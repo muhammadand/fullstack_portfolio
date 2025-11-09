@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mubarok Andi Mubarok - Developer & Founder</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            scroll-behavior: smooth;
+        }
+        .gradient-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.15);
+        }
+        .nav-link {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        .badge-tech {
+            display: inline-block;
+            padding: 6px 14px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 20px;
+            font-size: 13px;
+            color: #667eea;
+            font-weight: 600;
+            margin: 4px;
+        }
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+    </style>
+</head>
+<body class="bg-white text-gray-900">
+    <!-- Navigation -->
+    <nav class="fixed w-full top-0 z-50 glass-effect border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold gradient-text">Muhammad Andi</div>
+            <div class="hidden md:flex space-x-8">
+                <a href="#home" class="nav-link text-gray-700 font-medium">Home</a>
+                <a href="#about" class="nav-link text-gray-700 font-medium">Tentang</a>
+                <a href="#services" class="nav-link text-gray-700 font-medium">Layanan</a>
+                <a href="#portfolio" class="nav-link text-gray-700 font-medium">Portfolio</a>
+                <a href="#blog" class="nav-link text-gray-700 font-medium">Blog</a>
+                <a href="#contact" class="nav-link text-gray-700 font-medium">Kontak</a>
+            </div>
+            <button class="gradient-primary text-white px-6 py-2 rounded-lg font-medium hover:shadow-lg transition">
+                Konsultasi
+            </button>
+        </div>
+    </nav>
+
+    <!-- HOME SECTION -->
+    <section id="home" class="pt-32 pb-20 px-6 relative overflow-hidden">
+        <div class="absolute top-20 right-10 w-72 h-72 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 float-animation"></div>
+        <div class="absolute bottom-10 left-10 w-72 h-72 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 float-animation" style="animation-delay: 2s"></div>
+        
+        <div class="max-w-7xl mx-auto relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <!-- Content -->
+                <div>
+                    <p class="text-sm font-semibold text-purple-600 mb-4">✨ WELCOME TO MY CREATIVE SPACE</p>
+                    <h1 class="text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+                        Coding dengan <span class="gradient-text">Tujuan</span>, Membangun dengan <span class="gradient-text">Hati</span>
+                    </h1>
+                    <p class="text-lg text-gray-600 mb-4 leading-relaxed">
+                        Developer fullstack & founder dari Barack Digital. Saya membantu bisnis Anda tumbuh dengan website yang powerful dan copywriting yang persuasif.
+                    </p>
+                    <p class="text-gray-500 mb-8 leading-relaxed">
+                        Pengalaman 3+ tahun dalam web development, system design, dan digital marketing. Saya percaya teknologi adalah alat untuk menciptakan dampak nyata.
+                    </p>
+                    <div class="flex gap-4 mb-12">
+                        <button class="gradient-primary text-white px-8 py-4 rounded-lg font-semibold hover:shadow-lg transition">
+                            Mulai Sekarang
+                        </button>
+                        <button class="border-2 border-purple-600 text-purple-600 px-8 py-4 rounded-lg font-semibold hover:bg-purple-50 transition">
+                            Lihat Portfolio
+                        </button>
+                    </div>
+                    <div class="flex gap-6">
+                        <a href="#" class="text-gray-600 hover:text-purple-600 transition"><i class="fab fa-instagram text-2xl"></i></a>
+                        <a href="#" class="text-gray-600 hover:text-purple-600 transition"><i class="fab fa-linkedin text-2xl"></i></a>
+                        <a href="#" class="text-gray-600 hover:text-purple-600 transition"><i class="fab fa-github text-2xl"></i></a>
+                        <a href="#" class="text-gray-600 hover:text-purple-600 transition"><i class="fab fa-youtube text-2xl"></i></a>
+                    </div>
+                </div>
+
+                <!-- Visual -->
+                <div class="relative">
+                    <div class="relative w-full aspect-square rounded-3xl gradient-primary overflow-hidden shadow-2xl">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="text-center text-white">
+                                <i class="fas fa-code text-8xl mb-4 opacity-20"></i>
+                                <p class="text-2xl font-semibold opacity-40">Foto Placeholder</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="absolute -bottom-6 -right-6 w-48 h-48 gradient-primary rounded-2xl opacity-20 blur-2xl"></div>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="grid grid-cols-3 md:grid-cols-4 gap-8 mt-20 pt-20 border-t border-gray-200">
+                <div class="text-center">
+                    <p class="text-4xl font-bold gradient-text">50+</p>
+                    <p class="text-gray-600 text-sm mt-2">Project Selesai</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-4xl font-bold gradient-text">30+</p>
+                    <p class="text-gray-600 text-sm mt-2">Client Puas</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-4xl font-bold gradient-text">3+</p>
+                    <p class="text-gray-600 text-sm mt-2">Tahun Experience</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-4xl font-bold gradient-text">100%</p>
+                    <p class="text-gray-600 text-sm mt-2">Dedikasi Klien</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WHY CHOOSE ME -->
+    <section class="py-20 px-6 bg-gradient-to-br from-purple-50 to-blue-50">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-4xl font-bold text-center mb-4">Kenapa Memilih Saya?</h2>
+            <p class="text-center text-gray-600 mb-16 max-w-2xl mx-auto">
+                Saya tidak hanya membuat website, tapi membangun solusi yang sesuai dengan kebutuhan bisnis Anda.
+            </p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="card-hover glass-effect p-8 rounded-2xl text-center">
+                    <div class="w-16 h-16 gradient-primary rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">Cepat & Efisien</h3>
+                    <p class="text-gray-600 text-sm">Delivery tepat waktu tanpa mengorbankan kualitas.</p>
+                </div>
+
+                <div class="card-hover glass-effect p-8 rounded-2xl text-center">
+                    <div class="w-16 h-16 gradient-primary rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">Komunikasi Terbuka</h3>
+                    <p class="text-gray-600 text-sm">Saya selalu siap dengarkan feedback dan update progress.</p>
+                </div>
+
+                <div class="card-hover glass-effect p-8 rounded-2xl text-center">
+                    <div class="w-16 h-16 gradient-primary rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl">
+                        <i class="fas fa-sparkles"></i>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">Hasil Maksimal</h3>
+                    <p class="text-gray-600 text-sm">Fokus pada performa, UX, dan conversion rate.</p>
+                </div>
+
+                <div class="card-hover glass-effect p-8 rounded-2xl text-center">
+                    <div class="w-16 h-16 gradient-primary rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">Support Berkelanjutan</h3>
+                    <p class="text-gray-600 text-sm">Maintenance dan update gratis selama 3 bulan.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<!-- Section Category -->
+<section id="category" class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-6 text-center">
+      <h2 class="text-3xl md:text-4xl font-bold mb-8 gradient-text">Kategori Produk</h2>
+      <p class="text-gray-600 max-w-2xl mx-auto mb-12">
+        Berikut daftar kategori produk yang tersedia di sistem Gkomunika.
+      </p>
+  
+      <!-- Container kategori -->
+      <div id="category-list" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 justify-center">
+        <p id="loading" class="col-span-full text-gray-500">Memuat kategori...</p>
+      </div>
+    </div>
+  </section>
+  
+  <script>
+    const categoryContainer = document.getElementById('category-list');
+    const loadingText = document.getElementById('loading');
+  
+    async function loadCategories() {
+      try {
+        const response = await fetch("https://v2.gkomunika.id/api/v1/product-categories", {
+          headers: {
+            "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3YyLmdrb211bmlrYS5pZC9hcGkvdjEvYXV0aC9sb2dpbiIsImlhdCI6MTc2MDE2Njc1OCwiZXhwIjoxNzYwMjUzMTU4LCJuYmYiOjE3NjAxNjY3NTgsImp0aSI6IjJicHFFMEp5V3hPd2dxdGoiLCJzdWIiOiIxIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.mdOgd_zKTifdUZSJGRWFvxuvHOZuiMGoQ5mGH6lng44",
+            "Accept": "application/json"
+          }
+        });
+  
+        const result = await response.json();
+        loadingText.remove(); // Hapus teks loading
+  
+        // Jika tidak ada data
+        if (!result.data || result.data.length === 0) {
+          categoryContainer.innerHTML = '<p class="col-span-full text-gray-500">Tidak ada kategori ditemukan.</p>';
+          return;
+        }
+  
+        // Render kategori
+        result.data.forEach(cat => {
+          const card = document.createElement('div');
+          card.className = "card-hover glass-effect p-6 rounded-xl shadow-sm";
+          card.innerHTML = `
+            <i class="fa-solid fa-tags text-3xl text-indigo-500 mb-3"></i>
+            <h3 class="font-semibold text-gray-800">${cat.name}</h3>
+            <p class="text-sm text-gray-500 mt-2">${cat.description || ''}</p>
+          `;
+          categoryContainer.appendChild(card);
+        });
+  
+      } catch (error) {
+        loadingText.textContent = "Gagal memuat kategori 😞";
+        console.error(error);
+      }
+    }
+  
+    loadCategories();
+  </script>
+  
+  
+
+    <!-- SERVICES SECTION -->
+    <section id="services" class="py-20 px-6">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-4xl font-bold text-center mb-4">Layanan Saya</h2>
+            <p class="text-center text-gray-600 mb-16 max-w-2xl mx-auto">
+                Dua layanan utama yang akan membantu bisnis Anda berkembang di era digital.
+            </p>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- Service 1: Website -->
+                <div class="card-hover">
+                    <div class="bg-gradient-to-br from-purple-50 to-blue-50 p-12 rounded-3xl border border-gray-200">
+                        <div class="w-20 h-20 gradient-primary rounded-2xl flex items-center justify-center text-white text-4xl mb-6">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <h3 class="text-3xl font-bold mb-4">Website Development</h3>
+                        <p class="text-gray-600 mb-6 leading-relaxed">
+                            Website yang tidak hanya cantik, tapi juga mengkonversi. Saya bangun dengan teknologi terkini untuk performa maksimal.
+                        </p>
+                        
+                        <div class="mb-8">
+                            <p class="font-semibold text-gray-900 mb-4">✨ Yang Anda Dapatkan:</p>
+                            <ul class="space-y-3 text-gray-700">
+                                <li class="flex items-start gap-3">
+                                    <span class="text-purple-600 font-bold">✓</span>
+                                    <span>Design responsive dan modern</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-purple-600 font-bold">✓</span>
+                                    <span>SEO optimized untuk visibility di Google</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-purple-600 font-bold">✓</span>
+                                    <span>Fast loading & mobile-first approach</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-purple-600 font-bold">✓</span>
+                                    <span>CMS-friendly untuk mudah diupdate</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-purple-600 font-bold">✓</span>
+                                    <span>Integrasi payment & analytics</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="flex gap-3 flex-wrap mb-8">
+                            <span class="badge-tech">React</span>
+                            <span class="badge-tech">Next.js</span>
+                            <span class="badge-tech">Tailwind CSS</span>
+                            <span class="badge-tech">Node.js</span>
+                        </div>
+
+                        <button class="w-full gradient-primary text-white py-3 rounded-lg font-semibold hover:shadow-lg transition">
+                            Konsultasi Website
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Service 2: Copywriting -->
+                <div class="card-hover">
+                    <div class="bg-gradient-to-br from-purple-50 to-blue-50 p-12 rounded-3xl border border-gray-200">
+                        <div class="w-20 h-20 gradient-primary rounded-2xl flex items-center justify-center text-white text-4xl mb-6">
+                            <i class="fas fa-pen-fancy"></i>
+                        </div>
+                        <h3 class="text-3xl font-bold mb-4">Copywriting & Script</h3>
+                        <p class="text-gray-600 mb-6 leading-relaxed">
+                            Naskah yang tepat sasaran. Dari script video hingga copy sales yang convert—saya tahu cara bicara ke audiens Anda.
+                        </p>
+                        
+                        <div class="mb-8">
+                            <p class="font-semibold text-gray-900 mb-4">✨ Yang Anda Dapatkan:</p>
+                            <ul class="space-y-3 text-gray-700">
+                                <li class="flex items-start gap-3">
+                                    <span class="text-purple-600 font-bold">✓</span>
+                                    <span>Copy yang persuasif dan authentic</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-purple-600 font-bold">✓</span>
+                                    <span>Script untuk video, podcast, & konten media sosial</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-purple-600 font-bold">✓</span>
+                                    <span>Riset mendalam tentang target audiens</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-purple-600 font-bold">✓</span>
+                                    <span>Tone of voice yang konsisten dengan brand</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-purple-600 font-bold">✓</span>
+                                    <span>Revisi unlimited hingga puas</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="flex gap-3 flex-wrap mb-8">
+                            <span class="badge-tech">Sales Copy</span>
+                            <span class="badge-tech">Script Video</span>
+                            <span class="badge-tech">Social Media</span>
+                            <span class="badge-tech">Email Campaign</span>
+                        </div>
+
+                        <button class="w-full gradient-primary text-white py-3 rounded-lg font-semibold hover:shadow-lg transition">
+                            Konsultasi Copywriting
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT SECTION -->
+    <section id="about" class="py-20 px-6 bg-gray-50">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 class="text-4xl font-bold mb-6">Tentang Saya</h2>
+                    <p class="text-gray-600 mb-4 leading-relaxed">
+                        Halo! Saya Muhammad Andi Mubarok. Perjalanan saya di dunia teknologi dimulai sejak SMA ketika saya pertama kali belajar coding. Dari sana, passion saya terhadap problem-solving melalui kode mulai berkembang.
+                    </p>
+                    <p class="text-gray-600 mb-4 leading-relaxed">
+                        Saya lulus dari Sistem Informasi dengan IPK 3.69, dan pengalaman akademik itu memberikan fondasi kuat tentang bagaimana sistem bekerja. Tapi yang lebih penting, saya belajar bahwa teknologi harus melayani manusia, bukan sebaliknya.
+                    </p>
+                    <p class="text-gray-600 mb-6 leading-relaxed">
+                        Tiga tahun lalu, saya memutuskan untuk mendirikan <span class="font-semibold text-purple-600">Barack Digital</span>—sebuah digital agency yang fokus pada kualitas dan hasil nyata. Kenapa? Karena saya melihat banyak bisnis yang kebingungan dengan digital transformation. Mereka butuh mitra yang tidak hanya bisa technical, tapi juga mengerti bisnis.
+                    </p>
+
+                    <div class="space-y-4 mb-8">
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 gradient-primary rounded-full flex items-center justify-center text-white flex-shrink-0 mt-1">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-gray-900">Fokus pada Kualitas</p>
+                                <p class="text-gray-600 text-sm">Setiap project dikerjakan dengan standar tinggi dan attention to detail.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 gradient-primary rounded-full flex items-center justify-center text-white flex-shrink-0 mt-1">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-gray-900">Komunikasi Transparan</p>
+                                <p class="text-gray-600 text-sm">Saya percaya transparansi adalah kunci hubungan klien yang baik.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 gradient-primary rounded-full flex items-center justify-center text-white flex-shrink-0 mt-1">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-gray-900">Efisiensi Maksimal</p>
+                                <p class="text-gray-600 text-sm">Delivery tepat waktu tanpa mengurangi kualitas hasil kerja.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="text-lg text-gray-900 font-semibold italic">
+                        "Saya di sini untuk membantu bisnis Anda berkembang. Mari kita ciptakan sesuatu yang luar biasa bersama."
+                    </p>
+                </div>
+
+                <div>
+                    <div class="relative h-96 bg-gradient-to-br from-purple-200 to-blue-200 rounded-3xl overflow-hidden shadow-2xl">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="text-center text-white">
+                                <i class="fas fa-user text-8xl opacity-20 mb-4"></i>
+                                <p class="text-2xl font-semibold opacity-40">Foto Profil</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 mt-8">
+                        <div class="glass-effect p-6 rounded-xl text-center">
+                            <p class="text-3xl font-bold gradient-text">S1</p>
+                            <p class="text-sm text-gray-600 mt-2">Sistem Informasi</p>
+                            <p class="text-xs text-gray-500 mt-1">IPK 3.69</p>
+                        </div>
+                        <div class="glass-effect p-6 rounded-xl text-center">
+                            <p class="text-3xl font-bold gradient-text">CEO</p>
+                            <p class="text-sm text-gray-600 mt-2">Barack Digital</p>
+                            <p class="text-xs text-gray-500 mt-1">Sejak 2021</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PORTFOLIO SECTION -->
+    <section id="portfolio" class="py-20 px-6">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-4xl font-bold text-center mb-4">Portfolio</h2>
+            <p class="text-center text-gray-600 mb-16 max-w-2xl mx-auto">
+                Hasil karya terbaik saya bersama klien-klien yang luar biasa. Setiap project adalah bukti komitmen saya terhadap excellence.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+                <!-- Project 1 -->
+                <div class="card-hover group">
+                    <div class="bg-gradient-to-br from-purple-100 to-blue-100 h-64 rounded-2xl overflow-hidden mb-6 relative">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="text-center text-white">
+                                <i class="fas fa-image text-6xl opacity-20"></i>
+                                <p class="text-xl font-semibold opacity-40 mt-4">Project Screenshot</p>
+                            </div>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">E-Commerce Platform</h3>
+                    <p class="text-gray-600 text-sm mb-4">Platform e-commerce untuk UMKM fashion dengan fitur inventory, payment gateway, dan admin dashboard yang powerful.</p>
+                    <div class="flex gap-2 flex-wrap mb-4">
+                        <span class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full">React</span>
+                        <span class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full">Node.js</span>
+                        <span class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full">MongoDB</span>
+                    </div>
+                    <a href="#" class="text-purple-600 font-semibold inline-flex items-center gap-2 hover:gap-3 transition">
+                        Lihat Detail <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="card-hover group">
+                    <div class="bg-gradient-to-br from-purple-100 to-blue-100 h-64 rounded-2xl overflow-hidden mb-6 relative">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="text-center text-white">
+                                <i class="fas fa-image text-6xl opacity-20"></i>
+                                <p class="text-xl font-semibold opacity-40 mt-4">Project Screenshot</p>
+                            </div>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Corporate Website</h3>
+                    <p class="text-gray-600 text-sm mb-4">Website corporate untuk startup tech dengan design modern, blog terintegrasi, dan contact management system.</p>
+                    <div class="flex gap-2 flex-wrap mb-4">
+                        <span class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full">Next.js</span>
+                        <span class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full">Tailwind</span>
+                        <span class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full">Firebase</span>
+                    </div>
+                    <a href="#" class="text-purple-600 font-semibold inline-flex items-center gap-2 hover:gap-3 transition">
+                        Lihat Detail <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+
+                <!-- Project 3 -->
+                <div class="card-hover group">
+                    <div class="bg-gradient-to-br from-purple-100 to-blue-100 h-64 rounded-2xl overflow-hidden mb-6 relative">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="text-center text-white">
+                                <i class="fas fa-image text-6xl opacity-20"></i>
+                                <p class="text-xl font-semibold opacity-40 mt-4">Project Screenshot</p>
+                            </div>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Content Creator Dashboard</h3>
+                    <p class="text-gray-600 text-sm mb-4">Dashboard analytics untuk content creator dengan tracking engagement, earnings, dan collaboration tools.</p>
+                    <div class="flex gap-2 flex-wrap mb-4">
+                        <span class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full">Vue.js</span>
+                        <span class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full">TypeScript</span>
+                        <span class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full">API REST</span>
+                    </div>
+                    <a href="#" class="text-purple-600 font-semibold inline-flex items-center gap-2 hover:gap-3 transition">
+                        Lihat Detail <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button class="gradient-primary text-white px-8 py-4 rounded-lg font-semibold hover:shadow-lg transition">
+                    Lihat Semua Portfolio
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIAL SECTION -->
+    <section class="py-20 px-6 bg-gradient-to-br from-purple-50 to-blue-50">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-4xl font-bold text-center mb-4">Apa Kata Klien?</h2>
+            <p class="text-center text-gray-600 mb-16 max-w-2xl mx-auto">
+                Kepuasan klien adalah prioritas utama saya. Berikut adalah beberapa testimonial dari mereka.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Testimonial 1 -->
+                <div class="glass-effect p-8 rounded-2xl">
+                    <div class="flex gap-1 mb-4">
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                    </div>
+                    <p class="text-gray-700 mb-6 italic">
+                        "Andi adalah developer yang profesional dan responsif. Website yang dibuat sangat bagus dan meningkatkan conversion rate toko online kami hingga 40%."
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-gradient-to-br from-purple-300 to-blue-300 rounded-full"></div>
+                        <div>
+                            <p class="font-semibold text-gray-900">Siti Rahman</p>
+                            <p class="text-sm text-gray-600">Founder, Fashion Hub ID</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 2 -->
+                <div class="glass-effect p-8 rounded-2xl">
+                    <div class="flex gap-1 mb-4">
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                    </div>
+                    <p class="text-gray-700 mb-6 italic">
+                        "Copy yang dibuat Andi untuk campaign email marketing kami sangat efektif. Click-through rate naik 3x lipat dalam sebulan pertama."
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-gradient-to-br from-purple-300 to-blue-300 rounded-full"></div>
+                        <div>
+                            <p class="font-semibold text-gray-900">Budi Santoso</p>
+                            <p class="text-sm text-gray-600">CEO, Digital Startup XYZ</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 3 -->
+                <div class="glass-effect p-8 rounded-2xl">
+                    <div class="flex gap-1 mb-4">
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                    </div>
+                    <p class="text-gray-700 mb-6 italic">
+                        "Proses komunikasi dengan Andi sangat smooth. Support dan maintenance yang diberikan membuat kami merasa tenang dengan website kami."
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-gradient-to-br from-purple-300 to-blue-300 rounded-full"></div>
+                        <div>
+                            <p class="font-semibold text-gray-900">Dewi Lestari</p>
+                            <p class="text-sm text-gray-600">Marketing Head, Agency ABC</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BLOG SECTION -->
+    <section id="blog" class="py-20 px-6">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-4xl font-bold text-center mb-4">Blog & Insights</h2>
+            <p class="text-center text-gray-600 mb-16 max-w-2xl mx-auto">
+                Tulisan dan insights tentang coding, bisnis digital, dan teknologi AI yang akan membuat Anda lebih smart dalam berbisnis.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+                <!-- Blog 1 -->
+                <div class="card-hover glass-effect rounded-2xl overflow-hidden">
+                    <div class="h-48 bg-gradient-to-br from-purple-200 to-blue-200 relative">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <i class="fas fa-code text-6xl opacity-20"></i>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex gap-2 mb-3">
+                            <span class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full">Web Dev</span>
+                            <span class="text-xs text-gray-500">15 Sept 2024</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">React 19: Fitur Baru yang Wajib Diketahui Developer</h3>
+                        <p class="text-gray-600 text-sm mb-4">
+                            React 19 membawa perubahan besar dalam ecosystem. Dari Server Components hingga automatic batching, pelajari fitur-fitur terbaru yang akan meningkatkan produktivitas development Anda.
+                        </p>
+                        <a href="#" class="text-purple-600 font-semibold text-sm inline-flex items-center gap-2 hover:gap-3 transition">
+                            Baca Selengkapnya <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Blog 2 -->
+                <div class="card-hover glass-effect rounded-2xl overflow-hidden">
+                    <div class="h-48 bg-gradient-to-br from-purple-200 to-blue-200 relative">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <i class="fas fa-chart-line text-6xl opacity-20"></i>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex gap-2 mb-3">
+                            <span class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full">Bisnis</span>
+                            <span class="text-xs text-gray-500">12 Sept 2024</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">Bagaimana Startup Digital Berkembang Cepat di Era AI?</h3>
+                        <p class="text-gray-600 text-sm mb-4">
+                            AI bukan hanya hype, tapi tools yang mengubah cara berbisnis. Dalam artikel ini, kami bahas strategi konkret untuk startup yang ingin scale cepat menggunakan AI.
+                        </p>
+                        <a href="#" class="text-purple-600 font-semibold text-sm inline-flex items-center gap-2 hover:gap-3 transition">
+                            Baca Selengkapnya <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Blog 3 -->
+                <div class="card-hover glass-effect rounded-2xl overflow-hidden">
+                    <div class="h-48 bg-gradient-to-br from-purple-200 to-blue-200 relative">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <i class="fas fa-pen-fancy text-6xl opacity-20"></i>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex gap-2 mb-3">
+                            <span class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full">Copywriting</span>
+                            <span class="text-xs text-gray-500">8 Sept 2024</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">Copywriting yang Convert: Formula Sederhana tapi Powerful</h3>
+                        <p class="text-gray-600 text-sm mb-4">
+                            Tidak semua copywriter tahu formula ini. Pelajari framework AIDA yang akan membuat landing page Anda menghasilkan lebih banyak customer dengan conversion rate tinggi.
+                        </p>
+                        <a href="#" class="text-purple-600 font-semibold text-sm inline-flex items-center gap-2 hover:gap-3 transition">
+                            Baca Selengkapnya <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button class="border-2 border-purple-600 text-purple-600 px-8 py-4 rounded-lg font-semibold hover:bg-purple-50 transition">
+                    Lihat Semua Artikel
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- SOCIAL MEDIA SECTION -->
+    <section class="py-20 px-6 bg-gradient-to-br from-purple-50 to-blue-50">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-4xl font-bold text-center mb-4">Follow Me</h2>
+            <p class="text-center text-gray-600 mb-4 max-w-2xl mx-auto">
+                Setiap hari saya share insights tentang coding, bisnis, dan AI di platform media sosial. Jangan ketinggalan konten bermanfaat!
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12 mt-12">
+                <!-- YouTube -->
+                <div class="card-hover glass-effect p-8 rounded-2xl text-center">
+                    <div class="w-16 h-16 gradient-primary rounded-full flex items-center justify-center mx-auto mb-4 text-white text-3xl">
+                        <i class="fab fa-youtube"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2">YouTube Channel</h3>
+                    <p class="text-gray-600 mb-6">
+                        Tutorial coding, product building journey, dan tips digital marketing. Subscribe sekarang dan jangan lewatkan video terbaru setiap minggunya!
+                    </p>
+                    <div class="flex items-center justify-center gap-3 mb-6">
+                        <p class="text-3xl font-bold gradient-text">12K+</p>
+                        <p class="text-gray-600">Subscribers</p>
+                    </div>
+                    <button class="w-full gradient-primary text-white py-3 rounded-lg font-semibold hover:shadow-lg transition">
+                        Subscribe Sekarang
+                    </button>
+                </div>
+
+                <!-- TikTok -->
+                <div class="card-hover glass-effect p-8 rounded-2xl text-center">
+                    <div class="w-16 h-16 gradient-primary rounded-full flex items-center justify-center mx-auto mb-4 text-white text-3xl">
+                        <i class="fab fa-tiktok"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2">TikTok</h3>
+                    <p class="text-gray-600 mb-6">
+                        Short-form content tentang coding tips, produktivitas, dan AI trends. Follow untuk daily dose motivasi dan learning dari tech world!
+                    </p>
+                    <div class="flex items-center justify-center gap-3 mb-6">
+                        <p class="text-3xl font-bold gradient-text">45K+</p>
+                        <p class="text-gray-600">Followers</p>
+                    </div>
+                    <button class="w-full gradient-primary text-white py-3 rounded-lg font-semibold hover:shadow-lg transition">
+                        Follow Sekarang
+                    </button>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <p class="text-gray-600 mb-4">Atau follow di platform lain:</p>
+                <div class="flex justify-center gap-6">
+                    <a href="#" class="w-12 h-12 gradient-primary rounded-full flex items-center justify-center text-white text-xl hover:shadow-lg transition">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="w-12 h-12 gradient-primary rounded-full flex items-center justify-center text-white text-xl hover:shadow-lg transition">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="#" class="w-12 h-12 gradient-primary rounded-full flex items-center justify-center text-white text-xl hover:shadow-lg transition">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="#" class="w-12 h-12 gradient-primary rounded-full flex items-center justify-center text-white text-xl hover:shadow-lg transition">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section id="contact" class="py-20 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- Contact Info -->
+                <div>
+                    <h2 class="text-4xl font-bold mb-6">Mari Kita Kolaborasi</h2>
+                    <p class="text-gray-600 mb-8 leading-relaxed text-lg">
+                        Memiliki project atau hanya ingin ngobrol tentang teknologi? Saya terbuka untuk diskusi dan kolaborasi. Mari kita ciptakan sesuatu yang impactful bersama!
+                    </p>
+
+                    <div class="space-y-6 mb-12">
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 gradient-primary rounded-full flex items-center justify-center text-white flex-shrink-0">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-gray-900">Email</p>
+                                <a href="mailto:hello@andimubarok.com" class="text-purple-600 hover:text-purple-700">
+                                    hello@andimubarok.com
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 gradient-primary rounded-full flex items-center justify-center text-white flex-shrink-0">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-gray-900">WhatsApp</p>
+                                <a href="https://wa.me/628xx" class="text-purple-600 hover:text-purple-700">
+                                    +62 8xx xxxx xxxx
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 gradient-primary rounded-full flex items-center justify-center text-white flex-shrink-0">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-gray-900">Lokasi</p>
+                                <p class="text-gray-600">Bandung, West Java, Indonesia</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-6 bg-gradient-to-br from-purple-50 to-blue-50 rounded-2xl border border-purple-200">
+                        <p class="text-gray-700 mb-4">
+                            <span class="font-semibold">Respons time rata-rata:</span> 2-4 jam
+                        </p>
+                        <p class="text-gray-700">
+                            <span class="font-semibold">Availability:</span> Senin - Jumat, 9 AM - 6 PM
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Contact Form -->
+                <div>
+                    <form class="space-y-6">
+                        <div>
+                            <label class="block text-gray-900 font-semibold mb-2">Nama Lengkap</label>
+                            <input type="text" placeholder="Siapa nama Anda?" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-purple-600 focus:outline-none transition" />
+                        </div>
+
+                        <div>
+                            <label class="block text-gray-900 font-semibold mb-2">Email</label>
+                            <input type="email" placeholder="email@example.com" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-purple-600 focus:outline-none transition" />
+                        </div>
+
+                        <div>
+                            <label class="block text-gray-900 font-semibold mb-2">Jenis Layanan</label>
+                            <select class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-purple-600 focus:outline-none transition text-gray-700">
+                                <option>-- Pilih Layanan --</option>
+                                <option>Website Development</option>
+                                <option>Copywriting & Script</option>
+                                <option>Konsultasi</option>
+                                <option>Lainnya</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-gray-900 font-semibold mb-2">Pesan</label>
+                            <textarea placeholder="Ceritakan tentang project atau pertanyaan Anda..." rows="5" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-purple-600 focus:outline-none transition resize-none"></textarea>
+                        </div>
+
+                        <button type="submit" class="w-full gradient-primary text-white py-4 rounded-lg font-semibold hover:shadow-lg transition">
+                            Kirim Pesan Sekarang
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA SECTION -->
+    <section class="py-20 px-6 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-96 h-96 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+        <div class="absolute bottom-0 left-0 w-96 h-96 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+
+        <div class="max-w-4xl mx-auto text-center relative z-10">
+            <h2 class="text-4xl lg:text-5xl font-bold mb-6">
+                Siap Membuat Sesuatu yang <span class="gradient-text">Luar Biasa?</span>
+            </h2>
+            <p class="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+                Jangan biarkan bisnis Anda stagnan. Mari kita transform visi Anda menjadi kenyataan dengan solusi teknologi dan copywriting yang powerful.
+            </p>
+            <div class="flex gap-4 justify-center flex-wrap">
+                <button class="gradient-primary text-white px-8 py-4 rounded-lg font-semibold hover:shadow-lg transition">
+                    Mulai Konsultasi Gratis
+                </button>
+                <button class="border-2 border-purple-600 text-purple-600 px-8 py-4 rounded-lg font-semibold hover:bg-purple-50 transition">
+                    Hubungi via WhatsApp
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-gray-900 text-white py-16 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div>
+                    <h3 class="text-2xl font-bold gradient-text mb-4">Andi Mubarok</h3>
+                    <p class="text-gray-400 mb-4">Developer & Founder | Creating digital solutions with purpose</p>
+                    <p class="text-gray-500 text-sm italic">"Coding with purpose, creating with heart."</p>
+                </div>
+
+                <div>
+                    <p class="font-semibold mb-4">Layanan</p>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><a href="#" class="hover:text-white transition">Website Development</a></li>
+                        <li><a href="#" class="hover:text-white transition">Copywriting</a></li>
+                        <li><a href="#" class="hover:text-white transition">Konsultasi</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <p class="font-semibold mb-4">Resources</p>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><a href="#" class="hover:text-white transition">Blog</a></li>
+                        <li><a href="#" class="hover:text-white transition">Portfolio</a></li>
+                        <li><a href="#" class="hover:text-white transition">About</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <p class="font-semibold mb-4">Ikuti Saya</p>
+                    <div class="flex gap-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition text-lg">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition text-lg">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition text-lg">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition text-lg">
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-gray-400 text-sm">
+                    © 2024 Muhammad Andi Mubarok. All rights reserved.
+                </p>
+                <div class="flex gap-6 text-sm text-gray-400">
+                    <a href="#" class="hover:text-white transition">Privacy Policy</a>
+                    <a href="#" class="hover:text-white transition">Terms & Conditions</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scroll behavior
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Add animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'fadeInUp 0.6s ease forwards';
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.card-hover, .glass-effect').forEach(el => {
+            el.style.opacity = '0';
+            observer.observe(el);
+        });
+
+        // Add fade-in animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
