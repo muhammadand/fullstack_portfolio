@@ -5,9 +5,17 @@ namespace App\Http\Controllers;
 use App\Models\Portfolio;
 use App\Models\PortfolioCategory;
 use Illuminate\Http\Request;
-
+use App\Helpers\AuthHelper;
 class PortfolioController extends Controller
 {
+    public function __construct()
+    {
+        // Jika belum login -> stop di sini
+        if ($resp = AuthHelper::mustLogin()) {
+            // penting: return response dari constructor
+            abort(redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.'));
+        }
+    }
     public function index(Request $request)
     {
         // 🔍 Ambil kategori untuk dropdown filter

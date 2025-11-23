@@ -1,11 +1,7 @@
-@extends('layouts.app')
+@extends('layouts.admin.app')
 
 @section('content')
-<br>
-<br>
-<br>
-<br>
-<br>
+
 <div class="max-w-6xl mx-auto px-6 py-10">
     {{-- ✅ Header --}}
     <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
@@ -23,7 +19,7 @@
                 />
                 <button 
                     type="submit"
-                    class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+                    class="bg-gradient-to-r from-purple-600 to-purple-700 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
                 >
                     Cari
                 </button>
@@ -31,7 +27,7 @@
 
             {{-- ➕ Tambah Kategori --}}
             <a href="{{ route('portfolio-categories.create') }}"
-               class="gradient-primary text-white px-5 py-2 rounded-lg font-medium shadow hover:shadow-lg transition">
+               class="bg-gradient-to-r from-purple-600 to-purple-700 text-white px-5 py-2 rounded-lg font-medium shadow hover:shadow-lg transition">
                + Tambah Kategori
             </a>
         </div>
@@ -47,7 +43,7 @@
     {{-- ✅ Table --}}
     <div class="overflow-x-auto bg-white rounded-xl shadow-md">
         <table class="min-w-full text-sm text-left text-gray-700">
-            <thead class="gradient-primary text-white">
+            <thead class="gradient-primary text-black">
                 <tr>
                     <th class="py-3 px-4">#</th>
 

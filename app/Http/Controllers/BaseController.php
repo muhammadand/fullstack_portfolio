@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 abstract class BaseController extends Controller
 {
+
     protected $repository;
     protected $viewPath;
     protected $routeName;

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin.app')
 
 @section('content')
 <div class="max-w-3xl mx-auto px-6 py-10">
@@ -14,7 +14,7 @@
                Batal
             </a>
             <button type="submit"
-                    class="gradient-primary text-white px-5 py-2 rounded-lg font-medium shadow hover:shadow-lg transition">
+                    class="bg-gradient-to-r from-purple-600 to-purple-700 text-white px-5 py-2 rounded-lg font-medium shadow hover:shadow-lg transition">
                 Simpan
             </button>
         </div>
