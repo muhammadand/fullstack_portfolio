@@ -94,7 +94,7 @@
                 Project Overview
             </h2>
             <div class="prose prose-lg max-w-none text-gray-700 leading-relaxed">
-                <p class="whitespace-pre-line">{{ $portfolio->full_description }}</p>
+                <p class="whitespace-pre-line">{!! $portfolio->full_description !!}</p>
             </div>
         </div>
 
@@ -193,7 +193,7 @@
 <!-- Back to Portfolio Button -->
 <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <div class="max-w-6xl mx-auto text-center">
-        <a href="{{ route('portfolio.index') }}" 
+        <a href="{{ route('landing.portfolio') }}" 
            class="inline-flex items-center gap-2 text-purple-600 font-semibold hover:gap-3 transition-all duration-300 text-lg">
             <i class="fas fa-arrow-left"></i>
             Back to All Projects
