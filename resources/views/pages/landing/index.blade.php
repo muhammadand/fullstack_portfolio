@@ -127,7 +127,7 @@
                         
                         <!-- Image -->
                         <div class="relative rounded-3xl overflow-hidden shadow-2xl transform -rotate-3 hover:rotate-0 transition-transform duration-500">
-                            <img src="{{asset('storage/photo/foto.jpg')}}" 
+                            <img src="{{asset('foto.jpg')}}" 
                                  alt="Muhammad Andi Mubarok" 
                                  class="w-full h-[500px] object-cover">
                         </div>

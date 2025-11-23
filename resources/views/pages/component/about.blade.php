@@ -90,7 +90,7 @@
                 <!-- Profile Image -->
                 <div class="relative mb-8">
                     <div class="relative rounded-3xl overflow-hidden shadow-2xl">
-                        <img src="{{asset('storage/photo/foto.jpg')}}" 
+                        <img src="{{asset('foto.jpg')}}" 
                              alt="Muhammad Andi Mubarok" 
                              class="w-full h-[500px] object-cover hover:scale-105 transition-transform duration-500">
                         
