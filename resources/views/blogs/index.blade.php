@@ -25,10 +25,10 @@
                 </button>
             </form>
 
-            {{-- ➕ Tambah Blog --}}
+      
             <a href="{{ route('blogs.create') }}"
                class="bg-gradient-to-r from-purple-600 to-purple-700 text-white px-5 py-2 rounded-lg font-medium shadow hover:shadow-lg transition">
-               + Tambah Blog
+               Create
             </a>
         </div>
     </div>

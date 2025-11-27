@@ -48,30 +48,39 @@ class Portfolio extends Model
     }
 
     // 🧩 Validasi dinamis
-    public static function rules($id = null)
-    {
-        return [
-            'category_id' => 'required|exists:portfolio_categories,id',
-            'title' => 'required|string|max:200',
-            'slug' => 'required|string|max:200|unique:portfolios,slug,' . $id,
-            'client_name' => 'nullable|string|max:100',
-            'project_type' => 'nullable|string|max:100',
-            'short_description' => 'required|string|max:255',
-            'full_description' => 'required|string',
-            'challenge' => 'nullable|string',
-            'solution' => 'nullable|string',
-            'result' => 'nullable|string',
-            'thumbnail_image' => 'required|string|max:255',
-            'featured_image' => 'nullable|string|max:255',
-            'technologies' => 'nullable|array',
-            'project_url' => 'nullable|url|max:255',
-            'github_url' => 'nullable|url|max:255',
-            'completion_date' => 'nullable|date',
-            'is_featured' => 'boolean',
-            'display_order' => 'integer',
-            'is_active' => 'boolean',
-        ];
-    }
+  public static function rules($id = null)
+{
+    return [
+        'category_id' => 'required|exists:portfolio_categories,id',
+        'title' => 'required|string|max:200',
+        'slug' => 'required|string|max:200|unique:portfolios,slug,' . $id,
+        'client_name' => 'nullable|string|max:100',
+        'project_type' => 'nullable|string|max:100',
+        'short_description' => 'required|string|max:255',
+        'full_description' => 'required|string',
+        'challenge' => 'nullable|string',
+        'solution' => 'nullable|string',
+        'result' => 'nullable|string',
+
+        // 🔥 STORE = required, UPDATE = nullable
+        'thumbnail_image' => $id
+            ? 'nullable|image|mimes:jpg,jpeg,png|max:10240'
+            : 'required|image|mimes:jpg,jpeg,png|max:10240',
+
+        'featured_image' => 'nullable|image|mimes:jpg,jpeg,png|max:10240',
+
+        // 🔥 Input kamu string → controller yg ubah ke array
+        'technologies' => 'nullable|string',
+
+        'project_url' => 'nullable|url|max:255',
+        'github_url' => 'nullable|url|max:255',
+        'completion_date' => 'nullable|date',
+        'is_featured' => 'boolean',
+        'display_order' => 'integer',
+        'is_active' => 'boolean',
+    ];
+}
+
 
     // 🧭 Scope untuk aktif saja
     public function scopeActive($query)

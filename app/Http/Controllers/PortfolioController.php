@@ -6,6 +6,7 @@ use App\Models\Portfolio;
 use App\Models\PortfolioCategory;
 use Illuminate\Http\Request;
 use App\Helpers\AuthHelper;
+
 class PortfolioController extends Controller
 {
     public function __construct()
@@ -105,15 +106,24 @@ class PortfolioController extends Controller
     public function update(Request $request, $id)
     {
         $portfolio = Portfolio::findOrFail($id);
+
         $validated = $request->validate(Portfolio::rules($id));
 
-        // 🔹 Upload baru jika ada file baru
-        if ($request->hasFile('thumbnail_image')) {
-            $validated['thumbnail_image'] = $request->file('thumbnail_image')->store('uploads/portfolio', 'public');
+        // 🔹 Ubah technologies string → array
+        if (!empty($validated['technologies'])) {
+            $validated['technologies'] = array_map('trim', explode(',', $validated['technologies']));
         }
 
+        // 🔹 Upload thumbnail jika ada file baru
+        if ($request->hasFile('thumbnail_image')) {
+            $validated['thumbnail_image'] = $request->file('thumbnail_image')
+                ->store('uploads/portfolio', 'public');
+        }
+
+        // 🔹 Upload featured_image jika ada file baru
         if ($request->hasFile('featured_image')) {
-            $validated['featured_image'] = $request->file('featured_image')->store('uploads/portfolio', 'public');
+            $validated['featured_image'] = $request->file('featured_image')
+                ->store('uploads/portfolio', 'public');
         }
 
         $portfolio->update($validated);
@@ -121,6 +131,7 @@ class PortfolioController extends Controller
         return redirect()->route('portfolio.index')
             ->with('success', 'Portfolio berhasil diperbarui!');
     }
+
 
     // 🔹 Hapus
     public function destroy($id)
