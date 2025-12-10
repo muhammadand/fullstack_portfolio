@@ -9,7 +9,8 @@
                     <a href="#" class="text-gray-600 hover:text-gray-900 transition whitespace-nowrap">Project</a>
                     <a href="#" class="text-gray-600 hover:text-gray-900 transition whitespace-nowrap">Remote</a>
                     <a href="#" class="text-gray-600 hover:text-gray-900 transition whitespace-nowrap">Teamwork</a>
-                    <a href="#" class="text-purple-600 font-semibold border-b-2 border-purple-600 pb-3 -mb-[1px] whitespace-nowrap">Productivity</a>
+                    <a href="#"
+                        class="text-purple-600 font-semibold border-b-2 border-purple-600 pb-3 -mb-[1px] whitespace-nowrap">Productivity</a>
                     <a href="#" class="text-gray-600 hover:text-gray-900 transition whitespace-nowrap">Marketing</a>
                 </nav>
             </div>
@@ -22,13 +23,15 @@
                 <div class="lg:col-span-8">
                     <!-- Breadcrumb -->
                     <div class="mb-4">
-                        <a href="{{ route('landing.blogs') }}" class="text-sm text-purple-600 hover:text-purple-700 inline-flex items-center gap-1">
+                        <a href="{{ route('landing.blogs') }}"
+                            class="text-sm text-purple-600 hover:text-purple-700 inline-flex items-center gap-1">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                             </svg>
                             Back
                         </a>
-                        <span class="inline-block ml-3 px-2.5 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-medium">
+                        <span
+                            class="inline-block ml-3 px-2.5 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-medium">
                             {{ $blog->category->name ?? 'Blog' }}
                         </span>
                     </div>
@@ -59,7 +62,8 @@
                             <!-- Author & Meta -->
                             <div class="flex items-center justify-between flex-wrap gap-3 pb-6 border-b">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center text-white font-semibold text-sm">
+                                    <div
+                                        class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center text-white font-semibold text-sm">
                                         {{ substr($blog->author->name ?? 'A', 0, 1) }}
                                     </div>
                                     <div>
@@ -75,33 +79,76 @@
                                 <!-- Share Buttons -->
                                 <div class="flex items-center gap-1">
                                     <button class="p-2 hover:bg-gray-100 rounded-lg transition" title="Share">
-                                        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
+                                        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
                                         </svg>
                                     </button>
                                     <button class="p-2 hover:bg-gray-100 rounded-lg transition" title="Bookmark">
-                                        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+                                        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
                                         </svg>
                                     </button>
                                 </div>
                             </div>
 
-                            <!-- Content -->
-                            <div class="mt-6 prose prose-base max-w-none 
-                                        prose-headings:font-bold prose-headings:text-gray-900 
-                                        prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-3
-                                        prose-h3:text-lg prose-h3:mt-6 prose-h3:mb-2
-                                        prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-4
-                                        prose-a:text-purple-600 prose-a:no-underline hover:prose-a:underline
-                                        prose-strong:text-gray-900 prose-strong:font-semibold
-                                        prose-ul:my-4 prose-ol:my-4
-                                        prose-li:text-gray-700 prose-li:my-1
-                                        prose-img:rounded-lg prose-img:shadow-md
-                                        prose-blockquote:border-l-4 prose-blockquote:border-purple-500 prose-blockquote:bg-purple-50 prose-blockquote:py-2 prose-blockquote:px-4 prose-blockquote:rounded-r
-                                        prose-code:text-purple-600 prose-code:bg-purple-50 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:text-sm">
-                                {!! $blog->content !!}
-                            </div>
+                     <style>
+    /* Tampilkan nomor untuk ordered list dari Quill */
+    .prose ol {
+        list-style-type: decimal !important;
+        padding-left: 1.5rem !important;
+    }
+
+    .prose ol li {
+        display: list-item !important;
+    }
+
+    /* Support untuk bullet list juga */
+    .prose ul {
+        list-style-type: disc !important;
+        padding-left: 1.5rem !important;
+    }
+
+    .prose ul li {
+        display: list-item !important;
+    }
+
+    /* Jika ada class ql-align-justify */
+    .prose .ql-align-justify {
+        text-align: justify;
+    }
+
+    /* Style untuk link (href) - Bold & Biru */
+    .prose a {
+        color: #2563eb !important; /* Biru */
+        font-weight: 700 !important; /* Bold */
+        text-decoration: underline !important;
+    }
+
+    .prose a:hover {
+        color: #1e40af !important; /* Biru lebih gelap saat hover */
+    }
+</style>
+
+<div class="mt-6 prose prose-base max-w-none 
+    prose-headings:font-bold prose-headings:text-gray-900
+    prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-3
+    prose-h3:text-lg prose-h3:mt-6 prose-h3:mb-2
+    prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-4
+    prose-a:text-purple-600 prose-a:no-underline hover:prose-a:underline
+    prose-strong:text-gray-900 prose-strong:font-semibold
+    prose-ul:my-4 prose-ol:my-4
+    prose-li:text-gray-700 prose-li:my-1
+    prose-ol:list-decimal prose-ol:pl-5
+    prose-img:rounded-lg prose-img:shadow-md
+    prose-blockquote:border-l-4 prose-blockquote:border-purple-500 prose-blockquote:bg-purple-50 prose-blockquote:py-2 prose-blockquote:px-4 prose-blockquote:rounded-r
+    prose-code:text-purple-600 prose-code:bg-purple-50 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:text-sm">
+    {!! $blog->content !!}
+</div>
+
 
                             <!-- Tags -->
                             @if ($blog->tags)
@@ -127,7 +174,8 @@
                                         @endphp
 
                                         @foreach ($tags as $tag)
-                                            <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-purple-100 hover:text-purple-700 transition cursor-pointer">
+                                            <span
+                                                class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-purple-100 hover:text-purple-700 transition cursor-pointer">
                                                 #{{ $tag }}
                                             </span>
                                         @endforeach
@@ -157,11 +205,14 @@
                                                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
                                                 </div>
                                             @else
-                                                <div class="w-20 h-16 flex-shrink-0 rounded-lg bg-gradient-to-br from-purple-200 to-pink-200"></div>
+                                                <div
+                                                    class="w-20 h-16 flex-shrink-0 rounded-lg bg-gradient-to-br from-purple-200 to-pink-200">
+                                                </div>
                                             @endif
 
                                             <div class="flex-1 min-w-0">
-                                                <h4 class="font-semibold text-sm text-gray-900 mb-1 line-clamp-2 group-hover:text-purple-600 transition">
+                                                <h4
+                                                    class="font-semibold text-sm text-gray-900 mb-1 line-clamp-2 group-hover:text-purple-600 transition">
                                                     {{ $item->title }}
                                                 </h4>
                                                 <p class="text-xs text-gray-500">
@@ -209,7 +260,8 @@
                                 @endif
 
                                 <div class="p-5">
-                                    <h3 class="font-bold text-base text-gray-900 mb-2 line-clamp-2 group-hover:text-purple-600 transition">
+                                    <h3
+                                        class="font-bold text-base text-gray-900 mb-2 line-clamp-2 group-hover:text-purple-600 transition">
                                         {{ $item->title }}
                                     </h3>
 
@@ -220,7 +272,8 @@
                                     @endif
 
                                     <div class="flex items-center gap-2 text-xs text-gray-500">
-                                        <div class="w-6 h-6 rounded-full bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center text-white font-semibold">
+                                        <div
+                                            class="w-6 h-6 rounded-full bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center text-white font-semibold">
                                             {{ substr($item->author->name ?? 'A', 0, 1) }}
                                         </div>
                                         <span>{{ $item->author->name ?? 'Admin' }}</span>

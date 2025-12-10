@@ -76,7 +76,7 @@
                                 <i class="fas fa-phone-alt text-white text-xl"></i>
                             </div>
                             <div>
-                                <h3 class="font-bold text-gray-900 mb-1">Call: +62-xxx-xxx</h3>
+                                <h3 class="font-bold text-gray-900 mb-1">Call: +62-85221694067</h3>
                                 <p class="text-sm text-gray-600">24/7 Support available</p>
                             </div>
                         </div>
