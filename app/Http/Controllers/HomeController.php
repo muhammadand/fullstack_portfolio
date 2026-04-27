@@ -122,4 +122,8 @@ class HomeController extends Controller
     public function contact(){
         return view('pages.contact');
     }
+
+    public function portfolio_1(){
+        return view('portfolio.landingPage.index');
+    }
 }

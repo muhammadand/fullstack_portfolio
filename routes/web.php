@@ -48,5 +48,9 @@ use App\Http\Controllers\AuthController;
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 
+// portfolio
+Route::get('/portfolio', [HomeController::class, 'portfolio_1'])->name('portfolio');
+
+
 
 

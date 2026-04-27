@@ -1,16 +1,12 @@
-  <nav class="fixed w-full top-0 z-50 glass-effect border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="text-2xl font-bold gradient-text">Muhammad Andi</div>
-            <div class="hidden md:flex space-x-8">
-                <a href="{{route('landing')}}" class="nav-link text-gray-700 font-medium">Home</a>
-                <a href="#about" class="nav-link text-gray-700 font-medium">Tentang</a>
-                <a href="#services" class="nav-link text-gray-700 font-medium">Layanan</a>
-                <a href="{{route('landing.portfolio')}}" class="nav-link text-gray-700 font-medium">Portfolio</a>
-                <a href="{{route('landing.blogs')}}" class="nav-link text-gray-700 font-medium">Blog</a>
-                <a href="#contact" class="nav-link text-gray-700 font-medium">Kontak</a>
-            </div>
-            <button class="gradient-primary text-white px-6 py-2 rounded-lg font-medium hover:shadow-lg transition">
-                Konsultasi
-            </button>
+<nav class="fixed w-full top-0 z-50 backdrop-blur-md bg-navy/80 border-b border-white/5">
+    <div class="max-w-7xl mx-auto px-8 py-6 flex justify-between items-center">
+        <div class="text-xl font-semibold tracking-[0.2em] text-gold uppercase">
+            Muhammad <span class="text-white font-light">Andi</span>
         </div>
-    </nav>
+        <div class="hidden md:flex gap-10 text-[10px] uppercase tracking-[0.3em] text-gray-400">
+            <a href="#" class="hover:text-gold transition">Portfolio</a>
+            <a href="#" class="hover:text-gold transition">Process</a>
+            <a href="#" class="hover:text-gold transition">Inquiry</a>
+        </div>
+    </div>
+</nav>
