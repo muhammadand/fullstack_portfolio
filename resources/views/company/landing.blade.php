@@ -26,32 +26,34 @@
                     <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z" />
                     <path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z" />
                 </svg>
-                <span class="text-white/80">Solusi Teknologi untuk <span class="text-brand-accent font-semibold">UMKM
+                <span class="text-white/80">Solusi Teknologi untuk <span class="text-brand-accent font-semibold">Perusahaan
+                        dan UMKM
                         Indonesia</span></span>
             </div>
 
             <h1
-                class="font-display text-4xl sm:text-5xl md:text-6xl lg:text-[80px] font-semibold text-center leading-[1.15] tracking-[0.02em] mb-8 drop-shadow-xl">
+                class="font-display text-[2rem] leading-tight sm:text-5xl md:text-6xl lg:text-[76px] font-semibold text-center sm:leading-[1.15] tracking-[0.02em] mb-6 sm:mb-8 drop-shadow-xl">
                 Automasi Cerdas,<br />
                 <span class="relative">
                     Bisnis Naik Kelas
                 </span>
             </h1>
 
-            <p class="text-white/60 text-center max-w-2xl text-sm sm:text-base md:text-lg leading-relaxed mb-10">
+            <p
+                class="text-white/60 text-center max-w-2xl text-xs sm:text-base md:text-lg leading-relaxed mb-8 sm:mb-10 px-2">
                 Kami mengintegrasikan kecerdasan buatan, sains data, dan automasi ke dalam sistem operasional Anda.
                 Skalakan bisnis tanpa batas, biarkan algoritma yang bekerja.
             </p>
 
             <a href="https://wa.me/6285221694067" target="_blank"
-                class="group flex items-center gap-3 bg-btn-gradient text-white font-semibold px-7 py-3.5 rounded-full shadow-glow-blue hover:scale-105 transition-all">
+                class="group flex items-center gap-2 sm:gap-3 bg-btn-gradient text-white text-xs sm:text-sm font-semibold px-6 sm:px-7 py-3 sm:py-3.5 rounded-full shadow-glow-blue hover:scale-105 transition-all">
                 Konsultasi via WhatsApp
                 <span
-                    class="w-7 h-7 bg-white/20 rounded-full flex items-center justify-center group-hover:translate-x-1 transition-transform">→</span>
+                    class="w-6 h-6 sm:w-7 sm:h-7 bg-white/20 rounded-full flex items-center justify-center group-hover:translate-x-1 transition-transform">→</span>
             </a>
 
             <div
-                class="relative w-full max-w-4xl mt-14 flex flex-col md:flex-row items-center justify-center gap-6 md:gap-0 pb-10">
+                class="relative w-full max-w-4xl mt-10 sm:mt-14 flex flex-col md:flex-row items-center justify-center gap-6 md:gap-0 pb-10 scale-90 sm:scale-100 origin-top">
                 <div
                     class="animate-float md:absolute md:left-0 md:-translate-x-4 md:top-10 w-56 bg-card-glass border border-white/10 rounded-2xl p-4 shadow-card backdrop-blur-md z-20">
                     <p class="text-white/50 text-xs mb-1">Efisiensi Operasional</p>
@@ -317,16 +319,17 @@
         <div class="max-w-6xl mx-auto flex flex-col lg:flex-row gap-12 lg:gap-16 items-center lg:items-start">
 
             <!-- Bagian Kiri (Teks) -->
-            <div class="lg:w-[40%] flex flex-col items-center lg:items-start text-center lg:text-left lg:sticky lg:top-32">
+            <div
+                class="lg:w-[40%] flex flex-col items-center lg:items-start text-center lg:text-left lg:sticky lg:top-32 mb-8 lg:mb-0">
                 <div
-                    class="inline-flex items-center justify-center px-4 py-1.5 rounded-full border border-slate-200 text-slate-800 mb-6 bg-white shadow-sm">
+                    class="inline-flex items-center justify-center px-4 py-1.5 rounded-full border border-slate-200 text-slate-800 mb-4 sm:mb-6 bg-white shadow-sm">
                     <span class="font-bold text-[10px] tracking-widest uppercase">SERVICES</span>
                 </div>
                 <h2
-                    class="font-display text-3xl sm:text-4xl lg:text-[2.25rem] font-semibold text-slate-900 mb-4 leading-[1.15] tracking-tight">
+                    class="font-display text-3xl sm:text-4xl lg:text-[2.25rem] font-semibold text-slate-900 mb-3 sm:mb-4 leading-[1.15] tracking-tight">
                     Solusi Cerdas Untuk Bisnis Anda
                 </h2>
-                <p class="text-slate-500 leading-relaxed text-sm sm:text-base mb-8 max-w-lg">
+                <p class="text-slate-500 leading-relaxed text-sm sm:text-base mb-6 sm:mb-8 max-w-lg">
                     Mulai dari pembuatan sistem kustom hingga implementasi kecerdasan buatan, kami menghadirkan
                     ekosistem digital yang berjalan secara otomatis.
                 </p>
@@ -525,17 +528,19 @@
         </style>
     </section>
 
-    <section id="layanan" class="bg-brand-dark py-20 px-4 sm:px-6 lg:px-8 border-t border-white/5">
+    <section id="layanan" class="bg-brand-dark py-16 sm:py-20 px-4 sm:px-6 lg:px-8 border-t border-white/5">
         <div class="max-w-6xl mx-auto">
-            <div class="flex justify-center mb-6">
-                <span class="border border-white/20 text-white/60 text-xs font-medium rounded-full px-4 py-1.5">Pricing
+            <div class="flex justify-center mb-4 sm:mb-6">
+                <span
+                    class="border border-white/20 text-white/60 text-[10px] sm:text-xs font-medium rounded-full px-4 py-1.5">Pricing
                     & Services</span>
             </div>
             <h2
-                class="font-display text-4xl sm:text-5xl font-semibold text-center text-white mb-6 leading-tight tracking-wide">
+                class="font-display text-3xl sm:text-4xl md:text-5xl font-semibold text-center text-white mb-4 sm:mb-6 leading-tight tracking-wide">
                 Paket Layanan
                 Ekspansi Digital</h2>
-            <p class="text-white/60 text-center max-w-xl mx-auto text-sm mb-14">Pilih solusi cerdas yang paling sesuai
+            <p class="text-white/60 text-center max-w-xl mx-auto text-xs sm:text-sm mb-10 sm:mb-14 px-2">Pilih solusi
+                cerdas yang paling sesuai
                 dengan skala dan kebutuhan automasi bisnis Anda saat ini.</p>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -601,17 +606,21 @@
         </div>
     </section>
 
-    <section class="bg-[#0c1033] py-20 px-4 sm:px-6 lg:px-8 text-center relative overflow-hidden border-t border-white/5">
+    <section
+        class="bg-[#0c1033] py-16 sm:py-20 px-4 sm:px-6 lg:px-8 text-center relative overflow-hidden border-t border-white/5">
         <div class="absolute inset-0 bg-blue-glow opacity-30 pointer-events-none"></div>
         <div class="relative z-10 max-w-2xl mx-auto">
-            <h2 class="font-display text-4xl sm:text-5xl font-semibold mb-6 leading-tight tracking-wide">Siap
+            <h2
+                class="font-display text-3xl sm:text-4xl md:text-5xl font-semibold mb-4 sm:mb-6 leading-tight tracking-wide">
+                Siap
                 Mengeskalasi Bisnis Anda?</h2>
-            <p class="text-white/60 mb-8 text-sm">Mari diskusikan bagaimana kecerdasan buatan dan automasi dapat
+            <p class="text-white/60 mb-8 text-xs sm:text-sm leading-relaxed px-2">Mari diskusikan bagaimana kecerdasan
+                buatan dan automasi dapat
                 menghemat waktu, tenaga, dan melipatgandakan keuntungan UMKM Anda.</p>
             <a href="https://wa.me/6285221694067" target="_blank"
-                class="inline-flex items-center gap-3 bg-btn-gradient text-white font-semibold px-8 py-4 rounded-full shadow-glow-blue hover:scale-105 transition-all text-sm">
+                class="inline-flex items-center gap-2 sm:gap-3 bg-btn-gradient text-white font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-full shadow-glow-blue hover:scale-105 transition-all text-xs sm:text-sm">
                 Hubungi Kami Sekarang
-                <span class="w-7 h-7 bg-white/20 rounded-full flex items-center justify-center">→</span>
+                <span class="w-6 h-6 sm:w-7 sm:h-7 bg-white/20 rounded-full flex items-center justify-center">→</span>
             </a>
         </div>
     </section>

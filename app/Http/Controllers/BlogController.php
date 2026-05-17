@@ -142,4 +142,13 @@ class BlogController extends Controller
 
         return redirect()->route('blogs.index')->with('success', 'Blog berhasil dihapus!');
     }
+
+
+    //from public
+
+    public function getBlogs()
+    {
+        $blogs = Blog::published()->latest()->get();
+        return view('blogs.getBlogs', compact('blogs'));
+    }
 }

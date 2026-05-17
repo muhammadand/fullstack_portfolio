@@ -23,7 +23,7 @@ use App\Http\Controllers\AuthController;
     // Blogs
     Route::resource('blogs', BlogController::class);
 
-//landing users
+    //Public Routes
     Route::get('/',[HomeController::class,'indexCompanyProfile'])->name('index.company.profile');
     //blogs user
     Route::get('landing/blogs', [HomeController::class, 'blogs'])->name('landing.blogs');
