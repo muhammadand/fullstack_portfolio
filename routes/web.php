@@ -24,7 +24,7 @@ use App\Http\Controllers\AuthController;
     Route::resource('blogs', BlogController::class);
 
 //landing users
-    Route::get('/',[HomeController::class,'landing'])->name('landing');
+    Route::get('/',[HomeController::class,'indexCompanyProfile'])->name('index.company.profile');
     //blogs user
     Route::get('landing/blogs', [HomeController::class, 'blogs'])->name('landing.blogs');
     Route::get('landing/blog/{slug}', [HomeController::class, 'readBlog'])->name('blogs.read');

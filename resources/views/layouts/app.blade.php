@@ -1,148 +1,76 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
 <html lang="id">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium Navy & Gold</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scalify Intelligence — Automasi Cerdas, Bisnis Naik Kelas</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.3/cdn.min.js" defer></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        navy: '#1E2A38',
-                        gold: '#C9A96E',
-                        olive: '#6B705C',
+                        'brand-blue': '#2563EB',
+                        'brand-indigo': '#4F46E5',
+                        'brand-dark': '#0A0E2A',
+                        'brand-navy': '#0D1240',
+                        'brand-mid': '#111850',
+                        'brand-card': 'rgba(255,255,255,0.07)',
+                        'brand-accent': '#60A5FA',
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        display: ['Montserrat', 'sans-serif'],
+                    },
+                    backgroundImage: {
+                        'hero-gradient': 'radial-gradient(ellipse 80% 60% at 50% 0%, #1e3a8a 0%, #0A0E2A 70%)',
+                        'card-glass': 'linear-gradient(135deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.03) 100%)',
+                        'blue-glow': 'radial-gradient(circle, rgba(59,130,246,0.35) 0%, transparent 70%)',
+                        'btn-gradient': 'linear-gradient(90deg, #2563EB, #4F46E5)',
+                    },
+                    boxShadow: {
+                        'card': '0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.1)',
+                        'glow-blue': '0 0 30px rgba(59,130,246,0.4)',
+                        'glow-sm': '0 0 12px rgba(59,130,246,0.3)',
+                    },
+                    animation: {
+                        'float': 'float 4s ease-in-out infinite',
+                        'float-slow': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 3s ease-in-out infinite',
+                        'scan': 'scan 2s linear infinite',
                     }
                 }
             }
         }
     </script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600&display=swap');
-
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
-<body class="bg-navy text-white min-h-screen">
+<body class="bg-brand-dark text-white font-sans overflow-x-hidden scroll-smooth">
 
     @include('layouts.navbar')
     @yield('content')
-
-    <!-- FOOTER -->
-    <footer class="bg-gray-900 text-white py-16 px-6">
-        <div class="max-w-7xl mx-auto">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-                <div>
-                    <h3 class="text-2xl font-bold gradient-text mb-4">Andi Mubarok</h3>
-                    <p class="text-gray-400 mb-4">Developer & Founder | Creating digital solutions with purpose</p>
-                    <p class="text-gray-500 text-sm italic">"Coding with purpose, creating with heart."</p>
-                </div>
-
-                <div>
-                    <p class="font-semibold mb-4">Layanan</p>
-                    <ul class="space-y-2 text-gray-400 text-sm">
-                        <li><a href="#" class="hover:text-white transition">Website Development</a></li>
-                        <li><a href="#" class="hover:text-white transition">Copywriting</a></li>
-                        <li><a href="#" class="hover:text-white transition">Konsultasi</a></li>
-                    </ul>
-                </div>
-
-                <div>
-                    <p class="font-semibold mb-4">Resources</p>
-                    <ul class="space-y-2 text-gray-400 text-sm">
-                        <li><a href="#" class="hover:text-white transition">Blog</a></li>
-                        <li><a href="#" class="hover:text-white transition">Portfolio</a></li>
-                        <li><a href="#" class="hover:text-white transition">About</a></li>
-                    </ul>
-                </div>
-
-                <div>
-                    <p class="font-semibold mb-4">Ikuti Saya</p>
-                    <div class="flex gap-4">
-                        <a href="#" class="text-gray-400 hover:text-white transition text-lg">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-white transition text-lg">
-                            <i class="fab fa-youtube"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-white transition text-lg">
-                            <i class="fab fa-linkedin"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-white transition text-lg">
-                            <i class="fab fa-github"></i>
-                        </a>
-                    </div>
-                </div>
+    <footer class="bg-brand-navy border-t border-white/5 py-8 px-4 text-center text-white/30 text-xs">
+        <div class="flex items-center justify-center gap-2 mb-3">
+            <div class="w-6 h-6 rounded-lg bg-btn-gradient flex items-center justify-center shadow-glow-sm">
+                <svg class="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                    stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
             </div>
-
-            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-                <p class="text-gray-400 text-sm">
-                    © 2024 Muhammad Andi Mubarok. All rights reserved.
-                </p>
-                <div class="flex gap-6 text-sm text-gray-400">
-                    <a href="#" class="hover:text-white transition">Privacy Policy</a>
-                    <a href="#" class="hover:text-white transition">Terms & Conditions</a>
-                </div>
-            </div>
+            <span class="font-display font-bold text-sm text-white/60">Scalify<span class="text-brand-accent">
+                    Intelligence</span></span>
         </div>
+        <p>© 2026 Scalify Intelligence · All rights reserved</p>
     </footer>
 
-    <script>
-        // Smooth scroll behavior
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
-
-        // Add animation on scroll
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -100px 0px'
-        };
-
-        const observer = new IntersectionObserver(function(entries) {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.animation = 'fadeInUp 0.6s ease forwards';
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.card-hover, .glass-effect').forEach(el => {
-            el.style.opacity = '0';
-            observer.observe(el);
-        });
-
-        // Add fade-in animation
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes fadeInUp {
-                from {
-                    opacity: 0;
-                    transform: translateY(30px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
-        `;
-        document.head.appendChild(style);
-    </script>
 </body>
 
 </html>

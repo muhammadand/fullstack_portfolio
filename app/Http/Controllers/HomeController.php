@@ -25,6 +25,18 @@ class HomeController extends Controller
         return view('pages.landing.index', compact('latestBlogs','latestPortfolios'));
     }
 
+    public function indexCompanyProfile(){
+        $latestBlogs = Blog::published()
+            ->latest('published_at')
+            ->take(3)
+            ->get();
+        $latestPortfolios = Portfolio::active()
+        ->orderBy('completion_date', 'desc')
+        ->take(3)
+        ->get();
+        return view('company.landing', compact('latestBlogs','latestPortfolios'));
+    }
+
 
     public function blogs()
     {
