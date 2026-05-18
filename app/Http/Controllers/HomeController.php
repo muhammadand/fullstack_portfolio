@@ -46,11 +46,10 @@ class HomeController extends Controller
             ->take(3)
             ->get();
 
-        // 4 blog paling populer
+        // 1 blog paling populer
         $popular = Blog::published()
             ->orderByDesc('view_count')
-            ->take(4)
-            ->get();
+            ->first();
 
         $blogs = Blog::published()
             ->latest('published_at')

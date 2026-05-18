@@ -51,6 +51,19 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // portfolio
 Route::get('/portfolio', [HomeController::class, 'portfolio_1'])->name('portfolio');
 
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\File;
 
+Route::get('/fix-storage', function () {
+    // 1. Hapus symlink lama jika error/korup
+    if (File::exists(public_path('storage'))) {
+        File::deleteDirectory(public_path('storage'));
+    }
+    
+    // 2. Buat symlink baru
+    Artisan::call('storage:link');
+    
+    return 'Symlink storage berhasil dibuat!';
+});
 
 
