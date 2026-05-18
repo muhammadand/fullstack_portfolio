@@ -1,181 +1,122 @@
 @extends('pages.layouts.app')
 
 @section('content')
-    <div class="min-h-screen bg-gray-50">
-        <!-- Compact Navigation -->
-        <div class="bg-white border-b sticky top-0 z-10">
-            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                <nav class="flex gap-6 py-3 overflow-x-auto text-sm">
-                    <a href="#" class="text-gray-600 hover:text-gray-900 transition whitespace-nowrap">Project</a>
-                    <a href="#" class="text-gray-600 hover:text-gray-900 transition whitespace-nowrap">Remote</a>
-                    <a href="#" class="text-gray-600 hover:text-gray-900 transition whitespace-nowrap">Teamwork</a>
-                    <a href="#"
-                        class="text-purple-600 font-semibold border-b-2 border-purple-600 pb-3 -mb-[1px] whitespace-nowrap">Productivity</a>
-                    <a href="#" class="text-gray-600 hover:text-gray-900 transition whitespace-nowrap">Marketing</a>
-                </nav>
+    <div class="min-h-screen bg-slate-50 pt-24 pb-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Breadcrumb -->
+            <div class="mb-8 flex items-center gap-3">
+                <a href="{{ route('landing.blogs') }}"
+                    class="text-sm font-semibold text-slate-500 hover:text-blue-600 transition-colors inline-flex items-center gap-2">
+                    <i class="fas fa-arrow-left"></i> Kembali ke Blog
+                </a>
+                <span class="text-slate-300">/</span>
+                <span
+                    class="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-[10px] font-bold tracking-widest uppercase">
+                    {{ $blog->category->name ?? 'Artikel' }}
+                </span>
             </div>
-        </div>
 
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div class="grid lg:grid-cols-12 gap-8">
-
+            <div class="grid lg:grid-cols-12 gap-8 lg:gap-12">
                 <!-- Main Content -->
                 <div class="lg:col-span-8">
-                    <!-- Breadcrumb -->
-                    <div class="mb-4">
-                        <a href="{{ route('landing.blogs') }}"
-                            class="text-sm text-purple-600 hover:text-purple-700 inline-flex items-center gap-1">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                            </svg>
-                            Back
-                        </a>
-                        <span
-                            class="inline-block ml-3 px-2.5 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-medium">
-                            {{ $blog->category->name ?? 'Blog' }}
-                        </span>
-                    </div>
-
-                    <!-- Article Header -->
-                    <article class="bg-white rounded-xl shadow-sm overflow-hidden">
+                    <article class="bg-white rounded-3xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] overflow-hidden">
                         <!-- Featured Image -->
                         @if ($blog->featured_image)
-                            <div class="aspect-[16/9] overflow-hidden">
+                            <div class="aspect-video w-full overflow-hidden relative">
                                 <img src="{{ asset('storage/' . $blog->featured_image) }}" alt="{{ $blog->title }}"
-                                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+                                    class="w-full h-full object-cover">
+                                <div class="absolute inset-0 bg-gradient-to-t from-[#0f172a]/30 to-transparent"></div>
                             </div>
                         @endif
 
-                        <div class="p-6 sm:p-8">
+                        <div class="p-6 sm:p-8 md:p-12">
                             <!-- Title -->
-                            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 leading-tight">
+                            <h1 class="text-xl md:text-2xl font-display font-bold text-slate-900 mb-6 leading-tight">
                                 {{ $blog->title }}
                             </h1>
 
-                            <!-- Excerpt -->
-                            @if ($blog->excerpt)
-                                <p class="text-gray-600 text-base leading-relaxed mb-6">
-                                    {{ $blog->excerpt }}
-                                </p>
-                            @endif
-
                             <!-- Author & Meta -->
-                            <div class="flex items-center justify-between flex-wrap gap-3 pb-6 border-b">
-                                <div class="flex items-center gap-3">
+                            <div
+                                class="flex items-center justify-between flex-wrap gap-4 pb-8 border-b border-slate-100 mb-8">
+                                <div class="flex items-center gap-4">
                                     <div
-                                        class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center text-white font-semibold text-sm">
+                                        class="w-12 h-12 rounded-full bg-[#0f172a] flex items-center justify-center text-white font-bold text-lg shadow-md">
                                         {{ substr($blog->author->name ?? 'A', 0, 1) }}
                                     </div>
                                     <div>
-                                        <p class="font-semibold text-gray-900 text-sm">
+                                        <p class="font-semibold text-slate-900 text-base">
                                             {{ $blog->author->name ?? 'Admin' }}
                                         </p>
-                                        <p class="text-xs text-gray-500">
-                                            {{ $blog->published_at->format('M d, Y') }} · 5 min read
+                                        <p class="text-sm text-slate-500 font-medium">
+                                            {{ $blog->published_at?->format('d M Y') }} &bull;
+                                            {{ $blog->reading_time ?? '5' }} min read
                                         </p>
                                     </div>
                                 </div>
 
                                 <!-- Share Buttons -->
-                                <div class="flex items-center gap-1">
-                                    <button class="p-2 hover:bg-gray-100 rounded-lg transition" title="Share">
-                                        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-                                        </svg>
+                                <div class="flex items-center gap-2">
+                                    <button
+                                        class="w-10 h-10 flex items-center justify-center bg-slate-50 text-slate-600 hover:bg-[#0f172a] hover:text-white rounded-full transition-all shadow-sm"
+                                        title="Share">
+                                        <i class="fas fa-share-nodes"></i>
                                     </button>
-                                    <button class="p-2 hover:bg-gray-100 rounded-lg transition" title="Bookmark">
-                                        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
-                                        </svg>
+                                    <button
+                                        class="w-10 h-10 flex items-center justify-center bg-slate-50 text-slate-600 hover:bg-[#0f172a] hover:text-white rounded-full transition-all shadow-sm"
+                                        title="Bookmark">
+                                        <i class="far fa-bookmark"></i>
                                     </button>
                                 </div>
                             </div>
 
-                     <style>
-    /* Tampilkan nomor untuk ordered list dari Quill */
-    .prose ol {
-        list-style-type: decimal !important;
-        padding-left: 1.5rem !important;
-    }
+                            <!-- Excerpt -->
+                            @if ($blog->excerpt)
+                                <p
+                                    class="text-slate-600 text-sm md:text-md leading-relaxed mb-8 font-medium italic border-l-4 border-blue-500 pl-6 bg-slate-50 py-5 pr-5 rounded-r-xl">
+                                    {{ $blog->excerpt }}
+                                </p>
+                            @endif
 
-    .prose ol li {
-        display: list-item !important;
-    }
-
-    /* Support untuk bullet list juga */
-    .prose ul {
-        list-style-type: disc !important;
-        padding-left: 1.5rem !important;
-    }
-
-    .prose ul li {
-        display: list-item !important;
-    }
-
-    /* Jika ada class ql-align-justify */
-    .prose .ql-align-justify {
-        text-align: justify;
-    }
-
-    /* Style untuk link (href) - Bold & Biru */
-    .prose a {
-        color: #2563eb !important; /* Biru */
-        font-weight: 700 !important; /* Bold */
-        text-decoration: underline !important;
-    }
-
-    .prose a:hover {
-        color: #1e40af !important; /* Biru lebih gelap saat hover */
-    }
-</style>
-
-<div class="mt-6 prose prose-base max-w-none 
-    prose-headings:font-bold prose-headings:text-gray-900
-    prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-3
-    prose-h3:text-lg prose-h3:mt-6 prose-h3:mb-2
-    prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-4
-    prose-a:text-purple-600 prose-a:no-underline hover:prose-a:underline
-    prose-strong:text-gray-900 prose-strong:font-semibold
-    prose-ul:my-4 prose-ol:my-4
-    prose-li:text-gray-700 prose-li:my-1
-    prose-ol:list-decimal prose-ol:pl-5
-    prose-img:rounded-lg prose-img:shadow-md
-    prose-blockquote:border-l-4 prose-blockquote:border-purple-500 prose-blockquote:bg-purple-50 prose-blockquote:py-2 prose-blockquote:px-4 prose-blockquote:rounded-r
-    prose-code:text-purple-600 prose-code:bg-purple-50 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:text-sm">
-    {!! $blog->content !!}
-</div>
-
+                            <div
+                                class="prose prose-lg prose-slate max-w-none
+                                prose-headings:font-display prose-headings:text-slate-900
+                                prose-h2:text-3xl prose-h2:font-bold prose-h2:mt-10 prose-h2:mb-5 prose-h2:leading-snug
+                                prose-h3:text-2xl prose-h3:font-semibold prose-h3:mt-8 prose-h3:mb-4 prose-h3:leading-snug
+                                prose-p:text-slate-600 prose-p:leading-relaxed prose-p:mb-6
+                                prose-a:text-blue-600 prose-a:font-semibold prose-a:no-underline prose-a:border-b-2 prose-a:border-blue-200 hover:prose-a:border-blue-600 hover:prose-a:text-blue-800 prose-a:transition-colors
+                                prose-strong:text-slate-900 prose-strong:font-bold
+                                prose-ul:list-disc prose-ul:pl-6 prose-ol:list-decimal prose-ol:pl-6
+                                prose-li:my-2
+                                prose-img:rounded-2xl prose-img:my-10 prose-img:shadow-sm
+                                prose-blockquote:border-l-4 prose-blockquote:border-blue-600 prose-blockquote:bg-slate-50 prose-blockquote:py-5 prose-blockquote:px-6 prose-blockquote:rounded-r-lg prose-blockquote:text-slate-700 prose-blockquote:my-8 prose-blockquote:italic
+                                prose-code:text-blue-600 prose-code:bg-blue-50 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:before:content-none prose-code:after:content-none
+                                [&_.ql-align-justify]:text-justify">
+                                {!! $blog->content !!}
+                            </div>
 
                             <!-- Tags -->
                             @if ($blog->tags)
-                                <div class="mt-8 pt-6 border-t">
+                                <div class="mt-12 pt-8 border-t border-slate-100">
                                     <div class="flex flex-wrap gap-2">
                                         @php
                                             $tags = [];
                                             if (is_array($blog->tags)) {
                                                 foreach ($blog->tags as $item) {
                                                     if (strpos($item, ',') !== false) {
-                                                        $parts = explode(',', $item);
-                                                        foreach ($parts as $p) {
-                                                            $tags[] = trim($p);
-                                                        }
+                                                        $tags = array_merge($tags, explode(',', $item));
                                                     } else {
-                                                        $tags[] = trim($item);
+                                                        $tags[] = $item;
                                                     }
                                                 }
                                             } else {
-                                                $tags = array_map('trim', explode(',', $blog->tags));
+                                                $tags = explode(',', $blog->tags);
                                             }
-                                            $tags = array_filter($tags, fn($t) => $t !== '');
+                                            $tags = array_filter(array_map('trim', $tags), fn($t) => $t !== '');
                                         @endphp
 
                                         @foreach ($tags as $tag)
                                             <span
-                                                class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-purple-100 hover:text-purple-700 transition cursor-pointer">
+                                                class="px-4 py-1.5 bg-slate-50 border border-slate-100 text-slate-600 rounded-full text-sm font-medium hover:bg-[#0f172a] hover:text-white transition-colors cursor-pointer">
                                                 #{{ $tag }}
                                             </span>
                                         @endforeach
@@ -186,50 +127,55 @@
                     </article>
                 </div>
 
-                <!-- Compact Sidebar -->
+                <!-- Sidebar -->
                 <aside class="lg:col-span-4">
-                    <div class="sticky top-20">
+                    <div class="sticky top-28 space-y-8">
                         <!-- Recent Articles -->
-                        <div class="bg-white rounded-xl shadow-sm p-5">
-                            <h3 class="text-lg font-bold text-gray-900 mb-4">Recent Articles</h3>
+                        <div class="bg-white rounded-3xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] p-6 sm:p-8">
+                            <h3 class="text-xl font-display font-bold text-slate-900 mb-6 flex items-center gap-3">
+                                <span class="w-1.5 h-6 bg-blue-600 rounded-full"></span>
+                                Artikel Terkini
+                            </h3>
 
-                            <div class="space-y-4">
+                            <div class="space-y-6">
                                 @if ($related->count())
                                     @foreach ($related->take(5) as $item)
-                                        <a href="{{ route('blogs.read', $item->slug) }}" class="flex gap-3 group">
-                                            <!-- Thumbnail -->
+                                        <a href="{{ route('blogs.read', $item->slug) }}"
+                                            class="flex gap-4 group items-center">
                                             @if ($item->featured_image)
-                                                <div class="w-20 h-16 flex-shrink-0 rounded-lg overflow-hidden">
+                                                <div class="w-24 h-20 flex-shrink-0 rounded-xl overflow-hidden shadow-sm">
                                                     <img src="{{ asset('storage/' . $item->featured_image) }}"
                                                         alt="{{ $item->title }}"
-                                                        class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
+                                                        class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                                                 </div>
                                             @else
                                                 <div
-                                                    class="w-20 h-16 flex-shrink-0 rounded-lg bg-gradient-to-br from-purple-200 to-pink-200">
+                                                    class="w-24 h-20 flex-shrink-0 rounded-xl bg-slate-100 flex items-center justify-center">
+                                                    <i class="fas fa-image text-slate-300"></i>
                                                 </div>
                                             @endif
 
-                                            <div class="flex-1 min-w-0">
+                                            <div class="flex-1 min-w-0 py-1">
                                                 <h4
-                                                    class="font-semibold text-sm text-gray-900 mb-1 line-clamp-2 group-hover:text-purple-600 transition">
+                                                    class="font-display font-semibold text-[15px] text-slate-900 mb-1.5 line-clamp-2 group-hover:text-blue-600 transition-colors leading-snug">
                                                     {{ $item->title }}
                                                 </h4>
-                                                <p class="text-xs text-gray-500">
-                                                    {{ $item->published_at->format('M d, Y') }}
+                                                <p
+                                                    class="text-[11px] font-semibold tracking-widest uppercase text-slate-400">
+                                                    {{ $item->published_at?->format('d M Y') }}
                                                 </p>
                                             </div>
                                         </a>
                                     @endforeach
                                 @else
-                                    <p class="text-sm text-gray-500">No related articles</p>
+                                    <p class="text-sm text-slate-500 italic">Belum ada artikel terkait.</p>
                                 @endif
                             </div>
 
                             @if ($related->count())
                                 <a href="{{ route('landing.blogs') }}"
-                                    class="mt-5 block w-full text-center px-4 py-2.5 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition font-medium text-sm">
-                                    View All
+                                    class="mt-8 block w-full text-center px-4 py-3 bg-slate-900 text-white rounded-xl hover:bg-blue-600 transition-colors font-semibold text-sm">
+                                    Lihat Semua Artikel
                                 </a>
                             @endif
                         </div>
@@ -237,54 +183,57 @@
                 </aside>
             </div>
 
-            <!-- More Articles Grid -->
+            <!-- More Articles Section -->
             @if ($related->count() > 5)
-                <section class="mt-12">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-6">
-                        More from {{ $blog->category->name ?? 'this category' }}
-                    </h2>
+                <div class="mt-20">
+                    <div class="flex items-center justify-between mb-8">
+                        <h2 class="text-2xl md:text-3xl font-display font-bold text-slate-900">
+                            Baca Juga dari <span class="text-blue-600">{{ $blog->category->name ?? 'Kategori Ini' }}</span>
+                        </h2>
+                    </div>
 
-                    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                         @foreach ($related->skip(5)->take(3) as $item)
-                            <a href="{{ route('blogs.read', $item->slug) }}"
-                                class="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all">
-
-                                @if ($item->featured_image)
-                                    <div class="aspect-[16/10] overflow-hidden">
+                            <div
+                                class="bg-white border border-slate-100 text-slate-800 rounded-2xl overflow-hidden shadow-[0_2px_15px_rgb(0,0,0,0.02)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:-translate-y-1 transition-all duration-300 flex flex-col group">
+                                <div class="aspect-video bg-slate-50 relative overflow-hidden">
+                                    @if ($item->featured_image)
                                         <img src="{{ asset('storage/' . $item->featured_image) }}"
-                                            alt="{{ $item->title }}"
-                                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                                    </div>
-                                @else
-                                    <div class="aspect-[16/10] bg-gradient-to-br from-blue-200 to-blue-400"></div>
-                                @endif
+                                            class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out">
+                                    @else
+                                        <div class="absolute inset-0 flex items-center justify-center">
+                                            <i class="fas fa-image text-3xl text-slate-200"></i>
+                                        </div>
+                                    @endif
+                                </div>
 
-                                <div class="p-5">
+                                <div class="p-4 flex flex-col flex-1">
+                                    <div
+                                        class="flex items-center gap-2 mb-2 text-[9px] font-semibold tracking-widest text-slate-400 uppercase">
+                                        <span class="text-blue-500 bg-blue-50 px-2 py-0.5 rounded-md">
+                                            {{ $item->category->name ?? 'Blog' }}
+                                        </span>
+                                    </div>
+
                                     <h3
-                                        class="font-bold text-base text-gray-900 mb-2 line-clamp-2 group-hover:text-purple-600 transition">
+                                        class="font-display text-sm font-semibold mb-1.5 text-slate-900 leading-snug group-hover:text-blue-600 transition-colors line-clamp-2">
                                         {{ $item->title }}
                                     </h3>
 
-                                    @if ($item->excerpt)
-                                        <p class="text-gray-600 text-sm mb-3 line-clamp-2">
-                                            {{ $item->excerpt }}
-                                        </p>
-                                    @endif
+                                    <p class="text-slate-500 text-xs mb-4 flex-1 line-clamp-2 leading-relaxed">
+                                        {{ $item->excerpt }}
+                                    </p>
 
-                                    <div class="flex items-center gap-2 text-xs text-gray-500">
-                                        <div
-                                            class="w-6 h-6 rounded-full bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center text-white font-semibold">
-                                            {{ substr($item->author->name ?? 'A', 0, 1) }}
-                                        </div>
-                                        <span>{{ $item->author->name ?? 'Admin' }}</span>
-                                        <span>•</span>
-                                        <span>{{ $item->published_at->format('M d') }}</span>
-                                    </div>
+                                    <a href="{{ route('blogs.read', $item->slug) }}"
+                                        class="text-slate-900 text-xs font-semibold inline-flex items-center gap-1.5 hover:text-blue-600 transition-colors mt-auto group/btn">
+                                        Baca Selengkapnya <i
+                                            class="fas fa-arrow-right text-[8px] group-hover/btn:translate-x-1 transition-transform"></i>
+                                    </a>
                                 </div>
-                            </a>
+                            </div>
                         @endforeach
                     </div>
-                </section>
+                </div>
             @endif
         </div>
     </div>

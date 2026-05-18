@@ -68,7 +68,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-12">
                 @foreach ($blogs as $blog)
                     <div
-                        class="bg-white border border-slate-100 text-slate-800 rounded-2xl overflow-hidden shadow-[0_2px_15px_rgb(0,0,0,0.02)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:-translate-y-1 transition-all duration-300 flex flex-col group">
+                        class="bg-white border border-slate-100 text-slate-800 rounded-lg overflow-hidden shadow-[0_2px_15px_rgb(0,0,0,0.02)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:-translate-y-1 transition-all duration-300 flex flex-col group">
                         {{-- IMAGE --}}
                         <div class="aspect-video bg-slate-50 relative overflow-hidden">
                             @if ($blog->featured_image)
