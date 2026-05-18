@@ -1,5 +1,200 @@
 @extends('pages.layouts.app')
 
+@push('styles')
+    <style>
+        .ql-content {
+            color: #475569;
+            line-height: 1.8;
+            font-size: 1rem;
+        }
+
+        /* Alignment */
+        .ql-content .ql-align-justify {
+            text-align: justify;
+        }
+
+        .ql-content .ql-align-center {
+            text-align: center;
+        }
+
+        .ql-content .ql-align-right {
+            text-align: right;
+        }
+
+        .ql-content .ql-align-left {
+            text-align: left;
+        }
+
+        /* Font sizes */
+        .ql-content .ql-size-small {
+            font-size: 0.875rem;
+        }
+
+        .ql-content .ql-size-large {
+            font-size: 1.25rem;
+        }
+
+        .ql-content .ql-size-huge {
+            font-size: 1.75rem;
+        }
+
+        /* Indents */
+        .ql-content .ql-indent-1 {
+            padding-left: 2rem;
+        }
+
+        .ql-content .ql-indent-2 {
+            padding-left: 4rem;
+        }
+
+        .ql-content .ql-indent-3 {
+            padding-left: 6rem;
+        }
+
+        .ql-content .ql-indent-4 {
+            padding-left: 8rem;
+        }
+
+        .ql-content .ql-indent-5 {
+            padding-left: 10rem;
+        }
+
+        /* Headings */
+        .ql-content h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin: 2.5rem 0 1rem;
+            line-height: 1.25;
+        }
+
+        .ql-content h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin: 2rem 0 0.875rem;
+            line-height: 1.3;
+        }
+
+        .ql-content h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #0f172a;
+            margin: 1.75rem 0 0.75rem;
+            line-height: 1.35;
+        }
+
+        .ql-content h4,
+        .ql-content h5,
+        .ql-content h6 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin: 1.5rem 0 0.5rem;
+        }
+
+        /* Paragraphs */
+        .ql-content p {
+            margin-bottom: 1.25rem;
+        }
+
+        /* Links */
+        .ql-content a {
+            color: #2563eb;
+            font-weight: 600;
+            border-bottom: 2px solid #bfdbfe;
+            text-decoration: none;
+            transition: border-color 0.2s, color 0.2s;
+        }
+
+        .ql-content a:hover {
+            color: #1e40af;
+            border-color: #2563eb;
+        }
+
+        /* Bold / Italic */
+        .ql-content strong {
+            color: #0f172a;
+            font-weight: 700;
+        }
+
+        .ql-content em {
+            font-style: italic;
+        }
+
+        /* Lists */
+        .ql-content ul {
+            list-style-type: disc;
+            padding-left: 1.5rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .ql-content ol {
+            list-style-type: decimal;
+            padding-left: 1.5rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .ql-content li {
+            margin: 0.4rem 0;
+        }
+
+        /* Blockquote */
+        .ql-content blockquote {
+            border-left: 4px solid #2563eb;
+            background: #f8fafc;
+            padding: 1.25rem 1.5rem;
+            border-radius: 0 0.5rem 0.5rem 0;
+            color: #475569;
+            margin: 2rem 0;
+            font-style: italic;
+        }
+
+        /* Code */
+        .ql-content code {
+            background: #eff6ff;
+            color: #2563eb;
+            padding: 0.15rem 0.4rem;
+            border-radius: 0.3rem;
+            font-size: 0.875em;
+            font-family: ui-monospace, monospace;
+        }
+
+        .ql-content pre {
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 1.25rem 1.5rem;
+            border-radius: 0.75rem;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            font-size: 0.875rem;
+            line-height: 1.7;
+        }
+
+        .ql-content pre code {
+            background: transparent;
+            color: inherit;
+            padding: 0;
+        }
+
+        /* Images */
+        .ql-content img {
+            border-radius: 1rem;
+            margin: 2rem auto;
+            box-shadow: 0 2px 12px rgb(0, 0, 0, 0.07);
+            max-width: 100%;
+            display: block;
+        }
+
+        /* Horizontal rule */
+        .ql-content hr {
+            border: none;
+            border-top: 1px solid #e2e8f0;
+            margin: 2rem 0;
+        }
+    </style>
+@endpush
+
 @section('content')
     <div class="min-h-screen bg-slate-50 pt-24 pb-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -77,20 +272,8 @@
                                 </p>
                             @endif
 
-                            <div
-                                class="prose prose-lg prose-slate max-w-none
-                                prose-headings:font-display prose-headings:text-slate-900
-                                prose-h2:text-3xl prose-h2:font-bold prose-h2:mt-10 prose-h2:mb-5 prose-h2:leading-snug
-                                prose-h3:text-2xl prose-h3:font-semibold prose-h3:mt-8 prose-h3:mb-4 prose-h3:leading-snug
-                                prose-p:text-slate-600 prose-p:leading-relaxed prose-p:mb-6
-                                prose-a:text-blue-600 prose-a:font-semibold prose-a:no-underline prose-a:border-b-2 prose-a:border-blue-200 hover:prose-a:border-blue-600 hover:prose-a:text-blue-800 prose-a:transition-colors
-                                prose-strong:text-slate-900 prose-strong:font-bold
-                                prose-ul:list-disc prose-ul:pl-6 prose-ol:list-decimal prose-ol:pl-6
-                                prose-li:my-2
-                                prose-img:rounded-2xl prose-img:my-10 prose-img:shadow-sm
-                                prose-blockquote:border-l-4 prose-blockquote:border-blue-600 prose-blockquote:bg-slate-50 prose-blockquote:py-5 prose-blockquote:px-6 prose-blockquote:rounded-r-lg prose-blockquote:text-slate-700 prose-blockquote:my-8 prose-blockquote:italic
-                                prose-code:text-blue-600 prose-code:bg-blue-50 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:before:content-none prose-code:after:content-none
-                                [&_.ql-align-justify]:text-justify">
+
+                            <div class="ql-content max-w-none">
                                 {!! $blog->content !!}
                             </div>
 
