@@ -23,6 +23,7 @@
                 <a href="{{ route('index.company.profile') }}#layanan"
                     class="hidden hover:text-brand-accent transition-colors">Paket Layanan</a>
                 <a href="{{ route('landing.blogs') }}" class="hover:text-brand-accent transition-colors">Blog</a>
+                <a href="{{ route('landing.portfolio') }}" class="hover:text-brand-accent transition-colors">Project</a>
             </div>
 
             {{-- Right side: CTA + Hamburger --}}
