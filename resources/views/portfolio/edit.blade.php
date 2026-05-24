@@ -150,7 +150,7 @@
                         </div>
 
                         {{-- Full Description WYSIWYG --}}
-                        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+                        {{-- <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
                             <label class="block text-sm font-medium text-gray-700 mb-2">
                                 Deskripsi Lengkap <span class="text-red-500">*</span>
                             </label>
@@ -158,6 +158,82 @@
                                 {!! old('full_description', $item->full_description) !!}
                             </div>
                             <input type="hidden" name="full_description" id="descriptionInput">
+                        </div> --}}
+                        {{-- Full Description WYSIWYG --}}
+                        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+
+                            <label class="block text-sm font-medium text-gray-700 mb-3">
+                                Deskripsi Lengkap
+                                <span class="text-red-500">*</span>
+                            </label>
+
+                            <div class="border border-gray-300 rounded-2xl overflow-hidden">
+
+                                {{-- TOOLBAR --}}
+                                <div id="toolbar">
+
+                                    <span class="ql-formats">
+                                        <select class="ql-font"></select>
+                                        <select class="ql-size"></select>
+                                    </span>
+
+                                    <span class="ql-formats">
+                                        <button class="ql-bold"></button>
+                                        <button class="ql-italic"></button>
+                                        <button class="ql-underline"></button>
+                                        <button class="ql-strike"></button>
+                                    </span>
+
+                                    <span class="ql-formats">
+                                        <select class="ql-color"></select>
+                                        <select class="ql-background"></select>
+                                    </span>
+
+                                    <span class="ql-formats">
+                                        <button class="ql-script" value="sub"></button>
+                                        <button class="ql-script" value="super"></button>
+                                    </span>
+
+                                    <span class="ql-formats">
+                                        <button class="ql-header" value="1"></button>
+                                        <button class="ql-header" value="2"></button>
+                                        <button class="ql-blockquote"></button>
+                                        <button class="ql-code-block"></button>
+                                    </span>
+
+                                    <span class="ql-formats">
+                                        <button class="ql-list" value="ordered"></button>
+                                        <button class="ql-list" value="bullet"></button>
+
+                                        <button class="ql-indent" value="-1"></button>
+                                        <button class="ql-indent" value="+1"></button>
+                                    </span>
+
+                                    <span class="ql-formats">
+                                        <button class="ql-direction" value="rtl"></button>
+                                        <select class="ql-align"></select>
+                                    </span>
+
+                                    <span class="ql-formats">
+                                        <button class="ql-link"></button>
+                                        <button class="ql-image"></button>
+                                        <button class="ql-video"></button>
+                                    </span>
+
+                                    <span class="ql-formats">
+                                        <button class="ql-clean"></button>
+                                    </span>
+
+                                </div>
+
+                                {{-- EDITOR --}}
+                                <div id="quillEditor"></div>
+
+                            </div>
+
+                            <input type="hidden" name="full_description" id="descriptionInput"
+                                value="{{ old('full_description', $item->full_description) }}">
+
                         </div>
 
                         {{-- Challenge, Solution, Result --}}
@@ -326,146 +402,452 @@
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 
     <script>
-        // Initialize Quill Editor
+        /*
+        |--------------------------------------------------------------------------
+        | QUILL CONFIG
+        |--------------------------------------------------------------------------
+        */
+
+        // FONT
+        const Font = Quill.import('formats/font');
+
+        Font.whitelist = [
+            'sans-serif',
+            'serif',
+            'monospace'
+        ];
+
+        Quill.register(Font, true);
+
+        // FONT SIZE
+        const Size = Quill.import('attributors/style/size');
+
+        Size.whitelist = [
+            '12px',
+            '14px',
+            '16px',
+            '18px',
+            '24px',
+            '32px',
+            '42px'
+        ];
+
+        Quill.register(Size, true);
+
+        // INIT QUILL
         const quill = new Quill('#quillEditor', {
+
             theme: 'snow',
+
             placeholder: 'Tulis deskripsi lengkap portfolio Anda...',
+
             modules: {
-                toolbar: [
-                    [{
-                        'header': [1, 2, 3, false]
-                    }],
-                    ['bold', 'italic', 'underline', 'strike'],
-                    [{
-                        'list': 'ordered'
-                    }, {
-                        'list': 'bullet'
-                    }],
-                    ['blockquote', 'code-block'],
-                    ['link'],
-                    [{
-                        'align': []
-                    }],
-                    ['clean']
-                ]
+
+                toolbar: {
+
+                    container: '#toolbar',
+
+                    handlers: {
+                        image: imageHandler
+                    }
+                }
             }
         });
 
-        // Auto-generate slug from title
-        document.getElementById('titleInput').addEventListener('input', (e) => {
-            const title = e.target.value;
-            const slug = title.toLowerCase()
-                .replace(/[^a-z0-9]+/g, '-')
-                .replace(/^-+|-+$/g, '');
-            document.getElementById('slugInput').value = slug;
+        // LOAD EXISTING CONTENT
+        const existingContent =
+            document.getElementById('descriptionInput').value;
+
+        if (existingContent) {
+
+            quill.root.innerHTML = existingContent;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | IMAGE HANDLER
+        |--------------------------------------------------------------------------
+        */
+
+        function imageHandler() {
+
+            const input =
+                document.createElement('input');
+
+            input.setAttribute('type', 'file');
+
+            input.setAttribute('accept', 'image/*');
+
+            input.click();
+
+            input.onchange = () => {
+
+                const file = input.files[0];
+
+                if (!file) return;
+
+                // MAX 5MB
+                if (file.size > 5242880) {
+
+                    alert('Ukuran maksimal gambar 5MB');
+
+                    return;
+                }
+
+                const reader =
+                    new FileReader();
+
+                reader.onload = (e) => {
+
+                    const range =
+                        quill.getSelection(true);
+
+                    quill.insertEmbed(
+                        range.index,
+                        'image',
+                        e.target.result
+                    );
+
+                    quill.setSelection(range.index + 1);
+                };
+
+                reader.readAsDataURL(file);
+            };
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | SYNC QUILL TO INPUT
+        |--------------------------------------------------------------------------
+        */
+
+        quill.on('text-change', () => {
+
+            document.getElementById(
+                    'descriptionInput'
+                ).value =
+                quill.root.innerHTML;
         });
 
-        // Image Preview - Thumbnail
-        const thumbnailInput = document.getElementById('thumbnailInput');
-        const thumbnailPreview = document.getElementById('thumbnailPreview');
-        const thumbnailImg = document.getElementById('thumbnailImg');
-        const thumbnailUploadArea = document.getElementById('thumbnailUploadArea');
+        /*
+        |--------------------------------------------------------------------------
+        | AUTO GENERATE SLUG
+        |--------------------------------------------------------------------------
+        */
+
+        document.getElementById('titleInput')
+            .addEventListener('input', (e) => {
+
+                const title = e.target.value;
+
+                const slug = title.toLowerCase()
+                    .replace(/[^a-z0-9]+/g, '-')
+                    .replace(/^-+|-+$/g, '');
+
+                document.getElementById('slugInput')
+                    .value = slug;
+            });
+
+        /*
+        |--------------------------------------------------------------------------
+        | THUMBNAIL PREVIEW
+        |--------------------------------------------------------------------------
+        */
+
+        const thumbnailInput =
+            document.getElementById('thumbnailInput');
+
+        const thumbnailPreview =
+            document.getElementById('thumbnailPreview');
+
+        const thumbnailImg =
+            document.getElementById('thumbnailImg');
+
+        const thumbnailUploadArea =
+            document.getElementById('thumbnailUploadArea');
 
         thumbnailInput.addEventListener('change', (e) => {
+
             const file = e.target.files[0];
+
             if (file && file.size <= 2097152) {
-                const reader = new FileReader();
+
+                const reader =
+                    new FileReader();
+
                 reader.onload = (e) => {
+
                     thumbnailImg.src = e.target.result;
+
                     thumbnailPreview.classList.remove('hidden');
+
                     thumbnailUploadArea.classList.add('hidden');
                 };
+
                 reader.readAsDataURL(file);
+
             } else if (file) {
+
                 alert('Ukuran file maksimal 2MB');
+
                 thumbnailInput.value = '';
             }
         });
 
-        document.getElementById('removeThumbnail').addEventListener('click', () => {
-            thumbnailInput.value = '';
-            thumbnailPreview.classList.add('hidden');
-            thumbnailUploadArea.classList.remove('hidden');
-        });
+        document.getElementById('removeThumbnail')
+            .addEventListener('click', () => {
 
-        // Image Preview - Featured
-        const featuredInput = document.getElementById('featuredInput');
-        const featuredPreview = document.getElementById('featuredPreview');
-        const featuredImg = document.getElementById('featuredImg');
-        const featuredUploadArea = document.getElementById('featuredUploadArea');
+                thumbnailInput.value = '';
+
+                thumbnailPreview.classList.add('hidden');
+
+                thumbnailUploadArea.classList.remove('hidden');
+            });
+
+        /*
+        |--------------------------------------------------------------------------
+        | FEATURED IMAGE PREVIEW
+        |--------------------------------------------------------------------------
+        */
+
+        const featuredInput =
+            document.getElementById('featuredInput');
+
+        const featuredPreview =
+            document.getElementById('featuredPreview');
+
+        const featuredImg =
+            document.getElementById('featuredImg');
+
+        const featuredUploadArea =
+            document.getElementById('featuredUploadArea');
 
         featuredInput.addEventListener('change', (e) => {
+
             const file = e.target.files[0];
+
             if (file && file.size <= 2097152) {
-                const reader = new FileReader();
+
+                const reader =
+                    new FileReader();
+
                 reader.onload = (e) => {
+
                     featuredImg.src = e.target.result;
+
                     featuredPreview.classList.remove('hidden');
+
                     featuredUploadArea.classList.add('hidden');
                 };
+
                 reader.readAsDataURL(file);
+
             } else if (file) {
+
                 alert('Ukuran file maksimal 2MB');
+
                 featuredInput.value = '';
             }
         });
 
-        document.getElementById('removeFeatured').addEventListener('click', () => {
-            featuredInput.value = '';
-            featuredPreview.classList.add('hidden');
-            featuredUploadArea.classList.remove('hidden');
-        });
+        document.getElementById('removeFeatured')
+            .addEventListener('click', () => {
 
-        // Form Submit
-        document.getElementById('portfolioForm').addEventListener('submit', () => {
-            document.getElementById('descriptionInput').value = quill.root.innerHTML;
-        });
+                featuredInput.value = '';
+
+                featuredPreview.classList.add('hidden');
+
+                featuredUploadArea.classList.remove('hidden');
+            });
+
+        /*
+        |--------------------------------------------------------------------------
+        | FORM SUBMIT
+        |--------------------------------------------------------------------------
+        */
+
+        document.getElementById('portfolioForm')
+            .addEventListener('submit', () => {
+
+                document.getElementById(
+                        'descriptionInput'
+                    ).value =
+                    quill.root.innerHTML;
+            });
     </script>
 
     <style>
+        /*
+        |--------------------------------------------------------------------------
+        | QUILL
+        |--------------------------------------------------------------------------
+        */
+
+        .ql-toolbar {
+
+            border: none !important;
+
+            border-bottom:
+                1px solid #e5e7eb !important;
+
+            background: #f9fafb;
+
+            padding: 14px;
+        }
+
         .ql-container {
-            font-size: 15px;
+
+            border: none !important;
+
+            font-size: 16px;
+        }
+
+        #quillEditor {
+
+            min-height: 500px;
         }
 
         .ql-editor {
-            min-height: 300px;
-            padding: 16px;
+
+            min-height: 500px;
+
+            padding: 28px;
+
+            line-height: 1.9;
+
+            color: #111827;
+        }
+
+        .ql-editor h1 {
+
+            font-size: 36px;
+
+            font-weight: 700;
+
+            margin-bottom: 20px;
+        }
+
+        .ql-editor h2 {
+
+            font-size: 28px;
+
+            font-weight: 700;
+
+            margin-bottom: 18px;
+        }
+
+        .ql-editor p {
+
+            margin-bottom: 18px;
+        }
+
+        .ql-editor img {
+
+            max-width: 100%;
+
+            border-radius: 16px;
+
+            margin: 24px auto;
+        }
+
+        .ql-editor pre {
+
+            background: #111827;
+
+            color: white;
+
+            padding: 18px;
+
+            border-radius: 16px;
+        }
+
+        .ql-editor blockquote {
+
+            border-left: 4px solid #2563eb;
+
+            padding-left: 18px;
+
+            color: #6b7280;
+
+            margin: 20px 0;
+        }
+
+        .ql-editor ul,
+        .ql-editor ol {
+
+            padding-left: 30px;
+        }
+
+        .ql-editor ul {
+
+            list-style: disc;
+        }
+
+        .ql-editor ol {
+
+            list-style: decimal;
         }
 
         .ql-editor.ql-blank::before {
+
             color: #9ca3af;
+
             font-style: normal;
         }
 
-        /* Toggle Switch Styling */
+        /*
+        |--------------------------------------------------------------------------
+        | TOGGLE SWITCH
+        |--------------------------------------------------------------------------
+        */
+
         input[type="checkbox"] {
+
             position: relative;
+
             width: 2.25rem;
+
             height: 1.25rem;
+
             appearance: none;
+
             background: #e5e7eb;
+
             border-radius: 9999px;
+
             cursor: pointer;
+
             transition: all 0.2s;
         }
 
         input[type="checkbox"]:checked {
+
             background: #2563eb;
         }
 
         input[type="checkbox"]::after {
+
             content: '';
+
             position: absolute;
+
             top: 2px;
+
             left: 2px;
+
             width: 1rem;
+
             height: 1rem;
+
             background: white;
+
             border-radius: 50%;
+
             transition: all 0.2s;
         }
 
         input[type="checkbox"]:checked::after {
+
             transform: translateX(1rem);
         }
     </style>
