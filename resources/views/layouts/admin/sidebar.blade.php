@@ -1,44 +1,33 @@
 @php
-    // Daftar menu dinamis
     $menus = [
         [
             'label' => 'Dashboard',
             'route' => 'dashboard.admin',
-            'icon'  => 'fas fa-th-large',
+            'icon' => 'fas fa-th-large',
         ],
         [
             'label' => 'Category Portfolio',
             'route' => 'portfolio-categories.index',
-            'icon'  => 'far fa-credit-card',
+            'icon' => 'far fa-credit-card',
         ],
         [
             'label' => 'Management Portfolio',
-            'route' => 'portfolio.index',
-            'icon'  => 'fas fa-wallet',
+            'route' => 'portfolio.index', // ← konsisten, tanpa 's'
+            'icon' => 'fas fa-folder', // ← ikon lebih relevan
         ],
         [
             'label' => 'Category Blogs',
             'route' => 'blog-categories.index',
-            'icon'  => 'far fa-dot-circle',
+            'icon' => 'far fa-dot-circle',
         ],
         [
             'label' => 'Blogs',
             'route' => 'blogs.index',
-            'icon'  => 'far fa-circle',
+            'icon' => 'far fa-circle',
         ],
-        [
-            'label' => 'Analytics',
-            'route' => null, // tidak ada route → otomatis tidak tampil
-            'icon'  => 'fas fa-chart-bar',
-        ],
-        [
-            'label' => 'Settings',
-            'route' => null, // tidak ada route → otomatis tidak tampil
-            'icon'  => 'fas fa-cog',
-        ],
+        // Analytics & Settings disembunyikan sampai route-nya dibuat
     ];
 
-    // Route yang aktif sekarang
     $activeRoute = \Illuminate\Support\Facades\Route::currentRouteName();
 @endphp
 
@@ -46,7 +35,8 @@
 
     <!-- Logo -->
     <div class="flex items-center gap-4 mb-8 px-2">
-        <div class="w-10 h-10 bg-gradient-to-br from-purple-600 to-purple-800 rounded-xl flex items-center justify-center">
+        <div
+            class="w-10 h-10 bg-gradient-to-br from-purple-600 to-purple-800 rounded-xl flex items-center justify-center">
             <span class="text-white text-lg font-bold">BD</span>
         </div>
         <span class="text-lg font-bold">BarDigi</span>
@@ -54,22 +44,19 @@
 
     <nav class="space-y-1">
         @foreach ($menus as $menu)
-            @if ($menu['route'] && Route::has($menu['route']))      {{-- tampilkan hanya jika route ada --}}
-                
+            @if ($menu['route'] && Route::has($menu['route']))
                 @php
                     $isActive = $activeRoute === $menu['route'];
                 @endphp
 
                 <a href="{{ route($menu['route']) }}"
-                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-300 
-                        {{ $isActive 
-                            ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg scale-[1.03]' 
-                            : 'text-gray-700 hover:bg-purple-50 hover:text-purple-600 hover:translate-x-1' 
-                        }}">
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-300
+                        {{ $isActive
+                            ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg scale-[1.03]'
+                            : 'text-gray-700 hover:bg-purple-50 hover:text-purple-600 hover:translate-x-1' }}">
                     <i class="{{ $menu['icon'] }} text-sm"></i>
                     <span class="text-sm font-medium">{{ $menu['label'] }}</span>
                 </a>
-
             @endif
         @endforeach
     </nav>

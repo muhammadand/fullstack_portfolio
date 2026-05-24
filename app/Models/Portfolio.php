@@ -64,10 +64,10 @@ class Portfolio extends Model
 
         // 🔥 STORE = required, UPDATE = nullable
         'thumbnail_image' => $id
-            ? 'nullable|image|mimes:jpg,jpeg,png|max:10240'
-            : 'required|image|mimes:jpg,jpeg,png|max:10240',
+            ? 'nullable|image|mimes:jpg,jpeg,png|max:20000'
+            : 'required|image|mimes:jpg,jpeg,png|max:20000',
 
-        'featured_image' => 'nullable|image|mimes:jpg,jpeg,png|max:10240',
+        'featured_image' => 'nullable|image|mimes:jpg,jpeg,png|max:20000',
 
         // 🔥 Input kamu string → controller yg ubah ke array
         'technologies' => 'nullable|string',

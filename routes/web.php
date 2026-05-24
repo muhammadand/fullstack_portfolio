@@ -49,7 +49,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 
 // portfolio
-Route::get('/portfolio', [HomeController::class, 'portfolio_1'])->name('portfolio');
+// Route::get('/portfolio', [HomeController::class, 'portfolio_1'])->name('portfolio');
 
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;

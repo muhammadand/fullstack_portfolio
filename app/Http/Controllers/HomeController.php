@@ -98,8 +98,11 @@ class HomeController extends Controller
         ->orderBy('view_count', 'desc')
         ->take(5)
         ->get();
+    $featuredPortfolio = Portfolio::active()
+            ->orderByDesc('view_count')
+            ->first();
 
-    return view('pages.portfolio.index', compact('portfolios', 'popularPortfolios'));
+    return view('pages.portfolio.index', compact('portfolios', 'popularPortfolios','featuredPortfolio'));
 }
 
 

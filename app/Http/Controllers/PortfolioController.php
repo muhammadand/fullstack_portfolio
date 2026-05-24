@@ -74,8 +74,8 @@ class PortfolioController extends Controller
             'completion_date' => 'nullable|date',
             'is_featured' => 'boolean',
             'is_active' => 'boolean',
-            'thumbnail_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'featured_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'thumbnail_image' => 'nullable|image|mimes:jpg,jpeg,png|max:20000',
+            'featured_image' => 'nullable|image|mimes:jpg,jpeg,png|max:20000',
         ]);
 
         // ✅ Upload file jika ada
