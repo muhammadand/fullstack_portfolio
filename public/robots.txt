@@ -1,2 +1,16 @@
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
 User-agent: *
-Disallow:
+Allow: /
+
+Sitemap: https://scalifyintellegence.my.id/sitemap.xml

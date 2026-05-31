@@ -8,6 +8,15 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\BlogCategoryController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AuthController;
+use Spatie\Sitemap\SitemapGenerator;
+
+Route::get('/generate-sitemap', function () {
+
+    SitemapGenerator::create('https://scalifyintellegence.my.id/')
+        ->writeToFile(public_path('sitemap.xml'));
+
+    return 'Sitemap generated!';
+});
 
 
 //administrator
