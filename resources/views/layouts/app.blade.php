@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     {{-- ===== SEO: Primary Meta Tags ===== --}}
-    <title>Scalify Intelligence — Automasi Cerdas, Tingkatkan Efisiensi dan Performa Bisnis."</title>
+    <title>Scalify Intelligence — Automasi Cerdas, Tingkatkan Efisiensi dan Performa Bisnis.</title>
     <meta name="title" content="Scalify Intelligence — Automasi Cerdas, Bisnis Naik Kelas" />
     <meta name="description" content="Scalify Intelligence menghadirkan solusi kecerdasan buatan, otomasi bisnis, chatbot AI, dan analisis data untuk perusahaan dan UMKM Indonesia. Skalakan bisnis Anda dengan teknologi cerdas." />
     <meta name="keywords" content="automasi bisnis, kecerdasan buatan, AI chatbot, chatbot WhatsApp, otomasi UMKM, analisis data bisnis, sistem CRM otomatis, Scalify Intelligence, digital transformation Indonesia, landing page premium, web aplikasi bisnis" />

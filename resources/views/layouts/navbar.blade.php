@@ -22,6 +22,7 @@
                 <a href="{{ route('index.company.profile') }}#layanan" class="hidden hover:text-brand-accent transition-colors">Paket Layanan</a>
                 <a href="{{ route('landing.blogs') }}" class="hover:text-brand-accent transition-colors">Blog</a>
                 <a href="{{ route('landing.portfolio') }}" class="hover:text-brand-accent transition-colors">Project</a>
+                <a href="{{ route('sobat-scalify') }}" class="hover:text-brand-accent transition-colors">Sobat Scalify</a>
             </div>
 
             {{-- Right side: CTA + Hamburger --}}
@@ -59,6 +60,10 @@
                 <a href="{{ route('landing.blogs') }}" class="mobile-nav-link text-sm text-white/70 font-medium px-3 py-3 rounded-lg hover:bg-white/5 hover:text-brand-accent transition-all">
                     Blog
                 </a>
+                <a href="{{ route('sobat-scalify') }}" class="mobile-nav-link text-sm text-white/70 font-medium px-3 py-3 rounded-lg hover:bg-white/5 hover:text-brand-accent transition-all">
+                    Sobat Scalify
+                </a>
+
                 <div class="border-t border-white/10 mt-2 pt-3">
                     <a href="https://wa.me/6285221694067" target="_blank" class="block text-center bg-btn-gradient text-white text-sm font-semibold px-5 py-2.5 rounded-full shadow-glow-sm hover:shadow-glow-blue transition-all">
                         Hubungi Kami

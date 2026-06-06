@@ -9,6 +9,7 @@ use App\Http\Controllers\BlogCategoryController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AuthController;
 use Spatie\Sitemap\SitemapGenerator;
+use App\Http\Controllers\DocumentationController;
 
 Route::get('/generate-sitemap', function () {
 
@@ -49,6 +50,12 @@ Route::get('/generate-sitemap', function () {
     // REGISTER
     Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
     Route::post('/register', [AuthController::class, 'register'])->name('register.post');
+
+
+    // Sobat Scalify
+    Route::get('/sobat-scalify',[HomeController::class,'SobatScalify'])->name('sobat-scalify');
+    //Documentation
+    Route::resource('documentation',DocumentationController::class);
 
 // LOGIN
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');

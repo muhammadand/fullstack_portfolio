@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Blog;
 use App\Models\BlogCategory;
 use App\Models\Portfolio;
+use App\Models\Documentation;
 use Illuminate\Http\Request;
 
 
@@ -139,5 +140,11 @@ class HomeController extends Controller
 
     public function portfolio_1(){
         return view('portfolio.landingPage.index');
+    }
+
+
+    public function SobatScalify(){
+        $documentation=Documentation::get();
+        return view('company.SobatScalify',compact('documentation'));
     }
 }

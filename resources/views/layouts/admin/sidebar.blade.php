@@ -25,6 +25,11 @@ $menus = [
 'route' => 'blogs.index',
 'icon' => 'fa-solid fa-pen-nib',
 ],
+[
+'label' => 'Documentation',
+'route' => 'documentation.index',
+'icon' => 'fa-solid fa-camera',
+],
 ];
 
 $activeRoute = \Illuminate\Support\Facades\Route::currentRouteName();
