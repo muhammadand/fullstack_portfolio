@@ -29,12 +29,12 @@
                     Indonesia</span></span>
         </div>
 
-        <h1 class="font-display text-[2rem] leading-tight sm:text-5xl md:text-6xl lg:text-[76px] font-semibold text-center sm:leading-[1.15] tracking-[0.02em] mb-6 sm:mb-8 drop-shadow-xl">
+        <h2 class="font-display text-[2rem] leading-tight sm:text-5xl md:text-6xl lg:text-[45px] font-semibold text-center sm:leading-[1.15] tracking-[0.02em] mb-6 sm:mb-8 drop-shadow-xl">
             Automasi Cerdas,<br />
             <span class="relative">
-                Bisnis Naik Kelas
+                Tingkatkan Efisiensi dan Performa Bisnis.
             </span>
-        </h1>
+        </h2>
 
         <p class="text-white/60 text-center max-w-2xl text-xs sm:text-base md:text-lg leading-relaxed mb-8 sm:mb-10 px-2">
             Kami mengintegrasikan kecerdasan buatan, sains data, dan automasi ke dalam sistem operasional Anda.
@@ -530,4 +530,5 @@
         </a>
     </div>
 </section>
+
 @endsection
