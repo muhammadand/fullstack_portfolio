@@ -4,7 +4,139 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    {{-- ===== SEO: Primary Meta Tags ===== --}}
     <title>Scalify Intelligence — Automasi Cerdas, Bisnis Naik Kelas</title>
+    <meta name="title" content="Scalify Intelligence — Automasi Cerdas, Bisnis Naik Kelas" />
+    <meta name="description" content="Scalify Intelligence menghadirkan solusi kecerdasan buatan, otomasi bisnis, chatbot AI, dan analisis data untuk perusahaan dan UMKM Indonesia. Skalakan bisnis Anda dengan teknologi cerdas." />
+    <meta name="keywords" content="automasi bisnis, kecerdasan buatan, AI chatbot, chatbot WhatsApp, otomasi UMKM, analisis data bisnis, sistem CRM otomatis, Scalify Intelligence, digital transformation Indonesia, landing page premium, web aplikasi bisnis" />
+    <meta name="author" content="Scalify Intelligence" />
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="Indonesian" />
+    <meta name="revisit-after" content="7 days" />
+    <link rel="canonical" href="https://scalifyintellegence.my.id/" />
+
+    {{-- ===== SEO: Open Graph / Facebook / WhatsApp ===== --}}
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://scalifyintellegence.my.id/" />
+    <meta property="og:title" content="Scalify Intelligence — Automasi Cerdas, Bisnis Naik Kelas" />
+    <meta property="og:description" content="Kami mengintegrasikan AI, sains data, dan otomasi ke sistem operasional Anda. Skalakan bisnis tanpa batas — biarkan algoritma yang bekerja." />
+    <meta property="og:image" content="https://scalifyintellegence.my.id/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Scalify Intelligence — Platform Automasi Bisnis AI" />
+    <meta property="og:site_name" content="Scalify Intelligence" />
+    <meta property="og:locale" content="id_ID" />
+
+    {{-- ===== SEO: Twitter Card ===== --}}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://scalifyintellegence.my.id/" />
+    <meta name="twitter:title" content="Scalify Intelligence — Automasi Cerdas, Bisnis Naik Kelas" />
+    <meta name="twitter:description" content="Kami mengintegrasikan AI, sains data, dan otomasi ke sistem operasional Anda. Skalakan bisnis tanpa batas — biarkan algoritma yang bekerja." />
+    <meta name="twitter:image" content="https://scalifyintellegence.my.id/og-image.png" />
+
+    {{-- ===== SEO: JSON-LD Structured Data ===== --}}
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org"
+            , "@graph": [{
+                    "@type": "Organization"
+                    , "@id": "https://scalifyintellegence.my.id/#organization"
+                    , "name": "Scalify Intelligence"
+                    , "url": "https://scalifyintellegence.my.id"
+                    , "logo": {
+                        "@type": "ImageObject"
+                        , "url": "https://scalifyintellegence.my.id/scalify.png"
+                    }
+                    , "description": "Scalify Intelligence menghadirkan solusi kecerdasan buatan, otomasi bisnis, chatbot AI, dan analisis data untuk perusahaan dan UMKM Indonesia."
+                    , "contactPoint": {
+                        "@type": "ContactPoint"
+                        , "telephone": "+62-852-2169-4067"
+                        , "contactType": "customer service"
+                        , "availableLanguage": "Indonesian"
+                    }
+                    , "areaServed": "ID"
+                    , "sameAs": [
+                        "https://wa.me/6285221694067"
+                    ]
+                }
+                , {
+                    "@type": "WebSite"
+                    , "@id": "https://scalifyintellegence.my.id/#website"
+                    , "url": "https://scalifyintellegence.my.id"
+                    , "name": "Scalify Intelligence"
+                    , "publisher": {
+                        "@id": "https://scalifyintellegence.my.id/#organization"
+                    }
+                    , "inLanguage": "id-ID"
+                }
+                , {
+                    "@type": "WebPage"
+                    , "@id": "https://scalifyintellegence.my.id/#webpage"
+                    , "url": "https://scalifyintellegence.my.id"
+                    , "name": "Scalify Intelligence — Automasi Cerdas, Bisnis Naik Kelas"
+                    , "isPartOf": {
+                        "@id": "https://scalifyintellegence.my.id/#website"
+                    }
+                    , "about": {
+                        "@id": "https://scalifyintellegence.my.id/#organization"
+                    }
+                    , "description": "Kami mengintegrasikan kecerdasan buatan, sains data, dan automasi ke dalam sistem operasional Anda. Skalakan bisnis tanpa batas, biarkan algoritma yang bekerja."
+                }
+                , {
+                    "@type": "LocalBusiness"
+                    , "name": "Scalify Intelligence"
+                    , "image": "https://scalifyintellegence.my.id/og-image.png"
+                    , "url": "https://scalifyintellegence.my.id"
+                    , "telephone": "+62-852-2169-4067"
+                    , "priceRange": "$$"
+                    , "address": {
+                        "@type": "PostalAddress"
+                        , "addressCountry": "ID"
+                    }
+                    , "description": "Solusi teknologi AI dan otomasi bisnis untuk perusahaan dan UMKM Indonesia."
+                    , "openingHours": "Mo-Su 00:00-24:00"
+                    , "hasOfferCatalog": {
+                        "@type": "OfferCatalog"
+                        , "name": "Layanan Scalify Intelligence"
+                        , "itemListElement": [{
+                                "@type": "Offer"
+                                , "itemOffered": {
+                                    "@type": "Service"
+                                    , "name": "Digital Presence"
+                                    , "description": "Landing page elegan, company profile website, desain responsif dan cepat."
+                                }
+                            }
+                            , {
+                                "@type": "Offer"
+                                , "itemOffered": {
+                                    "@type": "Service"
+                                    , "name": "Smart Automation"
+                                    , "description": "Web/aplikasi bisnis kustom, integrasi chatbot AI (Flowise), sistem automasi order/kasir."
+                                }
+                            }
+                            , {
+                                "@type": "Offer"
+                                , "itemOffered": {
+                                    "@type": "Service"
+                                    , "name": "Intelligence & Data"
+                                    , "description": "Segmentasi pasar (K-Means), prediksi bisnis (Metode C45), arsitektur data terpusat."
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+
+    </script>
+
+    {{-- ===== Performance: DNS Prefetch & Preconnect ===== --}}
+    <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com" />
+    <link rel="dns-prefetch" href="//cdn.tailwindcss.com" />
+    <link rel="dns-prefetch" href="//www.youtube.com" />
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.3/cdn.min.js" defer></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
