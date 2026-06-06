@@ -191,17 +191,65 @@
 
     @include('layouts.navbar')
     @yield('content')
-    <footer class="bg-brand-navy border-t border-white/5 py-8 px-4 text-center text-white/30 text-xs">
-        <div class="flex items-center justify-center gap-2 mb-3">
-            <div class="w-6 h-6 rounded-lg bg-btn-gradient flex items-center justify-center shadow-glow-sm">
-                <svg class="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
+    <footer class="bg-brand-navy border-t border-white/5 pt-12 pb-8 px-6 text-white/40 text-xs">
+        <div class="max-w-5xl mx-auto flex flex-col md:flex-row items-center md:items-start justify-between gap-10 mb-8">
+
+            {{-- Brand Section --}}
+            <div class="flex flex-col items-center md:items-start gap-4">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-btn-gradient flex items-center justify-center shadow-glow-sm">
+                        <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </div>
+                    <span class="font-display font-bold text-lg text-white/80 tracking-wide">Scalify<span class="text-brand-accent"> Intelligence</span></span>
+                </div>
+                <p class="text-center md:text-left max-w-xs leading-relaxed text-white/50">
+                    Solusi cerdas automasi AI. Tingkatkan efisiensi dan performa bisnis Anda ke level berikutnya.
+                </p>
             </div>
-            <span class="font-display font-bold text-sm text-white/60">Scalify<span class="text-brand-accent">
-                    Intelligence</span></span>
+
+            {{-- Contact Information --}}
+            <div class="flex flex-col items-center md:items-start gap-3">
+                <h3 class="text-white/80 font-bold mb-1 text-sm tracking-wider uppercase">Hubungi Kami</h3>
+
+                <div class="flex items-center gap-3 text-white/60 hover:text-white transition-colors cursor-default">
+                    <div class="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center">
+                        <i class="fa-solid fa-map-pin text-brand-accent/80 text-[10px]"></i>
+                    </div>
+                    <span>Jakarta, Kuningan</span>
+                </div>
+
+                <a href="mailto:sales@scalifyintellegence.my.id" class="flex items-center gap-3 text-white/60 hover:text-white transition-colors">
+                    <div class="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center">
+                        <i class="fa-solid fa-envelope text-brand-accent/80 text-[10px]"></i>
+                    </div>
+                    <span>sales@scalifyintellegence.my.id</span>
+                </a>
+
+                <div class="flex flex-col gap-2 mt-1">
+                    <a href="https://wa.me/6287761036385" target="_blank" class="flex items-center gap-3 text-white/60 hover:text-white transition-colors">
+                        <div class="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center">
+                            <i class="fa-solid fa-phone text-brand-accent/80 text-[10px]"></i>
+                        </div>
+                        <span><span class="text-white/40 mr-1">Bisnis:</span> +62 877 6103 6385</span>
+                    </a>
+
+                    <a href="https://wa.me/6285221694067" target="_blank" class="flex items-center gap-3 text-white/60 hover:text-white transition-colors">
+                        <div class="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center">
+                            <i class="fa-brands fa-whatsapp text-green-400/80 text-[11px]"></i>
+                        </div>
+                        <span><span class="text-white/40 mr-1">Owner:</span> 0852 2169 4067</span>
+                    </a>
+                </div>
+            </div>
+
         </div>
-        <p>© 2026 Scalify Intelligence · All rights reserved</p>
+
+        {{-- Copyright --}}
+        <div class="border-t border-white/5 pt-6 text-center text-white/30">
+            <p>© 2026 Scalify Intelligence · All rights reserved</p>
+        </div>
     </footer>
 
 </body>

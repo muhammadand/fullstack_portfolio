@@ -3,26 +3,24 @@ name: CI/CD Deploy to Rumahweb
 on:
   push:
     branches:
-      - main # Jalankan otomatis hanya saat kamu push ke branch main
+      - main
 
 jobs:
   web-deploy:
     name: Deploy Laravel Project
     runs-on: ubuntu-latest
     steps:
-    - name: 🚚 Get latest code
+    - name: Get latest code
       uses: actions/checkout@v3
     
-    - name: 🚀 Sync files via FTP
+    - name: Sync files via FTP
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
         server: ${{ secrets.FTP_SERVER }}
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
         port: 21
-        # Mengarahkan langsung ke folder sub-direktori kamu
         server-dir: /public_html/company-profile/
-        # Mengabaikan file yang sama seperti pengaturan SFTP lamamu
         exclude: |
           **/.vscode/**
           **/.git/**
