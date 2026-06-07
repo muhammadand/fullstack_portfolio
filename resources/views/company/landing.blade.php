@@ -507,7 +507,7 @@
                 </div>
             </div>
 
-            {{-- Kanan: Foto Owner --}}
+
             <div class="relative flex items-center justify-center lg:justify-end order-1 lg:order-2">
                 {{-- Ornamen dekorasi di belakang foto --}}
                 <div class="absolute inset-0 bg-gradient-to-br from-brand-accent/20 to-brand-indigo/30 rounded-[2rem] transform rotate-3 scale-105 blur-md hidden md:block"></div>
