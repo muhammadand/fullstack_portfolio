@@ -485,7 +485,7 @@
                         </div>
                     </div>
 
-                    {{-- Poin 2: AI Agent & Multi Platform (Global Komunika) --}}
+
                     <div class="flex items-start gap-4 p-5 rounded-2xl bg-white/5 border border-white/10 hover:border-brand-accent/30 hover:bg-white/10 transition-all duration-300">
                         <div class="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center flex-shrink-0 border border-blue-500/30 shadow-[0_0_15px_rgba(59,130,246,0.3)]">
                             <i class="fa-solid fa-robot text-brand-accent text-xl"></i>
@@ -506,7 +506,6 @@
                     </a>
                 </div>
             </div>
-
 
             <div class="relative flex items-center justify-center lg:justify-end order-1 lg:order-2">
                 {{-- Ornamen dekorasi di belakang foto --}}
