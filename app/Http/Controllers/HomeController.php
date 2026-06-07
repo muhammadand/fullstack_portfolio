@@ -6,6 +6,7 @@ use App\Models\Blog;
 use App\Models\BlogCategory;
 use App\Models\Portfolio;
 use App\Models\Documentation;
+use App\Models\DailyView;
 use Illuminate\Http\Request;
 
 
@@ -75,6 +76,16 @@ class HomeController extends Controller
 
         // Tambah view count
         $blog->increment('view_count');
+        
+        // Tambah view count harian
+        $dailyView = DailyView::firstOrCreate(
+            [
+                'viewable_type' => Blog::class,
+                'viewable_id' => $blog->id,
+                'date' => now()->toDateString(),
+            ]
+        );
+        $dailyView->increment('views_count');
 
         // Ambil artikel lain untuk rekomendasi
         $related = Blog::published()
@@ -113,6 +124,16 @@ class HomeController extends Controller
 
         // Increment view count
         $portfolio->increment('view_count');
+
+        // Tambah view count harian
+        $dailyView = DailyView::firstOrCreate(
+            [
+                'viewable_type' => Portfolio::class,
+                'viewable_id' => $portfolio->id,
+                'date' => now()->toDateString(),
+            ]
+        );
+        $dailyView->increment('views_count');
 
         // Pastikan technologies selalu array
         if (!is_array($portfolio->technologies)) {

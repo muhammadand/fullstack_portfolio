@@ -62,18 +62,20 @@ class AdminController extends Controller
         $portfolios = collect();
 
         if ($type === 'blogs' || $type === 'both') {
-            $blogs = DB::table('blogs')
-                ->selectRaw('DATE(created_at) as date, SUM(view_count) as total')
-                ->whereBetween(DB::raw('DATE(created_at)'), [$start, $end])
+            $blogs = DB::table('daily_views')
+                ->selectRaw('date, SUM(views_count) as total')
+                ->where('viewable_type', \App\Models\Blog::class)
+                ->whereBetween('date', [$start, $end])
                 ->groupBy('date')
                 ->orderBy('date')
                 ->get();
         }
 
         if ($type === 'portfolios' || $type === 'both') {
-            $portfolios = DB::table('portfolios')
-                ->selectRaw('DATE(created_at) as date, SUM(view_count) as total')
-                ->whereBetween(DB::raw('DATE(created_at)'), [$start, $end])
+            $portfolios = DB::table('daily_views')
+                ->selectRaw('date, SUM(views_count) as total')
+                ->where('viewable_type', \App\Models\Portfolio::class)
+                ->whereBetween('date', [$start, $end])
                 ->groupBy('date')
                 ->orderBy('date')
                 ->get();
