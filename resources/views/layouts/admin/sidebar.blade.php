@@ -28,7 +28,12 @@ $menus = [
 [
 'label' => 'Documentation',
 'route' => 'documentation.index',
-'icon' => 'fa-solid fa-camera',
+'icon' => 'fa-solid fa-book',
+],
+[
+'label' => 'Users',
+'route' => 'users.index',
+'icon' => 'fa-solid fa-users',
 ],
 ];
 

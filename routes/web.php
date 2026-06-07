@@ -9,6 +9,7 @@ use App\Http\Controllers\BlogCategoryController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AuthController;
 use Spatie\Sitemap\SitemapGenerator;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\DocumentationController;
 
 Route::get('/generate-sitemap', function () {
@@ -34,6 +35,13 @@ Route::get('/generate-sitemap', function () {
     // Blogs
     Route::resource('blogs', BlogController::class);
     Route::post('blogs/upload-image', [BlogController::class, 'uploadImage'])->name('blogs.upload-image');
+
+    // Users
+    Route::resource('users', UserController::class);
+
+    // Profile
+    Route::get('profile', [UserController::class, 'editProfile'])->name('profile.edit');
+    Route::put('profile', [UserController::class, 'updateProfile'])->name('profile.update');
 
     //Public Routes
     Route::get('/',[HomeController::class,'indexCompanyProfile'])->name('index.company.profile');

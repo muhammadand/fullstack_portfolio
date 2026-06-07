@@ -40,13 +40,37 @@ $avatar = $user->profile_photo
         <div class="w-px h-8 bg-slate-200"></div>
 
         {{-- User menu --}}
-        <div class="flex items-center gap-2.5 cursor-pointer group">
-            <img src="{{ $avatar }}" alt="User" class="w-9 h-9 rounded-xl object-cover ring-2 ring-transparent transition-all duration-200 group-hover:ring-blue-200">
-            <div>
-                <p class="text-sm font-semibold text-slate-800 leading-tight">{{ $user->name }}</p>
-                <p class="text-xs text-slate-400 leading-tight">{{ $user->email }}</p>
+        {{-- User menu (Alpine.js Dropdown) --}}
+        <div x-data="{ open: false }" class="relative">
+            <div @click="open = !open" @click.away="open = false" class="flex items-center gap-2.5 cursor-pointer group">
+                <img src="{{ $avatar }}" alt="User" class="w-9 h-9 rounded-xl object-cover ring-2 ring-transparent transition-all duration-200 group-hover:ring-blue-200">
+                <div>
+                    <p class="text-sm font-semibold text-slate-800 leading-tight">{{ $user->name }}</p>
+                    <p class="text-xs text-slate-400 leading-tight">{{ $user->email }}</p>
+                </div>
+                <i class="fa-solid fa-chevron-down text-slate-400 text-[10px] ml-0.5 transition-transform duration-200" :class="{'rotate-180': open}"></i>
             </div>
-            <i class="fa-solid fa-chevron-down text-slate-400 text-[10px] ml-0.5"></i>
+
+            {{-- Dropdown Body --}}
+            <div x-show="open" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="absolute right-0 mt-3 w-48 bg-white rounded-xl shadow-lg border border-slate-100 py-2 z-50" style="display: none;">
+
+                <div class="px-4 py-2 border-b border-slate-50 mb-1">
+                    <p class="text-xs text-slate-400 font-medium uppercase tracking-wider">Account</p>
+                </div>
+
+                <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition">
+                    <i class="fa-solid fa-user-pen w-4 text-center"></i>
+                    Edit Profile
+                </a>
+
+                <form action="{{ route('logout') }}" method="POST" class="block mt-1 border-t border-slate-50 pt-1">
+                    @csrf
+                    <button type="submit" class="flex w-full items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition">
+                        <i class="fa-solid fa-arrow-right-from-bracket w-4 text-center"></i>
+                        Logout
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 </header>
