@@ -88,10 +88,6 @@ $activeRoute = \Illuminate\Support\Facades\Route::currentRouteName();
 
     {{-- Bottom utility --}}
     <div class="px-3 pb-5 space-y-0.5 border-t pt-4" style="border-color: rgba(255,255,255,0.07);">
-        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group" style="border: 1px solid transparent;">
-            <i class="fa-regular fa-circle-question text-sm text-white/40 group-hover:text-white/70 transition-colors w-4 text-center"></i>
-            <span class="text-sm font-medium text-white/55 group-hover:text-white/90 transition-colors">Help & Support</span>
-        </a>
 
         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">@csrf</form>
         <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group" style="border: 1px solid transparent;">

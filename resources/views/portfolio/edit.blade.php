@@ -1,33 +1,33 @@
 @extends('layouts.admin.app')
 
 @section('content')
-<div class="min-h-screen bg-gray-50 py-6 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-4xl mx-auto">
+<div class="min-h-screen bg-white py-6 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-6xl mx-auto">
         {{-- Header --}}
         <div class="mb-6">
             <div class="flex items-center gap-2 mb-1">
-                <a href="{{ route('portfolio.index') }}" class="p-1.5 hover:bg-gray-200 rounded-lg transition-colors">
+                <a href="{{ route('portfolio.index') }}" class="p-1.5 hover:bg-gray-200 rounded-xl transition-colors">
                     <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                     </svg>
                 </a>
                 <div>
-                    <h1 class="text-2xl font-bold text-gray-900">Edit Portfolio</h1>
-                    <p class="text-sm text-gray-600">Perbarui informasi portfolio Anda</p>
+                    <h1 class="text-lg tracking-tight font-bold text-gray-900">Edit Portfolio</h1>
+                    <p class="text-[13px] text-slate-500">Perbarui informasi portfolio Anda</p>
                 </div>
             </div>
         </div>
 
         {{-- Error Messages --}}
         @if ($errors->any())
-        <div class="mb-4 bg-red-50 border-l-4 border-red-500 p-3 rounded-lg">
+        <div class="mb-4 bg-red-50 border-l-4 border-red-500 p-3 rounded-xl">
             <div class="flex items-start">
                 <svg class="w-4 h-4 text-red-500 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
                 </svg>
                 <div class="flex-1">
-                    <h3 class="text-sm text-red-800 font-medium mb-1">Terdapat beberapa kesalahan:</h3>
-                    <ul class="list-disc list-inside text-sm text-red-700 space-y-0.5">
+                    <h3 class="text-[13px] text-red-800 font-medium mb-1">Terdapat beberapa kesalahan:</h3>
+                    <ul class="list-disc list-inside text-[13px] text-red-700 space-y-0.5">
                         @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
                         @endforeach
@@ -45,85 +45,85 @@
                 {{-- Main Content --}}
                 <div class="lg:col-span-2 space-y-4">
                     {{-- Title & Slug --}}
-                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+                        <label class="block text-[13px] font-medium tracking-wide text-slate-700 text-gray-700 mb-2">
                             Judul Portfolio <span class="text-red-500">*</span>
                         </label>
-                        <input type="text" name="title" id="titleInput" value="{{ old('title', $item->title) }}" required placeholder="Masukkan judul portfolio..." class="w-full text-xl font-semibold border-0 border-b-2 border-gray-200 px-0 py-2 focus:border-blue-500 focus:ring-0 placeholder-gray-400 mb-3">
+                        <input type="text" name="title" id="titleInput" value="{{ old('title', $item->title) }}" required placeholder="Masukkan judul portfolio..." class="w-full text-lg font-semibold border-0 border-b-2 border-gray-200 px-0 py-2 focus:border-slate-800 focus:ring-0 placeholder-gray-400 mb-3">
 
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Slug</label>
-                        <input type="text" name="slug" id="slugInput" value="{{ old('slug', $item->slug) }}" placeholder="otomatis-dari-judul" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <p class="mt-1 text-xs text-gray-500">Kosongkan untuk generate otomatis dari judul</p>
+                        <label class="block text-[13px] font-medium tracking-wide text-slate-700 text-gray-700 mb-2">Slug</label>
+                        <input type="text" name="slug" id="slugInput" value="{{ old('slug', $item->slug) }}" placeholder="otomatis-dari-judul" class="w-full border border-gray-300 rounded-xl px-3 py-2 text-[13px] focus:ring-2 focus:ring-slate-800 focus:border-transparent">
+                        <p class="mt-1 text-[11px] text-gray-500">Kosongkan untuk generate otomatis dari judul</p>
                     </div>
 
                     {{-- Images --}}
-                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-                        <h3 class="text-sm font-semibold text-gray-700 mb-3">Gambar Portfolio</h3>
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+                        <h3 class="text-[13px] font-semibold tracking-wide text-slate-700 text-gray-700 mb-3">Gambar Portfolio</h3>
 
                         <div class="grid grid-cols-2 gap-4">
                             {{-- Thumbnail --}}
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Thumbnail</label>
+                                <label class="block text-[13px] font-medium tracking-wide text-slate-700 text-gray-700 mb-2">Thumbnail</label>
                                 <div class="relative">
                                     <div id="thumbnailPreview" class="{{ $item->thumbnail_image ? '' : 'hidden' }} mb-3">
-                                        <img id="thumbnailImg" src="{{ $item->thumbnail_image ? asset('storage/' . $item->thumbnail_image) : '' }}" class="w-full h-32 object-cover rounded-lg" alt="Thumbnail">
+                                        <img id="thumbnailImg" src="{{ $item->thumbnail_image ? asset('storage/' . $item->thumbnail_image) : '' }}" class="w-full h-32 object-cover rounded-xl" alt="Thumbnail">
                                         <button type="button" id="removeThumbnail" class="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 transition-colors">
                                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                                             </svg>
                                         </button>
                                     </div>
-                                    <label for="thumbnailInput" id="thumbnailUploadArea" class="{{ $item->thumbnail_image ? 'hidden' : '' }} flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-all">
+                                    <label for="thumbnailInput" id="thumbnailUploadArea" class="{{ $item->thumbnail_image ? 'hidden' : '' }} flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:border-slate-800 hover:bg-slate-50 transition-all">
                                         <svg class="w-8 h-8 mb-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                         </svg>
-                                        <p class="text-xs text-gray-600">Upload Thumbnail</p>
+                                        <p class="text-[11px] text-gray-600">Upload Thumbnail</p>
                                     </label>
                                     <input type="file" name="thumbnail_image" id="thumbnailInput" accept="image/*" class="hidden">
                                 </div>
                                 @if ($item->thumbnail_image)
-                                <p class="text-xs text-gray-500 mt-1">Upload gambar baru untuk mengganti</p>
+                                <p class="text-[11px] text-gray-500 mt-1">Upload gambar baru untuk mengganti</p>
                                 @endif
                             </div>
 
                             {{-- Featured Image --}}
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Featured Image</label>
+                                <label class="block text-[13px] font-medium tracking-wide text-slate-700 text-gray-700 mb-2">Featured Image</label>
                                 <div class="relative">
                                     <div id="featuredPreview" class="{{ $item->featured_image ? '' : 'hidden' }} mb-3">
-                                        <img id="featuredImg" src="{{ $item->featured_image ? asset('storage/' . $item->featured_image) : '' }}" class="w-full h-32 object-cover rounded-lg" alt="Featured">
+                                        <img id="featuredImg" src="{{ $item->featured_image ? asset('storage/' . $item->featured_image) : '' }}" class="w-full h-32 object-cover rounded-xl" alt="Featured">
                                         <button type="button" id="removeFeatured" class="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 transition-colors">
                                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                                             </svg>
                                         </button>
                                     </div>
-                                    <label for="featuredInput" id="featuredUploadArea" class="{{ $item->featured_image ? 'hidden' : '' }} flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-all">
+                                    <label for="featuredInput" id="featuredUploadArea" class="{{ $item->featured_image ? 'hidden' : '' }} flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:border-slate-800 hover:bg-slate-50 transition-all">
                                         <svg class="w-8 h-8 mb-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                         </svg>
-                                        <p class="text-xs text-gray-600">Upload Featured</p>
+                                        <p class="text-[11px] text-gray-600">Upload Featured</p>
                                     </label>
                                     <input type="file" name="featured_image" id="featuredInput" accept="image/*" class="hidden">
                                 </div>
                                 @if ($item->featured_image)
-                                <p class="text-xs text-gray-500 mt-1">Upload gambar baru untuk mengganti</p>
+                                <p class="text-[11px] text-gray-500 mt-1">Upload gambar baru untuk mengganti</p>
                                 @endif
                             </div>
                         </div>
                     </div>
 
                     {{-- Description --}}
-                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+                        <label class="block text-[13px] font-medium tracking-wide text-slate-700 text-gray-700 mb-2">
                             Deskripsi Singkat <span class="text-red-500">*</span>
                         </label>
-                        <textarea name="short_description" rows="2" required placeholder="Ringkasan singkat portfolio (maks 160 karakter)" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none">{{ old('short_description', $item->short_description) }}</textarea>
+                        <textarea name="short_description" rows="2" required placeholder="Ringkasan singkat portfolio (maks 160 karakter)" class="w-full border border-gray-300 rounded-xl px-3 py-2 text-[13px] focus:ring-2 focus:ring-slate-800 focus:border-transparent resize-none">{{ old('short_description', $item->short_description) }}</textarea>
                     </div>
 
                     {{-- Full Description WYSIWYG --}}
-                    {{-- <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                    {{-- <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+                            <label class="block text-[13px] font-medium tracking-wide text-slate-700 text-gray-700 mb-2">
                                 Deskripsi Lengkap <span class="text-red-500">*</span>
                             </label>
                             <div id="quillEditor" class="bg-white" style="min-height: 300px;">
@@ -132,9 +132,9 @@
                             <input type="hidden" name="full_description" id="descriptionInput">
                         </div> --}}
                     {{-- Full Description WYSIWYG --}}
-                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
 
-                        <label class="block text-sm font-medium text-gray-700 mb-3">
+                        <label class="block text-[13px] font-medium tracking-wide text-slate-700 text-gray-700 mb-3">
                             Deskripsi Lengkap
                             <span class="text-red-500">*</span>
                         </label>
@@ -150,20 +150,20 @@
                     </div>
 
                     {{-- Challenge, Solution, Result --}}
-                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-                        <h3 class="text-sm font-semibold text-gray-700 mb-3">Detail Proyek</h3>
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+                        <h3 class="text-[13px] font-semibold tracking-wide text-slate-700 text-gray-700 mb-3">Detail Proyek</h3>
                         <div class="space-y-3">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1.5">Tantangan</label>
-                                <textarea name="challenge" rows="2" placeholder="Masalah atau tantangan yang dihadapi..." class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none">{{ old('challenge', $item->challenge) }}</textarea>
+                                <label class="block text-[13px] font-medium tracking-wide text-slate-700 text-gray-700 mb-1.5">Tantangan</label>
+                                <textarea name="challenge" rows="2" placeholder="Masalah atau tantangan yang dihadapi..." class="w-full border border-gray-300 rounded-xl px-3 py-2 text-[13px] focus:ring-2 focus:ring-slate-800 focus:border-transparent resize-none">{{ old('challenge', $item->challenge) }}</textarea>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1.5">Solusi</label>
-                                <textarea name="solution" rows="2" placeholder="Bagaimana Anda menyelesaikan masalah..." class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none">{{ old('solution', $item->solution) }}</textarea>
+                                <label class="block text-[13px] font-medium tracking-wide text-slate-700 text-gray-700 mb-1.5">Solusi</label>
+                                <textarea name="solution" rows="2" placeholder="Bagaimana Anda menyelesaikan masalah..." class="w-full border border-gray-300 rounded-xl px-3 py-2 text-[13px] focus:ring-2 focus:ring-slate-800 focus:border-transparent resize-none">{{ old('solution', $item->solution) }}</textarea>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1.5">Hasil</label>
-                                <textarea name="result" rows="2" placeholder="Hasil yang dicapai dari proyek ini..." class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none">{{ old('result', $item->result) }}</textarea>
+                                <label class="block text-[13px] font-medium tracking-wide text-slate-700 text-gray-700 mb-1.5">Hasil</label>
+                                <textarea name="result" rows="2" placeholder="Hasil yang dicapai dari proyek ini..." class="w-full border border-gray-300 rounded-xl px-3 py-2 text-[13px] focus:ring-2 focus:ring-slate-800 focus:border-transparent resize-none">{{ old('result', $item->result) }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -172,9 +172,9 @@
                 {{-- Sidebar --}}
                 <div class="lg:col-span-1 space-y-4">
                     {{-- Settings --}}
-                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 lg:sticky lg:top-4">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 lg:sticky lg:top-4">
                         <h3 class="text-base font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                            <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-4 h-4 text-slate-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                             </svg>
@@ -184,10 +184,10 @@
                         <div class="space-y-3">
                             {{-- Category --}}
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1.5">
+                                <label class="block text-[13px] font-medium tracking-wide text-slate-700 text-gray-700 mb-1.5">
                                     Kategori <span class="text-red-500">*</span>
                                 </label>
-                                <select name="category_id" required class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <select name="category_id" required class="w-full border border-gray-300 rounded-xl px-3 py-2 text-[13px] focus:ring-2 focus:ring-slate-800 focus:border-transparent">
                                     <option value="">Pilih Kategori</option>
                                     @foreach ($categories as $category)
                                     <option value="{{ $category->id }}" {{ old('category_id', $item->category_id) == $category->id ? 'selected' : '' }}>
@@ -199,18 +199,18 @@
 
                             {{-- Client & Project Type --}}
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1.5">Nama Klien</label>
-                                <input type="text" name="client_name" value="{{ old('client_name', $item->client_name) }}" placeholder="PT. Example Indonesia" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <label class="block text-[13px] font-medium tracking-wide text-slate-700 text-gray-700 mb-1.5">Nama Klien</label>
+                                <input type="text" name="client_name" value="{{ old('client_name', $item->client_name) }}" placeholder="PT. Example Indonesia" class="w-full border border-gray-300 rounded-xl px-3 py-2 text-[13px] focus:ring-2 focus:ring-slate-800 focus:border-transparent">
                             </div>
 
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1.5">Jenis Proyek</label>
-                                <input type="text" name="project_type" value="{{ old('project_type', $item->project_type) }}" placeholder="Website E-Commerce" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <label class="block text-[13px] font-medium tracking-wide text-slate-700 text-gray-700 mb-1.5">Jenis Proyek</label>
+                                <input type="text" name="project_type" value="{{ old('project_type', $item->project_type) }}" placeholder="Website E-Commerce" class="w-full border border-gray-300 rounded-xl px-3 py-2 text-[13px] focus:ring-2 focus:ring-slate-800 focus:border-transparent">
                             </div>
 
                             {{-- Technologies --}}
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1.5">Teknologi</label>
+                                <label class="block text-[13px] font-medium tracking-wide text-slate-700 text-gray-700 mb-1.5">Teknologi</label>
 
                                 @php
                                 // ambil value dari old() atau item
@@ -222,38 +222,38 @@
                                 }
                                 @endphp
 
-                                <input type="text" name="technologies" value="{{ $tech }}" placeholder="Laravel, Vue.js, MySQL" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <input type="text" name="technologies" value="{{ $tech }}" placeholder="Laravel, Vue.js, MySQL" class="w-full border border-gray-300 rounded-xl px-3 py-2 text-[13px] focus:ring-2 focus:ring-slate-800 focus:border-transparent">
 
-                                <p class="mt-1 text-xs text-gray-500">Pisahkan dengan koma</p>
+                                <p class="mt-1 text-[11px] text-gray-500">Pisahkan dengan koma</p>
                             </div>
 
 
                             {{-- URLs --}}
                             <div class="pt-3 border-t border-gray-200 space-y-3">
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1.5">URL Proyek</label>
-                                    <input type="url" name="project_url" value="{{ old('project_url', $item->project_url) }}" placeholder="https://example.com" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <label class="block text-[13px] font-medium tracking-wide text-slate-700 text-gray-700 mb-1.5">URL Proyek</label>
+                                    <input type="url" name="project_url" value="{{ old('project_url', $item->project_url) }}" placeholder="https://example.com" class="w-full border border-gray-300 rounded-xl px-3 py-2 text-[13px] focus:ring-2 focus:ring-slate-800 focus:border-transparent">
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1.5">URL Github</label>
-                                    <input type="url" name="github_url" value="{{ old('github_url', $item->github_url) }}" placeholder="https://github.com/username/repo" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <label class="block text-[13px] font-medium tracking-wide text-slate-700 text-gray-700 mb-1.5">URL Github</label>
+                                    <input type="url" name="github_url" value="{{ old('github_url', $item->github_url) }}" placeholder="https://github.com/username/repo" class="w-full border border-gray-300 rounded-xl px-3 py-2 text-[13px] focus:ring-2 focus:ring-slate-800 focus:border-transparent">
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1.5">Tanggal
+                                    <label class="block text-[13px] font-medium tracking-wide text-slate-700 text-gray-700 mb-1.5">Tanggal
                                         Selesai</label>
-                                    <input type="date" name="completion_date" value="{{ old('completion_date', $item->completion_date) }}" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <input type="date" name="completion_date" value="{{ old('completion_date', $item->completion_date) }}" class="w-full border border-gray-300 rounded-xl px-3 py-2 text-[13px] focus:ring-2 focus:ring-slate-800 focus:border-transparent">
                                 </div>
                             </div>
 
                             {{-- Toggles --}}
                             <div class="pt-3 border-t border-gray-200 space-y-2">
                                 <label class="flex items-center justify-between cursor-pointer">
-                                    <span class="text-sm font-medium text-gray-700">Featured</span>
+                                    <span class="text-[13px] font-medium tracking-wide text-slate-700 text-gray-700">Featured</span>
                                     <input type="checkbox" name="is_featured" value="1" {{ old('is_featured', $item->is_featured) ? 'checked' : '' }} class="w-9 h-5 bg-gray-200 rounded-full">
                                 </label>
 
                                 <label class="flex items-center justify-between cursor-pointer">
-                                    <span class="text-sm font-medium text-gray-700">Aktif</span>
+                                    <span class="text-[13px] font-medium tracking-wide text-slate-700 text-gray-700">Aktif</span>
                                     <input type="checkbox" name="is_active" value="1" {{ old('is_active', $item->is_active) ? 'checked' : '' }} class="w-9 h-5 bg-gray-200 rounded-full">
                                 </label>
                             </div>
@@ -261,15 +261,15 @@
 
                         {{-- Action Buttons --}}
                         <div class="mt-4 space-y-2">
-                            <button type="submit" class="w-full bg-blue-600 text-white font-medium py-2.5 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors">
-                                <span class="flex items-center justify-center gap-2 text-sm">
+                            <button type="submit" class="w-full bg-slate-900 text-white font-medium py-2.5 px-4 rounded-xl hover:bg-slate-800 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-slate-300 transition-colors">
+                                <span class="flex items-center justify-center gap-2 text-[13px]">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                                     </svg>
                                     Update Portfolio
                                 </span>
                             </button>
-                            <a href="{{ route('portfolio.index') }}" class="w-full bg-white text-gray-700 font-medium py-2.5 px-4 rounded-lg border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-200 transition-colors text-sm flex items-center justify-center">
+                            <a href="{{ route('portfolio.index') }}" class="w-full bg-white text-gray-700 font-medium py-2.5 px-4 rounded-xl border border-gray-300 hover:bg-white focus:outline-none focus:ring-2 focus:ring-gray-200 transition-colors text-[13px] flex items-center justify-center">
                                 Batal
                             </a>
                         </div>
@@ -443,7 +443,7 @@
                 img.addEventListener('click', (e) => {
                     e.stopPropagation();
                     quill.root.querySelectorAll('img').forEach(i => i.style.outline = '');
-                    img.style.outline = '3px solid #3b82f6';
+                    img.style.outline = '3px solid #0f172a';
                     img.style.borderRadius = '8px';
                     showImgToolbar(img);
                 });
@@ -648,7 +648,7 @@
     }
 
     .ql-editor blockquote {
-        border-left: 4px solid #2563eb;
+        border-left: 4px solid #1e293b;
         padding-left: 18px;
         color: #6b7280;
         margin: 20px 0;
@@ -682,15 +682,15 @@
     }
 
     .img-ctrl-btn:hover {
-        background: #3b82f6;
+        background: #0f172a;
         color: white;
-        border-color: #3b82f6;
+        border-color: #0f172a;
     }
 
     .img-ctrl-btn.active {
-        background: #2563eb;
+        background: #1e293b;
         color: white;
-        border-color: #1d4ed8;
+        border-color: #334155;
     }
 
     /* ─── Toggle Switch ──────────────────────────────────────────── */
@@ -706,7 +706,7 @@
     }
 
     input[type="checkbox"]:checked {
-        background: #2563eb;
+        background: #1e293b;
     }
 
     input[type="checkbox"]::after {

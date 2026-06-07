@@ -1,22 +1,27 @@
 @extends('layouts.admin.app')
 
 @section('content')
-<div class="max-w-3xl mx-auto px-6 py-10">
-    <h2 class="text-3xl font-bold mb-6 gradient-text">Edit Kategori Portfolio</h2>
-
-    <form action="{{ route('portfolio-categories.update', $item->id) }}" method="POST" class="space-y-6 bg-white p-8 rounded-2xl shadow-md">
-        @csrf
-        @method('PUT')
-        @include('portfolio_categories.form')
-
-        <div class="flex justify-end gap-3">
-            <a href="{{ route('portfolio-categories.index') }}" class="px-5 py-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100 transition">
-                Batal
-            </a>
-            <button type="submit" class="bg-blue-900 text-white px-5 py-2 rounded-lg font-medium shadow hover:bg-blue-950 transition">
-                Update
-            </button>
+<div class="min-h-screen bg-white py-6 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-6xl mx-auto">
+        <div class="mb-6">
+            <h2 class="text-xl tracking-tight font-bold text-slate-900">Edit Kategori Portfolio</h2>
+            <p class="text-[13px] text-slate-500">Perbarui informasi kategori portfolio Anda</p>
         </div>
-    </form>
+
+        <form action="{{ route('portfolio-categories.update', $item->id) }}" method="POST" class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-6">
+            @csrf
+            @method('PUT')
+            @include('portfolio_categories.form')
+
+            <div class="flex justify-end gap-3 pt-4 border-t border-slate-100">
+                <a href="{{ route('portfolio-categories.index') }}" class="px-5 py-2.5 rounded-xl border border-slate-200 text-gray-700 hover:bg-slate-50 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md text-[13px] font-medium flex items-center justify-center">
+                    Batal
+                </a>
+                <button type="submit" class="bg-slate-900 text-white px-5 py-2.5 rounded-xl text-[13px] font-medium transition-all duration-300 hover:bg-slate-800 hover:-translate-y-0.5 hover:shadow-lg flex items-center justify-center">
+                    Update
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
 @endsection

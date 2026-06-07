@@ -1,33 +1,33 @@
 @extends('layouts.admin.app')
 
 @section('content')
-<div class="min-h-screen bg-gray-50 py-6 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-4xl mx-auto">
+<div class="min-h-screen bg-white py-6 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-6xl mx-auto">
         {{-- Header --}}
         <div class="mb-6">
             <div class="flex items-center gap-2 mb-1">
-                <a href="{{ route('blogs.index') }}" class="p-1.5 hover:bg-gray-200 rounded-lg transition-colors">
+                <a href="{{ route('blogs.index') }}" class="p-1.5 hover:bg-gray-200 rounded-xl transition-colors">
                     <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                     </svg>
                 </a>
                 <div>
-                    <h1 class="text-2xl font-bold text-gray-900">Edit Blog</h1>
-                    <p class="text-sm text-gray-600">Perbarui artikel Anda</p>
+                    <h1 class="text-lg tracking-tight font-bold text-gray-900">Edit Blog</h1>
+                    <p class="text-[13px] text-slate-500">Perbarui artikel Anda</p>
                 </div>
             </div>
         </div>
 
         {{-- Error Messages --}}
         @if ($errors->any())
-        <div class="mb-4 bg-red-50 border-l-4 border-red-500 p-3 rounded-lg">
+        <div class="mb-4 bg-red-50 border-l-4 border-red-500 p-3 rounded-xl">
             <div class="flex items-start">
                 <svg class="w-4 h-4 text-red-500 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
                 </svg>
                 <div class="flex-1">
-                    <h3 class="text-sm text-red-800 font-medium mb-1">Terdapat beberapa kesalahan:</h3>
-                    <ul class="list-disc list-inside text-sm text-red-700 space-y-0.5">
+                    <h3 class="text-[13px] text-red-800 font-medium mb-1">Terdapat beberapa kesalahan:</h3>
+                    <ul class="list-disc list-inside text-[13px] text-red-700 space-y-0.5">
                         @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
                         @endforeach
@@ -39,12 +39,12 @@
 
         {{-- Success Message --}}
         @if (session('success'))
-        <div class="mb-4 bg-green-50 border-l-4 border-green-500 p-3 rounded-lg">
+        <div class="mb-4 bg-green-50 border-l-4 border-green-500 p-3 rounded-xl">
             <div class="flex items-start">
                 <svg class="w-4 h-4 text-green-500 mt-0.5 mr-2" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                 </svg>
-                <p class="text-sm text-green-800 font-medium">{{ session('success') }}</p>
+                <p class="text-[13px] text-green-800 font-medium">{{ session('success') }}</p>
             </div>
         </div>
         @endif
@@ -57,51 +57,51 @@
                 {{-- Main Content --}}
                 <div class="lg:col-span-2 space-y-4">
                     {{-- Title --}}
-                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+                        <label class="block text-[13px] font-medium tracking-wide text-slate-700 text-gray-700 mb-2">
                             Judul Blog <span class="text-red-500">*</span>
                         </label>
-                        <input type="text" name="title" id="titleInput" value="{{ old('title', $blog->title) }}" required placeholder="Masukkan judul blog yang menarik..." class="w-full text-xl font-semibold border-0 border-b-2 border-gray-200 px-0 py-2 focus:border-purple-500 focus:ring-0 placeholder-gray-400">
+                        <input type="text" name="title" id="titleInput" value="{{ old('title', $blog->title) }}" required placeholder="Masukkan judul blog yang menarik..." class="w-full text-lg font-semibold border-0 border-b-2 border-gray-200 px-0 py-2 focus:border-slate-800 focus:ring-0 placeholder-gray-400">
                     </div>
 
                     {{-- Featured Image --}}
-                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Gambar Unggulan</label>
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+                        <label class="block text-[13px] font-medium tracking-wide text-slate-700 text-gray-700 mb-2">Gambar Unggulan</label>
 
                         {{-- Current Image --}}
                         @if ($blog->featured_image)
                         <div class="mb-3">
-                            <p class="text-xs text-gray-500 mb-2">Gambar saat ini:</p>
+                            <p class="text-[11px] text-gray-500 mb-2">Gambar saat ini:</p>
                             <div class="relative inline-block">
-                                <img src="{{ asset('storage/' . $blog->featured_image) }}" class="w-full h-48 object-cover rounded-lg" alt="Current image">
+                                <img src="{{ asset('storage/' . $blog->featured_image) }}" class="w-full h-48 object-cover rounded-xl" alt="Current image">
                             </div>
                         </div>
                         @endif
 
                         <div class="relative">
                             <div id="imagePreview" class="hidden mb-3">
-                                <p class="text-xs text-gray-500 mb-2">Gambar baru:</p>
-                                <img id="previewImg" class="w-full h-48 object-cover rounded-lg" alt="Preview">
+                                <p class="text-[11px] text-gray-500 mb-2">Gambar baru:</p>
+                                <img id="previewImg" class="w-full h-48 object-cover rounded-xl" alt="Preview">
                                 <button type="button" id="removeImage" class="absolute top-8 right-2 bg-red-500 text-white p-1.5 rounded-full hover:bg-red-600 transition-colors">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                                     </svg>
                                 </button>
                             </div>
-                            <label for="imageInput" id="imageUploadArea" class="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-purple-500 hover:bg-purple-50 transition-all">
+                            <label for="imageInput" id="imageUploadArea" class="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:border-slate-800 hover:bg-slate-50 transition-all">
                                 <svg class="w-10 h-10 mb-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                 </svg>
-                                <p class="text-sm text-gray-600"><span class="font-medium">{{ $blog->featured_image ? 'Ganti gambar' : 'Klik untuk upload' }}</span>
+                                <p class="text-[13px] text-slate-500"><span class="font-medium">{{ $blog->featured_image ? 'Ganti gambar' : 'Klik untuk upload' }}</span>
                                     atau drag and drop</p>
-                                <p class="text-xs text-gray-500">PNG, JPG atau JPEG (MAX. 2MB)</p>
+                                <p class="text-[11px] text-gray-500">PNG, JPG atau JPEG (MAX. 2MB)</p>
                             </label>
                             <input type="file" name="featured_image" id="imageInput" accept="image/*" class="hidden">
                         </div>
 
                         @if ($blog->featured_image)
                         <div class="mt-3">
-                            <label class="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
+                            <label class="flex items-center gap-2 text-[13px] text-slate-500 cursor-pointer">
                                 <input type="checkbox" name="remove_image" value="1" class="rounded border-gray-300 text-red-600 focus:ring-red-500">
                                 <span>Hapus gambar saat ini</span>
                             </label>
@@ -110,8 +110,8 @@
                     </div>
 
                     {{-- Content Editor --}}
-                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+                        <label class="block text-[13px] font-medium tracking-wide text-slate-700 text-gray-700 mb-2">
                             Konten Blog <span class="text-red-500">*</span>
                         </label>
                         <div id="quillEditor" class="bg-white" style="min-height: 400px;">
@@ -119,7 +119,7 @@
                         </div>
                         <input type="hidden" name="content" id="contentInput">
                         <input type="file" id="quillImageFile" accept="image/*" class="hidden">
-                        <div class="mt-2 flex items-center gap-2 text-xs text-gray-500">
+                        <div class="mt-2 flex items-center gap-2 text-[11px] text-gray-500">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
@@ -130,19 +130,19 @@
                     </div>
 
                     {{-- Excerpt --}}
-                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Excerpt (Opsional)</label>
-                        <textarea name="excerpt" id="excerptInput" rows="2" placeholder="Ringkasan singkat artikel (otomatis diambil dari konten jika kosong)" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none">{{ old('excerpt', $blog->excerpt) }}</textarea>
-                        <p class="mt-1 text-xs text-gray-500">Maksimal 160 karakter untuk hasil optimal</p>
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+                        <label class="block text-[13px] font-medium tracking-wide text-slate-700 text-gray-700 mb-2">Excerpt (Opsional)</label>
+                        <textarea name="excerpt" id="excerptInput" rows="2" placeholder="Ringkasan singkat artikel (otomatis diambil dari konten jika kosong)" class="w-full border border-gray-300 rounded-xl px-3 py-2 text-[13px] focus:ring-2 focus:ring-slate-800 focus:border-transparent resize-none">{{ old('excerpt', $blog->excerpt) }}</textarea>
+                        <p class="mt-1 text-[11px] text-gray-500">Maksimal 160 karakter untuk hasil optimal</p>
                     </div>
                 </div>
 
                 {{-- Sidebar --}}
                 <div class="lg:col-span-1 space-y-4">
                     {{-- Publish Settings --}}
-                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 lg:sticky lg:top-4">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 lg:sticky lg:top-4">
                         <h3 class="text-base font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                            <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-4 h-4 text-slate-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                             </svg>
@@ -152,10 +152,10 @@
                         <div class="space-y-3">
                             {{-- Category --}}
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1.5">
+                                <label class="block text-[13px] font-medium tracking-wide text-slate-700 text-gray-700 mb-1.5">
                                     Kategori <span class="text-red-500">*</span>
                                 </label>
-                                <select name="category_id" required class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                <select name="category_id" required class="w-full border border-gray-300 rounded-xl px-3 py-2 text-[13px] focus:ring-2 focus:ring-slate-800 focus:border-transparent">
                                     <option value="">Pilih Kategori</option>
                                     @foreach ($categories as $category)
                                     <option value="{{ $category->id }}" {{ old('category_id', $blog->category_id) == $category->id ? 'selected' : '' }}>
@@ -167,10 +167,10 @@
 
                             {{-- Author --}}
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1.5">
+                                <label class="block text-[13px] font-medium tracking-wide text-slate-700 text-gray-700 mb-1.5">
                                     Penulis <span class="text-red-500">*</span>
                                 </label>
-                                <select name="author_id" required class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                <select name="author_id" required class="w-full border border-gray-300 rounded-xl px-3 py-2 text-[13px] focus:ring-2 focus:ring-slate-800 focus:border-transparent">
                                     <option value="">Pilih Penulis</option>
                                     @foreach ($authors as $author)
                                     <option value="{{ $author->id }}" {{ old('author_id', $blog->author_id) == $author->id ? 'selected' : '' }}>
@@ -182,59 +182,59 @@
 
                             {{-- Tags --}}
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1.5">Tags</label>
+                                <label class="block text-[13px] font-medium tracking-wide text-slate-700 text-gray-700 mb-1.5">Tags</label>
 
-                                <input type="text" name="tags[]" value="{{ old('tags') ? implode(',', old('tags')) : (is_array($blog->tags) ? implode(',', $blog->tags) : $blog->tags) }}" placeholder="Laravel, Tutorial, Web" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                <input type="text" name="tags[]" value="{{ old('tags') ? implode(',', old('tags')) : (is_array($blog->tags) ? implode(',', $blog->tags) : $blog->tags) }}" placeholder="Laravel, Tutorial, Web" class="w-full border border-gray-300 rounded-xl px-3 py-2 text-[13px] focus:ring-2 focus:ring-slate-800 focus:border-transparent">
 
-                                <p class="mt-1 text-xs text-gray-500">Pisahkan dengan koma</p>
+                                <p class="mt-1 text-[11px] text-gray-500">Pisahkan dengan koma</p>
                             </div>
 
 
                             {{-- SEO Fields --}}
                             <div class="pt-3 border-t border-gray-200 space-y-3">
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1.5">Meta Title</label>
-                                    <input type="text" name="meta_title" value="{{ old('meta_title', $blog->meta_title) }}" placeholder="Otomatis dari judul jika kosong" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                    <label class="block text-[13px] font-medium tracking-wide text-slate-700 text-gray-700 mb-1.5">Meta Title</label>
+                                    <input type="text" name="meta_title" value="{{ old('meta_title', $blog->meta_title) }}" placeholder="Otomatis dari judul jika kosong" class="w-full border border-gray-300 rounded-xl px-3 py-2 text-[13px] focus:ring-2 focus:ring-slate-800 focus:border-transparent">
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1.5">Meta
+                                    <label class="block text-[13px] font-medium tracking-wide text-slate-700 text-gray-700 mb-1.5">Meta
                                         Description</label>
-                                    <textarea name="meta_description" rows="2" placeholder="Otomatis dari excerpt jika kosong" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none">{{ old('meta_description', $blog->meta_description) }}</textarea>
+                                    <textarea name="meta_description" rows="2" placeholder="Otomatis dari excerpt jika kosong" class="w-full border border-gray-300 rounded-xl px-3 py-2 text-[13px] focus:ring-2 focus:ring-slate-800 focus:border-transparent resize-none">{{ old('meta_description', $blog->meta_description) }}</textarea>
                                 </div>
                             </div>
 
                             {{-- Toggles --}}
                             <div class="pt-3 border-t border-gray-200 space-y-2">
                                 <label class="flex items-center justify-between cursor-pointer">
-                                    <span class="text-sm font-medium text-gray-700">Featured</span>
-                                    <input type="checkbox" name="is_featured" value="1" {{ old('is_featured', $blog->is_featured) ? 'checked' : '' }} class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-purple-600">
+                                    <span class="text-[13px] font-medium tracking-wide text-slate-700 text-gray-700">Featured</span>
+                                    <input type="checkbox" name="is_featured" value="1" {{ old('is_featured', $blog->is_featured) ? 'checked' : '' }} class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-slate-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-slate-900">
                                 </label>
 
                                 <label class="flex items-center justify-between cursor-pointer">
-                                    <span class="text-sm font-medium text-gray-700">Publikasikan</span>
-                                    <input type="checkbox" name="is_published" value="1" {{ old('is_published', $blog->is_published) ? 'checked' : '' }} class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-purple-600">
+                                    <span class="text-[13px] font-medium tracking-wide text-slate-700 text-gray-700">Publikasikan</span>
+                                    <input type="checkbox" name="is_published" value="1" {{ old('is_published', $blog->is_published) ? 'checked' : '' }} class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-slate-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-slate-900">
                                 </label>
                             </div>
                         </div>
 
                         {{-- Action Buttons --}}
                         <div class="mt-4 space-y-2">
-                            <button type="submit" class="w-full bg-purple-600 text-white font-medium py-2.5 px-4 rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-300 transition-colors">
-                                <span class="flex items-center justify-center gap-2 text-sm">
+                            <button type="submit" class="w-full bg-slate-900 text-white font-medium py-2.5 px-4 rounded-xl hover:bg-slate-800 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-slate-300 transition-colors">
+                                <span class="flex items-center justify-center gap-2 text-[13px]">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                                     </svg>
                                     Update Blog
                                 </span>
                             </button>
-                            <button type="button" onclick="document.querySelector('input[name=is_published]').checked = false; document.getElementById('blogForm').submit();" class="w-full bg-white text-gray-700 font-medium py-2.5 px-4 rounded-lg border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-200 transition-colors text-sm">
+                            <button type="button" onclick="document.querySelector('input[name=is_published]').checked = false; document.getElementById('blogForm').submit();" class="w-full bg-white text-gray-700 font-medium py-2.5 px-4 rounded-xl border border-gray-300 hover:bg-white focus:outline-none focus:ring-2 focus:ring-gray-200 transition-colors text-[13px]">
                                 Simpan sebagai Draft
                             </button>
                         </div>
 
                         {{-- Info --}}
                         <div class="mt-4 pt-4 border-t border-gray-200">
-                            <div class="text-xs text-gray-500 space-y-1">
+                            <div class="text-[11px] text-gray-500 space-y-1">
                                 <p><span class="font-medium">Dibuat:</span>
                                     {{ $blog->created_at->format('d M Y, H:i') }}</p>
                                 <p><span class="font-medium">Terakhir diupdate:</span>
@@ -402,7 +402,7 @@
                 img.addEventListener('click', (e) => {
                     e.stopPropagation();
                     quill.root.querySelectorAll('img').forEach(i => i.style.outline = '');
-                    img.style.outline = '3px solid #9333ea';
+                    img.style.outline = '3px solid #0f172a';
                     img.style.borderRadius = '8px';
                     showImgToolbar(img);
                 });
@@ -565,15 +565,15 @@
     }
 
     .img-ctrl-btn:hover {
-        background: #9333ea;
+        background: #0f172a;
         color: white;
-        border-color: #9333ea;
+        border-color: #0f172a;
     }
 
     .img-ctrl-btn.active {
-        background: #7e22ce;
+        background: #1e293b;
         color: white;
-        border-color: #6b21a8;
+        border-color: #334155;
     }
 
     /* ─── Toggle Switch ──────────────────────────────────────────── */
@@ -589,7 +589,7 @@
     }
 
     input[type="checkbox"]:checked {
-        background: #9333ea;
+        background: #0f172a;
     }
 
     input[type="checkbox"]::after {
