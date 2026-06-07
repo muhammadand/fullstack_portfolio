@@ -13,7 +13,7 @@
 </section>
 
 {{-- Documentation Gallery Section --}}
-<section class="bg-[#0A0E2A] py-16 px-4 sm:px-6 lg:px-8 min-h-screen">
+<section x-data="{ lightboxOpen: false, lightboxImage: '' }" class="bg-[#0A0E2A] py-16 px-4 sm:px-6 lg:px-8 min-h-screen">
     <div class="max-w-7xl mx-auto">
 
         {{-- Header --}}
@@ -41,7 +41,7 @@
             @endphp
 
             @foreach($documentation as $doc)
-            <div class="relative group overflow-hidden rounded-xl cursor-pointer {{ $spans[$loop->index % count($spans)] }}">
+            <div @click="lightboxOpen = true; lightboxImage = '{{ $doc->images ? asset('images/' . $doc->images) : '' }}'" class="relative group overflow-hidden rounded-xl cursor-pointer {{ $spans[$loop->index % count($spans)] }}">
                 @if($doc->images)
                 <img src="{{ asset('images/' . $doc->images) }}" alt="{{ $doc->title }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
                 @else
@@ -63,6 +63,20 @@
 
         </div>
         @endif
+    </div>
+
+    {{-- Lightbox Modal --}}
+    <div x-show="lightboxOpen" style="display: none;" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md" x-transition.opacity.duration.300ms @keydown.escape.window="lightboxOpen = false">
+
+        {{-- Close button --}}
+        <button @click="lightboxOpen = false" class="absolute top-6 right-6 sm:top-8 sm:right-8 text-white/50 hover:text-white transition-colors z-50 focus:outline-none">
+            <i class="fa-solid fa-xmark text-4xl"></i>
+        </button>
+
+        {{-- Image container --}}
+        <div @click.away="lightboxOpen = false" class="relative max-w-6xl max-h-[90vh] w-full p-4 flex justify-center items-center">
+            <img :src="lightboxImage" x-show="lightboxImage" class="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl" x-transition.scale.80.duration.300ms>
+        </div>
     </div>
 </section>
 @endsection
