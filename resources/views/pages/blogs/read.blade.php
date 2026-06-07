@@ -277,7 +277,7 @@ $tagsString = is_array($blog->tags) ? implode(', ', $blog->tags) : $blog->tags;
 
                             <!-- Share Buttons -->
                             <div class="flex items-center gap-2">
-                                <button class="w-10 h-10 flex items-center justify-center bg-slate-50 text-slate-600 hover:bg-[#0f172a] hover:text-white rounded-full transition-all shadow-sm" title="Share">
+                                <button onclick="sharePost()" class="w-10 h-10 flex items-center justify-center bg-slate-50 text-slate-600 hover:bg-[#0f172a] hover:text-white rounded-full transition-all shadow-sm" title="Share">
                                     <i class="fas fa-share-nodes"></i>
                                 </button>
                                 <button class="w-10 h-10 flex items-center justify-center bg-slate-50 text-slate-600 hover:bg-[#0f172a] hover:text-white rounded-full transition-all shadow-sm" title="Bookmark">
@@ -646,4 +646,28 @@ $tagsString = is_array($blog->tags) ? implode(', ', $blog->tags) : $blog->tags;
         @endif
     </div>
 </div>
+
+<script>
+    function sharePost() {
+        if (navigator.share) {
+            navigator.share({
+                title: {
+                    !!json_encode($blog - > title) !!
+                }
+                , text: {
+                    !!json_encode($blog - > excerpt ? ? Str::limit(strip_tags($blog - > content), 100)) !!
+                }
+                , url: '{{ url()->current() }}'
+            }).catch((error) => console.log('Error sharing', error));
+        } else {
+            // Fallback for browsers that don't support Web Share API
+            navigator.clipboard.writeText('{{ url()->current() }}').then(() => {
+                alert('Link berhasil disalin ke clipboard! Anda bisa membagikannya secara manual.');
+            }).catch(() => {
+                alert('Gagal menyalin link.');
+            });
+        }
+    }
+
+</script>
 @endsection
