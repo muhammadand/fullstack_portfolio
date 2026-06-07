@@ -130,29 +130,71 @@
                     const res = await fetch(url);
                     const data = await res.json();
 
+                    // Menghitung rentang hari
+                    const startDate = new Date(this.start);
+                    const endDate = new Date(this.end);
+                    const diffTime = Math.abs(endDate - startDate);
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                    // Jika lebih dari 60 hari, tampilkan per bulan
+                    const isMonthly = diffDays > 60;
+
                     const datesMap = {};
+
+                    // Siapkan template tanggal/bulan yang terurut untuk mencegah grafik putus
+                    if (isMonthly) {
+                        let curr = new Date(startDate);
+                        curr.setDate(1); // Set ke awal bulan
+                        // Tambahkan 1 bulan ekstra untuk batas loop
+                        let loopEnd = new Date(endDate);
+                        loopEnd.setDate(1);
+                        while (curr <= loopEnd) {
+                            let m = (curr.getMonth() + 1).toString().padStart(2, '0');
+                            let y = curr.getFullYear();
+                            let key = `${y}-${m}`;
+                            datesMap[key] = {
+                                date: key
+                                , blogs: 0
+                                , portfolios: 0
+                            };
+                            curr.setMonth(curr.getMonth() + 1);
+                        }
+                    } else {
+                        let curr = new Date(startDate);
+                        while (curr <= endDate) {
+                            let key = curr.toISOString().split('T')[0];
+                            datesMap[key] = {
+                                date: key
+                                , blogs: 0
+                                , portfolios: 0
+                            };
+                            curr.setDate(curr.getDate() + 1);
+                        }
+                    }
 
                     // Gabungkan data blogs
                     if (data.blogs) {
                         data.blogs.forEach(r => {
-                            datesMap[r.date] = datesMap[r.date] || {
-                                date: r.date
+                            let key = isMonthly ? r.date.substring(0, 7) : r.date;
+                            if (!datesMap[key]) datesMap[key] = {
+                                date: key
                                 , blogs: 0
                                 , portfolios: 0
                             };
-                            datesMap[r.date].blogs = Number(r.total);
+                            datesMap[key].blogs += Number(r.total);
                         });
                     }
 
                     // Gabungkan data portfolios
                     if (data.portfolios) {
                         data.portfolios.forEach(r => {
-                            datesMap[r.date] = datesMap[r.date] || {
-                                date: r.date
+                            let key = isMonthly ? r.date.substring(0, 7) : r.date;
+                            if (!datesMap[key]) datesMap[key] = {
+                                date: key
                                 , blogs: 0
                                 , portfolios: 0
                             };
-                            datesMap[r.date].portfolios = Number(r.total);
+                            datesMap[key].portfolios += Number(r.total);
                         });
                     }
 
