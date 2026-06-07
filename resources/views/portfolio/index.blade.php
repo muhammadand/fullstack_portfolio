@@ -6,13 +6,12 @@
 <div class="max-w-6xl mx-auto px-6 py-10">
     {{-- ✅ Header --}}
     <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
-        <h2 class="text-3xl font-bold gradient-text">Daftar Portfolio</h2>
+        <h2 class="text-3xl font-bold text-slate-800">Daftar Portfolio</h2>
 
         <div class="flex gap-2">
             {{-- ➕ Tambah --}}
-            <a href="{{ route('portfolio.create') }}"
-               class="bg-gradient-to-r from-purple-600 to-purple-700 text-white px-5 py-2 rounded-lg font-medium shadow hover:shadow-lg transition">
-               Create
+            <a href="{{ route('portfolio.create') }}" class="bg-blue-900 text-white px-5 py-2 rounded-lg font-medium shadow hover:bg-blue-950 transition">
+                Create
             </a>
         </div>
     </div>
@@ -24,10 +23,10 @@
             name="search" 
             value="{{ request('search') }}"
             placeholder="Cari judul portfolio..." 
-            class="border border-gray-300 rounded-lg px-3 py-2 w-full sm:w-56 focus:ring focus:ring-blue-200"
+            class="border border-gray-300 rounded-lg px-3 py-2 w-full sm:w-56 focus:ring focus:ring-blue-900/30 focus:border-blue-900 outline-none transition"
         />
 
-        <select name="category_id" class="border border-gray-300 rounded-lg px-3 py-2 focus:ring focus:ring-blue-200">
+        <select name="category_id" class="border border-gray-300 rounded-lg px-3 py-2 focus:ring focus:ring-blue-900/30 focus:border-blue-900 outline-none transition bg-white">
             <option value="">-- Semua Kategori --</option>
             @foreach($categories as $cat)
                 <option value="{{ $cat->id }}" {{ request('category_id') == $cat->id ? 'selected' : '' }}>
@@ -36,7 +35,7 @@
             @endforeach
         </select>
 
-        <select name="is_active" class="border border-gray-300 rounded-lg px-3 py-2 focus:ring focus:ring-blue-200">
+        <select name="is_active" class="border border-gray-300 rounded-lg px-3 py-2 focus:ring focus:ring-blue-900/30 focus:border-blue-900 outline-none transition bg-white">
             <option value="">-- Semua Status --</option>
             <option value="1" {{ request('is_active') === '1' ? 'selected' : '' }}>Aktif</option>
             <option value="0" {{ request('is_active') === '0' ? 'selected' : '' }}>Nonaktif</option>
@@ -44,16 +43,16 @@
 
         <button 
             type="submit"
-            class="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition">
+            class="bg-blue-900 text-white px-5 py-2 rounded-lg font-medium shadow hover:bg-blue-950 transition">
             Filter
         </button>
     </form>
 
     {{-- ✅ Alert --}}
     @if(session('success'))
-        <div class="mb-4 p-4 rounded-lg bg-green-100 border border-green-300 text-green-800">
-            {{ session('success') }}
-        </div>
+    <div class="mb-4 p-4 rounded-lg bg-green-100 border border-green-300 text-green-800">
+        {{ session('success') }}
+    </div>
     @endif
 
     {{-- ✅ Table --}}
@@ -72,52 +71,47 @@
 
             <tbody>
                 @forelse($portfolios as $i => $item)
-                    <tr class="border-b hover:bg-gray-50 transition">
-                        <td class="py-3 px-4">{{ $portfolios->firstItem() + $i }}</td>
-                        <td class="py-3 px-4 font-medium text-gray-900">{{ $item->title }}</td>
-                        <td class="py-3 px-4">
-                            {{ $item->category ? $item->category->name : '-' }}
-                        </td>
-                        <td class="py-3 px-4">
-                            <span class="px-2 py-1 rounded text-xs font-semibold
+                <tr class="border-b hover:bg-gray-50 transition">
+                    <td class="py-3 px-4">{{ $portfolios->firstItem() + $i }}</td>
+                    <td class="py-3 px-4 font-medium text-gray-900">{{ $item->title }}</td>
+                    <td class="py-3 px-4">
+                        {{ $item->category ? $item->category->name : '-' }}
+                    </td>
+                    <td class="py-3 px-4">
+                        <span class="px-2 py-1 rounded text-xs font-semibold
                                 {{ $item->is_active ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">
-                                {{ $item->is_active ? 'Aktif' : 'Nonaktif' }}
-                            </span>
-                        </td>
-                        <td class="py-3 px-4">
-                            @if($item->thumbnail_image)
-                                <img src="{{ asset('storage/' . $item->thumbnail_image) }}" 
-                                     alt="thumbnail" class="w-20 rounded-md shadow-sm">
-                            @else
-                                <span class="text-gray-400 italic">Tidak ada gambar</span>
-                            @endif
-                        </td>
-                        <td class="py-3 px-4 text-center flex gap-2 justify-center">
-                            <a href="{{ route('portfolio.show', $item->id) }}"
-                               class="px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-xs font-semibold transition">
-                               Detail
-                            </a>
-                            <a href="{{ route('portfolio.edit', $item->id) }}"
-                               class="px-3 py-1 bg-yellow-400 hover:bg-yellow-500 text-white rounded-lg text-xs font-semibold transition">
-                               Edit
-                            </a>
-                            <form action="{{ route('portfolio.destroy', $item->id) }}" method="POST" 
-                                  onsubmit="return confirm('Yakin hapus data ini?')" class="inline-block">
-                                @csrf 
-                                @method('DELETE')
-                                <button type="submit"
-                                    class="px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded-lg text-xs font-semibold transition">
-                                    Hapus
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
+                            {{ $item->is_active ? 'Aktif' : 'Nonaktif' }}
+                        </span>
+                    </td>
+                    <td class="py-3 px-4">
+                        @if($item->thumbnail_image)
+                        <img src="{{ asset('storage/' . $item->thumbnail_image) }}" alt="thumbnail" class="w-20 rounded-md shadow-sm">
+                        @else
+                        <span class="text-gray-400 italic">Tidak ada gambar</span>
+                        @endif
+                    </td>
+                    <td class="py-3 px-4 text-center flex gap-2 justify-center">
+                        <a href="{{ route('portfolio.show', $item->id) }}" class="px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-xs font-semibold transition">
+                            Detail
+                        </a>
+                        <a href="{{ route('portfolio.edit', $item->id) }}" class="px-3 py-1 bg-yellow-400 hover:bg-yellow-500 text-white rounded-lg text-xs font-semibold transition">
+                            Edit
+                        </a>
+                        <form action="{{ route('portfolio.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Yakin hapus data ini?')" class="inline-block">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded-lg text-xs font-semibold transition">
+                                Hapus
+                            </button>
+                        </form>
+                    </td>
+                </tr>
                 @empty
-                    <tr>
-                        <td colspan="6" class="py-6 text-center text-gray-500 italic">
-                            Belum ada portfolio.
-                        </td>
-                    </tr>
+                <tr>
+                    <td colspan="6" class="py-6 text-center text-gray-500 italic">
+                        Belum ada portfolio.
+                    </td>
+                </tr>
                 @endforelse
             </tbody>
         </table>

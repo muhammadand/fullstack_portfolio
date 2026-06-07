@@ -4,22 +4,21 @@
     <div class="max-w-6xl mx-auto px-6 py-10">
         {{-- ✅ Header --}}
         <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
-            <h2 class="text-3xl font-bold gradient-text">Daftar Blog</h2>
+            <h2 class="text-3xl font-bold text-slate-800">Daftar Blog</h2>
 
             <div class="flex gap-2">
                 {{-- 🔍 Search Bar --}}
                 <form method="GET" class="flex items-center gap-2">
                     <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari judul atau kategori..."
-                        class="border border-gray-300 rounded-lg px-3 py-2 w-56 focus:ring focus:ring-purple-200" />
+                        class="border border-gray-300 rounded-lg px-3 py-2 w-56 focus:ring focus:ring-blue-900/30 focus:border-blue-900 outline-none transition" />
                     <button type="submit"
-                        class="bg-gradient-to-r from-purple-600 to-purple-700 text-white px-4 py-2 rounded-lg hover:opacity-90 transition">
+                        class="bg-blue-900 text-white px-4 py-2 rounded-lg font-medium shadow hover:bg-blue-950 transition">
                         Cari
                     </button>
                 </form>
 
-
                 <a href="{{ route('blogs.create') }}"
-                    class="bg-gradient-to-r from-purple-600 to-purple-700 text-white px-5 py-2 rounded-lg font-medium shadow hover:shadow-lg transition">
+                    class="bg-blue-900 text-white px-5 py-2 rounded-lg font-medium shadow hover:bg-blue-950 transition">
                     Create
                 </a>
             </div>
