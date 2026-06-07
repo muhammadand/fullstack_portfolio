@@ -6,6 +6,7 @@ use App\Models\Portfolio;
 use App\Models\PortfolioCategory;
 use Illuminate\Http\Request;
 use App\Helpers\AuthHelper;
+use Illuminate\Support\Facades\Storage;
 
 class PortfolioController extends Controller
 {
@@ -141,5 +142,21 @@ class PortfolioController extends Controller
 
         return redirect()->route('portfolio.index')
             ->with('success', 'Portfolio berhasil dihapus!');
+    }
+
+    /**
+     * Upload gambar dari WYSIWYG Editor (Quill) ke storage/public
+     * Mengembalikan URL publik gambar yang di-upload
+     */
+    public function uploadImage(Request $request)
+    {
+        $request->validate([
+            'image' => 'required|image|mimes:jpg,jpeg,png,gif,webp|max:5120',
+        ]);
+
+        $path = $request->file('image')->store('uploads/portfolio/content', 'public');
+        $url  = Storage::url($path); // => /storage/uploads/portfolio/content/filename.jpg
+
+        return response()->json(['url' => asset($url)]);
     }
 }

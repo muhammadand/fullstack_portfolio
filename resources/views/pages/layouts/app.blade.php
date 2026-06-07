@@ -4,7 +4,32 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Scalify Intelligence — Automasi Cerdas, Bisnis Naik Kelas</title>
+    {!! $meta_tags ?? '' !!}
+    @hasSection('meta_tags')
+        @yield('meta_tags')
+    @else
+        <title>Scalify Intelligence — Automasi Cerdas, Bisnis Naik Kelas</title>
+        <meta name="title" content="Scalify Intelligence — Automasi Cerdas, Bisnis Naik Kelas" />
+        <meta name="description" content="Scalify Intelligence menghadirkan solusi kecerdasan buatan, otomasi bisnis, chatbot AI, dan analisis data untuk perusahaan dan UMKM Indonesia." />
+        <meta name="keywords" content="automasi bisnis, kecerdasan buatan, AI chatbot, otomasi UMKM, analisis data bisnis" />
+        <meta name="author" content="Scalify Intelligence" />
+        <meta name="robots" content="index, follow" />
+        
+        {{-- Open Graph / Facebook --}}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="{{ url()->current() }}" />
+        <meta property="og:title" content="Scalify Intelligence — Automasi Cerdas, Bisnis Naik Kelas" />
+        <meta property="og:description" content="Scalify Intelligence menghadirkan solusi kecerdasan buatan, otomasi bisnis, chatbot AI, dan analisis data." />
+        <meta property="og:image" content="{{ asset('og-image.png') }}" />
+        
+        {{-- Twitter --}}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:url" content="{{ url()->current() }}" />
+        <meta name="twitter:title" content="Scalify Intelligence — Automasi Cerdas, Bisnis Naik Kelas" />
+        <meta name="twitter:description" content="Scalify Intelligence menghadirkan solusi kecerdasan buatan, otomasi bisnis, chatbot AI, dan analisis data." />
+        <meta name="twitter:image" content="{{ asset('og-image.png') }}" />
+    @endif
+    <link rel="canonical" href="{{ url()->current() }}" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.3/cdn.min.js" defer></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>

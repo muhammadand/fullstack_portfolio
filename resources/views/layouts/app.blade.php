@@ -5,7 +5,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    {{-- ===== SEO: Primary Meta Tags ===== --}}
+    {!! $meta_tags ?? '' !!}
+    @hasSection('meta_tags')
+    @yield('meta_tags')
+    @else
     <title>Scalify Intelligence — Automasi Cerdas, Tingkatkan Efisiensi dan Performa Bisnis.</title>
     <meta name="title" content="Scalify Intelligence — Automasi Cerdas, Bisnis Naik Kelas" />
     <meta name="description" content="Scalify Intelligence menghadirkan solusi kecerdasan buatan, otomasi bisnis, chatbot AI, dan analisis data untuk perusahaan dan UMKM Indonesia. Skalakan bisnis Anda dengan teknologi cerdas." />
@@ -14,14 +17,13 @@
     <meta name="robots" content="index, follow" />
     <meta name="language" content="Indonesian" />
     <meta name="revisit-after" content="7 days" />
-    <link rel="canonical" href="https://scalifyintellegence.my.id/" />
 
     {{-- ===== SEO: Open Graph / Facebook / WhatsApp ===== --}}
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://scalifyintellegence.my.id/" />
+    <meta property="og:url" content="{{ url()->current() }}" />
     <meta property="og:title" content="Scalify Intelligence — Automasi Cerdas, Bisnis Naik Kelas" />
     <meta property="og:description" content="Kami mengintegrasikan AI, sains data, dan otomasi ke sistem operasional Anda. Skalakan bisnis tanpa batas — biarkan algoritma yang bekerja." />
-    <meta property="og:image" content="https://scalifyintellegence.my.id/og-image.png" />
+    <meta property="og:image" content="{{ asset('og-image.png') }}" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content="Scalify Intelligence — Platform Automasi Bisnis AI" />
@@ -30,10 +32,12 @@
 
     {{-- ===== SEO: Twitter Card ===== --}}
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:url" content="https://scalifyintellegence.my.id/" />
+    <meta name="twitter:url" content="{{ url()->current() }}" />
     <meta name="twitter:title" content="Scalify Intelligence — Automasi Cerdas, Bisnis Naik Kelas" />
     <meta name="twitter:description" content="Kami mengintegrasikan AI, sains data, dan otomasi ke sistem operasional Anda. Skalakan bisnis tanpa batas — biarkan algoritma yang bekerja." />
-    <meta name="twitter:image" content="https://scalifyintellegence.my.id/og-image.png" />
+    <meta name="twitter:image" content="{{ asset('og-image.png') }}" />
+    @endif
+    <link rel="canonical" href="{{ url()->current() }}" />
 
     {{-- ===== SEO: JSON-LD Structured Data ===== --}}
     @verbatim

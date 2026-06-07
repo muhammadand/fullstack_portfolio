@@ -26,12 +26,14 @@ Route::get('/generate-sitemap', function () {
 
     // Portfolio
     Route::resource('portfolio', PortfolioController::class);
+    Route::post('portfolio/upload-image', [PortfolioController::class, 'uploadImage'])->name('portfolio.upload-image');
     Route::resource('portfolio-categories', PortfolioCategoryController::class);
     // Dashboard admin
     // Blog categories
     Route::resource('blog-categories', BlogCategoryController::class);
     // Blogs
     Route::resource('blogs', BlogController::class);
+    Route::post('blogs/upload-image', [BlogController::class, 'uploadImage'])->name('blogs.upload-image');
 
     //Public Routes
     Route::get('/',[HomeController::class,'indexCompanyProfile'])->name('index.company.profile');

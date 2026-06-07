@@ -151,4 +151,16 @@ class BlogController extends Controller
         $blogs = Blog::published()->latest()->get();
         return view('blogs.getBlogs', compact('blogs'));
     }
+
+    /**
+     * Upload inline image from WYSIWYG editor.
+     */
+    public function uploadImage(Request $request)
+    {
+        $request->validate(['image' => 'required|image|mimes:jpg,jpeg,png,gif,webp|max:5120']);
+
+        $path = $request->file('image')->store('uploads/blog/content', 'public');
+
+        return response()->json(['url' => asset('storage/' . $path)]);
+    }
 }
