@@ -280,9 +280,7 @@ $tagsString = is_array($blog->tags) ? implode(', ', $blog->tags) : $blog->tags;
                                 <button onclick="sharePost(this)" data-title="{{ $blog->title }}" data-text="{{ $blog->excerpt ?? Str::limit(strip_tags($blog->content), 100) }}" data-url="{{ url()->current() }}" class="w-10 h-10 flex items-center justify-center bg-slate-50 text-slate-600 hover:bg-[#0f172a] hover:text-white rounded-full transition-all shadow-sm" title="Share">
                                     <i class="fas fa-share-nodes"></i>
                                 </button>
-                                <button class="w-10 h-10 flex items-center justify-center bg-slate-50 text-slate-600 hover:bg-[#0f172a] hover:text-white rounded-full transition-all shadow-sm" title="Bookmark">
-                                    <i class="far fa-bookmark"></i>
-                                </button>
+
                             </div>
                         </div>
 
