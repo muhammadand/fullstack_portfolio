@@ -31,6 +31,11 @@ $menus = [
 'icon' => 'fa-solid fa-book',
 ],
 [
+'label' => 'Careers',
+'route' => 'careers.index',
+'icon' => 'fa-solid fa-briefcase',
+],
+[
 'label' => 'Users',
 'route' => 'users.index',
 'icon' => 'fa-solid fa-users',

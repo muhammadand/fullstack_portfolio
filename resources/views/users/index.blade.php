@@ -1,14 +1,14 @@
 @extends('layouts.admin.app')
 
 @section('content')
-<div class="max-w-6xl mx-auto px-6 py-10">
+<div class="max-w-6xl mx-auto px-4 py-8">
     {{-- ✅ Header --}}
-    <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
-        <h2 class="text-3xl font-bold text-slate-800">Daftar Users</h2>
+    <div class="flex flex-col sm:flex-row justify-between items-center mb-5 gap-4">
+        <h2 class="text-2xl font-semibold text-slate-800">Daftar Users</h2>
 
         <div class="flex gap-2">
             {{-- ➕ Tambah --}}
-            <a href="{{ route('users.create') }}" class="bg-blue-600 text-white px-5 py-2 rounded-lg font-medium shadow hover:bg-blue-700 transition">
+            <a href="{{ route('users.create') }}" class="bg-blue-900 text-white px-4 py-1.5 rounded-md text-sm font-medium shadow-sm hover:bg-blue-950 transition">
                 Create
             </a>
         </div>
@@ -27,24 +27,24 @@
     @endif
 
     {{-- ✅ Table --}}
-    <div class="overflow-x-auto bg-white rounded-xl shadow-sm border border-slate-200">
-        <table class="min-w-full text-sm text-left text-gray-700">
-            <thead class="bg-slate-50 text-slate-700 border-b border-slate-200">
+    <div class="overflow-x-auto bg-white rounded-lg shadow-sm border border-gray-100">
+        <table class="min-w-full text-sm text-left text-gray-600">
+            <thead class="bg-gray-50 text-gray-700 font-medium text-xs uppercase tracking-wider">
                 <tr>
-                    <th class="py-3 px-4 font-semibold">#</th>
-                    <th class="py-3 px-4 font-semibold">Nama</th>
-                    <th class="py-3 px-4 font-semibold">Email</th>
-                    <th class="py-3 px-4 font-semibold">Role</th>
-                    <th class="py-3 px-4 font-semibold">Status</th>
-                    <th class="py-3 px-4 font-semibold text-center">Aksi</th>
+                    <th class="py-2.5 px-3">#</th>
+                    <th class="py-2.5 px-3">Nama</th>
+                    <th class="py-2.5 px-3">Email</th>
+                    <th class="py-2.5 px-3">Role</th>
+                    <th class="py-2.5 px-3">Status</th>
+                    <th class="py-2.5 px-3 text-center">Aksi</th>
                 </tr>
             </thead>
 
-            <tbody>
+            <tbody class="text-[13px]">
                 @forelse($users as $i => $item)
-                <tr class="border-b hover:bg-slate-50 transition">
-                    <td class="py-3 px-4">{{ $loop->iteration }}</td>
-                    <td class="py-3 px-4 font-medium text-slate-900">
+                <tr class="border-b border-gray-50 hover:bg-gray-50/50 transition">
+                    <td class="py-2 px-3">{{ $loop->iteration }}</td>
+                    <td class="py-2 px-3 font-medium text-gray-800">
                         <div class="flex items-center gap-3">
                             @if($item->profile_photo)
                             <img src="{{ asset('storage/' . $item->profile_photo) }}" alt="avatar" class="w-8 h-8 rounded-full object-cover">
@@ -56,27 +56,27 @@
                             {{ $item->name }}
                         </div>
                     </td>
-                    <td class="py-3 px-4">{{ $item->email }}</td>
-                    <td class="py-3 px-4">
-                        <span class="px-2 py-1 rounded text-xs font-semibold bg-slate-100 text-slate-700 uppercase">
+                    <td class="py-2 px-3">{{ $item->email }}</td>
+                    <td class="py-2 px-3">
+                        <span class="px-2 py-0.5 rounded-md text-[11px] font-medium bg-gray-100 text-gray-700 border border-gray-200 uppercase">
                             {{ str_replace('_', ' ', $item->role) }}
                         </span>
                     </td>
-                    <td class="py-3 px-4">
-                        <span class="px-2 py-1 rounded text-xs font-semibold
-                                {{ $item->is_active ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">
+                    <td class="py-2 px-3">
+                        <span class="px-2 py-0.5 rounded-md text-[11px] font-medium border
+                                {{ $item->is_active ? 'bg-green-50 text-green-600 border-green-200' : 'bg-red-50 text-red-600 border-red-200' }}">
                             {{ $item->is_active ? 'Aktif' : 'Nonaktif' }}
                         </span>
                     </td>
-                    <td class="py-3 px-4 text-center flex gap-2 justify-center">
-                        <a href="{{ route('users.edit', $item->id) }}" class="px-3 py-1 bg-yellow-400 hover:bg-yellow-500 text-white rounded-lg text-xs font-semibold transition">
+                    <td class="py-2 px-3 text-center flex gap-1.5 justify-center">
+                        <a href="{{ route('users.edit', $item->id) }}" class="px-2.5 py-1 bg-yellow-50 text-yellow-600 hover:bg-yellow-100 border border-yellow-200 rounded-md text-[11px] font-medium transition">
                             Edit
                         </a>
                         @if(auth()->id() !== $item->id)
                         <form action="{{ route('users.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Yakin hapus data ini?')" class="inline-block">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded-lg text-xs font-semibold transition">
+                            <button type="submit" class="px-2.5 py-1 bg-red-50 text-red-600 hover:bg-red-100 border border-red-200 rounded-md text-[11px] font-medium transition">
                                 Hapus
                             </button>
                         </form>
@@ -85,7 +85,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="6" class="py-6 text-center text-slate-500 italic">
+                    <td colspan="6" class="py-6 text-center text-gray-500 italic text-sm">
                         Belum ada user.
                     </td>
                 </tr>

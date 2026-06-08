@@ -23,6 +23,7 @@
                 <a href="{{ route('landing.blogs') }}" class="hover:text-brand-accent transition-colors">Blog</a>
                 <a href="{{ route('landing.portfolio') }}" class="hover:text-brand-accent transition-colors">Project</a>
                 <a href="{{ route('sobat-scalify') }}" class="hover:text-brand-accent transition-colors">Sobat Scalify</a>
+                <a href="{{ route('landing.careers') }}" class="hover:text-brand-accent transition-colors">Careers</a>
             </div>
 
             {{-- Right side: CTA + Hamburger --}}
@@ -62,6 +63,9 @@
                 </a>
                 <a href="{{ route('sobat-scalify') }}" class="mobile-nav-link text-sm text-white/70 font-medium px-3 py-3 rounded-lg hover:bg-white/5 hover:text-brand-accent transition-all">
                     Sobat Scalify
+                </a>
+                <a href="{{ route('landing.careers') }}" class="mobile-nav-link text-sm text-white/70 font-medium px-3 py-3 rounded-lg hover:bg-white/5 hover:text-brand-accent transition-all">
+                    Careers
                 </a>
 
                 <div class="border-t border-white/10 mt-2 pt-3">

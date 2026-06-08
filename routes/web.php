@@ -11,6 +11,7 @@ use App\Http\Controllers\AuthController;
 use Spatie\Sitemap\SitemapGenerator;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DocumentationController;
+use App\Http\Controllers\CareersController;
 
 Route::get('/generate-sitemap', function () {
 
@@ -36,6 +37,10 @@ Route::get('/generate-sitemap', function () {
     Route::resource('blogs', BlogController::class);
     Route::post('blogs/upload-image', [BlogController::class, 'uploadImage'])->name('blogs.upload-image');
 
+    // Careers
+    Route::resource('careers', CareersController::class);
+    Route::post('careers/upload-image', [CareersController::class, 'uploadImage'])->name('careers.upload-image');
+
     // Users
     Route::resource('users', UserController::class);
 
@@ -51,6 +56,11 @@ Route::get('/generate-sitemap', function () {
     //portfolio users
     Route::get('landing/portfolio', [HomeController::class, 'portfolio'])->name('landing.portfolio');
     Route::get('landing/portfolio/{slug}', [HomeController::class, 'readPortfolio'])->name('portfolio.read');
+    
+    //careers users
+    Route::get('landing/careers', [App\Http\Controllers\CareersController::class, 'listCareers'])->name('landing.careers');
+    Route::get('landing/careers/{slug}', [App\Http\Controllers\CareersController::class, 'getByslug'])->name('careers.read');
+
     //service users
     Route::get('service',[HomeController::class,'service'])->name('service');
     //about users
