@@ -12,6 +12,7 @@ use Spatie\Sitemap\SitemapGenerator;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DocumentationController;
 use App\Http\Controllers\CareersController;
+use App\Http\Controllers\CareerApplicationController;
 
 Route::get('/generate-sitemap', function () {
 
@@ -40,6 +41,9 @@ Route::get('/generate-sitemap', function () {
     // Careers
     Route::resource('careers', CareersController::class);
     Route::post('careers/upload-image', [CareersController::class, 'uploadImage'])->name('careers.upload-image');
+
+    // Careers Application
+    Route::resource('career-applications', CareerApplicationController::class);
 
     // Users
     Route::resource('users', UserController::class);

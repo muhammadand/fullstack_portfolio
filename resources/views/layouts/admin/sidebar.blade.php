@@ -36,6 +36,12 @@ $menus = [
 'icon' => 'fa-solid fa-briefcase',
 ],
 [
+'label' => 'Career Applications',
+'route' => 'career-applications.index',
+'icon' => 'fa-solid fa-file-lines',
+],
+
+[
 'label' => 'Users',
 'route' => 'users.index',
 'icon' => 'fa-solid fa-users',

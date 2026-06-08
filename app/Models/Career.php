@@ -34,4 +34,12 @@ class Career extends Model
         'closing_date' => 'date',
         'is_active' => 'boolean',
     ];
+
+    /**
+     * Get the applications for the career.
+     */
+    public function applications()
+    {
+        return $this->hasMany(CareerApplication::class);
+    }
 }
