@@ -23,18 +23,58 @@ $avatar = $user->profile_photo
     </div>
 
     <div class="flex items-center gap-3">
-        {{-- Search --}}
-        <button class="w-10 h-10 bg-white border border-slate-200 rounded-xl flex items-center justify-center transition-all duration-200 hover:border-blue-300 hover:shadow-sm hover:shadow-blue-100">
-            <i class="fa-solid fa-magnifying-glass text-slate-400 text-sm"></i>
-        </button>
 
         {{-- Notification --}}
-        <button class="w-10 h-10 bg-white border border-slate-200 rounded-xl flex items-center justify-center relative transition-all duration-200 hover:border-blue-300 hover:shadow-sm hover:shadow-blue-100">
-            <i class="fa-regular fa-bell text-slate-400 text-sm"></i>
-            <span class="absolute -top-1 -right-1 w-4 h-4 bg-blue-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
-                3
-            </span>
-        </button>
+        <div x-data="{ notifOpen: false }" class="relative">
+            <button @click="notifOpen = !notifOpen" @click.away="notifOpen = false" class="w-10 h-10 bg-white border border-slate-200 rounded-xl flex items-center justify-center relative transition-all duration-200 hover:border-blue-300 hover:shadow-sm hover:shadow-blue-100">
+                <i class="fa-regular fa-bell text-slate-400 text-sm"></i>
+                @if($user->unreadNotifications->count() > 0)
+                <span class="absolute -top-1 -right-1 w-4 h-4 bg-blue-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                    {{ $user->unreadNotifications->count() }}
+                </span>
+                @endif
+            </button>
+
+            {{-- Dropdown Body --}}
+            <div x-show="notifOpen" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="absolute right-0 mt-3 w-80 bg-white rounded-xl shadow-lg border border-slate-100 py-2 z-50" style="display: none;">
+                <div class="px-4 py-2 border-b border-slate-50 mb-1 flex justify-between items-center">
+                    <p class="text-sm font-semibold text-slate-800">Notifications</p>
+                </div>
+                <div class="max-h-64 overflow-y-auto">
+                    @forelse($user->notifications()->latest()->get() as $notification)
+                    <div class="px-4 py-3 border-b border-slate-50 last:border-0 hover:bg-slate-50 transition flex items-start gap-3 {{ $notification->read_at ? 'opacity-70' : 'bg-blue-50/30' }}">
+                        <div class="flex-1">
+                            <p class="text-sm text-slate-700">
+                                {{ $notification->data['message'] ?? 'You have a new notification.' }}
+                            </p>
+                            <p class="text-xs text-slate-400 mt-1">{{ $notification->created_at->diffForHumans() }}</p>
+                        </div>
+                        <div class="flex flex-col gap-2 items-end justify-center pt-1">
+                            @if(!$notification->read_at)
+                            <form action="{{ route('notifications.mark-as-read', $notification->id) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="text-xs text-blue-600 hover:text-blue-800" title="Mark as Read">
+                                    <i class="fa-solid fa-check"></i>
+                                </button>
+                            </form>
+                            @endif
+                            <form action="{{ route('notifications.destroy', $notification->id) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-xs text-red-400 hover:text-red-600" title="Delete">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    @empty
+                    <div class="px-4 py-4 text-center text-sm text-slate-500">
+                        No notifications yet.
+                    </div>
+                    @endforelse
+                </div>
+            </div>
+        </div>
 
         {{-- Divider --}}
         <div class="w-px h-8 bg-slate-200"></div>

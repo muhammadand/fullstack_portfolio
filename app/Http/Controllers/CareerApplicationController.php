@@ -7,6 +7,10 @@ use App\Models\Career;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
+use App\Models\User;
+use App\Notifications\NewCareerApplicationNotification;
+use Illuminate\Support\Facades\Notification;
+
 class CareerApplicationController extends Controller
 {
     /**
@@ -61,7 +65,11 @@ class CareerApplicationController extends Controller
 
         $validated['applied_at'] = now();
 
-        CareerApplication::create($validated);
+        $application = CareerApplication::create($validated);
+
+        // Notify admins
+        $admins = User::all();
+        Notification::send($admins, new NewCareerApplicationNotification($application));
 
         return redirect()->back()->with('success', 'Lamaran berhasil disubmit.');
     }

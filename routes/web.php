@@ -27,6 +27,10 @@ Route::get('/generate-sitemap', function () {
     Route::get('/dashboard/admin', [AdminController::class, 'admin'])->name('dashboard.admin');
     Route::get('/admin/view-stats', [AdminController::class, 'viewStats'])->name('admin.view.stats');
 
+    // Notifications
+    Route::post('/notifications/{id}/mark-as-read', [App\Http\Controllers\Admin\NotificationController::class, 'markAsRead'])->name('notifications.mark-as-read');
+    Route::delete('/notifications/{id}', [App\Http\Controllers\Admin\NotificationController::class, 'destroy'])->name('notifications.destroy');
+
     // Portfolio
     Route::resource('portfolio', PortfolioController::class);
     Route::post('portfolio/upload-image', [PortfolioController::class, 'uploadImage'])->name('portfolio.upload-image');
