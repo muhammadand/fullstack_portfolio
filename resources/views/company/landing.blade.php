@@ -162,7 +162,7 @@
 <!-- Tech Stack Marquee -->
 <section class="py-8 bg-white border-b border-slate-100 overflow-hidden relative z-20">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-6">
-        <h3 class="text-center text-xs font-bold text-slate-400 uppercase tracking-widest">Tech Stack &
+        <h3 class="text-center text-xs font-bold text-slate-600 uppercase tracking-widest">Tech Stack &
             Infrastruktur</h3>
     </div>
 
@@ -176,47 +176,47 @@
         <!-- Group 1 -->
         <div class="flex gap-12 sm:gap-16 items-center px-6 sm:px-8">
             <!-- Laravel -->
-            <div class="flex items-center gap-3 text-slate-400 hover:text-[#FF2D20] transition-colors duration-300 cursor-default grayscale hover:grayscale-0">
+            <div class="flex items-center gap-3 text-slate-600 hover:text-[#FF2D20] transition-colors duration-300 cursor-default grayscale hover:grayscale-0">
                 <i class="fa-brands fa-laravel text-3xl"></i>
                 <span class="font-display font-bold text-lg">Laravel</span>
             </div>
             <!-- MySQL -->
-            <div class="flex items-center gap-3 text-slate-400 hover:text-[#4479A1] transition-colors duration-300 cursor-default grayscale hover:grayscale-0">
+            <div class="flex items-center gap-3 text-slate-600 hover:text-[#4479A1] transition-colors duration-300 cursor-default grayscale hover:grayscale-0">
                 <i class="fa-solid fa-database text-2xl"></i>
                 <span class="font-display font-bold text-lg">MySQL</span>
             </div>
             <!-- Node.js -->
-            <div class="flex items-center gap-3 text-slate-400 hover:text-[#339933] transition-colors duration-300 cursor-default grayscale hover:grayscale-0">
+            <div class="flex items-center gap-3 text-slate-600 hover:text-[#339933] transition-colors duration-300 cursor-default grayscale hover:grayscale-0">
                 <i class="fa-brands fa-node-js text-3xl"></i>
                 <span class="font-display font-bold text-lg">Node.js</span>
             </div>
             <!-- Python -->
-            <div class="flex items-center gap-3 text-slate-400 hover:text-[#3776AB] transition-colors duration-300 cursor-default grayscale hover:grayscale-0">
+            <div class="flex items-center gap-3 text-slate-600 hover:text-[#3776AB] transition-colors duration-300 cursor-default grayscale hover:grayscale-0">
                 <i class="fa-brands fa-python text-3xl"></i>
                 <span class="font-display font-bold text-lg">Python</span>
             </div>
             <!-- PostgreSQL -->
-            <div class="flex items-center gap-3 text-slate-400 hover:text-[#336791] transition-colors duration-300 cursor-default grayscale hover:grayscale-0">
+            <div class="flex items-center gap-3 text-slate-600 hover:text-[#336791] transition-colors duration-300 cursor-default grayscale hover:grayscale-0">
                 <i class="fa-solid fa-database text-2xl"></i>
                 <span class="font-display font-bold text-lg">PostgreSQL</span>
             </div>
             <!-- Flowise -->
-            <div class="flex items-center gap-3 text-slate-400 hover:text-brand-accent transition-colors duration-300 cursor-default grayscale hover:grayscale-0">
+            <div class="flex items-center gap-3 text-slate-600 hover:text-brand-accent transition-colors duration-300 cursor-default grayscale hover:grayscale-0">
                 <i class="fa-solid fa-robot text-2xl"></i>
                 <span class="font-display font-bold text-lg">Flowise</span>
             </div>
             <!-- Redis -->
-            <div class="flex items-center gap-3 text-slate-400 hover:text-[#DC382D] transition-colors duration-300 cursor-default grayscale hover:grayscale-0">
+            <div class="flex items-center gap-3 text-slate-600 hover:text-[#DC382D] transition-colors duration-300 cursor-default grayscale hover:grayscale-0">
                 <i class="fa-solid fa-server text-2xl"></i>
                 <span class="font-display font-bold text-lg">Redis</span>
             </div>
             <!-- VPS -->
-            <div class="flex items-center gap-3 text-slate-400 hover:text-slate-700 transition-colors duration-300 cursor-default grayscale hover:grayscale-0">
+            <div class="flex items-center gap-3 text-slate-600 hover:text-slate-700 transition-colors duration-300 cursor-default grayscale hover:grayscale-0">
                 <i class="fa-solid fa-cloud text-2xl"></i>
                 <span class="font-display font-bold text-lg">VPS Server</span>
             </div>
             <!-- Docker -->
-            <div class="flex items-center gap-3 text-slate-400 hover:text-[#2496ED] transition-colors duration-300 cursor-default grayscale hover:grayscale-0">
+            <div class="flex items-center gap-3 text-slate-600 hover:text-[#2496ED] transition-colors duration-300 cursor-default grayscale hover:grayscale-0">
                 <i class="fa-brands fa-docker text-3xl"></i>
                 <span class="font-display font-bold text-lg">Docker</span>
             </div>
@@ -224,39 +224,39 @@
 
         <!-- Group 2 (Duplicate for seamless loop) -->
         <div class="flex gap-12 sm:gap-16 items-center px-6 sm:px-8">
-            <div class="flex items-center gap-3 text-slate-400 hover:text-[#FF2D20] transition-colors duration-300 cursor-default grayscale hover:grayscale-0">
+            <div class="flex items-center gap-3 text-slate-600 hover:text-[#FF2D20] transition-colors duration-300 cursor-default grayscale hover:grayscale-0">
                 <i class="fa-brands fa-laravel text-3xl"></i>
                 <span class="font-display font-bold text-lg">Laravel</span>
             </div>
-            <div class="flex items-center gap-3 text-slate-400 hover:text-[#4479A1] transition-colors duration-300 cursor-default grayscale hover:grayscale-0">
+            <div class="flex items-center gap-3 text-slate-600 hover:text-[#4479A1] transition-colors duration-300 cursor-default grayscale hover:grayscale-0">
                 <i class="fa-solid fa-database text-2xl"></i>
                 <span class="font-display font-bold text-lg">MySQL</span>
             </div>
-            <div class="flex items-center gap-3 text-slate-400 hover:text-[#339933] transition-colors duration-300 cursor-default grayscale hover:grayscale-0">
+            <div class="flex items-center gap-3 text-slate-600 hover:text-[#339933] transition-colors duration-300 cursor-default grayscale hover:grayscale-0">
                 <i class="fa-brands fa-node-js text-3xl"></i>
                 <span class="font-display font-bold text-lg">Node.js</span>
             </div>
-            <div class="flex items-center gap-3 text-slate-400 hover:text-[#3776AB] transition-colors duration-300 cursor-default grayscale hover:grayscale-0">
+            <div class="flex items-center gap-3 text-slate-600 hover:text-[#3776AB] transition-colors duration-300 cursor-default grayscale hover:grayscale-0">
                 <i class="fa-brands fa-python text-3xl"></i>
                 <span class="font-display font-bold text-lg">Python</span>
             </div>
-            <div class="flex items-center gap-3 text-slate-400 hover:text-[#336791] transition-colors duration-300 cursor-default grayscale hover:grayscale-0">
+            <div class="flex items-center gap-3 text-slate-600 hover:text-[#336791] transition-colors duration-300 cursor-default grayscale hover:grayscale-0">
                 <i class="fa-solid fa-database text-2xl"></i>
                 <span class="font-display font-bold text-lg">PostgreSQL</span>
             </div>
-            <div class="flex items-center gap-3 text-slate-400 hover:text-brand-accent transition-colors duration-300 cursor-default grayscale hover:grayscale-0">
+            <div class="flex items-center gap-3 text-slate-600 hover:text-brand-accent transition-colors duration-300 cursor-default grayscale hover:grayscale-0">
                 <i class="fa-solid fa-robot text-2xl"></i>
                 <span class="font-display font-bold text-lg">Flowise</span>
             </div>
-            <div class="flex items-center gap-3 text-slate-400 hover:text-[#DC382D] transition-colors duration-300 cursor-default grayscale hover:grayscale-0">
+            <div class="flex items-center gap-3 text-slate-600 hover:text-[#DC382D] transition-colors duration-300 cursor-default grayscale hover:grayscale-0">
                 <i class="fa-solid fa-server text-2xl"></i>
                 <span class="font-display font-bold text-lg">Redis</span>
             </div>
-            <div class="flex items-center gap-3 text-slate-400 hover:text-slate-700 transition-colors duration-300 cursor-default grayscale hover:grayscale-0">
+            <div class="flex items-center gap-3 text-slate-600 hover:text-slate-700 transition-colors duration-300 cursor-default grayscale hover:grayscale-0">
                 <i class="fa-solid fa-cloud text-2xl"></i>
                 <span class="font-display font-bold text-lg">VPS Server</span>
             </div>
-            <div class="flex items-center gap-3 text-slate-400 hover:text-[#2496ED] transition-colors duration-300 cursor-default grayscale hover:grayscale-0">
+            <div class="flex items-center gap-3 text-slate-600 hover:text-[#2496ED] transition-colors duration-300 cursor-default grayscale hover:grayscale-0">
                 <i class="fa-brands fa-docker text-3xl"></i>
                 <span class="font-display font-bold text-lg">Docker</span>
             </div>
@@ -528,7 +528,7 @@
                             <i class="fa-solid fa-server text-brand-accent text-xl"></i>
                         </div>
                         <div>
-                            <h4 class="text-white font-bold text-sm mb-1.5">Pengembangan Sistem Skala Nasional</h4>
+                            <h3 class="text-white font-bold text-sm mb-1.5">Pengembangan Sistem Skala Nasional</h3>
                             <p class="text-white/60 text-xs leading-relaxed">Dipercaya sebagai backend engineer yang menghandle proyek strategis nasional, termasuk pengembangan <span class="text-white/80 font-medium">Simkopdes</span> di <span class="text-white/80 font-medium">Kementerian Koperasi dan UKM</span>. Ahli dalam merancang arsitektur aplikasi yang andal untuk volume data besar dan birokrasi yang kompleks.</p>
                         </div>
                     </div>
@@ -539,7 +539,7 @@
                             <i class="fa-solid fa-robot text-brand-accent text-xl"></i>
                         </div>
                         <div>
-                            <h4 class="text-white font-bold text-sm mb-1.5">Spesialisasi AI Agent & Integrasi Multi-Platform</h4>
+                            <h3 class="text-white font-bold text-sm mb-1.5">Spesialisasi AI Agent & Integrasi Multi-Platform</h3>
                             <p class="text-white/60 text-xs leading-relaxed">Melalui pengalaman di <span class="text-white/80 font-medium">Global Komunika</span>, saya mendalami perancangan agen pintar (AI Agent) untuk otomatisasi alur kerja serta membangun integrasi API multi-platform yang menjamin kelancaran komunikasi data antar ekosistem digital.</p>
                         </div>
                     </div>
@@ -574,7 +574,7 @@
                                 <h3 class="text-white font-bold text-lg tracking-wide">Muhammad Andi</h3>
                                 <p class="text-brand-accent text-xs font-medium mt-0.5">Founder & System Architect</p>
                             </div>
-                            <a href="https://www.linkedin.com/in/muhammad-andi-mubarok" target="_blank" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center border border-white/20 hover:bg-white/20 transition-colors">
+                            <a href="https://www.linkedin.com/in/muhammad-andi-mubarok" target="_blank" aria-label="LinkedIn Muhammad Andi" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center border border-white/20 hover:bg-white/20 transition-colors">
                                 <i class="fa-brands fa-linkedin-in text-white text-sm"></i>
                             </a>
                         </div>

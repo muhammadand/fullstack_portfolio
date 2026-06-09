@@ -159,7 +159,7 @@
     <main id="main-content">
         @yield('content')
     </main>
-    <footer class="bg-brand-navy border-t border-white/5 pt-12 pb-8 px-6 text-white/40 text-xs">
+    <footer class="bg-brand-navy border-t border-white/5 pt-12 pb-8 px-6 text-white/60 text-xs">
         <div class="max-w-5xl mx-auto flex flex-col md:flex-row items-center md:items-start justify-between gap-10 mb-8">
 
             {{-- Brand Section --}}
@@ -200,14 +200,14 @@
                         <div class="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center">
                             <i class="fa-solid fa-phone text-brand-accent/80 text-[10px]"></i>
                         </div>
-                        <span><span class="text-white/40 mr-1">Bisnis:</span> +62 877 6103 6385</span>
+                        <span><span class="text-white/70 mr-1">Bisnis:</span> +62 877 6103 6385</span>
                     </a>
 
                     <a href="https://wa.me/6285221694067" target="_blank" class="flex items-center gap-3 text-white/60 hover:text-white transition-colors">
                         <div class="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center">
                             <i class="fa-brands fa-whatsapp text-green-400/80 text-[11px]"></i>
                         </div>
-                        <span><span class="text-white/40 mr-1">Owner:</span> 0852 2169 4067</span>
+                        <span><span class="text-white/70 mr-1">Owner:</span> 0852 2169 4067</span>
                     </a>
                 </div>
             </div>
@@ -215,7 +215,7 @@
         </div>
 
         {{-- Copyright --}}
-        <div class="border-t border-white/5 pt-6 text-center text-white/30">
+        <div class="border-t border-white/5 pt-6 text-center text-white/50">
             <p>© 2026 Scalify Intelligence · All rights reserved</p>
         </div>
     </footer>
