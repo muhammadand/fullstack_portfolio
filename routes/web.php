@@ -13,13 +13,88 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\DocumentationController;
 use App\Http\Controllers\CareersController;
 use App\Http\Controllers\CareerApplicationController;
+use Spatie\Sitemap\Sitemap;
+use Spatie\Sitemap\Tags\Url;
+use App\Models\Blog;
+use App\Models\Portfolio;
+use App\Models\Career;
 
 Route::get('/generate-sitemap', function () {
+    $sitemap = Sitemap::create();
 
-    SitemapGenerator::create('https://scalifyintellegence.my.id/')
-        ->writeToFile(public_path('sitemap.xml'));
+    // 1. Halaman Utama
+    $sitemap->add(Url::create('/')
+        ->setLastModificationDate(now())
+        ->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY)
+        ->setPriority(1.0));
 
-    return 'Sitemap generated!';
+    // 2. Halaman Statis / Publik Utama
+    $sitemap->add(Url::create('/service')
+        ->setLastModificationDate(now())
+        ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
+        ->setPriority(0.8));
+
+    $sitemap->add(Url::create('/about')
+        ->setLastModificationDate(now())
+        ->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY)
+        ->setPriority(0.7));
+
+    $sitemap->add(Url::create('/contact')
+        ->setLastModificationDate(now())
+        ->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY)
+        ->setPriority(0.7));
+
+    $sitemap->add(Url::create('/sobat-scalify')
+        ->setLastModificationDate(now())
+        ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
+        ->setPriority(0.8));
+
+    // 3. Halaman Indeks Dinamis
+    $sitemap->add(Url::create('/s/blogs')
+        ->setLastModificationDate(now())
+        ->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY)
+        ->setPriority(0.9));
+
+    $sitemap->add(Url::create('/s/portfolio')
+        ->setLastModificationDate(now())
+        ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
+        ->setPriority(0.9));
+
+    $sitemap->add(Url::create('/s/careers')
+        ->setLastModificationDate(now())
+        ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
+        ->setPriority(0.8));
+
+    // 4. Artikel Blog Dinamis
+    $blogs = Blog::published()->get();
+    foreach ($blogs as $blog) {
+        $sitemap->add(Url::create("/s/blog/{$blog->slug}")
+            ->setLastModificationDate($blog->updated_at ?? now())
+            ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
+            ->setPriority(0.8));
+    }
+
+    // 5. Item Portofolio Dinamis
+    $portfolios = Portfolio::active()->get();
+    foreach ($portfolios as $portfolio) {
+        $sitemap->add(Url::create("/s/portfolio/{$portfolio->slug}")
+            ->setLastModificationDate($portfolio->updated_at ?? now())
+            ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
+            ->setPriority(0.8));
+    }
+
+    // 6. Lowongan Karir Dinamis
+    $careers = Career::where('is_active', 1)->get();
+    foreach ($careers as $career) {
+        $sitemap->add(Url::create("/s/careers/{$career->slug}")
+            ->setLastModificationDate($career->updated_at ?? now())
+            ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
+            ->setPriority(0.7));
+    }
+
+    $sitemap->writeToFile(public_path('sitemap.xml'));
+
+    return 'Sitemap dinamis berhasil dibuat!';
 });
 
 
