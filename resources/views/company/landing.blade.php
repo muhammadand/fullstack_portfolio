@@ -376,7 +376,7 @@
                 <div class="shrink-0 w-[280px] sm:w-[360px] snap-center group/card">
                     <div class="relative w-full rounded-[1.5rem] overflow-hidden bg-black shadow-md transition-all duration-300 group-hover/card:shadow-xl group-hover/card:shadow-slate-300 group-hover/card:-translate-y-1 border border-slate-200">
                         <div style="padding-top: 56.25%;"></div>
-                        <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/iUJWNHxI2RU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/iUJWNHxI2RU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
                     </div>
                 </div>
 
@@ -384,7 +384,7 @@
                 <div class="shrink-0 w-[280px] sm:w-[360px] snap-center group/card">
                     <div class="relative w-full rounded-[1.5rem] overflow-hidden bg-black shadow-md transition-all duration-300 group-hover/card:shadow-xl group-hover/card:shadow-slate-300 group-hover/card:-translate-y-1 border border-slate-200">
                         <div style="padding-top: 56.25%;"></div>
-                        <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/-bkn_ignjD4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/-bkn_ignjD4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
                     </div>
                 </div>
 
@@ -392,7 +392,7 @@
                 <div class="shrink-0 w-[280px] sm:w-[360px] snap-center group/card">
                     <div class="relative w-full rounded-[1.5rem] overflow-hidden bg-black shadow-md transition-all duration-300 group-hover/card:shadow-xl group-hover/card:shadow-slate-300 group-hover/card:-translate-y-1 border border-slate-200">
                         <div style="padding-top: 56.25%;"></div>
-                        <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/kMWZS8c5Xuo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/kMWZS8c5Xuo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
                     </div>
                 </div>
 
@@ -400,7 +400,7 @@
                 <div class="shrink-0 w-[280px] sm:w-[360px] snap-center group/card">
                     <div class="relative w-full rounded-[1.5rem] overflow-hidden bg-black shadow-md transition-all duration-300 group-hover/card:shadow-xl group-hover/card:shadow-slate-300 group-hover/card:-translate-y-1 border border-slate-200">
                         <div style="padding-top: 56.25%;"></div>
-                        <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/tO4PwTDOLX8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/tO4PwTDOLX8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
                     </div>
                 </div>
 
@@ -408,7 +408,7 @@
                 <div class="shrink-0 w-[280px] sm:w-[360px] snap-center group/card">
                     <div class="relative w-full rounded-[1.5rem] overflow-hidden bg-black shadow-md transition-all duration-300 group-hover/card:shadow-xl group-hover/card:shadow-slate-300 group-hover/card:-translate-y-1 border border-slate-200">
                         <div style="padding-top: 56.25%;"></div>
-                        <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/mG9gcUFLMeM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/mG9gcUFLMeM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
                     </div>
                 </div>
 
@@ -416,7 +416,7 @@
                 <div class="shrink-0 w-[280px] sm:w-[360px] snap-center group/card">
                     <div class="relative w-full rounded-[1.5rem] overflow-hidden bg-black shadow-md transition-all duration-300 group-hover/card:shadow-xl group-hover/card:shadow-slate-300 group-hover/card:-translate-y-1 border border-slate-200">
                         <div style="padding-top: 56.25%;"></div>
-                        <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/9vuxrTVfRNo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/9vuxrTVfRNo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
                     </div>
                 </div>
 
@@ -517,7 +517,7 @@
                     <div class="absolute inset-0 bg-gradient-to-t from-[#0A0E2A] via-[#0A0E2A]/20 to-transparent z-10"></div>
 
                     {{-- Anda bisa upload foto owner ke folder public/images dengan nama founder.png --}}
-                    <img src="{{ asset('images/founder.png') }}" alt="Founder Scalify" class="w-full h-full object-cover object-top relative z-0">
+                    <img src="{{ asset('images/founder.jpg') }}" alt="Founder Scalify" class="w-full h-full object-cover object-top relative z-0" loading="lazy">
 
                     {{-- Badge nama di atas gambar --}}
                     <div class="absolute bottom-6 left-6 right-6 z-20 p-4 rounded-xl border border-white/20 shadow-xl" style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);">

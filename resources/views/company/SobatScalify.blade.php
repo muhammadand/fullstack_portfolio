@@ -6,7 +6,7 @@
     {{-- Gradient atas: dari brand-dark ke transparan --}}
     <div class="absolute top-14 sm:top-16 left-0 right-0 h-32 bg-gradient-to-b from-[#0A0E2A] to-transparent z-10 pointer-events-none"></div>
 
-    <img src="{{ asset('images/sobatscal.png') }}" alt="Sobat Scalify" class="w-full h-auto block">
+    <img src="{{ asset('images/sobatscal.jpg') }}" alt="Sobat Scalify" class="w-full h-auto block" fetchpriority="high">
 
     {{-- Gradient bawah: dari transparan ke brand-dark --}}
     <div class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0A0E2A] to-transparent z-10 pointer-events-none"></div>
