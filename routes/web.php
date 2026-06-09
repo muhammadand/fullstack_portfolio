@@ -58,6 +58,15 @@ Route::get('/generate-sitemap', function () {
 
     //Public Routes
     Route::get('/',[HomeController::class,'indexCompanyProfile'])->name('index.company.profile');
+
+    // Redirect 301 dari route lama (landing/*) ke route baru (s/*) untuk menjaga SEO
+    Route::redirect('landing/blogs', '/s/blogs', 301);
+    Route::redirect('landing/blog/{slug}', '/s/blog/{slug}', 301);
+    Route::redirect('landing/portfolio', '/s/portfolio', 301);
+    Route::redirect('landing/portfolio/{slug}', '/s/portfolio/{slug}', 301);
+    Route::redirect('landing/careers', '/s/careers', 301);
+    Route::redirect('landing/careers/{slug}', '/s/careers/{slug}', 301);
+
     //blogs user
     Route::get('s/blogs', [HomeController::class, 'blogs'])->name('landing.blogs');
     Route::get('s/blog/{slug}', [HomeController::class, 'readBlog'])->name('blogs.read');
