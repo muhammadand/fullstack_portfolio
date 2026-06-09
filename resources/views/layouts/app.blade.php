@@ -154,7 +154,9 @@
 <body class="bg-brand-dark text-white font-sans overflow-x-hidden scroll-smooth">
 
     @include('layouts.navbar')
-    @yield('content')
+    <main id="main-content">
+        @yield('content')
+    </main>
     <footer class="bg-brand-navy border-t border-white/5 pt-12 pb-8 px-6 text-white/40 text-xs">
         <div class="max-w-5xl mx-auto flex flex-col md:flex-row items-center md:items-start justify-between gap-10 mb-8">
 

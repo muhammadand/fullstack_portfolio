@@ -69,7 +69,7 @@
     <div x-show="lightboxOpen" style="display: none;" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md" x-transition.opacity.duration.300ms @keydown.escape.window="lightboxOpen = false">
 
         {{-- Close button --}}
-        <button @click="lightboxOpen = false" class="absolute top-6 right-6 sm:top-8 sm:right-8 text-white/50 hover:text-white transition-colors z-50 focus:outline-none">
+        <button @click="lightboxOpen = false" aria-label="Tutup detail foto" class="absolute top-6 right-6 sm:top-8 sm:right-8 text-white/50 hover:text-white transition-colors z-50 focus:outline-none">
             <i class="fa-solid fa-xmark text-4xl"></i>
         </button>
 

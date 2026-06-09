@@ -43,17 +43,19 @@
     <!-- Navigation -->
 
     @include('pages.layouts.navbar')
-    @yield('content')
-    @if (Route::currentRouteName() === 'landing')
-    @include('pages.component.service')
-    @include('pages.component.about')
-    @include('pages.component.portfolio')
-    @include('pages.component.testimoni')
-    @include('pages.component.blogs')
-    @include('pages.component.social_media')
-    @include('pages.component.contact')
-    @include('pages.component.cta')
-    @endif
+    <main id="main-content">
+        @yield('content')
+        @if (Route::currentRouteName() === 'landing')
+        @include('pages.component.service')
+        @include('pages.component.about')
+        @include('pages.component.portfolio')
+        @include('pages.component.testimoni')
+        @include('pages.component.blogs')
+        @include('pages.component.social_media')
+        @include('pages.component.contact')
+        @include('pages.component.cta')
+        @endif
+    </main>
     @include('pages.layouts.footer')
 </body>
 

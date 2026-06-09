@@ -373,50 +373,98 @@
             <div x-ref="slider" class="flex gap-5 sm:gap-6 overflow-x-auto snap-x snap-mandatory pb-8 pt-4 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0" style="scrollbar-width: none; -ms-overflow-style: none;">
 
                 <!-- Card 1 -->
-                <div class="shrink-0 w-[280px] sm:w-[360px] snap-center group/card">
+                <div class="shrink-0 w-[280px] sm:w-[360px] snap-center group/card" x-data="{ playing: false }">
                     <div class="relative w-full rounded-[1.5rem] overflow-hidden bg-black shadow-md transition-all duration-300 group-hover/card:shadow-xl group-hover/card:shadow-slate-300 group-hover/card:-translate-y-1 border border-slate-200">
                         <div style="padding-top: 56.25%;"></div>
-                        <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/iUJWNHxI2RU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+                        <template x-if="playing">
+                            <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/iUJWNHxI2RU?autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </template>
+                        <div x-show="!playing" @click="playing = true" class="absolute inset-0 cursor-pointer flex items-center justify-center bg-cover bg-center" style="background-image: url('https://img.youtube.com/vi/iUJWNHxI2RU/hqdefault.jpg')">
+                            <div class="absolute inset-0 bg-black/30 group-hover/card:bg-black/45 transition-colors"></div>
+                            <button aria-label="Putar video portofolio 1" class="relative z-10 w-14 h-14 rounded-full bg-red-600 flex items-center justify-center text-white shadow-lg transition-transform duration-300 group-hover/card:scale-110">
+                                <i class="fa-solid fa-play text-lg ml-1"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Card 2 -->
-                <div class="shrink-0 w-[280px] sm:w-[360px] snap-center group/card">
+                <div class="shrink-0 w-[280px] sm:w-[360px] snap-center group/card" x-data="{ playing: false }">
                     <div class="relative w-full rounded-[1.5rem] overflow-hidden bg-black shadow-md transition-all duration-300 group-hover/card:shadow-xl group-hover/card:shadow-slate-300 group-hover/card:-translate-y-1 border border-slate-200">
                         <div style="padding-top: 56.25%;"></div>
-                        <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/-bkn_ignjD4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+                        <template x-if="playing">
+                            <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/-bkn_ignjD4?autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </template>
+                        <div x-show="!playing" @click="playing = true" class="absolute inset-0 cursor-pointer flex items-center justify-center bg-cover bg-center" style="background-image: url('https://img.youtube.com/vi/-bkn_ignjD4/hqdefault.jpg')">
+                            <div class="absolute inset-0 bg-black/30 group-hover/card:bg-black/45 transition-colors"></div>
+                            <button aria-label="Putar video portofolio 2" class="relative z-10 w-14 h-14 rounded-full bg-red-600 flex items-center justify-center text-white shadow-lg transition-transform duration-300 group-hover/card:scale-110">
+                                <i class="fa-solid fa-play text-lg ml-1"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Card 3 -->
-                <div class="shrink-0 w-[280px] sm:w-[360px] snap-center group/card">
+                <div class="shrink-0 w-[280px] sm:w-[360px] snap-center group/card" x-data="{ playing: false }">
                     <div class="relative w-full rounded-[1.5rem] overflow-hidden bg-black shadow-md transition-all duration-300 group-hover/card:shadow-xl group-hover/card:shadow-slate-300 group-hover/card:-translate-y-1 border border-slate-200">
                         <div style="padding-top: 56.25%;"></div>
-                        <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/kMWZS8c5Xuo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+                        <template x-if="playing">
+                            <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/kMWZS8c5Xuo?autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </template>
+                        <div x-show="!playing" @click="playing = true" class="absolute inset-0 cursor-pointer flex items-center justify-center bg-cover bg-center" style="background-image: url('https://img.youtube.com/vi/kMWZS8c5Xuo/hqdefault.jpg')">
+                            <div class="absolute inset-0 bg-black/30 group-hover/card:bg-black/45 transition-colors"></div>
+                            <button aria-label="Putar video portofolio 3" class="relative z-10 w-14 h-14 rounded-full bg-red-600 flex items-center justify-center text-white shadow-lg transition-transform duration-300 group-hover/card:scale-110">
+                                <i class="fa-solid fa-play text-lg ml-1"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Card 4 -->
-                <div class="shrink-0 w-[280px] sm:w-[360px] snap-center group/card">
+                <div class="shrink-0 w-[280px] sm:w-[360px] snap-center group/card" x-data="{ playing: false }">
                     <div class="relative w-full rounded-[1.5rem] overflow-hidden bg-black shadow-md transition-all duration-300 group-hover/card:shadow-xl group-hover/card:shadow-slate-300 group-hover/card:-translate-y-1 border border-slate-200">
                         <div style="padding-top: 56.25%;"></div>
-                        <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/tO4PwTDOLX8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+                        <template x-if="playing">
+                            <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/tO4PwTDOLX8?autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </template>
+                        <div x-show="!playing" @click="playing = true" class="absolute inset-0 cursor-pointer flex items-center justify-center bg-cover bg-center" style="background-image: url('https://img.youtube.com/vi/tO4PwTDOLX8/hqdefault.jpg')">
+                            <div class="absolute inset-0 bg-black/30 group-hover/card:bg-black/45 transition-colors"></div>
+                            <button aria-label="Putar video portofolio 4" class="relative z-10 w-14 h-14 rounded-full bg-red-600 flex items-center justify-center text-white shadow-lg transition-transform duration-300 group-hover/card:scale-110">
+                                <i class="fa-solid fa-play text-lg ml-1"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Card 5 -->
-                <div class="shrink-0 w-[280px] sm:w-[360px] snap-center group/card">
+                <div class="shrink-0 w-[280px] sm:w-[360px] snap-center group/card" x-data="{ playing: false }">
                     <div class="relative w-full rounded-[1.5rem] overflow-hidden bg-black shadow-md transition-all duration-300 group-hover/card:shadow-xl group-hover/card:shadow-slate-300 group-hover/card:-translate-y-1 border border-slate-200">
                         <div style="padding-top: 56.25%;"></div>
-                        <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/mG9gcUFLMeM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+                        <template x-if="playing">
+                            <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/mG9gcUFLMeM?autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </template>
+                        <div x-show="!playing" @click="playing = true" class="absolute inset-0 cursor-pointer flex items-center justify-center bg-cover bg-center" style="background-image: url('https://img.youtube.com/vi/mG9gcUFLMeM/hqdefault.jpg')">
+                            <div class="absolute inset-0 bg-black/30 group-hover/card:bg-black/45 transition-colors"></div>
+                            <button aria-label="Putar video portofolio 5" class="relative z-10 w-14 h-14 rounded-full bg-red-600 flex items-center justify-center text-white shadow-lg transition-transform duration-300 group-hover/card:scale-110">
+                                <i class="fa-solid fa-play text-lg ml-1"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Card 6 -->
-                <div class="shrink-0 w-[280px] sm:w-[360px] snap-center group/card">
+                <div class="shrink-0 w-[280px] sm:w-[360px] snap-center group/card" x-data="{ playing: false }">
                     <div class="relative w-full rounded-[1.5rem] overflow-hidden bg-black shadow-md transition-all duration-300 group-hover/card:shadow-xl group-hover/card:shadow-slate-300 group-hover/card:-translate-y-1 border border-slate-200">
                         <div style="padding-top: 56.25%;"></div>
-                        <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/9vuxrTVfRNo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+                        <template x-if="playing">
+                            <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/9vuxrTVfRNo?autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </template>
+                        <div x-show="!playing" @click="playing = true" class="absolute inset-0 cursor-pointer flex items-center justify-center bg-cover bg-center" style="background-image: url('https://img.youtube.com/vi/9vuxrTVfRNo/hqdefault.jpg')">
+                            <div class="absolute inset-0 bg-black/30 group-hover/card:bg-black/45 transition-colors"></div>
+                            <button aria-label="Putar video portofolio 6" class="relative z-10 w-14 h-14 rounded-full bg-red-600 flex items-center justify-center text-white shadow-lg transition-transform duration-300 group-hover/card:scale-110">
+                                <i class="fa-solid fa-play text-lg ml-1"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -429,10 +477,10 @@
                 </a>
 
                 <div class="flex items-center gap-3">
-                    <button @click="$refs.slider.scrollBy({left: -360, behavior: 'smooth'})" class="w-12 h-12 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-50 hover:text-brand-blue transition-colors shadow-sm">
+                    <button @click="$refs.slider.scrollBy({left: -360, behavior: 'smooth'})" aria-label="Slide sebelumnya" class="w-12 h-12 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-50 hover:text-brand-blue transition-colors shadow-sm">
                         <i class="fa-solid fa-chevron-left"></i>
                     </button>
-                    <button @click="$refs.slider.scrollBy({left: 360, behavior: 'smooth'})" class="w-12 h-12 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-50 hover:text-brand-blue transition-colors shadow-sm">
+                    <button @click="$refs.slider.scrollBy({left: 360, behavior: 'smooth'})" aria-label="Slide berikutnya" class="w-12 h-12 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-50 hover:text-brand-blue transition-colors shadow-sm">
                         <i class="fa-solid fa-chevron-right"></i>
                     </button>
                 </div>
