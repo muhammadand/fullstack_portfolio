@@ -59,15 +59,15 @@ Route::get('/generate-sitemap', function () {
     //Public Routes
     Route::get('/',[HomeController::class,'indexCompanyProfile'])->name('index.company.profile');
     //blogs user
-    Route::get('landing/blogs', [HomeController::class, 'blogs'])->name('landing.blogs');
-    Route::get('landing/blog/{slug}', [HomeController::class, 'readBlog'])->name('blogs.read');
+    Route::get('s/blogs', [HomeController::class, 'blogs'])->name('landing.blogs');
+    Route::get('s/blog/{slug}', [HomeController::class, 'readBlog'])->name('blogs.read');
     //portfolio users
-    Route::get('landing/portfolio', [HomeController::class, 'portfolio'])->name('landing.portfolio');
-    Route::get('landing/portfolio/{slug}', [HomeController::class, 'readPortfolio'])->name('portfolio.read');
+    Route::get('s/portfolio', [HomeController::class, 'portfolio'])->name('landing.portfolio');
+    Route::get('s/portfolio/{slug}', [HomeController::class, 'readPortfolio'])->name('portfolio.read');
     
     //careers users
-    Route::get('landing/careers', [App\Http\Controllers\CareersController::class, 'listCareers'])->name('landing.careers');
-    Route::get('landing/careers/{slug}', [App\Http\Controllers\CareersController::class, 'getByslug'])->name('careers.read');
+    Route::get('s/careers', [App\Http\Controllers\CareersController::class, 'listCareers'])->name('landing.careers');
+    Route::get('s/careers/{slug}', [App\Http\Controllers\CareersController::class, 'getByslug'])->name('careers.read');
 
     //service users
     Route::get('service',[HomeController::class,'service'])->name('service');
