@@ -242,7 +242,7 @@ $tagsString = is_array($blog->tags) ? implode(', ', $blog->tags) : $blog->tags;
 
         <div class="grid lg:grid-cols-12 gap-8 lg:gap-12">
             <!-- Main Content -->
-            <div class="lg:col-span-8">
+            <div class="lg:col-span-8 min-w-0">
                 <article class="bg-white rounded-3xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] overflow-hidden">
                     <!-- Featured Image -->
                     @if ($blog->featured_image)
@@ -252,23 +252,23 @@ $tagsString = is_array($blog->tags) ? implode(', ', $blog->tags) : $blog->tags;
                     </div>
                     @endif
 
-                    <div class="p-6 sm:p-8 md:p-12">
+                    <div class="p-6 sm:p-8 md:p-12 min-w-0">
                         <!-- Title -->
-                        <h1 class="text-xl md:text-2xl font-display font-bold text-slate-900 mb-6 leading-tight">
+                        <h1 class="text-xl md:text-2xl font-display font-bold text-slate-900 mb-6 leading-tight break-words">
                             {{ $blog->title }}
                         </h1>
 
                         <!-- Author & Meta -->
                         <div class="flex items-center justify-between flex-wrap gap-4 pb-8 border-b border-slate-100 mb-8">
-                            <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 rounded-full bg-[#0f172a] flex items-center justify-center text-white font-bold text-lg shadow-md">
+                            <div class="flex items-center gap-4 min-w-0">
+                                <div class="w-12 h-12 rounded-full bg-[#0f172a] flex items-center justify-center text-white font-bold text-lg shadow-md flex-shrink-0">
                                     {{ substr($blog->author->name ?? 'A', 0, 1) }}
                                 </div>
-                                <div>
-                                    <p class="font-semibold text-slate-900 text-base">
+                                <div class="min-w-0">
+                                    <p class="font-semibold text-slate-900 text-base truncate">
                                         {{ $blog->author->name ?? 'Admin' }}
                                     </p>
-                                    <p class="text-sm text-slate-500 font-medium">
+                                    <p class="text-sm text-slate-500 font-medium truncate">
                                         {{ $blog->published_at?->format('d M Y') }} &bull;
                                         {{ $blog->reading_time ?? '5' }} min read
                                     </p>
@@ -276,11 +276,14 @@ $tagsString = is_array($blog->tags) ? implode(', ', $blog->tags) : $blog->tags;
                             </div>
 
                             <!-- Share Buttons -->
-                            <div class="flex items-center gap-2">
-                                <button onclick="sharePost(this)" data-title="{{ $blog->title }}" data-text="{{ $blog->excerpt ?? Str::limit(strip_tags($blog->content), 100) }}" data-url="{{ url()->current() }}" class="w-10 h-10 flex items-center justify-center bg-slate-50 text-slate-600 hover:bg-[#0f172a] hover:text-white rounded-full transition-all shadow-sm" title="Share">
+                            <div class="flex items-center gap-2 flex-shrink-0">
+                                <button onclick="sharePost(this)" data-title="{{ $blog->title }}" data-text="{{ $blog->excerpt ?? Str::limit(strip_tags($blog->content), 100) }}" data-url="{{ url()->current() }}" class="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-slate-50 text-slate-600 hover:bg-[#0f172a] hover:text-white rounded-full transition-all shadow-sm" title="Share">
                                     <i class="fas fa-share-nodes"></i>
                                 </button>
 
+                                <a href="https://t.me/share/url?url={{ urlencode(url()->current()) }}&text={{ urlencode($blog->title) }}" target="_blank" class="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-slate-50 text-[#229ED9] hover:bg-[#229ED9] hover:text-white rounded-full transition-all shadow-sm" title="Share to Telegram">
+                                    <i class="fab fa-telegram-plane"></i>
+                                </a>
                             </div>
                         </div>
 
@@ -302,6 +305,8 @@ $tagsString = is_array($blog->tags) ? implode(', ', $blog->tags) : $blog->tags;
                                 font-size: 16px;
                                 line-height: 1.8;
                                 color: #374151;
+                                overflow-wrap: anywhere;
+                                word-break: break-word;
                             }
 
                             /* Headings */
