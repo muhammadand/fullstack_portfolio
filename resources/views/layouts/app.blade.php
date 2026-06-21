@@ -430,13 +430,108 @@
             const btn     = document.getElementById('scalify-chat-btn');
             const tooltip = document.getElementById('scalify-chat-tooltip');
 
-            // Show tooltip on hover
-            btn.addEventListener('mouseenter', () => tooltip.classList.add('visible'));
+            // Create mobile backdrop overlay
+            const backdrop = document.createElement('div');
+            backdrop.id = 'scalify-chat-backdrop';
+            Object.assign(backdrop.style, {
+                position: 'fixed', inset: '0', background: 'rgba(0,0,0,0.45)',
+                backdropFilter: 'blur(4px)', zIndex: '9998',
+                opacity: '0', pointerEvents: 'none',
+                transition: 'opacity 0.3s ease', display: 'none'
+            });
+            document.body.appendChild(backdrop);
+
+            // Mobile CSS to inject into Flowise Shadow DOM
+            const MOBILE_CSS = `
+                @media (max-width: 640px) {
+                    /* Bottom sheet container */
+                    .chat-window,
+                    [class*="chatWindow"],
+                    [class*="chat-window"],
+                    div[style*="position: fixed"][style*="bottom"],
+                    div[style*="position:fixed"][style*="bottom"] {
+                        position: fixed !important;
+                        bottom: 0 !important;
+                        left: 0 !important;
+                        right: 0 !important;
+                        top: auto !important;
+                        width: 100vw !important;
+                        max-width: 100vw !important;
+                        height: 72vh !important;
+                        max-height: 72vh !important;
+                        border-radius: 24px 24px 0 0 !important;
+                        box-shadow: 0 -8px 40px rgba(0,0,0,0.35) !important;
+                        animation: scalify-slideup 0.35s cubic-bezier(0.34,1.56,0.64,1) both !important;
+                        transform: none !important;
+                    }
+                    @keyframes scalify-slideup {
+                        from { transform: translateY(100%); opacity: 0; }
+                        to   { transform: translateY(0);    opacity: 1; }
+                    }
+                    /* Hide the default Flowise button on mobile too */
+                    button[part="button"], .chatbot-button {
+                        display: none !important;
+                    }
+                }
+            `;
+
+            let styleInjected = false;
+
+            // Inject styles + hide default button via MutationObserver
+            const observer = new MutationObserver(() => {
+                const bubble = document.querySelector('flowise-chatbot')
+                            ?? document.querySelector('flowise-fullchatbot');
+                if (!bubble?.shadowRoot) return;
+
+                // Inject mobile CSS once
+                if (!styleInjected) {
+                    const styleEl = document.createElement('style');
+                    styleEl.id = 'scalify-mobile-override';
+                    styleEl.textContent = MOBILE_CSS;
+                    bubble.shadowRoot.appendChild(styleEl);
+                    styleInjected = true;
+                }
+
+                // Hide Flowise default button
+                const flowiseBtn = bubble.shadowRoot.querySelector('button[part="button"]')
+                                ?? bubble.shadowRoot.querySelector('.chatbot-button');
+                if (flowiseBtn) {
+                    flowiseBtn.style.cssText = 'display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important;';
+                }
+
+                // Mobile backdrop: show/hide based on chat window visibility
+                if (window.innerWidth <= 640) {
+                    const chatWin = bubble.shadowRoot.querySelector('.chat-window')
+                                 ?? bubble.shadowRoot.querySelector('[class*="chatWindow"]')
+                                 ?? bubble.shadowRoot.querySelector('[style*="position: fixed"]');
+                    const isOpen = chatWin && getComputedStyle(chatWin).display !== 'none'
+                                           && chatWin.offsetParent !== null;
+                    if (isOpen) {
+                        backdrop.style.display = 'block';
+                        requestAnimationFrame(() => { backdrop.style.opacity = '1'; backdrop.style.pointerEvents = 'auto'; });
+                    } else {
+                        backdrop.style.opacity = '0';
+                        backdrop.style.pointerEvents = 'none';
+                        setTimeout(() => { if (backdrop.style.opacity === '0') backdrop.style.display = 'none'; }, 300);
+                    }
+                }
+            });
+            observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['style', 'class'] });
+
+            // Tap backdrop to close chat
+            backdrop.addEventListener('click', () => {
+                const bubble = document.querySelector('flowise-chatbot') ?? document.querySelector('flowise-fullchatbot');
+                const shadowBtn = bubble?.shadowRoot?.querySelector('button[part="button"]')
+                               ?? bubble?.shadowRoot?.querySelector('.chatbot-button');
+                if (shadowBtn) shadowBtn.click();
+            });
+
+            // Show tooltip on hover (desktop only)
+            btn.addEventListener('mouseenter', () => { if (window.innerWidth > 640) tooltip.classList.add('visible'); });
             btn.addEventListener('mouseleave', () => tooltip.classList.remove('visible'));
 
             // Toggle chat window on click
             btn.addEventListener('click', function () {
-                // Flowise exposes the bubble element – click it programmatically
                 const bubble = document.querySelector('flowise-chatbot')
                                 ?? document.querySelector('flowise-fullchatbot');
                 if (bubble) {
@@ -445,16 +540,6 @@
                     if (shadowBtn) shadowBtn.click();
                 }
             });
-
-            // Hide Flowise's own default button so only our custom one is visible
-            const observer = new MutationObserver(() => {
-                const flowiseBtn = document.querySelector('flowise-chatbot')?.shadowRoot?.querySelector('button[part="button"]')
-                                ?? document.querySelector('flowise-chatbot')?.shadowRoot?.querySelector('.chatbot-button');
-                if (flowiseBtn) {
-                    flowiseBtn.style.cssText = 'display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important;';
-                }
-            });
-            observer.observe(document.body, { childList: true, subtree: true });
         });
     </script>
 
