@@ -221,7 +221,7 @@
     </footer>
 
 
-    {{-- @include("partials.flowise") --}}
+    @include("partials.flowise")
 
 </body>
 
