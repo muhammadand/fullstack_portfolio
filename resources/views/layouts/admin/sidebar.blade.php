@@ -42,6 +42,16 @@ $menus = [
 ],
 
 [
+'label' => 'Affiliate Partners',
+'route' => 'admin.affiliates.index',
+'icon' => 'fa-solid fa-handshake',
+],
+[
+'label' => 'Withdrawals',
+'route' => 'admin.withdrawals.index',
+'icon' => 'fa-solid fa-money-bill-transfer',
+],
+[
 'label' => 'Users',
 'route' => 'users.index',
 'icon' => 'fa-solid fa-users',

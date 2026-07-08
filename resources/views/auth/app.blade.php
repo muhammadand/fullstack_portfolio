@@ -24,7 +24,6 @@
         body {
             /* True Midnight Blue gradient with a noticeable blue tint */
             background: linear-gradient(135deg, #0B1120 0%, #172554 100%);
-            overflow: hidden;
             color: white;
         }
 
@@ -115,7 +114,7 @@
 
     </style>
 </head>
-<body class="h-screen w-screen overflow-hidden text-slate-100">
+<body class="min-h-screen w-full overflow-x-hidden text-slate-100 relative">
 
     <!-- Decorative background glow -->
     <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-blue-600/20 blur-[120px] pointer-events-none"></div>

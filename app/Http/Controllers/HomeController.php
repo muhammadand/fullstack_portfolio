@@ -168,4 +168,8 @@ class HomeController extends Controller
         $documentation=Documentation::get();
         return view('company.SobatScalify',compact('documentation'));
     }
+
+    public function partnerProgram(){
+        return view('company.partner_program');
+    }
 }

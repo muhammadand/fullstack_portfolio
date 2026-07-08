@@ -127,6 +127,17 @@ Route::get('/generate-sitemap', function () {
     // Users
     Route::resource('users', UserController::class);
 
+    // Affiliate Partners Management
+    Route::get('admin/affiliates', [App\Http\Controllers\Admin\AffiliateController::class, 'index'])->name('admin.affiliates.index');
+    Route::get('admin/affiliates/{affiliate}', [App\Http\Controllers\Admin\AffiliateController::class, 'show'])->name('admin.affiliates.show');
+    Route::post('admin/affiliates/{affiliate}/approve', [App\Http\Controllers\Admin\AffiliateController::class, 'approve'])->name('admin.affiliates.approve');
+    Route::post('admin/affiliates/{affiliate}/reject', [App\Http\Controllers\Admin\AffiliateController::class, 'reject'])->name('admin.affiliates.reject');
+    Route::post('admin/affiliates/{affiliate}/commission', [App\Http\Controllers\Admin\AffiliateController::class, 'addCommission'])->name('admin.affiliates.commission');
+    
+    // Withdrawals Management
+    Route::get('admin/withdrawals', [App\Http\Controllers\Admin\WithdrawalController::class, 'index'])->name('admin.withdrawals.index');
+    Route::post('admin/withdrawals/{withdrawal}/approve', [App\Http\Controllers\Admin\WithdrawalController::class, 'approve'])->name('admin.withdrawals.approve');
+
     // Profile
     Route::get('profile', [UserController::class, 'editProfile'])->name('profile.edit');
     Route::put('profile', [UserController::class, 'updateProfile'])->name('profile.update');
@@ -166,9 +177,29 @@ Route::get('/generate-sitemap', function () {
 
     // Sobat Scalify
     Route::get('/sobat-scalify',[HomeController::class,'SobatScalify'])->name('sobat-scalify');
+    Route::get('/partner-program',[HomeController::class,'partnerProgram'])->name('partner.program');
     //Documentation
     Route::resource('documentation',DocumentationController::class);
 
+    // Sobat Scalify Affiliate (Public/Guest)
+    Route::get('/partner/register', [App\Http\Controllers\AffiliateController::class, 'registerForm'])->name('affiliate.register');
+    Route::post('/partner/register', [App\Http\Controllers\AffiliateController::class, 'registerSubmit'])->name('affiliate.register.submit');
+    Route::get('/partner/login', [App\Http\Controllers\AffiliateController::class, 'loginForm'])->name('affiliate.login');
+    Route::post('/partner/login', [App\Http\Controllers\AffiliateController::class, 'loginSubmit'])->name('affiliate.login.submit');
+    Route::post('/api/track-wa-click', [App\Http\Controllers\AffiliateController::class, 'trackClick']);
+    
+    // Sobat Scalify Affiliate (Auth protected)
+    Route::middleware(['auth:affiliate'])->group(function () {
+        Route::get('/partner/dashboard', [App\Http\Controllers\AffiliateController::class, 'dashboard'])->name('affiliate.dashboard');
+        Route::get('/partner/history', [App\Http\Controllers\AffiliateController::class, 'history'])->name('affiliate.history');
+        Route::post('/partner/logout', [App\Http\Controllers\AffiliateController::class, 'logout'])->name('affiliate.logout');
+        Route::post('/partner/withdraw', [App\Http\Controllers\AffiliateController::class, 'withdraw'])->name('affiliate.withdraw');
+        
+        // Notifications
+        Route::post('/partner/notifications/{id}/read', [App\Http\Controllers\AffiliateController::class, 'markNotificationRead'])->name('affiliate.notifications.read');
+        Route::post('/partner/notifications/clear', [App\Http\Controllers\AffiliateController::class, 'clearNotifications'])->name('affiliate.notifications.clear');
+    });
+    
 // LOGIN
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.post');
