@@ -24,8 +24,8 @@
         </div>
 
         <!-- Right Side - Form -->
-        <div class="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-8 lg:p-10 relative flex-1">
-            <div class="w-full max-w-md w-full my-auto pb-4 sm:pb-0">
+        <div class="w-full lg:w-1/2 overflow-y-auto p-6 sm:p-8 lg:p-10 relative flex-1">
+            <div class="w-full max-w-md mx-auto min-h-full flex flex-col justify-center pb-4 sm:pb-0">
 
                 <!-- Header -->
                 <div class="mb-8">
