@@ -27,7 +27,7 @@ jobs:
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: '8.2' # Sesuaikan dengan versi PHP di hosting
+        php-version: '8.3' # Diubah ke 8.3 karena composer.lock Anda membutuhkan paket untuk PHP >= 8.3
     
     - name: Install Composer Dependencies
       run: composer install --no-dev --optimize-autoloader
