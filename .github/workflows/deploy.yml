@@ -30,7 +30,7 @@ jobs:
         php-version: '8.3' # Diubah ke 8.3 karena composer.lock Anda membutuhkan paket untuk PHP >= 8.3
     
     - name: Install Composer Dependencies
-      run: composer install --no-dev --optimize-autoloader
+      run: composer install --no-dev --optimize-autoloader --ignore-platform-reqs
     
     - name: Sync files via FTP
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
