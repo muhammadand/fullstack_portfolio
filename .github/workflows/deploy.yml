@@ -20,6 +20,7 @@ jobs:
         
     - name: Install NPM & Build
       run: |
+        rm -f package-lock.json
         npm install
         npm run build
 
