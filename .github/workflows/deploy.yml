@@ -16,7 +16,7 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '18' # Sesuaikan versi Node.js jika perlu
+        node-version: '20' # Diubah ke 20 karena tailwindcss/oxide membutuhkan Node >= 20
         
     - name: Install NPM & Build
       run: |
