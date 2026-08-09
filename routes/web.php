@@ -10,6 +10,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AuthController;
 use Spatie\Sitemap\SitemapGenerator;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\SpecialPageController;
 use App\Http\Controllers\DocumentationController;
 use App\Http\Controllers\CareersController;
 use App\Http\Controllers\CareerApplicationController;
@@ -209,6 +210,10 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // portfolio
 // Route::get('/portfolio', [HomeController::class, 'portfolio_1'])->name('portfolio');
+
+// Special Landing Pages & Proposals
+Route::get('/landing/permata-qiana-wedding', [SpecialPageController::class, 'permataQianaWeddingLanding'])->name('landing.permata_qiana_wedding');
+Route::get('/proposal/permata-qiana-wedding', [SpecialPageController::class, 'permataQianaWeddingProposal'])->name('proposal.permata_qiana_wedding');
 
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
