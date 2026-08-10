@@ -212,8 +212,22 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // Route::get('/portfolio', [HomeController::class, 'portfolio_1'])->name('portfolio');
 
 // Special Landing Pages & Proposals
-Route::get('/landing/permata-qiana-wedding', [SpecialPageController::class, 'permataQianaWeddingLanding'])->name('landing.permata_qiana_wedding');
-Route::get('/proposal/permata-qiana-wedding', [SpecialPageController::class, 'permataQianaWeddingProposal'])->name('proposal.permata_qiana_wedding');
+use App\Http\Controllers\ClientProposalController;
+
+Route::get('/landing/{slug}', [ClientProposalController::class, 'landing'])->name('landing.dynamic');
+Route::get('/proposal/{slug}', [ClientProposalController::class, 'proposal'])->name('proposal.dynamic');
+
+// Endpoint rahasia untuk trigger deploy (migrasi & cache) dari GitHub Actions (Tanpa SSH)
+Route::get('/secret-deploy-trigger-12345', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'ClientProposalSeeder', '--force' => true]);
+        \Illuminate\Support\Facades\Artisan::call('optimize:clear');
+        return "Deploy commands executed successfully!";
+    } catch (\Exception $e) {
+        return "Error: " . $e->getMessage();
+    }
+});
 
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;

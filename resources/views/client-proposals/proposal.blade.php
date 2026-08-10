@@ -5,22 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Meta Tags untuk Preview Link (WhatsApp, Telegram, dsb) -->
-    <title>Proposal Proyek Website - Permata Qiana Wedding</title>
-    <meta name="description" content="Proposal pengajuan pengembangan sistem dan website custom untuk Permata Qiana Wedding oleh Scalify Intelligence.">
+    <title>Proposal Proyek Website - {{ $client->brand_name }}</title>
+    <meta name="description" content="Proposal pengajuan pengembangan sistem dan website custom untuk {{ $client->brand_name }} oleh Scalify Intelligence.">
 
     <!-- Open Graph / Facebook / WhatsApp -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:title" content="Proposal Proyek Website - Permata Qiana Wedding">
-    <meta property="og:description" content="Proposal pengajuan pengembangan sistem dan website custom untuk Permata Qiana Wedding oleh Scalify Intelligence.">
+    <meta property="og:title" content="Proposal Proyek Website - {{ $client->brand_name }}">
+    <meta property="og:description" content="Proposal pengajuan pengembangan sistem dan website custom untuk {{ $client->brand_name }} oleh Scalify Intelligence.">
     <!-- Gambar yang akan muncul di link (Rekomendasi ukuran: 1200x630px) -->
     <meta property="og:image" content="{{ asset('images/agency-cover.jpg') }}">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="{{ url()->current() }}">
-    <meta property="twitter:title" content="Proposal Proyek Website - Permata Qiana Wedding">
-    <meta property="twitter:description" content="Proposal pengajuan pengembangan sistem dan website custom untuk Permata Qiana Wedding oleh Scalify Intelligence.">
+    <meta property="twitter:title" content="Proposal Proyek Website - {{ $client->brand_name }}">
+    <meta property="twitter:description" content="Proposal pengajuan pengembangan sistem dan website custom untuk {{ $client->brand_name }} oleh Scalify Intelligence.">
     <meta property="twitter:image" content="{{ asset('images/agency-cover.jpg') }}">
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -123,7 +123,7 @@
                 </div>
                 <div class="text-right">
                     <div class="w-12 h-12 rounded-full border-2 border-gold flex items-center justify-center text-gold font-serif text-2xl ml-auto mb-2">P</div>
-                    <p class="font-bold text-dark text-lg">Permata Qiana Wedding</p>
+                    <p class="font-bold text-dark text-lg">{{ $client->brand_name }}</p>
                     <p class="text-sm text-gray-500">{{ date('d F Y') }}</p>
                 </div>
             </div>
@@ -133,7 +133,7 @@
         <div class="mb-12 flex justify-between text-sm">
             <div>
                 <p class="text-gray-400 mb-1">Disiapkan untuk:</p>
-                <p class="font-bold text-gray-800 text-base">Manajemen Permata Qiana Wedding</p>
+                <p class="font-bold text-gray-800 text-base">{{ $client->client_name ?? $client->brand_name }}</p>
                 <p class="text-gray-600">Jakarta, Indonesia</p>
             </div>
             <div class="text-right">
@@ -152,7 +152,7 @@
                 Dalam era digital saat ini, kehadiran online yang profesional sangatlah krusial bagi industri pernikahan (Wedding Organizer). Calon pengantin modern melakukan riset mendalam melalui internet sebelum memutuskan vendor pernikahan mereka. Website yang elegan, informatif, dan responsif tidak hanya berfungsi sebagai brosur digital, melainkan juga sebagai alat utama untuk membangun kepercayaan (trust) dan menampilkan portofolio kualitas layanan.
             </p>
             <p class="text-gray-600 leading-relaxed text-sm text-justify">
-                Proposal ini menjabarkan rencana pengembangan website <strong>Permata Qiana Wedding</strong>. Website ini akan dirancang dengan estetika mewah (luxury design), menonjolkan galeri dekorasi & makeup, merinci paket pernikahan yang ditawarkan, serta mengintegrasikan sistem kontak yang memudahkan calon klien untuk segera berkonsultasi.
+                Proposal ini menjabarkan rencana pengembangan website <strong>{{ $client->brand_name }}</strong>. Website ini akan dirancang dengan estetika mewah (luxury design), menonjolkan galeri dekorasi & makeup, merinci paket pernikahan yang ditawarkan, serta mengintegrasikan sistem kontak yang memudahkan calon klien untuk segera berkonsultasi.
             </p>
 
             <!-- Link Demo Draft Landing Page -->
@@ -163,10 +163,10 @@
                     </h3>
                     <p class="text-[13px] text-gray-700">Sebagai gambaran dan referensi visual awal, kami telah menyiapkan kerangka desain (draft) landing page yang bisa Anda lihat langsung pada tautan berikut.</p>
                     <div class="hidden print:block text-[13px] font-medium text-blue-600 break-all mt-2 underline">
-                        https://scalifyintellegence.my.id/landing/permata-qiana-wedding
+                        {{ route("landing.dynamic", $client->slug) }}
                     </div>
                 </div>
-                <a href="https://scalifyintellegence.my.id/landing/permata-qiana-wedding" target="_blank" class="shrink-0 bg-dark hover:bg-gray-800 text-white px-5 py-2.5 rounded-full text-[13px] font-medium transition inline-flex items-center justify-center gap-2 no-print shadow-md">
+                <a href="{{ route("landing.dynamic", $client->slug) }}" target="_blank" class="shrink-0 bg-dark hover:bg-gray-800 text-white px-5 py-2.5 rounded-full text-[13px] font-medium transition inline-flex items-center justify-center gap-2 no-print shadow-md">
                     Lihat Demo Web <i class="fas fa-external-link-alt text-[10px]"></i>
                 </a>
             </div>
@@ -180,7 +180,7 @@
             <ul class="space-y-3 text-sm text-gray-600">
                 <li class="flex items-start gap-3">
                     <i class="fas fa-check text-gold mt-1"></i>
-                    <span><strong>Meningkatkan Kredibilitas:</strong> Menghadirkan citra Permata Qiana sebagai WO profesional & eksklusif.</span>
+                    <span><strong>Meningkatkan Kredibilitas:</strong> Menghadirkan citra {{ $client->brand_name }} sebagai WO profesional & eksklusif.</span>
                 </li>
                 <li class="flex items-start gap-3">
                     <i class="fas fa-check text-gold mt-1"></i>
@@ -209,27 +209,27 @@
                 <span class="text-gold">03.</span> Ruang Lingkup & Fitur Website
             </h2>
 
-            <p class="text-sm text-gray-600 mb-6">Website akan dibangun menggunakan teknologi modern (Laravel/Tailwind CSS) yang menjamin kecepatan akses (fast loading) dan keamanan tingkat tinggi. Berikut adalah fitur-fitur utamanya:</p>
+            <p class="text-sm text-gray-600 mb-6">Website ini akan dirancang agar tidak hanya tampil memukau secara visual, tetapi juga sangat cepat saat diakses dan aman dari kendala gangguan. Berikut adalah ringkasan fitur-fitur unggulan yang akan Anda dapatkan:</p>
 
             <div class="grid grid-cols-2 gap-6 mb-6">
                 <!-- Fitur Utama -->
                 <div class="bg-gray-50 p-5 rounded-lg border border-gray-100">
-                    <h3 class="font-bold text-gray-800 mb-3 text-sm">Halaman Publik (Front-End)</h3>
+                    <h3 class="font-bold text-gray-800 mb-3 text-sm">Tampilan Utama untuk Calon Klien</h3>
                     <ul class="space-y-2 text-[13px] text-gray-600">
-                        <li><i class="fas fa-angle-right text-gold w-4"></i> <strong>Beranda (Home):</strong> Layout hero mewah, highlight layanan, dan CTA.</li>
-                        <li><i class="fas fa-angle-right text-gold w-4"></i> <strong>Layanan & Galeri:</strong> Detail layanan dan album interaktif portofolio.</li>
-                        <li><i class="fas fa-angle-right text-gold w-4"></i> <strong>Paket Wedding:</strong> Tabel harga/paket yang elegan & komprehensif.</li>
-                        <li><i class="fas fa-angle-right text-gold w-4"></i> <strong>Kontak & Testimoni:</strong> Integrasi Form ke Email & WhatsApp langsung.</li>
+                        <li><i class="fas fa-angle-right text-gold w-4"></i> <strong>Halaman Awal Memikat:</strong> Desain layar pertama yang mewah untuk meyakinkan klien sejak detik pertama.</li>
+                        <li><i class="fas fa-angle-right text-gold w-4"></i> <strong>Buku Portofolio:</strong> Album foto panggung, dekorasi, dan riasan yang tertata rapi selayaknya majalah pernikahan.</li>
+                        <li><i class="fas fa-angle-right text-gold w-4"></i> <strong>Daftar Paket Jelas:</strong> Rincian harga dan layanan paket yang disusun agar mudah dipahami calon pengantin.</li>
+                        <li><i class="fas fa-angle-right text-gold w-4"></i> <strong>Tombol Langsung WhatsApp:</strong> Memudahkan pengunjung untuk langsung chat atau konsultasi dengan tim Anda.</li>
                     </ul>
                 </div>
 
                 <!-- Fitur Admin -->
                 <div class="bg-gray-50 p-5 rounded-lg border border-gray-100">
-                    <h3 class="font-bold text-gray-800 mb-3 text-sm">Sistem Manajemen (CMS / Back-End)</h3>
+                    <h3 class="font-bold text-gray-800 mb-3 text-sm">Ruang Kerja Pengelola (Admin)</h3>
                     <ul class="space-y-2 text-[13px] text-gray-600">
-                        <li><i class="fas fa-angle-right text-gold w-4"></i> <strong>Dashboard Admin:</strong> Panel aman dengan sistem login.</li>
-                        <li><i class="fas fa-angle-right text-gold w-4"></i> <strong>Kelola Web:</strong> Update galeri, paket, dan testimoni dengan mudah.</li>
-                        <li><i class="fas fa-angle-right text-gold w-4"></i> <strong>SEO & Responsif:</strong> Optimasi mesin pencari dan ramah mobile/HP.</li>
+                        <li><i class="fas fa-angle-right text-gold w-4"></i> <strong>Akses Khusus & Aman:</strong> Ruang kerja digital yang hanya bisa dibuka dengan password oleh staf internal Anda.</li>
+                        <li><i class="fas fa-angle-right text-gold w-4"></i> <strong>Update Mandiri Tanpa Ribet:</strong> Anda bebas mengganti foto, mengubah harga, atau menambah ulasan baru semudah bermain sosial media (tanpa perlu paham coding).</li>
+                        <li><i class="fas fa-angle-right text-gold w-4"></i> <strong>Tampil Rapi di Layar HP:</strong> Tampilan web akan menyesuaikan secara otomatis saat dibuka lewat handphone calon klien.</li>
                     </ul>
                 </div>
             </div>
@@ -237,21 +237,21 @@
             <div class="grid grid-cols-2 gap-6">
                 <!-- Fitur Eksekutif Owner & Surveyor -->
                 <div class="bg-gray-50 p-5 rounded-lg border border-gray-100 border-l-4 border-l-gold">
-                    <h3 class="font-bold text-gray-800 mb-3 text-sm">Fitur Eksekutif (Owner & Tim Survey)</h3>
+                    <h3 class="font-bold text-gray-800 mb-3 text-sm">Fitur Khusus Pemilik & Tim Lapangan</h3>
                     <ul class="space-y-2 text-[13px] text-gray-600">
-                        <li><i class="fas fa-map-marked-alt text-gold w-4"></i> <strong>Sistem Survey Maps (API):</strong> Input titik lokasi acara, otomatis hitung jarak tempuh tim dari kantor/gudang untuk hitung ongkos logistik.</li>
-                        <li><i class="fas fa-chart-line text-gold w-4"></i> <strong>Laporan & Analitik:</strong> Rekapitulasi jumlah klien, pendapatan, dan progres proyek.</li>
-                        <li><i class="fas fa-boxes text-gold w-4"></i> <strong>Manajemen Jadwal:</strong> Pantau ketersediaan tim dan alat di tanggal tertentu (cegah bentrok).</li>
+                        <li><i class="fas fa-map-marked-alt text-gold w-4"></i> <strong>Hitung Jarak Lokasi Acara:</strong> Cukup masukkan alamat venue acara, sistem akan otomatis menghitung jarak dari gudang untuk mempermudah penentuan ongkos angkut barang.</li>
+                        <li><i class="fas fa-chart-line text-gold w-4"></i> <strong>Laporan Keuangan Ringkas:</strong> Pantau tren jumlah klien, pendapatan proyek, dan status penyelesaian acara dari satu layar.</li>
+                        <li><i class="fas fa-boxes text-gold w-4"></i> <strong>Kalender Pintar Anti Bentrok:</strong> Anda bisa melihat ketersediaan tim (siapa yang tugas) dan alat/dekor mana yang sedang dipakai di tanggal tertentu.</li>
                     </ul>
                 </div>
 
                 <!-- Portal Klien & Nilai Tambah -->
                 <div class="bg-gray-50 p-5 rounded-lg border border-gray-100 border-l-4 border-l-gold">
-                    <h3 class="font-bold text-gray-800 mb-3 text-sm">Portal Klien & Nilai Tambah Ekstra</h3>
+                    <h3 class="font-bold text-gray-800 mb-3 text-sm">Area Khusus Klien & Layanan Ekstra</h3>
                     <ul class="space-y-2 text-[13px] text-gray-600">
-                        <li><i class="fas fa-user-circle text-gold w-4"></i> <strong>Client Dashboard:</strong> Klien bisa login untuk pantau detail paket yang dipesan, tanggal acara, dan progress checklist persiapan.</li>
-                        <li><i class="fas fa-envelope-open-text text-gold w-4"></i> <strong>Undangan Digital Terintegrasi:</strong> Layanan pembuatan undangan digital (add-on) langsung dari sistem untuk klien.</li>
-                        <li><i class="fas fa-file-invoice text-gold w-4"></i> <strong>Manajemen Invoice:</strong> Sistem penagihan otomatis untuk pantau status DP & Pelunasan klien.</li>
+                        <li><i class="fas fa-user-circle text-gold w-4"></i> <strong>Halaman Pantau Klien:</strong> Calon pengantin bisa "masuk" ke akun khusus mereka untuk mengecek ulang paket yang dipesan dan melihat sejauh mana persiapannya.</li>
+                        <li><i class="fas fa-envelope-open-text text-gold w-4"></i> <strong>Bonus Undangan Online:</strong> Sebagai bonus, Anda bisa membuatkan undangan digital canggih untuk klien langsung dari sistem ini secara cepat.</li>
+                        <li><i class="fas fa-file-invoice text-gold w-4"></i> <strong>Sistem Tagihan Pintar:</strong> Mencatat dengan rapi klien mana yang baru bayar DP (Down Payment) dan mana yang sudah lunas.</li>
                     </ul>
                 </div>
             </div>
@@ -287,7 +287,7 @@
                 <div class="relative pl-6">
                     <div class="absolute w-4 h-4 bg-gold rounded-full -left-[9px] top-1 border-4 border-white"></div>
                     <h4 class="font-bold text-gray-800 text-sm">Fase 4: Finalisasi & Deployment <span class="text-gold font-normal ml-2">(Minggu 8)</span></h4>
-                    <p class="text-[13px] text-gray-600 mt-1">Revisi final dari pihak Permata Qiana (jika ada), setup domain & hosting, website live ke internet, dan serah terima (training penggunaan CMS).</p>
+                    <p class="text-[13px] text-gray-600 mt-1">Revisi final dari pihak {{ $client->brand_name }} (jika ada), setup domain & hosting, website live ke internet, dan serah terima (training penggunaan CMS).</p>
                 </div>
             </div>
         </div>
@@ -318,18 +318,18 @@
                             <span class="font-bold text-gray-800 block">Pengembangan Sistem & Website Custom <span class="text-gold">(Special Offer)</span></span>
                             <span class="text-[12px]">Termasuk UI/UX mewah, Backend CMS, Portal Klien, Integrasi Maps API (Surveyor), Sistem Manajemen Jadwal, Invoice Otomatis & Fitur Undangan Digital.</span>
                         </td>
-                        <td class="py-4 px-4 text-right font-medium text-gray-800 align-top">Rp 4.500.000</td>
+                        <td class="py-4 px-4 text-right font-medium text-gray-800 align-top">Rp {{ number_format($client->project_price, 0, ",", ".") }}</td>
                     </tr>
                     <tr class="border-b border-gray-100">
                         <td class="py-4 px-4 text-gray-600">
                             <span class="font-bold text-gray-800 block">Domain & Cloud Hosting Server (1 Tahun)</span>
                             <span class="text-[12px]">Domain (.com / .id), penyimpanan SSD Cloud berkecepatan tinggi, SSL Certificate (Keamanan HTTPS), dan setup server.</span>
                         </td>
-                        <td class="py-4 px-4 text-right font-medium text-gray-800 align-top">Rp 1.200.000</td>
+                        <td class="py-4 px-4 text-right font-medium text-gray-800 align-top">Rp {{ number_format($client->domain_price, 0, ",", ".") }}</td>
                     </tr>
                     <tr class="bg-gray-50 border-t-2 border-gray-300">
                         <td class="py-4 px-4 font-bold text-gray-800 text-right">TOTAL INVESTASI :</td>
-                        <td class="py-4 px-4 text-right font-bold text-gold text-lg">Rp 5.700.000</td>
+                        <td class="py-4 px-4 text-right font-bold text-gold text-lg">Rp {{ number_format($client->project_price + $client->domain_price, 0, ",", ".") }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -341,7 +341,7 @@
                     <div>
                         <h4 class="font-bold text-gray-800 text-sm mb-1">Terbuka untuk Diskusi (Negotiable)</h4>
                         <p class="text-[13px] text-gray-700 leading-relaxed">
-                            Spesifikasi fitur dan estimasi biaya investasi di atas bersifat usulan awal dan <strong>sangat fleksibel</strong>. Kami sangat terbuka untuk berdiskusi lebih lanjut dan melakukan penyesuaian (customization) baik dari segi fitur maupun rincian harga akhir, agar benar-benar selaras dengan kebutuhan prioritas dan alokasi budget dari pihak Permata Qiana Wedding.
+                            Spesifikasi fitur dan estimasi biaya investasi di atas bersifat usulan awal dan <strong>sangat fleksibel</strong>. Kami sangat terbuka untuk berdiskusi lebih lanjut dan melakukan penyesuaian (customization) baik dari segi fitur maupun rincian harga akhir, agar benar-benar selaras dengan kebutuhan prioritas dan alokasi budget dari pihak {{ $client->brand_name }}.
                         </p>
                     </div>
                 </div>
@@ -354,10 +354,10 @@
                 <span class="text-gold">06.</span> Syarat Ketentuan & Layanan Lanjutan
             </h2>
             <ul class="space-y-3 text-sm text-gray-600 list-disc pl-5">
-                <li>Pembayaran <strong>Down Payment (DP) 50%</strong> (Rp 2.850.000) dilakukan sebelum proyek dimulai (Termin 1).</li>
-                <li>Pembayaran <strong>Pelunasan 50%</strong> (Rp 2.850.000) dilakukan setelah sistem & website selesai, disetujui, dan siap online (Termin 2).</li>
+                <li>Pembayaran <strong>Down Payment (DP) 50%</strong> (Rp {{ number_format(($client->project_price + $client->domain_price) / 2, 0, ",", ".") }}) dilakukan sebelum proyek dimulai (Termin 1).</li>
+                <li>Pembayaran <strong>Pelunasan 50%</strong> (Rp {{ number_format(($client->project_price + $client->domain_price) / 2, 0, ",", ".") }}) dilakukan setelah sistem & website selesai, disetujui, dan siap online (Termin 2).</li>
                 <li>Masa garansi dan <i>free maintenance</i> (perbaikan bug/error) berlaku gratis selama <strong>3 Bulan</strong> pertama sejak website live.</li>
-                <li><strong>Biaya Perpanjangan (Tahun Ke-2 dst):</strong> Biaya wajib perpanjangan Server & Domain adalah Rp 1.200.000/tahun. Jika disertai Jasa Maintenance Rutin (backup berkala & update keamanan), total biayanya menjadi Rp 2.000.000/tahun (Opsional).</li>
+                <li><strong>Biaya Perpanjangan (Tahun Ke-2 dst):</strong> Biaya wajib perpanjangan Server & Domain adalah Rp {{ number_format($client->domain_price, 0, ",", ".") }}/tahun. Jika disertai Jasa Maintenance Rutin (backup berkala & update keamanan), total biayanya menjadi Rp 2.000.000/tahun (Opsional).</li>
                 <li><strong>Penambahan Fitur Baru (Upgrade):</strong> Pembuatan fitur baru atau modifikasi sistem di luar kesepakatan proposal awal akan dikenakan biaya tambahan mulai dari <strong>Rp 300.000 - Rp 700.000</strong> per fitur, menyesuaikan tingkat kerumitan.</li>
             </ul>
         </div>
@@ -365,7 +365,7 @@
         <!-- 7. Penutup -->
         <div class="mt-16 border-t border-gray-200 pt-10 text-sm text-gray-600">
             <p class="mb-6 leading-relaxed">
-                Demikian proposal penawaran pembuatan website ini kami sampaikan. Kami berharap dapat menjadi mitra digital yang solid bagi kesuksesan <strong>Permata Qiana Wedding</strong> ke depannya. Jika ada pertanyaan lebih lanjut terkait rincian teknis maupun biaya, kami siap untuk berdiskusi.
+                Demikian proposal penawaran pembuatan website ini kami sampaikan. Kami berharap dapat menjadi mitra digital yang solid bagi kesuksesan <strong>{{ $client->brand_name }}</strong> ke depannya. Jika ada pertanyaan lebih lanjut terkait rincian teknis maupun biaya, kami siap untuk berdiskusi.
             </p>
             <p class="mb-12">Atas perhatian dan kerja samanya, kami ucapkan terima kasih.</p>
 
@@ -380,7 +380,7 @@
                     <p class="mb-20">Disetujui Oleh,</p>
                     <div class="border-b border-gray-400 w-48 mb-1 mx-auto"></div>
                     <p class="font-bold text-gray-800">.........................................</p>
-                    <p class="text-xs text-gray-500">Permata Qiana Wedding</p>
+                    <p class="text-xs text-gray-500">{{ $client->brand_name }}</p>
                 </div>
             </div>
         </div>

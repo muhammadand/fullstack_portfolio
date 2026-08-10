@@ -52,19 +52,8 @@ jobs:
           storage/logs/**
           public/sitemap.xml
 
-    # Opsional: Jika hosting Anda memiliki akses SSH (Rumahweb biasanya ada), 
-    # Anda bisa menjalankan migrate dan cache otomatis di server
-    # - name: Run Artisan Commands via SSH
-    #   uses: appleboy/ssh-action@v1.0.3
-    #   with:
-    #     host: ${{ secrets.FTP_SERVER }}
-    #     username: ${{ secrets.SSH_USERNAME }}
-    #     password: ${{ secrets.SSH_PASSWORD }}
-    #     port: 21098 # Port SSH default Rumahweb biasanya 21098
-    #     script: |
-    #       cd /home/USERNAME_CPANEL/public_html/company-profile/
-    #       php artisan migrate --force
-    #       php artisan optimize:clear
-    #       php artisan config:cache
-    #       php artisan route:cache
-    #       php artisan view:cache
+    # Opsional: Karena menggunakan Shared Hosting tanpa SSH, kita bisa jalankan migrasi via URL (Webhook)
+    - name: Run Artisan Migrate via Webhook
+      run: |
+        echo "Menjalankan migrasi dan cache di server..."
+        curl -s https://scalifyintellegence.my.id/secret-deploy-trigger-12345

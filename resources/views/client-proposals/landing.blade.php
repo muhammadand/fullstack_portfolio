@@ -5,22 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Meta Tags untuk Preview Link (WhatsApp, Telegram, dsb) -->
-    <title>Demo Website - Permata Qiana Wedding</title>
-    <meta name="description" content="Preview desain website eksklusif untuk Permata Qiana Wedding yang disiapkan oleh Scalify Intelligence.">
+    <title>Demo Website - {{ $client->brand_name }}</title>
+    <meta name="description" content="Preview desain website eksklusif untuk {{ $client->brand_name }} yang disiapkan oleh Scalify Intelligence.">
 
     <!-- Open Graph / Facebook / WhatsApp -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:title" content="Demo Website - Permata Qiana Wedding">
-    <meta property="og:description" content="Preview desain website eksklusif untuk Permata Qiana Wedding yang disiapkan oleh Scalify Intelligence.">
+    <meta property="og:title" content="Demo Website - {{ $client->brand_name }}">
+    <meta property="og:description" content="Preview desain website eksklusif untuk {{ $client->brand_name }} yang disiapkan oleh Scalify Intelligence.">
     <!-- Gambar yang akan muncul di link (Rekomendasi ukuran: 1200x630px) -->
     <meta property="og:image" content="{{ asset('images/agency-cover.jpg') }}">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="{{ url()->current() }}">
-    <meta property="twitter:title" content="Demo Website - Permata Qiana Wedding">
-    <meta property="twitter:description" content="Preview desain website eksklusif untuk Permata Qiana Wedding yang disiapkan oleh Scalify Intelligence.">
+    <meta property="twitter:title" content="Demo Website - {{ $client->brand_name }}">
+    <meta property="twitter:description" content="Preview desain website eksklusif untuk {{ $client->brand_name }} yang disiapkan oleh Scalify Intelligence.">
     <meta property="twitter:image" content="{{ asset('images/agency-cover.jpg') }}">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -98,7 +98,7 @@
         <div class="flex items-center gap-3">
             <img src="{{ asset('images/permata-qiana/logo-placeholder.png') }}" onerror="this.outerHTML='<div class=\'w-10 h-10 rounded-full border border-brand-gold flex items-center justify-center text-brand-gold font-serif text-xl\'>P</div>'" alt="Logo" class="w-10 h-10">
             <div>
-                <h1 class="font-serif font-bold text-gray-800 leading-tight tracking-[0.1em] text-sm md:text-[15px]">PERMATA QIANA</h1>
+                <h1 class="font-serif font-bold text-gray-800 leading-tight tracking-[0.1em] text-sm md:text-[15px]">{{ strtoupper($client->brand_name) }}</h1>
                 <p class="text-[9px] tracking-[0.3em] text-gray-500 uppercase text-center mt-0.5">Wedding</p>
             </div>
         </div>
@@ -139,14 +139,14 @@
                     <span class="block text-brand-gold mt-2">Kami Wujudkan</span>
                 </h1>
                 <p class="text-gray-600 text-sm md:text-[15px] mb-10 max-w-[420px] leading-relaxed">
-                    Permata Qiana Wedding adalah penyedia layanan pernikahan terlengkap yang menghadirkan keindahan, detail dan kesempurnaan untuk hari bahagia Anda.
+                    {{ $client->brand_name }} adalah penyedia layanan pernikahan terlengkap yang menghadirkan keindahan, detail dan kesempurnaan untuk hari bahagia Anda.
                 </p>
 
                 <div class="flex flex-wrap gap-4">
                     <a href="#kontak" class="bg-brand-gold hover:bg-[#B88655] text-white px-7 py-3.5 rounded-md text-[13px] font-medium transition flex items-center gap-2">
                         Konsultasi Gratis <i class="far fa-calendar-alt ml-1"></i>
                     </a>
-                    <a href="{{ url('/proposal/permata-qiana-wedding') }}" class="border border-gray-300 hover:border-gray-400 bg-white text-gray-700 px-7 py-3.5 rounded-md text-[13px] font-medium transition flex items-center gap-2">
+                    <a href="{{ route('proposal.dynamic', $client->slug) }}" class="border border-gray-300 hover:border-gray-400 bg-white text-gray-700 px-7 py-3.5 rounded-md text-[13px] font-medium transition flex items-center gap-2">
                         Lihat Proposal Web <i class="fas fa-file-invoice-dollar ml-1"></i>
                     </a>
                 </div>
@@ -353,11 +353,11 @@
                 <div class="flex items-center gap-3 mb-6">
                     <img src="{{ asset('images/permata-qiana/logo-placeholder.png') }}" onerror="this.outerHTML='<div class=\'w-10 h-10 rounded-full border border-brand-gold flex items-center justify-center text-brand-gold font-serif text-xl\'>P</div>'" alt="Logo" class="w-10 h-10">
                     <div>
-                        <h3 class="font-serif font-bold text-gray-800 leading-tight uppercase tracking-widest text-[13px]">Permata Qiana</h3>
+                        <h3 class="font-serif font-bold text-gray-800 leading-tight uppercase tracking-widest text-[13px]">{{ $client->brand_name }}</h3>
                         <p class="text-[9px] tracking-[0.3em] text-gray-500 uppercase mt-0.5">Wedding</p>
                     </div>
                 </div>
-                <p class="text-gray-500 text-[12px] leading-relaxed mb-6 max-w-[280px]">Mewujudkan setiap momen berharga Anda menjadi kenangan tak terlupakan bersama Permata Qiana Wedding.</p>
+                <p class="text-gray-500 text-[12px] leading-relaxed mb-6 max-w-[280px]">Mewujudkan setiap momen berharga Anda menjadi kenangan tak terlupakan bersama {{ $client->brand_name }}.</p>
             </div>
 
             <div>
@@ -389,7 +389,7 @@
                     </li>
                     <li class="flex items-start gap-3">
                         <i class="far fa-envelope mt-1 text-brand-gold w-4"></i>
-                        <span>info@permataqianawedding.com</span>
+                        <span>info@{{ strtolower(str_replace(" ", "", $client->brand_name)) }}.com</span>
                     </li>
                     <li class="flex items-start gap-3">
                         <i class="fas fa-map-marker-alt mt-1 text-brand-gold w-4"></i>
@@ -407,7 +407,7 @@
         </div>
 
         <div class="border-t border-gray-100 pt-6 flex flex-col md:flex-row justify-between items-center max-w-[1400px] mx-auto px-6 md:px-12 text-[11px] text-gray-400">
-            <p>&copy; 2026 Permata Qiana Wedding. All rights reserved.</p>
+            <p>&copy; 2026 {{ $client->brand_name }}. All rights reserved.</p>
             <div class="flex gap-4 mt-3 md:mt-0">
                 <span class="font-medium text-gray-500">Jam Operasional:</span>
                 <span>Senin - Sabtu (09.00 - 18.00)</span>
