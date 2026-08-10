@@ -52,6 +52,11 @@ $menus = [
 'icon' => 'fa-solid fa-money-bill-transfer',
 ],
 [
+'label' => 'Client Proposals',
+'route' => 'admin.client_proposals.index',
+'icon' => 'fa-solid fa-file-invoice-dollar',
+],
+[
 'label' => 'Users',
 'route' => 'users.index',
 'icon' => 'fa-solid fa-users',

@@ -139,6 +139,16 @@ Route::get('/generate-sitemap', function () {
     Route::get('admin/withdrawals', [App\Http\Controllers\Admin\WithdrawalController::class, 'index'])->name('admin.withdrawals.index');
     Route::post('admin/withdrawals/{withdrawal}/approve', [App\Http\Controllers\Admin\WithdrawalController::class, 'approve'])->name('admin.withdrawals.approve');
 
+    // Manajemen Client Proposals
+    Route::resource('admin/client-proposals', App\Http\Controllers\Admin\ClientProposalController::class)->names([
+        'index' => 'admin.client_proposals.index',
+        'create' => 'admin.client_proposals.create',
+        'store' => 'admin.client_proposals.store',
+        'edit' => 'admin.client_proposals.edit',
+        'update' => 'admin.client_proposals.update',
+        'destroy' => 'admin.client_proposals.destroy',
+    ]);
+
     // Profile
     Route::get('profile', [UserController::class, 'editProfile'])->name('profile.edit');
     Route::put('profile', [UserController::class, 'updateProfile'])->name('profile.update');
