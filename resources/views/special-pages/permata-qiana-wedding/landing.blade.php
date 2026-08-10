@@ -3,7 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Permata Qiana Wedding - Wujudkan Pernikahan Impian Anda</title>
+
+    <!-- Meta Tags untuk Preview Link (WhatsApp, Telegram, dsb) -->
+    <title>Demo Website - Permata Qiana Wedding</title>
+    <meta name="description" content="Preview desain website eksklusif untuk Permata Qiana Wedding yang disiapkan oleh Scalify Intelligence.">
+
+    <!-- Open Graph / Facebook / WhatsApp -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="Demo Website - Permata Qiana Wedding">
+    <meta property="og:description" content="Preview desain website eksklusif untuk Permata Qiana Wedding yang disiapkan oleh Scalify Intelligence.">
+    <!-- Gambar yang akan muncul di link (Rekomendasi ukuran: 1200x630px) -->
+    <meta property="og:image" content="{{ asset('images/agency-cover.jpg') }}">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="{{ url()->current() }}">
+    <meta property="twitter:title" content="Demo Website - Permata Qiana Wedding">
+    <meta property="twitter:description" content="Preview desain website eksklusif untuk Permata Qiana Wedding yang disiapkan oleh Scalify Intelligence.">
+    <meta property="twitter:image" content="{{ asset('images/agency-cover.jpg') }}">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
