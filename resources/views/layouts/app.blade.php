@@ -181,7 +181,7 @@
             <div class="flex flex-col items-center md:items-start gap-3">
                 <h3 class="text-white/80 font-bold mb-1 text-sm tracking-wider uppercase">Project Khusus</h3>
 
-                <a href="{{ route('landing.permata_qiana_wedding') }}" class="flex items-center gap-3 text-white/60 hover:text-white transition-colors">
+                <a href="{{ route('landing.dynamic', 'permata-qiana-wedding') }}" class="flex items-center gap-3 text-white/60 hover:text-white transition-colors">
                     <div class="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center">
                         <i class="fa-solid fa-globe text-brand-accent/80 text-[10px]"></i>
                     </div>
