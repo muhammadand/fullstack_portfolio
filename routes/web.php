@@ -220,7 +220,12 @@ Route::get('/proposal/{slug}', [ClientProposalController::class, 'proposal'])->n
 // Endpoint rahasia untuk trigger deploy (migrasi & cache) dari GitHub Actions (Tanpa SSH)
 Route::get('/secret-deploy-trigger-12345', function () {
     try {
-        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        // Hanya menjalankan migrasi untuk file client_proposals agar tidak bentrok dengan tabel lama yang sudah ada di database
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_08_10_032737_create_client_proposals_table.php',
+            '--force' => true
+        ]);
+        
         \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'ClientProposalSeeder', '--force' => true]);
         \Illuminate\Support\Facades\Artisan::call('optimize:clear');
         return "Deploy commands executed successfully!";
