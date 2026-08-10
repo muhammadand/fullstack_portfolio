@@ -299,6 +299,19 @@
                     </tr>
                 </tbody>
             </table>
+
+            <!-- Catatan Fleksibilitas -->
+            <div class="bg-[#C59A6F]/10 border-l-4 border-gold rounded-r-lg p-4 mt-8">
+                <div class="flex items-start gap-3">
+                    <i class="fas fa-handshake text-gold mt-1 text-lg"></i>
+                    <div>
+                        <h4 class="font-bold text-gray-800 text-sm mb-1">Terbuka untuk Diskusi (Negotiable)</h4>
+                        <p class="text-[13px] text-gray-700 leading-relaxed">
+                            Spesifikasi fitur dan estimasi biaya investasi di atas bersifat usulan awal dan <strong>sangat fleksibel</strong>. Kami sangat terbuka untuk berdiskusi lebih lanjut dan melakukan penyesuaian (customization) baik dari segi fitur maupun rincian harga akhir, agar benar-benar selaras dengan kebutuhan prioritas dan alokasi budget dari pihak Permata Qiana Wedding.
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- 6. Syarat & Ketentuan -->
