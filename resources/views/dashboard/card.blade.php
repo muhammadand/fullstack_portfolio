@@ -1,5 +1,5 @@
 {{-- ===== STATS CARDS ===== --}}
-<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
 
     {{-- Total Views (Combined) --}}
     <div class="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group">

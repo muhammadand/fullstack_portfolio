@@ -3,21 +3,23 @@
 
     {{-- View Statistics Line Chart (col-span-2) --}}
     <div x-data="lineChart()" x-init="initChart()" class="col-span-1 lg:col-span-2 bg-white border border-slate-100 rounded-2xl shadow-sm p-5 relative">
-        <div class="flex items-center justify-between mb-5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
             <div>
                 <h3 class="text-sm font-bold text-slate-800">View Statistics</h3>
                 <p class="text-[11px] text-slate-400 mt-0.5">Tren views berdasarkan tanggal pembuatan konten</p>
             </div>
-            <div class="flex items-center gap-2">
+            <div class="flex flex-wrap sm:flex-nowrap items-center gap-2">
                 {{-- Type selector --}}
-                <select x-model="type" @change="loadData()" class="px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-600 focus:outline-none focus:border-blue-400 cursor-pointer">
+                <select x-model="type" @change="loadData()" class="flex-1 sm:flex-none px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-600 focus:outline-none focus:border-blue-400 cursor-pointer">
                     <option value="both">Both</option>
                     <option value="blogs">Blogs</option>
                     <option value="portfolios">Portfolios</option>
                 </select>
                 {{-- Date range (default 6 months back so data is more likely to show) --}}
-                <input type="date" x-model="start" @change="loadData()" class="px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-600 focus:outline-none focus:border-blue-400">
-                <input type="date" x-model="end" @change="loadData()" class="px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-600 focus:outline-none focus:border-blue-400">
+                <div class="flex items-center gap-2 w-full sm:w-auto">
+                    <input type="date" x-model="start" @change="loadData()" class="flex-1 sm:flex-none px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-600 focus:outline-none focus:border-blue-400">
+                    <input type="date" x-model="end" @change="loadData()" class="flex-1 sm:flex-none px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-600 focus:outline-none focus:border-blue-400">
+                </div>
             </div>
         </div>
 

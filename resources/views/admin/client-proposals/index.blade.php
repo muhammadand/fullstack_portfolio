@@ -24,9 +24,9 @@
                 <thead>
                     <tr class="bg-slate-50 border-b border-slate-200">
                         <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Brand Klien</th>
-                        <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Kategori</th>
-                        <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Kontak WA</th>
-                        <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Harga Project</th>
+                        <th class="hidden sm:table-cell px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Kategori</th>
+                        <th class="hidden md:table-cell px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Kontak WA</th>
+                        <th class="hidden lg:table-cell px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Harga Project</th>
                         <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">Aksi</th>
                     </tr>
                 </thead>
@@ -38,50 +38,62 @@
                             <div class="text-xs text-slate-500">{{ $p->client_name ?? '-' }}</div>
                             <div class="text-xs text-blue-500 mt-1">/proposal/{{ $p->slug }}</div>
                         </td>
-                        <td class="px-6 py-4">
+                        <td class="hidden sm:table-cell px-6 py-4">
                             <span class="px-2.5 py-1 rounded-full text-xs font-medium {{ $p->category ? 'bg-blue-100 text-blue-700' : 'bg-slate-100 text-slate-600' }}">
                                 {{ $p->category ? $p->category->name : 'Tanpa Kategori' }}
                             </span>
                         </td>
-                        <td class="px-6 py-4">
+                        <td class="hidden md:table-cell px-6 py-4">
                             <div class="text-sm text-slate-800">{{ $p->wa_number }}</div>
                         </td>
-                        <td class="px-6 py-4">
+                        <td class="hidden lg:table-cell px-6 py-4">
                             <div class="text-sm font-bold text-emerald-600">Rp {{ number_format($p->project_price, 0, ',', '.') }}</div>
                             <div class="text-xs text-slate-500">+ Domain: Rp {{ number_format($p->domain_price, 0, ',', '.') }}</div>
                         </td>
                         <td class="px-6 py-4 text-right whitespace-nowrap">
-                            <div class="flex items-center justify-end gap-2">
-                                <a href="{{ route('landing.dynamic', $p->slug) }}" target="_blank" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium rounded-lg transition-colors" title="Lihat Landing Page">
-                                    <i class="fa-solid fa-eye"></i>
-                                </a>
-                                <a href="{{ route('proposal.dynamic', $p->slug) }}" target="_blank" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium rounded-lg transition-colors" title="Lihat Proposal">
-                                    <i class="fa-solid fa-file-invoice"></i>
-                                </a>
-                                <a href="{{ route('admin.client_proposals.edit', $p->id) }}" class="px-3 py-1.5 bg-yellow-100 hover:bg-yellow-200 text-yellow-700 text-xs font-medium rounded-lg transition-colors" title="Edit Data">
-                                    <i class="fa-solid fa-pen"></i>
-                                </a>
-                                <div class="relative inline-block">
-                                    <select onchange="kirimWaLangsung(this, '{{ $p->wa_number }}', '{{ $p->brand_name }}', '{{ route('landing.dynamic', $p->slug) }}', '{{ route('proposal.dynamic', $p->slug) }}')" class="appearance-none pl-7 pr-6 py-1.5 bg-green-100 hover:bg-green-200 text-green-700 text-xs font-medium rounded-lg transition-colors cursor-pointer outline-none">
-                                        <option value="" disabled selected>Kirim WA</option>
-                                        @foreach($chatTemplates as $ct)
-                                        <option value="{{ base64_encode($ct->content) }}">{{ $ct->name }}</option>
-                                        @endforeach
-                                    </select>
-                                    <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2 text-green-700">
-                                        <i class="fa-brands fa-whatsapp"></i>
-                                    </div>
-                                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2 text-green-700">
-                                        <i class="fa-solid fa-chevron-down text-[10px]"></i>
+                            <!-- Pop Up Menu Action -->
+                            <div x-data="{ open: false }" class="relative inline-block text-left z-10">
+                                <button @click="open = !open" @click.away="open = false" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg transition-colors focus:outline-none">
+                                    <i class="fa-solid fa-ellipsis-vertical px-1"></i>
+                                </button>
+
+                                <div x-show="open" x-transition.opacity.duration.200ms style="display: none;" class="absolute right-0 mt-2 w-56 bg-white border border-slate-200 rounded-xl shadow-xl z-50 overflow-hidden text-left">
+                                    <div class="py-1">
+                                        <a href="{{ route('landing.dynamic', $p->slug) }}" target="_blank" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 transition-colors">
+                                            <i class="fa-solid fa-eye w-5 text-blue-500"></i> Lihat Landing Page
+                                        </a>
+                                        <a href="{{ route('proposal.dynamic', $p->slug) }}" target="_blank" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 transition-colors">
+                                            <i class="fa-solid fa-file-invoice w-5 text-indigo-500"></i> Lihat Proposal
+                                        </a>
+                                        <a href="{{ route('admin.client_proposals.edit', $p->id) }}" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 transition-colors">
+                                            <i class="fa-solid fa-pen w-5 text-yellow-500"></i> Edit Data
+                                        </a>
+                                        <form action="{{ route('admin.client_proposals.destroy', $p->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data klien ini?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors">
+                                                <i class="fa-solid fa-trash w-5"></i> Hapus Data
+                                            </button>
+                                        </form>
+
+                                        <div class="border-t border-slate-100 my-1"></div>
+
+                                        <div class="px-4 py-3 bg-green-50/50">
+                                            <label class="block text-xs font-semibold text-green-800 mb-2"><i class="fa-brands fa-whatsapp mr-1"></i> Kirim WhatsApp:</label>
+                                            <div class="relative">
+                                                <select onchange="kirimWaLangsung(this, '{{ $p->wa_number }}', '{{ $p->brand_name }}', '{{ route('landing.dynamic', $p->slug) }}', '{{ route('proposal.dynamic', $p->slug) }}')" class="w-full appearance-none pl-3 pr-8 py-2 bg-white border border-green-200 text-green-700 text-xs font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 cursor-pointer shadow-sm transition-all hover:border-green-300">
+                                                    <option value="" disabled selected>Pilih Template...</option>
+                                                    @foreach($chatTemplates as $ct)
+                                                    <option value="{{ base64_encode($ct->content) }}">{{ $ct->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2 text-green-600">
+                                                    <i class="fa-solid fa-chevron-down text-[10px]"></i>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <form action="{{ route('admin.client_proposals.destroy', $p->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data klien ini?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="px-3 py-1.5 bg-red-100 hover:bg-red-200 text-red-700 text-xs font-medium rounded-lg transition-colors" title="Hapus Data">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </button>
-                                </form>
                             </div>
                         </td>
                     </tr>
