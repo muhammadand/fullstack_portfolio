@@ -5,12 +5,13 @@
 
     {{-- Header --}}
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-5 gap-4">
-        <div>
+        <div class="hidden sm:block">
             <h2 class="text-2xl font-semibold text-slate-800">Documentation</h2>
             <p class="text-slate-500 text-xs mt-1">Kelola foto dokumentasi Sobat Scalify</p>
         </div>
-        <a href="{{ route('documentation.create') }}" class="flex items-center gap-2 bg-blue-900 text-white px-4 py-1.5 rounded-md text-sm font-medium shadow-sm hover:bg-blue-950 transition">
-            <i class="fa-solid fa-plus text-[11px]"></i> Tambah Foto
+        <a href="{{ route('documentation.create') }}" class="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 text-blue-600 hover:text-blue-700 sm:bg-blue-900 sm:text-white sm:px-4 sm:py-1.5 sm:rounded-md sm:shadow-sm sm:hover:bg-blue-950 transition w-full sm:w-auto mt-2 sm:mt-0">
+            <i class="fa-solid fa-camera text-xl sm:text-sm"></i>
+            <span class="text-[11px] sm:text-sm font-medium">Tambah Foto</span>
         </a>
     </div>
 

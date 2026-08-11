@@ -1,8 +1,8 @@
 @extends('layouts.admin.app')
 
 @section('content')
-<div class="px-6 py-8">
-    <div class="mb-8 flex items-center gap-4">
+<div class="px-4 sm:px-6 py-4 sm:py-8">
+    <div class="mb-6 sm:mb-8 flex items-center gap-4">
         <a href="{{ route('admin.client_proposals.index') }}" class="w-10 h-10 bg-white border border-slate-200 rounded-full flex items-center justify-center text-slate-500 hover:text-blue-600 hover:border-blue-600 transition-colors">
             <i class="fa-solid fa-arrow-left"></i>
         </a>
@@ -23,16 +23,16 @@
     @endif
 
     <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-        <form action="{{ route('admin.client_proposals.update', $client_proposal->id) }}" method="POST" class="p-6">
+        <form action="{{ route('admin.client_proposals.update', $client_proposal->id) }}" method="POST" class="p-4 sm:p-6">
             @csrf
             @method('PUT')
-            
+
             <div class="mb-6">
                 <label class="block text-sm font-medium text-slate-700 mb-2">Kategori Bisnis (Tema)</label>
                 <select name="business_category_id" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all">
                     <option value="">-- Tanpa Kategori Khusus (Gunakan Default) --</option>
                     @foreach($categories as $cat)
-                        <option value="{{ $cat->id }}" {{ old('business_category_id', $client_proposal->business_category_id) == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
+                    <option value="{{ $cat->id }}" {{ old('business_category_id', $client_proposal->business_category_id) == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
                     @endforeach
                 </select>
                 <p class="text-xs text-slate-500 mt-1">Pilih kategori untuk menentukan tema halaman yang akan ditampilkan.</p>
@@ -60,7 +60,7 @@
                     <label class="block text-sm font-medium text-slate-700 mb-2">Harga Project Web <span class="text-red-500">*</span></label>
                     <input type="number" name="project_price" value="{{ old('project_price', $client_proposal->project_price) }}" required class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all">
                 </div>
-                
+
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-2">Harga Domain & Hosting <span class="text-red-500">*</span></label>
                     <input type="number" name="domain_price" value="{{ old('domain_price', $client_proposal->domain_price) }}" required class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all">

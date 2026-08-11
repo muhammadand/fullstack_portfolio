@@ -7,19 +7,26 @@
     <div class="flex flex-col sm:flex-row justify-between items-center mb-5 gap-4">
         <h2 class="text-2xl font-semibold text-slate-800">Daftar Kategori Blog</h2>
 
-        <div class="flex gap-2">
-            {{-- 🔍 Search Bar --}}
-            <form method="GET" class="flex items-center gap-2">
-                <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari nama kategori..." class="border border-gray-300 rounded-md px-3 py-1.5 w-56 text-sm focus:ring focus:ring-blue-900/30 focus:border-blue-900 outline-none transition" />
-                <button type="submit" class="bg-blue-900 text-white px-3 py-1.5 rounded-md text-sm font-medium shadow-sm hover:bg-blue-950 transition">
-                    Cari
-                </button>
+        <div class="w-full sm:w-auto">
+            <form method="GET" class="flex flex-row items-center w-full sm:w-auto gap-2">
+                {{-- 🔍 Search Bar --}}
+                <div class="flex-1 min-w-0">
+                    <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari nama kategori..." class="w-full border border-gray-300 rounded-md px-3 py-1.5 sm:w-56 text-sm focus:ring focus:ring-blue-900/30 focus:border-blue-900 outline-none transition" />
+                </div>
+                
+                {{-- Buttons sejajar di satu baris --}}
+                <div class="flex flex-row items-center gap-2 flex-shrink-0">
+                    <button type="submit" class="flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-2 text-slate-500 hover:text-blue-600 sm:bg-blue-900 sm:text-white sm:px-4 sm:py-1.5 sm:rounded-md sm:shadow-sm sm:hover:bg-blue-950 transition w-10 sm:w-auto">
+                        <i class="fa-solid fa-magnifying-glass text-[15px] sm:text-sm"></i>
+                        <span class="text-[9px] sm:text-sm font-medium">Cari</span>
+                    </button>
+                    
+                    <a href="{{ route('blog-categories.create') }}" class="flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-2 text-blue-600 hover:text-blue-700 sm:bg-blue-900 sm:text-white sm:px-4 sm:py-1.5 sm:rounded-md sm:shadow-sm sm:hover:bg-blue-950 transition w-10 sm:w-auto">
+                        <i class="fa-solid fa-circle-plus text-[15px] sm:text-sm"></i>
+                        <span class="text-[9px] sm:text-sm font-medium">Tambah</span>
+                    </a>
+                </div>
             </form>
-
-            {{-- ➕ Tambah Kategori --}}
-            <a href="{{ route('blog-categories.create') }}" class="bg-blue-900 text-white px-4 py-1.5 rounded-md text-sm font-medium shadow-sm hover:bg-blue-950 transition">
-                + Tambah Kategori
-            </a>
         </div>
     </div>
 

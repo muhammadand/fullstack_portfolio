@@ -98,7 +98,7 @@
             </div>
 
             <!-- Submit Button -->
-            <div class="flex justify-end gap-3 pt-4 border-t border-slate-100">
+            <div class="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-4 border-t border-slate-100">
                 <button type="reset" class="px-5 py-2.5 bg-slate-100 text-slate-600 rounded-lg text-sm font-medium hover:bg-slate-200 transition">Reset</button>
                 <button type="submit" class="px-5 py-2.5 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition">Simpan Lamaran</button>
             </div>

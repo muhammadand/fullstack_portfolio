@@ -157,6 +157,14 @@ Route::get('/generate-sitemap', function () {
         'update' => 'admin.client_proposals.update',
         'destroy' => 'admin.client_proposals.destroy',
     ]);
+    Route::post('admin/client-proposals/{client_proposal}/wa-template', [App\Http\Controllers\Admin\ClientProposalController::class, 'updateWaTemplate'])->name('admin.client_proposals.update_wa');
+
+    Route::resource('admin/chat-templates', App\Http\Controllers\Admin\ChatTemplateController::class)->except(['create', 'show', 'edit'])->names([
+        'index' => 'admin.chat_templates.index',
+        'store' => 'admin.chat_templates.store',
+        'update' => 'admin.chat_templates.update',
+        'destroy' => 'admin.chat_templates.destroy',
+    ]);
 
     // Profile
     Route::get('profile', [UserController::class, 'editProfile'])->name('profile.edit');
@@ -239,13 +247,25 @@ Route::get('/proposal/{slug}', [ClientProposalController::class, 'proposal'])->n
 // Endpoint rahasia untuk trigger deploy (migrasi & cache) dari GitHub Actions (Tanpa SSH)
 Route::get('/secret-deploy-trigger-12345', function () {
     try {
-        // Hanya menjalankan migrasi untuk file client_proposals agar tidak bentrok dengan tabel lama yang sudah ada di database
         \Illuminate\Support\Facades\Artisan::call('migrate', [
             '--path' => 'database/migrations/2026_08_10_032737_create_client_proposals_table.php',
             '--force' => true
         ]);
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_08_10_044737_create_business_categories_table.php',
+            '--force' => true
+        ]);
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_08_10_044909_add_business_category_id_to_client_proposals_table.php',
+            '--force' => true
+        ]);
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_08_11_081437_create_chat_templates_table.php',
+            '--force' => true
+        ]);
         
         \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'ClientProposalSeeder', '--force' => true]);
+        \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'BusinessCategorySeeder', '--force' => true]);
         \Illuminate\Support\Facades\Artisan::call('optimize:clear');
         return "Deploy commands executed successfully!";
     } catch (\Exception $e) {
@@ -253,8 +273,7 @@ Route::get('/secret-deploy-trigger-12345', function () {
     }
 });
 
-// Endpoint Webhook untuk menerima data dari Scraper WhatsApp
-Route::post('/webhook/scraper-client', [App\Http\Controllers\Admin\ClientProposalController::class, 'handleWebhook']);
+// Route webhook scraper sudah dipindahkan ke routes/api.php
 
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;

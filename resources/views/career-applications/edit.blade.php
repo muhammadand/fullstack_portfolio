@@ -108,7 +108,7 @@
             </div>
 
             <!-- Submit Button -->
-            <div class="flex justify-end gap-3 pt-4 border-t border-slate-100">
+            <div class="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-4 border-t border-slate-100">
                 <a href="{{ route('career-applications.index') }}" class="px-5 py-2.5 bg-slate-100 text-slate-600 rounded-lg text-sm font-medium hover:bg-slate-200 transition">Batal</a>
                 <button type="submit" class="px-5 py-2.5 bg-yellow-500 text-white rounded-lg text-sm font-medium hover:bg-yellow-600 transition">Update Lamaran</button>
             </div>

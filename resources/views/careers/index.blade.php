@@ -6,8 +6,8 @@
     <div class="flex flex-col sm:flex-row justify-between items-center mb-5 gap-4">
         <h2 class="text-2xl font-semibold text-slate-800">Daftar Karir / Lowongan</h2>
 
-        <div class="flex gap-2">
-            <a href="{{ route('careers.create') }}" class="bg-blue-900 text-white px-4 py-1.5 rounded-md text-sm font-medium shadow-sm hover:bg-blue-950 transition">
+        <div class="flex flex-col sm:flex-row w-full sm:w-auto gap-2">
+            <a href="{{ route('careers.create') }}" class="bg-blue-900 text-white text-center w-full sm:w-auto px-4 py-1.5 rounded-md text-sm font-medium shadow-sm hover:bg-blue-950 transition">
                 Create
             </a>
         </div>

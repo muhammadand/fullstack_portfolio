@@ -33,16 +33,25 @@
 </head>
 
 <body class="bg-slate-50 font-sans h-screen overflow-hidden">
-    <div class="flex h-screen">
+    <div x-data="{ sidebarOpen: false }" class="flex h-screen relative w-full overflow-hidden">
 
-        <!-- Sidebar -->
-        @include('layouts.admin.sidebar')
+        <!-- Mobile Overlay -->
+        <div x-show="sidebarOpen" x-transition.opacity @click="sidebarOpen = false" class="fixed inset-0 bg-slate-900/60 z-40 lg:hidden backdrop-blur-sm" style="display: none;"></div>
+
+        <!-- Sidebar Container -->
+        <div :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'" class="fixed lg:relative z-50 h-screen transition-transform duration-300 ease-in-out lg:translate-x-0 shadow-2xl lg:shadow-none">
+            @include('layouts.admin.sidebar')
+        </div>
 
         <!-- Main Content -->
-        <main class="flex-1 h-screen overflow-y-auto bg-slate-50 p-8" style="scrollbar-width: thin; scrollbar-color: #cbd5e1 #f1f5f9;">
+        <main class="flex-1 h-screen overflow-y-auto bg-slate-50 p-4 lg:p-8 min-w-0" style="scrollbar-width: thin; scrollbar-color: #cbd5e1 #f1f5f9;">
             <!-- Header -->
             @include('layouts.admin.header')
-            @yield('content')
+
+            <div class="mt-4 lg:mt-0">
+                @yield('content')
+            </div>
+
             @yield('head')
         </main>
     </div>

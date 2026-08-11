@@ -141,16 +141,19 @@
             </div>
 
             <div class="flex gap-3 relative z-10 mt-6">
-                @if($affiliate->balance < 50000) <button onclick="alert('Maaf, saldo komisi Anda minimal Rp 50.000 untuk dapat melakukan penarikan.')" class="flex-1 py-2.5 bg-white/10 hover:bg-white/20 text-white text-sm font-semibold rounded-xl transition-colors backdrop-blur-md flex justify-center items-center gap-2">
-                    <i class="fa-solid fa-money-bill-transfer"></i> Tarik (Min. 50rb)
+                @if($affiliate->balance < 50000) <button onclick="alert('Maaf, saldo komisi Anda minimal Rp 50.000 untuk dapat melakukan penarikan.')" class="flex-1 py-2 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-xl transition-colors backdrop-blur-md flex flex-col justify-center items-center gap-1">
+                    <i class="fa-solid fa-money-bill-transfer text-[18px]"></i>
+                    <span class="text-[10px]">Tarik (Min 50rb)</span>
                     </button>
                     @else
-                    <button onclick="openWithdrawModal()" class="flex-1 py-2.5 bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold rounded-xl shadow-lg shadow-blue-500/30 transition-colors flex justify-center items-center gap-2">
-                        <i class="fa-solid fa-money-bill-transfer"></i> Tarik Komisi
+                    <button onclick="openWithdrawModal()" class="flex-1 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl shadow-lg shadow-blue-500/30 transition-colors flex flex-col justify-center items-center gap-1">
+                        <i class="fa-solid fa-money-bill-transfer text-[18px]"></i>
+                        <span class="text-[10px]">Tarik Komisi</span>
                     </button>
                     @endif
-                    <button onclick="copyLink()" class="flex-1 py-2.5 glass-panel text-white text-sm font-semibold rounded-xl transition-colors flex justify-center items-center gap-2">
-                        <i class="fa-solid fa-link text-blue-300"></i> Salin Link
+                    <button onclick="copyLink()" class="flex-1 py-2 glass-panel text-white font-semibold rounded-xl transition-colors flex flex-col justify-center items-center gap-1">
+                        <i class="fa-solid fa-link text-blue-300 text-[18px]"></i>
+                        <span class="text-[10px]">Salin Link</span>
                     </button>
             </div>
         </div>
@@ -306,8 +309,6 @@
             </form>
             @endif
         </div>
-    </div>
-    </div>
     </div>
 
     <!-- Notification Modal (Mobile Friendly) -->

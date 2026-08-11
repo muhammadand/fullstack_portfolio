@@ -13,7 +13,7 @@
                 <i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
             </form>
 
-            <a href="{{ route('career-applications.create') }}" class="bg-blue-900 text-white px-4 py-1.5 rounded-md text-sm font-medium shadow-sm hover:bg-blue-950 transition whitespace-nowrap text-center">
+            <a href="{{ route('career-applications.create') }}" class="bg-blue-900 text-white w-full sm:w-auto px-4 py-1.5 rounded-md text-sm font-medium shadow-sm hover:bg-blue-950 transition whitespace-nowrap text-center">
                 Create Application
             </a>
         </div>

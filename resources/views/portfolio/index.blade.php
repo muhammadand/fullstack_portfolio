@@ -6,38 +6,51 @@
 <div class="max-w-6xl mx-auto px-4 py-8">
     {{-- ✅ Header --}}
     <div class="flex flex-col sm:flex-row justify-between items-center mb-5 gap-4">
-        <h2 class="text-2xl font-semibold text-slate-800">Daftar Portfolio</h2>
+        <h2 class="hidden sm:block text-2xl font-semibold text-slate-800">Daftar Portfolio</h2>
 
-        <div class="flex gap-2">
-            {{-- ➕ Tambah --}}
-            <a href="{{ route('portfolio.create') }}" class="bg-blue-900 text-white px-4 py-1.5 rounded-md text-sm font-medium shadow-sm hover:bg-blue-950 transition">
-                Create
+        <div class="hidden sm:flex flex-col sm:flex-row w-full sm:w-auto gap-2">
+            {{-- ➕ Tambah (Desktop Only) --}}
+            <a href="{{ route('portfolio.create') }}" class="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 text-blue-600 hover:text-blue-700 sm:bg-blue-900 sm:text-white sm:px-4 sm:py-1.5 sm:rounded-md sm:shadow-sm sm:hover:bg-blue-950 transition w-full sm:w-auto">
+                <i class="fa-solid fa-circle-plus text-xl sm:text-sm"></i>
+                <span class="text-[11px] sm:text-sm font-medium">Create</span>
             </a>
         </div>
     </div>
 
     {{-- ✅ Filter & Search --}}
-    <form method="GET" class="flex flex-col sm:flex-row gap-3 mb-6 items-center">
-        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari judul portfolio..." class="border border-gray-300 rounded-md px-3 py-1.5 w-full sm:w-56 text-sm focus:ring focus:ring-blue-900/30 focus:border-blue-900 outline-none transition" />
+    <form method="GET" class="flex flex-col gap-3 mb-6">
+        <div class="flex flex-row items-center w-full gap-2">
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari judul portfolio..." class="flex-1 min-w-0 border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:ring focus:ring-blue-900/30 focus:border-blue-900 outline-none transition" />
 
-        <select name="category_id" class="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:ring focus:ring-blue-900/30 focus:border-blue-900 outline-none transition bg-white">
-            <option value="">-- Semua Kategori --</option>
-            @foreach($categories as $cat)
-            <option value="{{ $cat->id }}" {{ request('category_id') == $cat->id ? 'selected' : '' }}>
-                {{ $cat->name }}
-            </option>
-            @endforeach
-        </select>
+            <div class="flex flex-row items-center gap-2 flex-shrink-0">
+                <button type="submit" class="flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-2 text-slate-500 hover:text-blue-600 sm:bg-blue-900 sm:text-white sm:px-4 sm:py-1.5 sm:rounded-md sm:shadow-sm sm:hover:bg-blue-950 transition w-10 sm:w-auto">
+                    <i class="fa-solid fa-filter text-[15px] sm:text-sm"></i>
+                    <span class="text-[9px] sm:text-sm font-medium">Filter</span>
+                </button>
 
-        <select name="is_active" class="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:ring focus:ring-blue-900/30 focus:border-blue-900 outline-none transition bg-white">
-            <option value="">-- Semua Status --</option>
-            <option value="1" {{ request('is_active') === '1' ? 'selected' : '' }}>Aktif</option>
-            <option value="0" {{ request('is_active') === '0' ? 'selected' : '' }}>Nonaktif</option>
-        </select>
+                <a href="{{ route('portfolio.create') }}" class="sm:hidden flex flex-col items-center justify-center gap-0.5 text-blue-600 hover:text-blue-700 transition w-10">
+                    <i class="fa-solid fa-circle-plus text-[15px]"></i>
+                    <span class="text-[9px] font-medium">Create</span>
+                </a>
+            </div>
+        </div>
 
-        <button type="submit" class="bg-blue-900 text-white px-4 py-1.5 rounded-md text-sm font-medium shadow-sm hover:bg-blue-950 transition">
-            Filter
-        </button>
+        <div class="flex flex-row gap-2 w-full">
+            <select name="category_id" class="w-1/2 border border-gray-300 rounded-md px-2 py-1.5 text-[13px] sm:text-sm focus:ring focus:ring-blue-900/30 focus:border-blue-900 outline-none transition bg-white">
+                <option value="">-- Kategori --</option>
+                @foreach($categories as $cat)
+                <option value="{{ $cat->id }}" {{ request('category_id') == $cat->id ? 'selected' : '' }}>
+                    {{ Str::limit($cat->name, 15) }}
+                </option>
+                @endforeach
+            </select>
+
+            <select name="is_active" class="w-1/2 border border-gray-300 rounded-md px-2 py-1.5 text-[13px] sm:text-sm focus:ring focus:ring-blue-900/30 focus:border-blue-900 outline-none transition bg-white">
+                <option value="">-- Status --</option>
+                <option value="1" {{ request('is_active') === '1' ? 'selected' : '' }}>Aktif</option>
+                <option value="0" {{ request('is_active') === '0' ? 'selected' : '' }}>Nonaktif</option>
+            </select>
+        </div>
     </form>
 
     {{-- ✅ Alert --}}

@@ -14,7 +14,8 @@ class ClientProposalController extends Controller
     public function index()
     {
         $proposals = ClientProposal::with('category')->latest()->get();
-        return view('admin.client-proposals.index', compact('proposals'));
+        $chatTemplates = \App\Models\ChatTemplate::all();
+        return view('admin.client-proposals.index', compact('proposals', 'chatTemplates'));
     }
 
     public function create()
@@ -137,5 +138,18 @@ class ClientProposalController extends Controller
             'message' => 'Data dari scraper berhasil disimpan menjadi draft proposal!',
             'data' => $proposal
         ], 201);
+    }
+
+    public function updateWaTemplate(Request $request, ClientProposal $client_proposal)
+    {
+        $request->validate([
+            'wa_template' => 'required|string'
+        ]);
+
+        $client_proposal->update([
+            'wa_template' => $request->wa_template
+        ]);
+
+        return redirect()->back()->with('success', 'Template pesan WhatsApp berhasil disimpan.');
     }
 }

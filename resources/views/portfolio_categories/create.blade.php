@@ -12,11 +12,11 @@
             @csrf
             @include('portfolio_categories.form')
 
-            <div class="flex justify-end gap-3 pt-4 border-t border-slate-100">
-                <a href="{{ route('portfolio-categories.index') }}" class="px-5 py-2.5 rounded-xl border border-slate-200 text-gray-700 hover:bg-slate-50 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md text-[13px] font-medium flex items-center justify-center">
+            <div class="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-4 border-t border-slate-100">
+                <a href="{{ route('portfolio-categories.index') }}" class="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-slate-200 text-gray-700 hover:bg-slate-50 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md text-[13px] font-medium flex items-center justify-center">
                     Batal
                 </a>
-                <button type="submit" class="bg-slate-900 text-white px-5 py-2.5 rounded-xl text-[13px] font-medium transition-all duration-300 hover:bg-slate-800 hover:-translate-y-0.5 hover:shadow-lg flex items-center justify-center">
+                <button type="submit" class="w-full sm:w-auto bg-slate-900 text-white px-5 py-2.5 rounded-xl text-[13px] font-medium transition-all duration-300 hover:bg-slate-800 hover:-translate-y-0.5 hover:shadow-lg flex items-center justify-center">
                     Simpan
                 </button>
             </div>

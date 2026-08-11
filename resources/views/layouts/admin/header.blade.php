@@ -12,17 +12,24 @@ $avatar = $user->profile_photo
 : "https://ui-avatars.com/api/?name=" . urlencode($user->name) . "&background=1E3A8A&color=fff&bold=true";
 @endphp
 
-<header class="flex items-center justify-between mb-8">
-    <div>
-        <h1 class="text-2xl font-bold text-slate-900 mb-0.5">
-            {{ $pageTitle }}
-        </h1>
-        <p class="text-slate-400 text-sm">
-            Welcome back, <span class="font-medium text-slate-600">{{ $user->name }}</span>
-        </p>
+<header class="flex flex-col-reverse lg:flex-row lg:items-center justify-between gap-4 lg:gap-0 mb-6 lg:mb-8">
+    <div class="flex items-center justify-between lg:justify-start w-full lg:w-auto">
+        <div>
+            <h1 class="text-xl lg:text-2xl font-bold text-slate-900 mb-0.5">
+                {{ $pageTitle }}
+            </h1>
+            <p class="hidden sm:block text-slate-400 text-sm">
+                Welcome back, <span class="font-medium text-slate-600">{{ $user->name }}</span>
+            </p>
+        </div>
+
+        {{-- Mobile Menu Toggle --}}
+        <button @click="sidebarOpen = !sidebarOpen" class="lg:hidden w-10 h-10 flex items-center justify-center bg-white border border-slate-200 rounded-xl text-slate-500 hover:text-blue-600 hover:border-blue-300 transition-colors">
+            <i class="fa-solid fa-bars"></i>
+        </button>
     </div>
 
-    <div class="flex items-center gap-3">
+    <div class="flex items-center justify-end w-full lg:w-auto gap-3">
 
         {{-- Notification --}}
         <div x-data="{ notifOpen: false }" class="relative">
@@ -84,11 +91,11 @@ $avatar = $user->profile_photo
         <div x-data="{ open: false }" class="relative">
             <div @click="open = !open" @click.away="open = false" class="flex items-center gap-2.5 cursor-pointer group">
                 <img src="{{ $avatar }}" alt="User" class="w-9 h-9 rounded-xl object-cover ring-2 ring-transparent transition-all duration-200 group-hover:ring-blue-200">
-                <div>
+                <div class="hidden md:block">
                     <p class="text-sm font-semibold text-slate-800 leading-tight">{{ $user->name }}</p>
                     <p class="text-xs text-slate-400 leading-tight">{{ $user->email }}</p>
                 </div>
-                <i class="fa-solid fa-chevron-down text-slate-400 text-[10px] ml-0.5 transition-transform duration-200" :class="{'rotate-180': open}"></i>
+                <i class="fa-solid fa-chevron-down text-slate-400 text-[10px] ml-0.5 transition-transform duration-200 hidden md:block" :class="{'rotate-180': open}"></i>
             </div>
 
             {{-- Dropdown Body --}}
