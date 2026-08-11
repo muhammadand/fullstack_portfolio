@@ -140,6 +140,15 @@ Route::get('/generate-sitemap', function () {
     Route::post('admin/withdrawals/{withdrawal}/approve', [App\Http\Controllers\Admin\WithdrawalController::class, 'approve'])->name('admin.withdrawals.approve');
 
     // Manajemen Client Proposals
+    Route::resource('admin/business-categories', App\Http\Controllers\Admin\BusinessCategoryController::class)->names([
+        'index' => 'admin.business_categories.index',
+        'create' => 'admin.business_categories.create',
+        'store' => 'admin.business_categories.store',
+        'edit' => 'admin.business_categories.edit',
+        'update' => 'admin.business_categories.update',
+        'destroy' => 'admin.business_categories.destroy',
+    ]);
+    
     Route::resource('admin/client-proposals', App\Http\Controllers\Admin\ClientProposalController::class)->names([
         'index' => 'admin.client_proposals.index',
         'create' => 'admin.client_proposals.create',
@@ -243,6 +252,9 @@ Route::get('/secret-deploy-trigger-12345', function () {
         return "Error: " . $e->getMessage();
     }
 });
+
+// Endpoint Webhook untuk menerima data dari Scraper WhatsApp
+Route::post('/webhook/scraper-client', [App\Http\Controllers\Admin\ClientProposalController::class, 'handleWebhook']);
 
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;

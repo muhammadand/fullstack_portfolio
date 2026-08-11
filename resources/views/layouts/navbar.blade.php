@@ -2,7 +2,7 @@
         <div class="max-w-6xl mx-auto px-4 flex items-center justify-between h-14 sm:h-16">
 
             {{-- Logo --}}
-            <div class="flex items-center gap-1.5 sm:gap-2 cursor-pointer" onclick="window.scrollTo(0,0)">
+            <a href="{{ route('login') }}" class="flex items-center gap-1.5 sm:gap-2 cursor-pointer">
 
                 <div class="w-6 h-6 sm:w-8 sm:h-8 overflow-hidden rounded-md sm:rounded-lg shadow-glow-sm">
                     <img src="{{ asset('scalify.png') }}" alt="Scalify Intelligence Logo" class="w-full h-full object-cover">
@@ -12,7 +12,7 @@
                     Scalify<span class="text-brand-accent"> Intelligence</span>
                 </span>
 
-            </div>
+            </a>
 
             {{-- Desktop Nav --}}
             <div class="hidden md:flex items-center gap-8 text-sm text-white/70 font-medium">

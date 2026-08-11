@@ -24,6 +24,7 @@
                 <thead>
                     <tr class="bg-slate-50 border-b border-slate-200">
                         <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Brand Klien</th>
+                        <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Kategori</th>
                         <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Kontak WA</th>
                         <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Harga Project</th>
                         <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">Aksi</th>
@@ -36,6 +37,11 @@
                             <div class="font-bold text-slate-800">{{ $p->brand_name }}</div>
                             <div class="text-xs text-slate-500">{{ $p->client_name ?? '-' }}</div>
                             <div class="text-xs text-blue-500 mt-1">/proposal/{{ $p->slug }}</div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="px-2.5 py-1 rounded-full text-xs font-medium {{ $p->category ? 'bg-blue-100 text-blue-700' : 'bg-slate-100 text-slate-600' }}">
+                                {{ $p->category ? $p->category->name : 'Tanpa Kategori' }}
+                            </span>
                         </td>
                         <td class="px-6 py-4">
                             <div class="text-sm text-slate-800">{{ $p->wa_number }}</div>

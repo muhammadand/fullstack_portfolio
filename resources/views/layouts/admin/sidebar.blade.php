@@ -57,6 +57,11 @@ $menus = [
 'icon' => 'fa-solid fa-file-invoice-dollar',
 ],
 [
+'label' => 'Business Categories',
+'route' => 'admin.business_categories.index',
+'icon' => 'fa-solid fa-layer-group',
+],
+[
 'label' => 'Users',
 'route' => 'users.index',
 'icon' => 'fa-solid fa-users',
