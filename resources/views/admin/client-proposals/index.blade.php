@@ -62,7 +62,7 @@
                                     <i class="fa-solid fa-pen"></i>
                                 </a>
                                 <div class="relative inline-block">
-                                    <select onchange="kirimWaLangsung(this, '{{ $p->wa_number }}', '{{ $p->brand_name }}', '{{ route('landing.dynamic', $p->slug) }}')" class="appearance-none pl-7 pr-6 py-1.5 bg-green-100 hover:bg-green-200 text-green-700 text-xs font-medium rounded-lg transition-colors cursor-pointer outline-none">
+                                    <select onchange="kirimWaLangsung(this, '{{ $p->wa_number }}', '{{ $p->brand_name }}', '{{ route('landing.dynamic', $p->slug) }}', '{{ route('proposal.dynamic', $p->slug) }}')" class="appearance-none pl-7 pr-6 py-1.5 bg-green-100 hover:bg-green-200 text-green-700 text-xs font-medium rounded-lg transition-colors cursor-pointer outline-none">
                                         <option value="" disabled selected>Kirim WA</option>
                                         @foreach($chatTemplates as $ct)
                                         <option value="{{ base64_encode($ct->content) }}">{{ $ct->name }}</option>
@@ -99,7 +99,7 @@
 </div>
 
 <script>
-    function kirimWaLangsung(selectElement, phone, brandName, linkProposal) {
+    function kirimWaLangsung(selectElement, phone, brandName, linkLandingPage, linkProposal) {
         if (!selectElement.value) return;
 
         if (!phone) {
@@ -121,13 +121,22 @@
         if (brandName) {
             text = text.replace(/\{nama_bisnis\}/g, brandName);
         }
+        if (linkLandingPage) {
+            text = text.replace(/\{link_landing_page\}/g, linkLandingPage);
+        }
         if (linkProposal) {
             text = text.replace(/\{link_proposal\}/g, linkProposal);
         }
 
         // Open WA Link
-        const waUrl = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(text)}`;
-        window.open(waUrl, '_blank');
+        const waUrl = `https://api.whatsapp.com/send?phone=${formattedPhone}&text=${encodeURIComponent(text)}`;
+
+        // Deteksi jika dibuka via HP (Mobile) agar langsung buka aplikasi tanpa diblokir browser
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+            window.location.href = waUrl;
+        } else {
+            window.open(waUrl, '_blank');
+        }
 
         // Reset dropdown back to default
         selectElement.value = "";

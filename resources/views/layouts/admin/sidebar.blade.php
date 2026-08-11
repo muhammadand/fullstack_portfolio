@@ -40,7 +40,6 @@ $menus = [
 'route' => 'career-applications.index',
 'icon' => 'fa-solid fa-file-lines',
 ],
-
 [
 'label' => 'Affiliate Partners',
 'route' => 'admin.affiliates.index',
@@ -51,6 +50,10 @@ $menus = [
 'route' => 'admin.withdrawals.index',
 'icon' => 'fa-solid fa-money-bill-transfer',
 ],
+[
+'label' => 'Marketing',
+'icon' => 'fa-solid fa-bullhorn',
+'submenu' => [
 [
 'label' => 'Client Proposals',
 'route' => 'admin.client_proposals.index',
@@ -65,6 +68,8 @@ $menus = [
 'label' => 'Business Categories',
 'route' => 'admin.business_categories.index',
 'icon' => 'fa-solid fa-layer-group',
+],
+]
 ],
 [
 'label' => 'Users',
@@ -99,23 +104,43 @@ $activeRoute = \Illuminate\Support\Facades\Route::currentRouteName();
         {{-- Grid for mobile, List for desktop --}}
         <div class="grid grid-cols-3 sm:grid-cols-4 gap-2 lg:flex lg:flex-col lg:space-y-0.5 lg:gap-0">
             @foreach ($menus as $menu)
-            @if ($menu['route'] && Route::has($menu['route']))
+            @if (isset($menu['submenu']))
+            @php
+            $isSubActive = collect($menu['submenu'])->contains(function($sub) use ($activeRoute) {
+            return $activeRoute === $sub['route'] || str_starts_with($activeRoute, explode('.', $sub['route'])[0]);
+            });
+            @endphp
+            <div x-data="{ open: {{ $isSubActive ? 'true' : 'false' }} }" class="col-span-3 sm:col-span-4 lg:col-span-1">
+                <button @click="open = !open" class="w-full flex flex-col lg:flex-row items-center lg:justify-between justify-center gap-1.5 lg:gap-3 p-3 lg:px-3 lg:py-2.5 rounded-xl transition-all duration-200 group relative {{ $isSubActive ? 'bg-white/5' : '' }}" style="border: 1px solid transparent;">
+                    <div class="flex flex-col lg:flex-row items-center gap-1.5 lg:gap-3">
+                        <i class="{{ $menu['icon'] }} text-lg lg:text-sm w-4 text-center transition-colors duration-200 {{ $isSubActive ? 'text-blue-400' : 'text-white/40 group-hover:text-white/70' }}"></i>
+                        <span class="text-[10px] lg:text-sm font-medium transition-colors duration-200 text-center lg:text-left leading-tight {{ $isSubActive ? 'text-white' : 'text-white/55 group-hover:text-white/90' }}">
+                            {{ $menu['label'] }}
+                        </span>
+                    </div>
+                    <i class="fa-solid fa-chevron-down text-[10px] text-white/40 hidden lg:block transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
+                </button>
+
+                <div x-show="open" class="lg:pl-7 mt-1 grid grid-cols-3 sm:grid-cols-4 gap-2 lg:flex lg:flex-col lg:space-y-0.5 lg:gap-0">
+                    @foreach ($menu['submenu'] as $sub)
+                    @php $isActive = $activeRoute === $sub['route']; @endphp
+                    <a href="{{ route($sub['route']) }}" class="flex flex-col lg:flex-row items-center lg:justify-start justify-center gap-1.5 lg:gap-3 p-3 lg:px-3 lg:py-2 rounded-lg transition-all duration-200 group relative {{ $isActive ? 'text-white' : '' }}" style="{{ $isActive ? 'background: linear-gradient(90deg, rgba(59,130,246,0.2) 0%, rgba(59,130,246,0.08) 100%); border: 1px solid rgba(59,130,246,0.25);' : 'border: 1px solid transparent;' }}">
+                        <i class="{{ $sub['icon'] }} text-lg lg:text-[13px] w-4 text-center transition-colors duration-200 {{ $isActive ? 'text-blue-400' : 'text-white/40 group-hover:text-white/70' }}"></i>
+                        <span class="text-[10px] lg:text-[13px] font-medium transition-colors duration-200 text-center lg:text-left leading-tight {{ $isActive ? 'text-white' : 'text-white/55 group-hover:text-white/90' }}">
+                            {{ $sub['label'] }}
+                        </span>
+                    </a>
+                    @endforeach
+                </div>
+            </div>
+            @elseif (isset($menu['route']) && Route::has($menu['route']))
             @php $isActive = $activeRoute === $menu['route']; @endphp
-
-            <a href="{{ route($menu['route']) }}" class="flex flex-col lg:flex-row items-center lg:justify-start justify-center gap-1.5 lg:gap-3 p-3 lg:px-3 lg:py-2.5 rounded-xl transition-all duration-200 group relative
-                            {{ $isActive ? 'text-white' : '' }}" style="{{ $isActive
-                            ? 'background: linear-gradient(90deg, rgba(59,130,246,0.2) 0%, rgba(59,130,246,0.08) 100%); border: 1px solid rgba(59,130,246,0.25);'
-                            : 'border: 1px solid transparent;' }}">
-
-                {{-- Active left accent bar (Desktop only) --}}
+            <a href="{{ route($menu['route']) }}" class="flex flex-col lg:flex-row items-center lg:justify-start justify-center gap-1.5 lg:gap-3 p-3 lg:px-3 lg:py-2.5 rounded-xl transition-all duration-200 group relative {{ $isActive ? 'text-white' : '' }}" style="{{ $isActive ? 'background: linear-gradient(90deg, rgba(59,130,246,0.2) 0%, rgba(59,130,246,0.08) 100%); border: 1px solid rgba(59,130,246,0.25);' : 'border: 1px solid transparent;' }}">
                 @if ($isActive)
                 <span class="hidden lg:block absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 rounded-full" style="background: #3B82F6; box-shadow: 0 0 8px rgba(59,130,246,0.8);"></span>
                 @endif
-
-                <i class="{{ $menu['icon'] }} text-lg lg:text-sm w-4 text-center transition-colors duration-200
-                            {{ $isActive ? 'text-blue-400' : 'text-white/40 group-hover:text-white/70' }}"></i>
-                <span class="text-[10px] lg:text-sm font-medium transition-colors duration-200 text-center lg:text-left leading-tight
-                            {{ $isActive ? 'text-white' : 'text-white/55 group-hover:text-white/90' }}">
+                <i class="{{ $menu['icon'] }} text-lg lg:text-sm w-4 text-center transition-colors duration-200 {{ $isActive ? 'text-blue-400' : 'text-white/40 group-hover:text-white/70' }}"></i>
+                <span class="text-[10px] lg:text-sm font-medium transition-colors duration-200 text-center lg:text-left leading-tight {{ $isActive ? 'text-white' : 'text-white/55 group-hover:text-white/90' }}">
                     {{ $menu['label'] }}
                 </span>
             </a>
