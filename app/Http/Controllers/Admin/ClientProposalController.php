@@ -104,21 +104,30 @@ class ClientProposalController extends Controller
         }
 
         $categoryId = null;
-        $waTemplate = 'Halo tim Scalify, saya tertarik untuk diskusi lebih lanjut.';
         $projectPrice = 4500000;
         $domainPrice = 1200000;
 
         if (!empty($validated['category'])) {
-            $category = BusinessCategory::where('name', 'like', '%' . $validated['category'] . '%')
-                        ->orWhere('slug', Str::slug($validated['category']))
+            $categoryName = $validated['category'];
+            $categorySlug = Str::slug($categoryName);
+
+            $category = BusinessCategory::where('name', $categoryName)
+                        ->orWhere('slug', $categorySlug)
                         ->first();
             
-            if ($category) {
-                $categoryId = $category->id;
-                $waTemplate = $category->wa_template ?? $waTemplate;
-                $projectPrice = $category->project_price;
-                $domainPrice = $category->domain_price;
+            if (!$category) {
+                $category = BusinessCategory::create([
+                    'name' => $categoryName,
+                    'slug' => $categorySlug,
+                    'wa_template' => null,
+                    'project_price' => $projectPrice,
+                    'domain_price' => $domainPrice,
+                ]);
             }
+
+            $categoryId = $category->id;
+            $projectPrice = $category->project_price ?? $projectPrice;
+            $domainPrice = $category->domain_price ?? $domainPrice;
         }
 
         // Simpan data otomatis ke database
@@ -128,7 +137,7 @@ class ClientProposalController extends Controller
             'brand_name' => $validated['name'],
             'client_name' => $validated['name'],
             'wa_number' => $validated['phone'],
-            'wa_template' => $waTemplate,
+            'wa_template' => null,
             'project_price' => $projectPrice,
             'domain_price' => $domainPrice,
         ]);
