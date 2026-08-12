@@ -162,34 +162,57 @@
         <input type="text" readonly value="{{ url('/sobat-scalify?ref=' . $affiliate->affiliate_code) }}" class="absolute -left-[9999px] opacity-0" id="affiliate-link">
 
         <!-- Grid Menu -->
-        <div class="grid grid-cols-4 gap-4 mb-8">
-            <a href="{{ route('affiliate.history') }}" class="flex flex-col items-center gap-2">
-                <div class="w-12 h-12 rounded-2xl glass-panel flex items-center justify-center text-blue-400 text-lg shadow-inner">
-                    <i class="fa-solid fa-clock-rotate-left"></i>
-                </div>
-                <span class="text-[10px] text-slate-300 font-medium text-center">Riwayat<br>Dana</span>
-            </a>
-            <div class="flex flex-col items-center gap-2" onclick="copyLink()">
-                <div class="w-12 h-12 rounded-2xl glass-panel flex items-center justify-center text-indigo-400 text-lg shadow-inner relative">
+        <div class="grid grid-cols-3 gap-y-6 gap-x-4 mb-8">
+            <!-- 1. Bagikan Web -->
+            <div class="flex flex-col items-center gap-2 cursor-pointer" onclick="openShareModal()">
+                <div class="w-12 h-12 rounded-2xl glass-panel flex items-center justify-center text-indigo-400 text-lg shadow-inner relative transition-transform active:scale-95">
                     <i class="fa-solid fa-share-nodes"></i>
                 </div>
-                <span class="text-[10px] text-slate-300 font-medium text-center">Bagikan<br>Link</span>
+                <span class="text-[10px] text-slate-300 font-medium text-center leading-tight">Bagikan<br>Web</span>
             </div>
+
+            <!-- 2. Katalog Proposal -->
+            <a href="{{ route('affiliate.proposals') }}" class="flex flex-col items-center gap-2">
+                <div class="w-12 h-12 rounded-2xl glass-panel flex items-center justify-center text-rose-400 text-lg shadow-inner relative transition-transform active:scale-95">
+                    <i class="fa-solid fa-folder-open"></i>
+                </div>
+                <span class="text-[10px] text-slate-300 font-medium text-center leading-tight">Katalog<br>Proposal</span>
+            </a>
+
+            <!-- 3. Riwayat Dana -->
+            <a href="{{ route('affiliate.history') }}" class="flex flex-col items-center gap-2">
+                <div class="w-12 h-12 rounded-2xl glass-panel flex items-center justify-center text-blue-400 text-lg shadow-inner transition-transform active:scale-95">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                </div>
+                <span class="text-[10px] text-slate-300 font-medium text-center leading-tight">Riwayat<br>Dana</span>
+            </a>
+
+            <!-- 4. Bagikan Akses -->
+            <a href="{{ route('affiliate.magic_login_qr') }}" class="flex flex-col items-center gap-2">
+                <div class="w-12 h-12 rounded-2xl glass-panel flex items-center justify-center text-purple-400 text-lg shadow-inner transition-transform active:scale-95">
+                    <i class="fa-solid fa-key"></i>
+                </div>
+                <span class="text-[10px] text-slate-300 font-medium text-center leading-tight">Akses<br>Login</span>
+            </a>
+
+            <!-- 5. Project Deal -->
             <div class="flex flex-col items-center gap-2">
                 <div class="w-12 h-12 rounded-2xl glass-panel flex items-center justify-center text-emerald-400 text-lg shadow-inner">
                     <div class="flex items-center gap-1">
                         <span class="font-bold text-sm">{{ $totalProjects }}</span>
                     </div>
                 </div>
-                <span class="text-[10px] text-slate-300 font-medium text-center">Project<br>Deal</span>
+                <span class="text-[10px] text-slate-300 font-medium text-center leading-tight">Project<br>Deal</span>
             </div>
+
+            <!-- 5. Total Klik -->
             <div class="flex flex-col items-center gap-2">
                 <div class="w-12 h-12 rounded-2xl glass-panel flex items-center justify-center text-yellow-400 text-lg shadow-inner">
                     <div class="flex items-center gap-1">
                         <span class="font-bold text-sm">{{ $totalClicks }}</span>
                     </div>
                 </div>
-                <span class="text-[10px] text-slate-300 font-medium text-center">Total<br>Klik</span>
+                <span class="text-[10px] text-slate-300 font-medium text-center leading-tight">Total<br>Klik</span>
             </div>
         </div>
 
@@ -386,6 +409,39 @@
         </div>
     </div>
 
+    <!-- Share Modal (QR Code) -->
+    <div id="shareModal" class="fixed inset-0 z-[60] flex flex-col justify-end bg-slate-900/80 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-[#1e293b] border-t border-white/10 w-full rounded-t-3xl transform translate-y-full transition-transform duration-300" id="shareModalContent">
+            <div class="p-6">
+                <div class="w-12 h-1.5 bg-slate-600 rounded-full mx-auto mb-6"></div>
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold text-white">Bagikan Link Anda</h3>
+                    <button type="button" onclick="closeShareModal()" class="w-8 h-8 rounded-full glass-panel flex items-center justify-center text-slate-400 hover:text-white">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <div class="flex flex-col items-center mb-6">
+                    <div class="bg-white p-3 rounded-2xl mb-4 shadow-xl">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{ urlencode(url('/sobat-scalify?ref=' . $affiliate->affiliate_code)) }}" alt="QR Code" class="w-40 h-40 rounded-lg">
+                    </div>
+                    <p class="text-xs text-slate-400 text-center px-4 leading-relaxed">
+                        Prospek bisa langsung <b>Scan QR Code</b> ini untuk membuka website dengan kode afiliasi Anda.
+                    </p>
+                </div>
+
+                <div class="glass-panel p-3.5 rounded-xl flex items-center justify-between gap-3 mb-2">
+                    <div class="truncate flex-1 text-sm font-medium text-blue-300">
+                        {{ url('/sobat-scalify?ref=' . $affiliate->affiliate_code) }}
+                    </div>
+                    <button onclick="copyLink()" class="w-10 h-10 rounded-xl bg-blue-500 hover:bg-blue-600 shadow-lg shadow-blue-500/30 text-white flex items-center justify-center shrink-0 transition-colors">
+                        <i class="fa-solid fa-copy"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         function showToast(message, type = 'success') {
             const toast = document.createElement('div');
@@ -420,7 +476,16 @@
             copyText.setSelectionRange(0, 99999);
             navigator.clipboard.writeText(copyText.value);
 
-            showToast('Link referral berhasil disalin!', 'success');
+            showToast('Link website berhasil disalin!', 'success');
+        }
+
+        function copyLoginLink() {
+            var copyText = document.getElementById("login-link-input");
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(copyText.value);
+
+            showToast('Link Akses Login berhasil disalin!', 'success');
         }
 
         function openWithdrawModal() {
@@ -457,6 +522,26 @@
         function closeNotificationModal() {
             const modal = document.getElementById('notificationModal');
             const content = document.getElementById('notificationModalContent');
+
+            content.classList.add('translate-y-full');
+            setTimeout(() => {
+                modal.classList.add('opacity-0', 'pointer-events-none');
+            }, 300);
+        }
+
+        function openShareModal() {
+            const modal = document.getElementById('shareModal');
+            const content = document.getElementById('shareModalContent');
+
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                content.classList.remove('translate-y-full');
+            }, 10);
+        }
+
+        function closeShareModal() {
+            const modal = document.getElementById('shareModal');
+            const content = document.getElementById('shareModalContent');
 
             content.classList.add('translate-y-full');
             setTimeout(() => {

@@ -213,6 +213,8 @@ Route::get('/generate-sitemap', function () {
     Route::get('/partner/register', [App\Http\Controllers\AffiliateController::class, 'registerForm'])->name('affiliate.register');
     Route::post('/partner/register', [App\Http\Controllers\AffiliateController::class, 'registerSubmit'])->name('affiliate.register.submit');
     Route::get('/partner/login', [App\Http\Controllers\AffiliateController::class, 'loginForm'])->name('affiliate.login');
+    Route::get('/partner/magic-login/{affiliate}', [App\Http\Controllers\AffiliateController::class, 'magicLogin'])->name('affiliate.magic_login')->middleware('signed');
+    Route::get('/partner/magic-login-qr', [App\Http\Controllers\AffiliateController::class, 'magicLoginQr'])->name('affiliate.magic_login_qr');
     Route::post('/partner/login', [App\Http\Controllers\AffiliateController::class, 'loginSubmit'])->name('affiliate.login.submit');
     Route::post('/api/track-wa-click', [App\Http\Controllers\AffiliateController::class, 'trackClick']);
     
@@ -220,6 +222,7 @@ Route::get('/generate-sitemap', function () {
     Route::middleware(['auth:affiliate'])->group(function () {
         Route::get('/partner/dashboard', [App\Http\Controllers\AffiliateController::class, 'dashboard'])->name('affiliate.dashboard');
         Route::get('/partner/history', [App\Http\Controllers\AffiliateController::class, 'history'])->name('affiliate.history');
+        Route::get('/partner/proposals', [App\Http\Controllers\AffiliateController::class, 'proposals'])->name('affiliate.proposals');
         Route::post('/partner/logout', [App\Http\Controllers\AffiliateController::class, 'logout'])->name('affiliate.logout');
         Route::post('/partner/withdraw', [App\Http\Controllers\AffiliateController::class, 'withdraw'])->name('affiliate.withdraw');
         

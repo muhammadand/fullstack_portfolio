@@ -96,6 +96,41 @@
             </div>
         </div>
 
+        <!-- Quick Actions (New Features) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <!-- Katalog Proposal -->
+            <div class="bg-white rounded-3xl shadow-sm hover:shadow-md transition-all duration-300 border border-slate-100 p-6 flex items-center justify-between group">
+                <div class="flex items-center gap-5">
+                    <div class="w-14 h-14 rounded-2xl bg-rose-50 text-rose-500 flex items-center justify-center text-2xl group-hover:bg-rose-500 group-hover:text-white transition-colors">
+                        <i class="fa-solid fa-folder-open"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-800">Katalog Proposal</h3>
+                        <p class="text-sm text-slate-500">Pilih dan bagikan link spesifik klien</p>
+                    </div>
+                </div>
+                <a href="{{ route('affiliate.proposals') }}" class="w-10 h-10 rounded-full bg-slate-50 text-slate-400 hover:bg-rose-50 hover:text-rose-600 flex items-center justify-center transition-colors shrink-0">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <!-- Akses Login -->
+            <div class="bg-white rounded-3xl shadow-sm hover:shadow-md transition-all duration-300 border border-slate-100 p-6 flex items-center justify-between group">
+                <div class="flex items-center gap-5">
+                    <div class="w-14 h-14 rounded-2xl bg-purple-50 text-purple-500 flex items-center justify-center text-2xl group-hover:bg-purple-500 group-hover:text-white transition-colors">
+                        <i class="fa-solid fa-key"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-800">Akses Login (Magic Link)</h3>
+                        <p class="text-sm text-slate-500">Login otomatis via QR untuk device lain</p>
+                    </div>
+                </div>
+                <a href="{{ route('affiliate.magic_login_qr') }}" class="w-10 h-10 rounded-full bg-slate-50 text-slate-400 hover:bg-purple-50 hover:text-purple-600 flex items-center justify-center transition-colors shrink-0">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+
         <!-- Stats Grid -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <!-- Clicks -->

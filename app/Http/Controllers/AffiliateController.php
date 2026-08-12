@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Affiliate;
 use App\Models\AffiliateClick;
+use App\Models\ClientProposal;
+use App\Models\ChatTemplate;
+use App\Models\BusinessCategory;
 use Illuminate\Support\Facades\Auth;
 
 class AffiliateController extends Controller
@@ -181,5 +184,49 @@ class AffiliateController extends Controller
         $affiliate->notifications()->delete();
         
         return redirect()->back();
+    }
+
+    public function proposals(Request $request)
+    {
+        $affiliate = Auth::guard('affiliate')->user();
+        
+        if ($affiliate->status !== 'approved') {
+            return redirect()->route('affiliate.dashboard')->with('error', 'Akun Anda belum disetujui.');
+        }
+
+        $query = ClientProposal::with('category')->latest();
+        
+        if ($request->filled('category_id')) {
+            $query->where('business_category_id', $request->category_id);
+        }
+        
+        $proposals = $query->simplePaginate(10)->withQueryString();
+        $categories = \App\Models\BusinessCategory::all();
+        $chatTemplates = ChatTemplate::all();
+
+        return view('affiliate.proposals_mobile', compact('affiliate', 'proposals', 'categories', 'chatTemplates'));
+    }
+
+    public function magicLogin(Request $request, Affiliate $affiliate)
+    {
+        if (!$request->hasValidSignature()) {
+            abort(401, 'Link login sudah kedaluwarsa atau tidak valid.');
+        }
+
+        Auth::guard('affiliate')->login($affiliate);
+
+        return redirect()->route('affiliate.dashboard')->with('success', 'Berhasil login via QR Akses.');
+    }
+
+    public function magicLoginQr()
+    {
+        $affiliate = Auth::guard('affiliate')->user();
+        if ($affiliate->status !== 'approved') {
+            return redirect()->route('affiliate.dashboard');
+        }
+
+        $magicLoginUrl = \Illuminate\Support\Facades\URL::temporarySignedRoute('affiliate.magic_login', now()->addDays(7), ['affiliate' => $affiliate->id]);
+
+        return view('affiliate.magic_login_qr', compact('affiliate', 'magicLoginUrl'));
     }
 }
