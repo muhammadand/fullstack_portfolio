@@ -16,14 +16,32 @@
 
             {{-- Desktop Nav --}}
             <div class="hidden md:flex items-center gap-8 text-sm text-white/70 font-medium">
-                <a href="{{ route('index.company.profile') }}" class="hover:text-brand-accent transition-colors">Tentang
-                    Kami</a>
-                <a href="{{ route('index.company.profile') }}#portofolio" class="hover:text-brand-accent transition-colors">Portofolio</a>
-                <a href="{{ route('index.company.profile') }}#layanan" class="hidden hover:text-brand-accent transition-colors">Paket Layanan</a>
-                <a href="{{ route('landing.blogs') }}" class="hover:text-brand-accent transition-colors">Blog</a>
-                <a href="{{ route('landing.portfolio') }}" class="hover:text-brand-accent transition-colors">Project</a>
-                <a href="{{ route('sobat-scalify') }}" class="hover:text-brand-accent transition-colors">Sobat Scalify</a>
-                <a href="{{ route('landing.careers') }}" class="hover:text-brand-accent transition-colors">Careers</a>
+
+                {{-- Dropdown: Perusahaan --}}
+                <div class="relative group cursor-pointer py-4">
+                    <span class="hover:text-brand-accent transition-colors flex items-center gap-1.5">
+                        Perusahaan <i class="fa-solid fa-chevron-down text-[10px] opacity-70 group-hover:rotate-180 transition-transform"></i>
+                    </span>
+                    <div class="absolute top-full left-0 w-48 bg-brand-dark/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 overflow-hidden z-50">
+                        <a href="{{ route('index.company.profile') }}" class="block px-4 py-3 hover:bg-white/5 hover:text-brand-accent transition-colors">Tentang Kami</a>
+                        <a href="{{ route('landing.careers') }}" class="block px-4 py-3 hover:bg-white/5 hover:text-brand-accent transition-colors border-t border-white/5">Careers</a>
+                    </div>
+                </div>
+
+                {{-- Dropdown: Layanan & Karya --}}
+                <div class="relative group cursor-pointer py-4">
+                    <span class="hover:text-brand-accent transition-colors flex items-center gap-1.5">
+                        Layanan & Karya <i class="fa-solid fa-chevron-down text-[10px] opacity-70 group-hover:rotate-180 transition-transform"></i>
+                    </span>
+                    <div class="absolute top-full left-0 w-56 bg-brand-dark/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 overflow-hidden z-50">
+                        <a href="{{ route('index.company.profile') }}#layanan" class="block px-4 py-3 hover:bg-white/5 hover:text-brand-accent transition-colors">Paket Layanan</a>
+                        <a href="{{ route('index.company.profile') }}#portofolio" class="block px-4 py-3 hover:bg-white/5 hover:text-brand-accent transition-colors border-t border-white/5">Portofolio Singkat</a>
+                        <a href="{{ route('landing.portfolio') }}" class="block px-4 py-3 hover:bg-white/5 hover:text-brand-accent transition-colors border-t border-white/5">Semua Project Detail</a>
+                    </div>
+                </div>
+
+                <a href="{{ route('landing.blogs') }}" class="hover:text-brand-accent transition-colors py-4">Blog</a>
+                <a href="{{ route('sobat-scalify') }}" class="hover:text-brand-accent transition-colors py-4">Sobat Scalify</a>
             </div>
 
             {{-- Right side: CTA + Hamburger --}}
@@ -49,27 +67,36 @@
         {{-- Mobile Menu Drawer --}}
         <div id="mobile-menu" class="md:hidden overflow-hidden max-h-0 transition-all duration-300 ease-in-out border-t border-white/0">
             <div class="px-4 py-4 flex flex-col gap-1 bg-brand-dark/95 backdrop-blur-xl">
-                <a href="{{ route('index.company.profile') }}" class="mobile-nav-link text-sm text-white/70 font-medium px-3 py-3 rounded-lg hover:bg-white/5 hover:text-brand-accent transition-all">
+
+                <div class="text-[10px] uppercase text-white/40 font-bold px-3 pt-2 pb-1 tracking-wider">Perusahaan</div>
+                <a href="{{ route('index.company.profile') }}" class="mobile-nav-link text-sm text-white/70 font-medium px-3 py-2 rounded-lg hover:bg-white/5 hover:text-brand-accent transition-all">
                     Tentang Kami
                 </a>
-                <a href="{{ route('index.company.profile') }}#portofolio" class="mobile-nav-link text-sm text-white/70 font-medium px-3 py-3 rounded-lg hover:bg-white/5 hover:text-brand-accent transition-all">
-                    Portofolio
-                </a>
-                <a href="{{ route('index.company.profile') }}#layanan" class="mobile-nav-link text-sm text-white/70 font-medium px-3 py-3 rounded-lg hover:bg-white/5 hover:text-brand-accent transition-all">
-                    Paket Layanan
-                </a>
-                <a href="{{ route('landing.blogs') }}" class="mobile-nav-link text-sm text-white/70 font-medium px-3 py-3 rounded-lg hover:bg-white/5 hover:text-brand-accent transition-all">
-                    Blog
-                </a>
-                <a href="{{ route('sobat-scalify') }}" class="mobile-nav-link text-sm text-white/70 font-medium px-3 py-3 rounded-lg hover:bg-white/5 hover:text-brand-accent transition-all">
-                    Sobat Scalify
-                </a>
-                <a href="{{ route('landing.careers') }}" class="mobile-nav-link text-sm text-white/70 font-medium px-3 py-3 rounded-lg hover:bg-white/5 hover:text-brand-accent transition-all">
+                <a href="{{ route('landing.careers') }}" class="mobile-nav-link text-sm text-white/70 font-medium px-3 py-2 rounded-lg hover:bg-white/5 hover:text-brand-accent transition-all">
                     Careers
                 </a>
 
-                <div class="border-t border-white/10 mt-2 pt-3">
-                    <a href="https://wa.me/6285221694067" target="_blank" class="block text-center bg-btn-gradient text-white text-sm font-semibold px-5 py-2.5 rounded-full shadow-glow-sm hover:shadow-glow-blue transition-all">
+                <div class="text-[10px] uppercase text-white/40 font-bold px-3 pt-4 pb-1 tracking-wider border-t border-white/5 mt-2">Layanan & Karya</div>
+                <a href="{{ route('index.company.profile') }}#layanan" class="mobile-nav-link text-sm text-white/70 font-medium px-3 py-2 rounded-lg hover:bg-white/5 hover:text-brand-accent transition-all">
+                    Paket Layanan
+                </a>
+                <a href="{{ route('index.company.profile') }}#portofolio" class="mobile-nav-link text-sm text-white/70 font-medium px-3 py-2 rounded-lg hover:bg-white/5 hover:text-brand-accent transition-all">
+                    Portofolio Singkat
+                </a>
+                <a href="{{ route('landing.portfolio') }}" class="mobile-nav-link text-sm text-white/70 font-medium px-3 py-2 rounded-lg hover:bg-white/5 hover:text-brand-accent transition-all">
+                    Semua Project Detail
+                </a>
+
+                <div class="text-[10px] uppercase text-white/40 font-bold px-3 pt-4 pb-1 tracking-wider border-t border-white/5 mt-2">Lainnya</div>
+                <a href="{{ route('landing.blogs') }}" class="mobile-nav-link text-sm text-white/70 font-medium px-3 py-2 rounded-lg hover:bg-white/5 hover:text-brand-accent transition-all">
+                    Blog
+                </a>
+                <a href="{{ route('sobat-scalify') }}" class="mobile-nav-link text-sm text-white/70 font-medium px-3 py-2 rounded-lg hover:bg-white/5 hover:text-brand-accent transition-all">
+                    Sobat Scalify
+                </a>
+
+                <div class="border-t border-white/10 mt-3 pt-4">
+                    <a href="https://wa.me/6285221694067" target="_blank" class="block text-center bg-btn-gradient text-white text-sm font-semibold px-5 py-3 rounded-full shadow-glow-sm hover:shadow-glow-blue transition-all">
                         Hubungi Kami
                     </a>
                 </div>

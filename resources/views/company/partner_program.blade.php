@@ -38,18 +38,20 @@
             </div>
             <h1 class="text-4xl sm:text-5xl lg:text-5xl lg:leading-tight font-bold font-display leading-tight mb-6 text-white drop-shadow-lg">
                 Jadilah <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">Sobat Scalify Partner</span><br />& Dapatkan Penghasilan Tambahan
-            </h1>
-            <p class="text-lg text-blue-100/80 mb-10 max-w-3xl mx-auto leading-relaxed">
-                Rekomendasikan layanan jasa pembuatan website, skripsi, dan sistem cerdas. Nikmati komisi <strong class="text-white">10% untuk project perusahaan</strong> dan komisi <strong class="text-white">Rp 150.000 untuk project mahasiswa</strong> dari setiap deal yang berhasil.
-            </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="{{ route('affiliate.register') }}" class="px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold rounded-xl shadow-[0_0_20px_rgba(59,130,246,0.4)] hover:shadow-[0_0_30px_rgba(59,130,246,0.6)] transition-all duration-300 transform hover:-translate-y-1 flex items-center justify-center gap-2 border border-blue-500/50">
-                    <i class="fa-solid fa-user-plus"></i> Gabung Sekarang Gratis
-                </a>
-                <a href="{{ route('affiliate.login') }}" class="px-8 py-4 bg-white/5 border border-white/20 text-white font-semibold rounded-xl hover:bg-white/10 backdrop-blur-md transition-all duration-300 flex items-center justify-center gap-2">
-                    Masuk Dashboard
-                </a>
-            </div>
+                <h1 class="text-4xl sm:text-5xl lg:text-5xl lg:leading-tight font-bold font-display leading-tight mb-6 text-white drop-shadow-lg">
+                    Jadilah <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">Sobat Scalify Partner</span><br />& Dapatkan Penghasilan Tambahan
+                </h1>
+                <p class="text-lg text-blue-100/80 mb-10 max-w-3xl mx-auto leading-relaxed">
+                    Kami sediakan <strong class="text-white">Proposal & Landing Page Profesional</strong> secara gratis. Anda tinggal pilih target pasarnya (Wedding, Cafe, Retail, dll) lalu bagikan! Nikmati komisi <strong class="text-white text-xl">Rp 500.000 per Klien</strong> dari setiap deal yang berhasil.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="{{ route('affiliate.register') }}" class="px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold rounded-xl shadow-[0_0_20px_rgba(59,130,246,0.4)] hover:shadow-[0_0_30px_rgba(59,130,246,0.6)] transition-all duration-300 transform hover:-translate-y-1 flex items-center justify-center gap-2 border border-blue-500/50">
+                        <i class="fa-solid fa-user-plus"></i> Gabung Sekarang Gratis
+                    </a>
+                    <a href="{{ route('affiliate.login') }}" class="px-8 py-4 bg-white/5 border border-white/20 text-white font-semibold rounded-xl hover:bg-white/10 backdrop-blur-md transition-all duration-300 flex items-center justify-center gap-2">
+                        Masuk Dashboard
+                    </a>
+                </div>
         </div>
     </section>
 
@@ -69,37 +71,48 @@
                 </div>
 
                 {{-- Steps Explanation --}}
-                <div class="order-1 lg:order-2 space-y-8">
+                <div class="order-1 lg:order-2 space-y-6">
                     {{-- Step 1 --}}
-                    <div class="flex items-start gap-4 p-6 bg-white rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
-                        <div class="w-14 h-14 shrink-0 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-2xl font-bold font-display">
+                    <div class="flex items-start gap-4 p-5 bg-white rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+                        <div class="w-12 h-12 shrink-0 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-xl font-bold font-display">
                             1
                         </div>
                         <div>
-                            <h4 class="text-xl font-bold text-slate-800 mb-2">Sebarkan Link Referral</h4>
-                            <p class="text-slate-600 leading-relaxed">Dapatkan link eksklusif di Dashboard Partner Anda. Bagikan ke grup WhatsApp, media sosial, atau langsung ke kenalan Anda yang membutuhkan website/skripsi.</p>
+                            <h4 class="text-lg font-bold text-slate-800 mb-1">Pilih Target Pasar</h4>
+                            <p class="text-sm text-slate-600 leading-relaxed">Masuk ke Dashboard, lalu buka <b>Katalog Proposal</b>. Pilih kategori bisnis yang ingin Anda sasar (seperti Wedding, Cafe, Jasa, dll).</p>
                         </div>
                     </div>
 
                     {{-- Step 2 --}}
-                    <div class="flex items-start gap-4 p-6 bg-white rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
-                        <div class="w-14 h-14 shrink-0 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-2xl font-bold font-display">
+                    <div class="flex items-start gap-4 p-5 bg-white rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+                        <div class="w-12 h-12 shrink-0 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-xl font-bold font-display">
                             2
                         </div>
                         <div>
-                            <h4 class="text-xl font-bold text-slate-800 mb-2">Klien & Tim Berkolaborasi</h4>
-                            <p class="text-slate-600 leading-relaxed">Ketika klien mengklik link Anda dan mulai berkonsultasi, sistem kami otomatis merekam jejak Anda. Tim developer akan menangani project tersebut hingga deal.</p>
+                            <h4 class="text-lg font-bold text-slate-800 mb-1">Bagikan Proposal & Web</h4>
+                            <p class="text-sm text-slate-600 leading-relaxed">Kami sudah siapkan Landing Page & PDF Proposal profesional yang tertanam otomatis dengan ID Anda. Tinggal <i>copy-paste</i> atau kirim via WA.</p>
                         </div>
                     </div>
 
                     {{-- Step 3 --}}
-                    <div class="flex items-start gap-4 p-6 bg-white rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
-                        <div class="w-14 h-14 shrink-0 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-2xl font-bold font-display">
+                    <div class="flex items-start gap-4 p-5 bg-white rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+                        <div class="w-12 h-12 shrink-0 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center text-xl font-bold font-display">
                             3
                         </div>
                         <div>
-                            <h4 class="text-xl font-bold text-slate-800 mb-2">Terima Komisi Anda!</h4>
-                            <p class="text-slate-600 leading-relaxed">Setelah project selesai & pelunasan dilakukan, komisi otomatis masuk ke saldo Anda. Anda bisa mencairkan dana tersebut langsung ke rekening bank Anda.</p>
+                            <h4 class="text-lg font-bold text-slate-800 mb-1">Tim Kami yang Closing</h4>
+                            <p class="text-sm text-slate-600 leading-relaxed">Ketika klien menghubungi dari link Anda, tim profesional kami yang akan melakukan presentasi, negosiasi, dan pengerjaan project hingga selesai.</p>
+                        </div>
+                    </div>
+
+                    {{-- Step 4 --}}
+                    <div class="flex items-start gap-4 p-5 bg-white rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+                        <div class="w-12 h-12 shrink-0 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl font-bold font-display">
+                            4
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-bold text-slate-800 mb-1">Terima Komisi Rp 500Rb</h4>
+                            <p class="text-sm text-slate-600 leading-relaxed">Setelah project deal dan klien melakukan pembayaran, komisi <b>Rp 500.000</b> (untuk project perusahaan) akan langsung cair ke Dashboard Anda!</p>
                         </div>
                     </div>
                 </div>
@@ -118,15 +131,15 @@
                     <div class="w-20 h-20 mx-auto rounded-full bg-blue-100 flex items-center justify-center text-3xl text-blue-600 mb-6">
                         <i class="fa-solid fa-money-bill-trend-up"></i>
                     </div>
-                    <h4 class="text-xl font-bold text-slate-800 mb-3">Komisi Menarik</h4>
-                    <p class="text-slate-500">Dapatkan komisi <strong>10%</strong> dari nilai project untuk klien perusahaan, atau flat <strong>Rp 150.000</strong> untuk project mahasiswa.</p>
+                    <h4 class="text-xl font-bold text-slate-800 mb-3">Komisi Besar & Tetap</h4>
+                    <p class="text-slate-500">Dapatkan komisi flat <strong>Rp 500.000</strong> per klien perusahaan, atau <strong>Rp 150.000</strong> untuk klien mahasiswa. Semakin banyak share, semakin untung!</p>
                 </div>
                 <div class="text-center p-8 bg-slate-50 rounded-3xl border border-slate-100">
                     <div class="w-20 h-20 mx-auto rounded-full bg-emerald-100 flex items-center justify-center text-3xl text-emerald-600 mb-6">
-                        <i class="fa-solid fa-chart-pie"></i>
+                        <i class="fa-solid fa-file-pdf"></i>
                     </div>
-                    <h4 class="text-xl font-bold text-slate-800 mb-3">Dashboard Transparan</h4>
-                    <p class="text-slate-500">Pantau jumlah klik, project sukses, dan saldo komisi Anda secara *real-time* lewat dashboard canggih.</p>
+                    <h4 class="text-xl font-bold text-slate-800 mb-3">Bahan Marketing Siap Pakai</h4>
+                    <p class="text-slate-500">Tak perlu repot bikin bahan presentasi. Kami siapkan Landing Page & PDF Proposal super profesional untuk setiap kategori bisnis.</p>
                 </div>
                 <div class="text-center p-8 bg-slate-50 rounded-3xl border border-slate-100">
                     <div class="w-20 h-20 mx-auto rounded-full bg-purple-100 flex items-center justify-center text-3xl text-purple-600 mb-6">
