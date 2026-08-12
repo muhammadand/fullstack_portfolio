@@ -207,6 +207,39 @@ class AffiliateController extends Controller
         return view('affiliate.proposals_mobile', compact('affiliate', 'proposals', 'categories', 'chatTemplates'));
     }
 
+    public function generateProposal(Request $request)
+    {
+        $affiliate = Auth::guard('affiliate')->user();
+        
+        if ($affiliate->status !== 'approved') {
+            return redirect()->route('affiliate.dashboard')->with('error', 'Akun Anda belum disetujui.');
+        }
+
+        $request->validate([
+            'business_category_id' => 'required|exists:business_categories,id',
+            'brand_name' => 'required|string|max:255',
+            'wa_number' => 'required|string|max:20',
+        ]);
+
+        $slug = \Illuminate\Support\Str::slug($request->brand_name);
+        
+        // Ensure slug is unique
+        if (ClientProposal::where('slug', $slug)->exists()) {
+            $slug = $slug . '-' . time();
+        }
+
+        ClientProposal::create([
+            'business_category_id' => $request->business_category_id,
+            'brand_name' => $request->brand_name,
+            'slug' => $slug,
+            'wa_number' => $request->wa_number,
+            'project_price' => 4500000,
+            'domain_price' => 1200000,
+        ]);
+
+        return redirect()->back()->with('success', 'Website & Proposal berhasil dibuat!');
+    }
+
     public function magicLogin(Request $request, Affiliate $affiliate)
     {
         if (!$request->hasValidSignature()) {

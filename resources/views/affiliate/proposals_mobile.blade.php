@@ -30,6 +30,22 @@
             scrollbar-width: none;
         }
 
+        @keyframes floating {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-4px);
+            }
+        }
+
+        .animate-floating {
+            animation: floating 2.5s ease-in-out infinite;
+        }
+
     </style>
 </head>
 <body class="pb-24 overflow-x-hidden min-h-screen flex flex-col relative">
@@ -40,13 +56,39 @@
     <div class="relative z-10 w-full max-w-md mx-auto flex flex-col min-h-screen px-4 pt-6">
 
         <!-- Header -->
-        <div class="flex items-center gap-4 mb-6">
-            <a href="{{ route('affiliate.dashboard') }}" class="w-10 h-10 rounded-full glass-panel flex items-center justify-center text-slate-300 hover:text-white transition-colors">
-                <i class="fa-solid fa-arrow-left"></i>
-            </a>
-            <div>
-                <p class="text-xs text-rose-400 font-medium tracking-wider uppercase">Marketing</p>
-                <h1 class="text-xl font-bold text-white">Katalog Proposal</h1>
+        <div class="flex items-center justify-between mb-6 z-20 relative">
+            <div class="flex items-center gap-4">
+                <a href="{{ route('affiliate.dashboard') }}" class="w-10 h-10 rounded-full glass-panel flex items-center justify-center text-slate-300 hover:text-white transition-colors">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </a>
+                <div>
+                    <p class="text-xs text-rose-400 font-medium tracking-wider uppercase">Marketing</p>
+                    <h1 class="text-xl font-bold text-white">Katalog Proposal</h1>
+                </div>
+            </div>
+
+            <div class="relative">
+                <button onclick="openModal()" class="w-10 h-10 rounded-full bg-rose-500 text-white shadow-lg shadow-rose-500/30 flex items-center justify-center hover:bg-rose-600 transition-colors shrink-0 relative z-10">
+                    <i class="fa-solid fa-plus"></i>
+                </button>
+
+                <!-- Coach Mark / Tutorial -->
+                <div id="coach-mark" class="absolute top-14 right-0 w-56 bg-emerald-600 text-white p-3.5 rounded-2xl shadow-2xl hidden z-50 transform origin-top-right transition-all duration-500 scale-0 opacity-0 border border-emerald-400/30">
+                    <div class="absolute -top-2 right-3 w-4 h-4 bg-emerald-600 border-t border-l border-emerald-400/30 rotate-45 rounded-sm"></div>
+                    <div class="relative z-10">
+                        <div class="flex items-start gap-3">
+                            <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center shrink-0 shadow-inner">
+                                <i class="fa-solid fa-lightbulb text-yellow-300"></i>
+                            </div>
+                            <div>
+                                <p class="text-[11px] font-medium leading-relaxed mb-3">Buat website landing page & proposal mandiri untuk calon klien Anda dengan mudah pakai ini!</p>
+                                <button onclick="dismissCoachMark()" class="bg-black/20 hover:bg-black/30 border border-black/10 px-3 py-1.5 rounded-lg text-[10px] font-bold text-white transition-colors w-full text-center active:scale-95">
+                                    Oke, Mengerti
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -155,6 +197,51 @@
 
     </div>
 
+    <!-- Modal Buat Proposal -->
+    <div id="modal-buat-proposal" class="fixed inset-0 z-[100] flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeModal()"></div>
+        <div class="bg-slate-900 border border-white/10 rounded-2xl w-full max-w-sm m-4 relative z-10 transform scale-95 transition-transform duration-300 p-5 shadow-2xl">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors w-8 h-8 flex items-center justify-center rounded-full bg-white/5">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <h2 class="text-lg font-bold text-white mb-1"><i class="fa-solid fa-wand-magic-sparkles text-rose-400 mr-2"></i>Buat Proposal Baru</h2>
+            <p class="text-xs text-slate-400 mb-5 leading-relaxed">Buat website landing page dan proposal khusus untuk calon klien Anda secara instan.</p>
+
+            <form action="{{ route('affiliate.proposals.generate') }}" method="POST">
+                @csrf
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1.5">Kategori Bisnis</label>
+                        <select name="business_category_id" required class="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-rose-500 transition-colors">
+                            <option value="" disabled selected class="text-slate-800">Pilih Kategori...</option>
+                            @foreach($categories as $cat)
+                            <option value="{{ $cat->id }}" class="text-slate-800">{{ $cat->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1.5">Nama Bisnis / Brand</label>
+                        <input type="text" name="brand_name" required placeholder="Contoh: Permata Qiana" class="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-rose-500 transition-colors">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1.5">Nomor WhatsApp</label>
+                        <input type="text" name="wa_number" required placeholder="Contoh: 6281234567890" class="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-rose-500 transition-colors">
+                        <p class="text-[10px] text-slate-400 mt-1"><i class="fa-solid fa-circle-info mr-1"></i>Gunakan format 628... (tanpa tanda +)</p>
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                    <button type="submit" class="w-full bg-rose-500 hover:bg-rose-600 text-white font-medium py-2.5 rounded-xl transition-colors shadow-lg shadow-rose-500/30 text-sm flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-rocket"></i> Buat Sekarang
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Hidden input for copying text -->
     <input type="text" readonly class="absolute -left-[9999px] opacity-0" id="clipboard-input">
 
@@ -226,6 +313,62 @@
             // Reset dropdown back to default
             selectElement.value = "";
         }
+
+        function openModal() {
+            const modal = document.getElementById('modal-buat-proposal');
+            const modalContent = modal.querySelector('.transform');
+            modal.classList.remove('hidden');
+            // Trigger reflow
+            void modal.offsetWidth;
+            modal.classList.remove('opacity-0');
+            modalContent.classList.remove('scale-95');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('modal-buat-proposal');
+            const modalContent = modal.querySelector('.transform');
+            modal.classList.add('opacity-0');
+            modalContent.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        function dismissCoachMark() {
+            const coachMark = document.getElementById('coach-mark');
+            coachMark.classList.remove('scale-100', 'opacity-100', 'animate-floating');
+            coachMark.classList.add('scale-0', 'opacity-0');
+            setTimeout(() => {
+                coachMark.classList.add('hidden');
+            }, 500);
+            localStorage.setItem('has_seen_proposal_tutorial', 'true');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tampilkan tutorial coach mark jika belum pernah lihat
+            if (!localStorage.getItem('has_seen_proposal_tutorial')) {
+                const coachMark = document.getElementById('coach-mark');
+                coachMark.classList.remove('hidden');
+
+                // Animate pop-in
+                setTimeout(() => {
+                    coachMark.classList.remove('scale-0', 'opacity-0');
+                    coachMark.classList.add('scale-100', 'opacity-100');
+
+                    // Add floating animation after pop-in is done
+                    setTimeout(() => {
+                        coachMark.classList.add('animate-floating');
+                    }, 500);
+                }, 600);
+            }
+
+            @if(session('success'))
+            setTimeout(() => showToast("{{ session('success') }}", 'success'), 500);
+            @endif
+            @if(session('error'))
+            setTimeout(() => showToast("{{ session('error') }}", 'error'), 500);
+            @endif
+        });
 
     </script>
 </body>
