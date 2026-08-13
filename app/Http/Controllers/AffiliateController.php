@@ -90,8 +90,8 @@ class AffiliateController extends Controller
         
         $withdrawals = \App\Models\Withdrawal::where('affiliate_id', $affiliate->id)->latest()->take(5)->get();
 
-        // Selalu gunakan tampilan mobile (Midnight Blue) sebagai tampilan utama
-        return view('affiliate.dashboard_mobile', compact('affiliate', 'totalClicks', 'totalProjects', 'withdrawals'));
+        // Tampilkan dashboard terpadu (Responsive Desktop + Mobile)
+        return view('affiliate.dashboard', compact('affiliate', 'totalClicks', 'totalProjects', 'withdrawals'));
     }
 
     public function history(Request $request)

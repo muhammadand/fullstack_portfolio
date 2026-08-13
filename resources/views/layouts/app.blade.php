@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="overflow-x-hidden w-full">
 
 <head>
     <meta charset="UTF-8" />
@@ -151,15 +151,21 @@
     <noscript>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"></noscript>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" media="print" onload="this.media='all'">
+    
+    @stack('meta')
+    @stack('styles')
 </head>
 
 <body class="bg-brand-dark text-white font-sans overflow-x-hidden scroll-smooth">
 
-    @include('layouts.navbar')
+    <div class="@hasSection('hide_navbar_mobile') hidden md:block @endif">
+        @include('layouts.navbar')
+    </div>
     <main id="main-content">
         @yield('content')
     </main>
-    <footer class="bg-brand-navy border-t border-white/5 pt-12 pb-8 px-6 text-white/60 text-xs">
+    <div class="@hasSection('hide_footer_mobile') hidden md:block @endif">
+        <footer class="bg-brand-navy border-t border-white/5 pt-12 pb-8 px-6 text-white/60 text-xs">
         <div class="max-w-5xl mx-auto flex flex-col md:flex-row items-center md:items-start justify-between gap-10 mb-8">
 
             {{-- Brand Section --}}
@@ -233,10 +239,12 @@
             <p>© 2026 Scalify Intelligence · All rights reserved</p>
         </div>
     </footer>
+    </div>
 
 
     @include("partials.flowise")
 
+    @stack('scripts')
 </body>
 
 </html>
