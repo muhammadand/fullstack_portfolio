@@ -234,6 +234,7 @@ Route::get('/generate-sitemap', function () {
         // Gamification / Points
         Route::post('/partner/claim-points', [App\Http\Controllers\AffiliateController::class, 'claimDailyPoints'])->name('affiliate.claim_points');
         Route::get('/partner/streak', [App\Http\Controllers\AffiliateController::class, 'streak'])->name('affiliate.streak');
+        Route::get('/partner/store', [App\Http\Controllers\AffiliateController::class, 'store'])->name('affiliate.store');
     });
     
 // LOGIN

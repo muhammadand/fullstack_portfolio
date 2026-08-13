@@ -25,11 +25,22 @@
 </head>
 <body class="pb-10 overflow-x-hidden min-h-screen relative">
     <!-- Header -->
-    <div class="fixed top-0 left-0 w-full z-50 glass-panel border-b border-white/10 px-5 py-4 flex items-center gap-4">
-        <a href="{{ route('affiliate.dashboard') }}" class="w-10 h-10 rounded-full bg-slate-800/80 flex items-center justify-center text-slate-300 hover:text-white transition-colors">
-            <i class="fa-solid fa-arrow-left"></i>
-        </a>
-        <h1 class="text-lg font-bold text-white">Progres Api Streak</h1>
+    <div class="fixed top-0 left-0 w-full z-50 glass-panel border-b border-white/10 px-5 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+            <a href="{{ route('affiliate.dashboard') }}" class="w-10 h-10 rounded-full bg-slate-800/80 flex items-center justify-center text-slate-300 hover:text-white transition-colors">
+                <i class="fa-solid fa-arrow-left"></i>
+            </a>
+            <h1 class="text-lg font-bold text-white">Progres Api</h1>
+        </div>
+
+        <button type="button" onclick="openInfoModal()" class="relative w-10 h-10 rounded-full bg-slate-800/80 flex items-center justify-center text-blue-400 hover:text-white transition-colors" id="infoBtn">
+            <i class="fa-solid fa-circle-info text-lg"></i>
+            <!-- Pulse indicator for first time -->
+            <span class="absolute top-0 right-0 flex h-3 w-3 hidden" id="infoPulse">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-3 w-3 bg-blue-500 border-2 border-slate-900"></span>
+            </span>
+        </button>
     </div>
 
     <div class="pt-24 px-5 pb-6">
@@ -137,5 +148,88 @@
         </div>
     </div>
     </div>
+
+    <!-- Info Modal -->
+    <div id="infoModal" class="fixed inset-0 z-[60] flex flex-col justify-end bg-slate-900/80 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-[#1e293b] border-t border-white/10 w-full rounded-t-3xl transform translate-y-full transition-transform duration-300 flex flex-col max-h-[85vh]" id="infoModalContent">
+            <div class="p-6 pb-4 border-b border-white/10 shrink-0">
+                <div class="w-12 h-1.5 bg-slate-600 rounded-full mx-auto mb-6"></div>
+                <div class="flex justify-between items-center">
+                    <h3 class="text-xl font-bold text-white"><i class="fa-solid fa-circle-info text-blue-400 mr-2"></i>Info Penukaran Poin</h3>
+                    <button type="button" onclick="closeInfoModal()" class="w-8 h-8 rounded-full glass-panel flex items-center justify-center text-slate-400 hover:text-white">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="p-6 overflow-y-auto hide-scrollbar flex-1 space-y-6">
+
+                <div class="flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-full bg-yellow-500/20 text-yellow-400 flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-coins text-lg"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold text-white mb-1">Ketentuan Penukaran</h4>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Poin yang Anda kumpulkan dari <i class="fa-solid fa-fire text-orange-400 mx-1"></i> <b>Api Streak</b> dapat ditukar dengan berbagai hadiah menarik! Minimal penukaran poin saat ini adalah <b>10.000 Poin</b>.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-5 rounded-2xl relative overflow-hidden bg-blue-500/10 border-blue-500/30">
+                    <div class="absolute -right-6 -top-6 w-24 h-24 bg-blue-500/20 rounded-full blur-2xl"></div>
+                    <h4 class="text-sm font-bold text-white mb-2 relative z-10">
+                        <i class="fa-solid fa-store text-blue-400 mr-1.5"></i> Scalify Store
+                    </h4>
+                    <p class="text-[11px] text-slate-300 leading-relaxed relative z-10 mb-4">
+                        Tukarkan poin Anda dengan <b>Saldo E-Wallet</b>, <b>Voucher Makanan</b> (GoFood), <b>Fashion & Merchandise</b>, atau diskon layanan Scalify eksklusif di <b>Scalify Store</b>.
+                    </p>
+
+                    <a href="{{ route('affiliate.store') }}" class="block text-center w-full py-3 bg-blue-500 hover:bg-blue-600 text-white text-xs font-bold rounded-xl transition-colors relative z-10 shadow-lg shadow-blue-500/30">
+                        Kunjungi Scalify Store <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+
+                <button type="button" onclick="closeInfoModal()" class="w-full py-3.5 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl transition-colors mt-2">
+                    Mengerti
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const hasSeenInfo = localStorage.getItem('hasSeenStreakInfo');
+            if (!hasSeenInfo) {
+                const pulse = document.getElementById('infoPulse');
+                if (pulse) pulse.classList.remove('hidden');
+            }
+        });
+
+        function openInfoModal() {
+            const modal = document.getElementById('infoModal');
+            const content = document.getElementById('infoModalContent');
+            const pulse = document.getElementById('infoPulse');
+
+            if (pulse) pulse.classList.add('hidden');
+            localStorage.setItem('hasSeenStreakInfo', 'true');
+
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                content.classList.remove('translate-y-full');
+            }, 10);
+        }
+
+        function closeInfoModal() {
+            const modal = document.getElementById('infoModal');
+            const content = document.getElementById('infoModalContent');
+
+            content.classList.add('translate-y-full');
+            setTimeout(() => {
+                modal.classList.add('opacity-0', 'pointer-events-none');
+            }, 300);
+        }
+
+    </script>
 </body>
 </html>

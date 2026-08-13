@@ -214,6 +214,11 @@ class AffiliateController extends Controller
         return view('affiliate.streak_mobile', compact('affiliate', 'streak', 'currentWeekDay', 'today'));
     }
 
+    public function store(Request $request)
+    {
+        return view('affiliate.scalify_store');
+    }
+
     public function trackClick(Request $request)
     {
         $code = $request->cookie('affiliate_ref') ?? $request->input('ref');
