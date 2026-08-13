@@ -236,6 +236,10 @@ Route::get('/generate-sitemap', function () {
         Route::post('/partner/claim-points', [App\Http\Controllers\AffiliateController::class, 'claimDailyPoints'])->name('affiliate.claim_points');
         Route::get('/partner/streak', [App\Http\Controllers\AffiliateController::class, 'streak'])->name('affiliate.streak');
         Route::get('/partner/store', [App\Http\Controllers\AffiliateController::class, 'store'])->name('affiliate.store');
+        
+        // Profile
+        Route::get('/partner/profile', [App\Http\Controllers\AffiliateController::class, 'profile'])->name('affiliate.profile');
+        Route::post('/partner/profile', [App\Http\Controllers\AffiliateController::class, 'updateProfile'])->name('affiliate.profile.update');
     });
     
 // LOGIN

@@ -70,12 +70,17 @@
                     <p class="text-blue-100/70 text-base">Selamat datang kembali, <span class="text-white font-semibold">{{ $affiliate->name }}</span>!</p>
                 </div>
 
-                <form action="{{ route('affiliate.logout') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="group flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-red-500/10 text-white/70 hover:text-red-400 text-sm font-medium rounded-lg transition-all duration-300 border border-white/10 hover:border-red-500/30 backdrop-blur-md">
-                        <i class="fa-solid fa-arrow-right-from-bracket group-hover:-translate-x-1 transition-transform"></i> Keluar
-                    </button>
-                </form>
+                <div class="flex items-center gap-3">
+                    <a href="{{ route('affiliate.profile') }}" class="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-blue-500/20 text-white/70 hover:text-blue-400 text-sm font-medium rounded-lg transition-all duration-300 border border-white/10 hover:border-blue-500/30 backdrop-blur-md">
+                        <i class="fa-solid fa-user"></i> Profil
+                    </a>
+                    <form action="{{ route('affiliate.logout') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="group flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-red-500/10 text-white/70 hover:text-red-400 text-sm font-medium rounded-lg transition-all duration-300 border border-white/10 hover:border-red-500/30 backdrop-blur-md">
+                            <i class="fa-solid fa-arrow-right-from-bracket group-hover:-translate-x-1 transition-transform"></i> Keluar
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

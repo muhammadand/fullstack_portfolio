@@ -11,6 +11,9 @@
         </div>
     </div>
     <div class="flex gap-2">
+        <a href="{{ route('affiliate.profile') }}" class="w-10 h-10 rounded-full glass-panel flex items-center justify-center text-blue-300 hover:text-white transition-colors">
+            <i class="fa-solid fa-user"></i>
+        </a>
         <button onclick="openNotificationModal()" class="w-10 h-10 rounded-full glass-panel flex items-center justify-center text-blue-300 hover:text-white transition-colors relative">
             <i class="fa-solid fa-bell"></i>
             @if($affiliate->unreadNotifications->count() > 0)

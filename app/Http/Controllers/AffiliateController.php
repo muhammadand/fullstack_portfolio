@@ -226,6 +226,38 @@ class AffiliateController extends Controller
         return response()->json(['status' => 'success']);
     }
 
+    public function profile()
+    {
+        $affiliate = Auth::guard('affiliate')->user();
+        return view('affiliate.profile', compact('affiliate'));
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $affiliate = Auth::guard('affiliate')->user();
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:affiliates,email,' . $affiliate->id,
+            'bank_info' => 'nullable|string',
+            'password' => 'nullable|min:8'
+        ]);
+
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
+            'bank_info' => $request->bank_info,
+        ];
+
+        if ($request->filled('password')) {
+            $data['password'] = \Hash::make($request->password);
+        }
+
+        $affiliate->update($data);
+
+        return redirect()->back()->with('success', 'Profil berhasil diperbarui!');
+    }
+
     public function markNotificationRead($id)
     {
         $affiliate = Auth::guard('affiliate')->user();
