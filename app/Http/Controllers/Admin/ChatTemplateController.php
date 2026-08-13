@@ -10,8 +10,9 @@ class ChatTemplateController extends Controller
 {
     public function index()
     {
-        $templates = ChatTemplate::latest()->get();
-        return view('admin.chat-templates.index', compact('templates'));
+        $templates = ChatTemplate::with('businessCategory')->latest()->get();
+        $categories = \App\Models\BusinessCategory::all();
+        return view('admin.chat-templates.index', compact('templates', 'categories'));
     }
 
     public function store(Request $request)
@@ -19,6 +20,7 @@ class ChatTemplateController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'content' => 'required|string',
+            'business_category_id' => 'required|exists:business_categories,id',
         ]);
 
         ChatTemplate::create($validated);
@@ -31,6 +33,7 @@ class ChatTemplateController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'content' => 'required|string',
+            'business_category_id' => 'required|exists:business_categories,id',
         ]);
 
         $chat_template->update($validated);

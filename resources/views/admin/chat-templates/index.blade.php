@@ -31,10 +31,17 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @forelse($templates as $t)
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
-            <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-                <h3 class="font-bold text-slate-800">{{ $t->name }}</h3>
+            <div class="p-5 border-b border-slate-100 flex justify-between items-start bg-slate-50/50">
+                <div>
+                    <h3 class="font-bold text-slate-800">{{ $t->name }}</h3>
+                    @if($t->businessCategory)
+                    <span class="inline-flex items-center mt-1 px-2 py-0.5 rounded text-[10px] font-medium bg-blue-100 text-blue-800">
+                        {{ $t->businessCategory->name }}
+                    </span>
+                    @endif
+                </div>
                 <div class="flex gap-2">
-                    <button type="button" onclick="openTemplateModal({{ $t->id }}, '{{ addslashes($t->name) }}', '{{ base64_encode($t->content) }}')" class="w-8 h-8 rounded-lg bg-yellow-50 text-yellow-600 hover:bg-yellow-100 flex items-center justify-center transition-colors" title="Edit Template">
+                    <button type="button" onclick="openTemplateModal({{ $t->id }}, '{{ addslashes($t->name) }}', '{{ base64_encode($t->content) }}', '{{ $t->business_category_id }}')" class="w-8 h-8 rounded-lg bg-yellow-50 text-yellow-600 hover:bg-yellow-100 flex items-center justify-center transition-colors" title="Edit Template">
                         <i class="fa-solid fa-pen text-xs"></i>
                     </button>
                     <form action="{{ route('admin.chat_templates.destroy', $t->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus template ini?');">
@@ -89,6 +96,16 @@
                 <input type="text" name="name" id="templateName" required class="w-full bg-slate-50 border-2 border-slate-200 text-slate-800 rounded-xl py-3 px-4 focus:outline-none focus:border-blue-400 transition-colors" placeholder="Contoh: Penawaran Pertama">
             </div>
 
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-slate-700 mb-2">Kategori Bisnis</label>
+                <select name="business_category_id" id="businessCategoryId" required class="w-full bg-slate-50 border-2 border-slate-200 text-slate-800 rounded-xl py-3 px-4 focus:outline-none focus:border-blue-400 transition-colors">
+                    <option value="">-- Pilih Kategori --</option>
+                    @foreach($categories as $cat)
+                    <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
             <div class="mb-5">
                 <label class="block text-sm font-medium text-slate-700 mb-2">Isi Pesan</label>
                 <textarea name="content" id="templateContent" rows="6" required class="w-full bg-slate-50 border-2 border-slate-200 text-slate-800 rounded-xl py-3 px-4 focus:outline-none focus:border-blue-400 transition-colors placeholder-slate-400 leading-relaxed font-mono text-sm" placeholder="Halo {nama_bisnis}, kami dari..."></textarea>
@@ -103,12 +120,13 @@
 </div>
 
 <script>
-    function openTemplateModal(id = null, name = '', contentB64 = '') {
+    function openTemplateModal(id = null, name = '', contentB64 = '', categoryId = '') {
         const modal = document.getElementById('templateModal');
         const modalContent = document.getElementById('templateModalContent');
         const form = document.getElementById('templateForm');
         const title = document.getElementById('modalTitle');
         const nameInput = document.getElementById('templateName');
+        const categoryInput = document.getElementById('businessCategoryId');
         const contentInput = document.getElementById('templateContent');
         const methodField = document.getElementById('methodField');
 
@@ -117,12 +135,14 @@
             form.action = `/admin/chat-templates/${id}`;
             methodField.innerHTML = '@method("PUT")';
             nameInput.value = name;
+            categoryInput.value = categoryId;
             contentInput.value = decodeURIComponent(escape(window.atob(contentB64)));
         } else {
             title.textContent = 'Tambah Template Baru';
             form.action = "{{ route('admin.chat_templates.store') }}";
             methodField.innerHTML = '';
             nameInput.value = '';
+            categoryInput.value = '';
             contentInput.value = '';
         }
 

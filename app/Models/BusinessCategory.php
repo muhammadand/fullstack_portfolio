@@ -12,4 +12,9 @@ class BusinessCategory extends Model
     {
         return $this->hasMany(ClientProposal::class);
     }
+
+    public function chatTemplates()
+    {
+        return $this->hasMany(ChatTemplate::class);
+    }
 }

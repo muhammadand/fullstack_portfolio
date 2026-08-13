@@ -83,7 +83,12 @@
                                             <div class="relative">
                                                 <select onchange="kirimWaLangsung(this, '{{ $p->wa_number }}', '{{ $p->brand_name }}', '{{ route('landing.dynamic', $p->slug) }}', '{{ route('proposal.dynamic', $p->slug) }}')" class="w-full appearance-none pl-3 pr-8 py-2 bg-white border border-green-200 text-green-700 text-xs font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 cursor-pointer shadow-sm transition-all hover:border-green-300">
                                                     <option value="" disabled selected>Pilih Template...</option>
-                                                    @foreach($chatTemplates as $ct)
+                                                    @php
+                                                    $filteredTemplates = $chatTemplates->filter(function($ct) use ($p) {
+                                                    return is_null($ct->business_category_id) || $ct->business_category_id == $p->business_category_id;
+                                                    });
+                                                    @endphp
+                                                    @foreach($filteredTemplates as $ct)
                                                     <option value="{{ base64_encode($ct->content) }}">{{ $ct->name }}</option>
                                                     @endforeach
                                                 </select>

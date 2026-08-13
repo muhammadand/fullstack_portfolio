@@ -10,4 +10,9 @@ class ChatTemplate extends Model
     use HasFactory;
 
     protected $guarded = ['id'];
+
+    public function businessCategory()
+    {
+        return $this->belongsTo(BusinessCategory::class);
+    }
 }

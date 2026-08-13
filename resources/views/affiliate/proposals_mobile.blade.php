@@ -149,7 +149,12 @@
                     <div class="relative">
                         <select onchange="kirimWaLangsungAffiliate(this, '{{ $p->brand_name }}', '{{ route('landing.dynamic', $p->slug) }}?ref={{ $affiliate->affiliate_code }}', '{{ route('proposal.dynamic', $p->slug) }}?ref={{ $affiliate->affiliate_code }}')" class="w-full appearance-none pl-3 pr-8 py-2 bg-white/5 border border-emerald-500/30 text-emerald-300 text-xs font-medium rounded-xl focus:outline-none focus:border-emerald-500 cursor-pointer transition-all">
                             <option value="" disabled selected class="text-slate-800">Pilih Template Chat...</option>
-                            @foreach($chatTemplates as $ct)
+                            @php
+                            $filteredTemplates = $chatTemplates->filter(function($ct) use ($p) {
+                            return is_null($ct->business_category_id) || $ct->business_category_id == $p->business_category_id;
+                            });
+                            @endphp
+                            @foreach($filteredTemplates as $ct)
                             <option value="{{ base64_encode($ct->content) }}" class="text-slate-800">{{ $ct->name }}</option>
                             @endforeach
                         </select>
