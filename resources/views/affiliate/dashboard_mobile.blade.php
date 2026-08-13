@@ -78,6 +78,8 @@
         </script>
         @endif
 
+        <x-affiliate.check-in-card :affiliate="$affiliate" />
+
         <x-affiliate.balance-card :affiliate="$affiliate" />
 
         <!-- Hidden input for copy -->

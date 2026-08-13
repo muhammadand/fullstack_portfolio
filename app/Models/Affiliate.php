@@ -21,4 +21,9 @@ class Affiliate extends Authenticatable
         'password',
         'remember_token',
     ];
+    
+    public function pointHistories()
+    {
+        return $this->hasMany(AffiliatePointHistory::class);
+    }
 }

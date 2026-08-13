@@ -230,6 +230,10 @@ Route::get('/generate-sitemap', function () {
         // Notifications
         Route::post('/partner/notifications/{id}/read', [App\Http\Controllers\AffiliateController::class, 'markNotificationRead'])->name('affiliate.notifications.read');
         Route::post('/partner/notifications/clear', [App\Http\Controllers\AffiliateController::class, 'clearNotifications'])->name('affiliate.notifications.clear');
+        
+        // Gamification / Points
+        Route::post('/partner/claim-points', [App\Http\Controllers\AffiliateController::class, 'claimDailyPoints'])->name('affiliate.claim_points');
+        Route::get('/partner/streak', [App\Http\Controllers\AffiliateController::class, 'streak'])->name('affiliate.streak');
     });
     
 // LOGIN

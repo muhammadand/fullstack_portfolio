@@ -148,6 +148,72 @@ class AffiliateController extends Controller
         return redirect()->back()->with('success', 'Permintaan penarikan komisi berhasil diajukan dan sedang diproses.');
     }
 
+    public function claimDailyPoints(Request $request)
+    {
+        $affiliate = Auth::guard('affiliate')->user();
+        
+        if ($affiliate->status !== 'approved') {
+            return redirect()->back()->with('error', 'Akun Anda belum disetujui.');
+        }
+
+        $today = now()->format('Y-m-d');
+        
+        if ($affiliate->last_claim_date === $today) {
+            return redirect()->back()->with('error', 'Anda sudah melakukan klaim hari ini.');
+        }
+
+        $yesterday = now()->subDay()->format('Y-m-d');
+        $pointsEarned = 10;
+        $description = 'Klaim Poin Harian';
+        
+        if ($affiliate->last_claim_date === $yesterday) {
+            $affiliate->current_streak += 1;
+        } else {
+            $affiliate->current_streak = 1;
+        }
+
+        if ($affiliate->current_streak % 7 == 0) {
+            $pointsEarned += 50; // Bonus mingguan
+            $description = 'Klaim Poin Harian + Bonus Mingguan';
+        }
+
+        if ($affiliate->current_streak > $affiliate->highest_streak) {
+            $affiliate->highest_streak = $affiliate->current_streak;
+        }
+
+        $affiliate->points += $pointsEarned;
+        $affiliate->last_claim_date = $today;
+        $affiliate->save();
+
+        \App\Models\AffiliatePointHistory::create([
+            'affiliate_id' => $affiliate->id,
+            'points_earned' => $pointsEarned,
+            'description' => $description,
+        ]);
+
+        return redirect()->back()->with('success', 'Berhasil klaim ' . $pointsEarned . ' poin! Streak Anda: ' . $affiliate->current_streak . ' hari.');
+    }
+
+    public function streak(Request $request)
+    {
+        $affiliate = Auth::guard('affiliate')->user();
+        
+        $today = now()->format('Y-m-d');
+        $yesterday = now()->subDay()->format('Y-m-d');
+        $streak = $affiliate->current_streak;
+        
+        if ($affiliate->last_claim_date !== $today && $affiliate->last_claim_date !== $yesterday) {
+            $streak = 0;
+        }
+        
+        $currentWeekDay = $streak % 7;
+        if ($currentWeekDay == 0 && $streak > 0) {
+            $currentWeekDay = 7;
+        }
+        
+        return view('affiliate.streak_mobile', compact('affiliate', 'streak', 'currentWeekDay', 'today'));
+    }
+
     public function trackClick(Request $request)
     {
         $code = $request->cookie('affiliate_ref') ?? $request->input('ref');
