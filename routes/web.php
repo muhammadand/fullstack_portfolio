@@ -130,6 +130,7 @@ Route::get('/generate-sitemap', function () {
 
     // Affiliate Partners Management
     Route::get('admin/affiliates', [App\Http\Controllers\Admin\AffiliateController::class, 'index'])->name('admin.affiliates.index');
+    Route::post('admin/affiliates', [App\Http\Controllers\Admin\AffiliateController::class, 'store'])->name('admin.affiliates.store');
     Route::get('admin/affiliates/{affiliate}', [App\Http\Controllers\Admin\AffiliateController::class, 'show'])->name('admin.affiliates.show');
     Route::post('admin/affiliates/{affiliate}/approve', [App\Http\Controllers\Admin\AffiliateController::class, 'approve'])->name('admin.affiliates.approve');
     Route::post('admin/affiliates/{affiliate}/reject', [App\Http\Controllers\Admin\AffiliateController::class, 'reject'])->name('admin.affiliates.reject');
