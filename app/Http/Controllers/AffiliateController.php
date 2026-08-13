@@ -90,13 +90,8 @@ class AffiliateController extends Controller
         
         $withdrawals = \App\Models\Withdrawal::where('affiliate_id', $affiliate->id)->latest()->take(5)->get();
 
-        $isMobile = preg_match('/Mobile|Android|BlackBerry|iPhone|Windows Phone/i', $request->userAgent());
-        
-        if ($isMobile) {
-            return view('affiliate.dashboard_mobile', compact('affiliate', 'totalClicks', 'totalProjects', 'withdrawals'));
-        }
-
-        return view('affiliate.dashboard', compact('affiliate', 'totalClicks', 'totalProjects', 'withdrawals'));
+        // Selalu gunakan tampilan mobile (Midnight Blue) sebagai tampilan utama
+        return view('affiliate.dashboard_mobile', compact('affiliate', 'totalClicks', 'totalProjects', 'withdrawals'));
     }
 
     public function history(Request $request)
@@ -111,13 +106,7 @@ class AffiliateController extends Controller
             ->latest()
             ->paginate(10, ['*'], 'tarik_page');
 
-        $isMobile = preg_match('/Mobile|Android|BlackBerry|iPhone|Windows Phone/i', $request->userAgent());
-        
-        if ($isMobile) {
-            return view('affiliate.history_mobile', compact('affiliate', 'commissions', 'withdrawals'));
-        }
-
-        return view('affiliate.history', compact('affiliate', 'commissions', 'withdrawals'));
+        return view('affiliate.history_mobile', compact('affiliate', 'commissions', 'withdrawals'));
     }
 
     public function withdraw(Request $request)
