@@ -52,12 +52,12 @@
                         </td>
                         <td class="px-6 py-4 text-right whitespace-nowrap">
                             <!-- Pop Up Menu Action -->
-                            <div x-data="{ open: false }" class="relative inline-block text-left z-10">
+                            <div x-data="{ open: false }" class="relative inline-block text-left">
                                 <button @click="open = !open" @click.away="open = false" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg transition-colors focus:outline-none">
                                     <i class="fa-solid fa-ellipsis-vertical px-1"></i>
                                 </button>
 
-                                <div x-show="open" x-transition.opacity.duration.200ms style="display: none;" class="absolute right-0 mt-2 w-56 bg-white border border-slate-200 rounded-xl shadow-xl z-50 overflow-hidden text-left">
+                                <div x-show="open" x-transition.opacity.duration.200ms style="display: none;" class="absolute right-0 mt-2 w-56 bg-white border border-slate-200 rounded-xl shadow-xl z-[60] overflow-hidden text-left">
                                     <div class="py-1">
                                         <a href="{{ route('landing.dynamic', $p->slug) }}" target="_blank" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 transition-colors">
                                             <i class="fa-solid fa-eye w-5 text-blue-500"></i> Lihat Landing Page

@@ -15,4 +15,9 @@ class ChatTemplate extends Model
     {
         return $this->belongsTo(BusinessCategory::class);
     }
+
+    public function affiliate()
+    {
+        return $this->belongsTo(Affiliate::class);
+    }
 }

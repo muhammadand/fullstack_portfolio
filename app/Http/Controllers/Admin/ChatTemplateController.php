@@ -10,7 +10,7 @@ class ChatTemplateController extends Controller
 {
     public function index()
     {
-        $templates = ChatTemplate::with('businessCategory')->whereNull('affiliate_id')->latest()->get();
+        $templates = ChatTemplate::with(['businessCategory', 'affiliate'])->latest()->get();
         $categories = \App\Models\BusinessCategory::all();
         return view('admin.chat-templates.index', compact('templates', 'categories'));
     }

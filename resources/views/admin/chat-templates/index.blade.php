@@ -34,11 +34,22 @@
             <div class="p-5 border-b border-slate-100 flex justify-between items-start bg-slate-50/50">
                 <div>
                     <h3 class="font-bold text-slate-800">{{ $t->name }}</h3>
-                    @if($t->businessCategory)
-                    <span class="inline-flex items-center mt-1 px-2 py-0.5 rounded text-[10px] font-medium bg-blue-100 text-blue-800">
-                        {{ $t->businessCategory->name }}
-                    </span>
-                    @endif
+                    <div class="mt-1 flex flex-wrap gap-1">
+                        @if($t->businessCategory)
+                        <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-blue-100 text-blue-800">
+                            {{ $t->businessCategory->name }}
+                        </span>
+                        @endif
+                        @if($t->affiliate_id)
+                        <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-purple-100 text-purple-800">
+                            <i class="fa-solid fa-user-tag mr-1"></i> Partner: {{ $t->affiliate->name }}
+                        </span>
+                        @else
+                        <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-slate-100 text-slate-800">
+                            <i class="fa-solid fa-globe mr-1"></i> Global / Admin
+                        </span>
+                        @endif
+                    </div>
                 </div>
                 <div class="flex gap-2">
                     <button type="button" onclick="openTemplateModal({{ $t->id }}, '{{ addslashes($t->name) }}', '{{ base64_encode($t->content) }}', '{{ $t->business_category_id }}')" class="w-8 h-8 rounded-lg bg-yellow-50 text-yellow-600 hover:bg-yellow-100 flex items-center justify-center transition-colors" title="Edit Template">
