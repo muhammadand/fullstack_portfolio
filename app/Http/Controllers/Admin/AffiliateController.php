@@ -57,10 +57,12 @@ class AffiliateController extends Controller
     public function show(Affiliate $affiliate)
     {
         $affiliate->loadCount('clicks');
-        $commissions = \App\Models\Commission::where('affiliate_id', $affiliate->id)->latest()->paginate(10);
-        $withdrawals = \App\Models\Withdrawal::where('affiliate_id', $affiliate->id)->latest()->paginate(10);
+        $commissions = \App\Models\Commission::where('affiliate_id', $affiliate->id)->latest()->paginate(10, ['*'], 'komisi_page');
+        $withdrawals = \App\Models\Withdrawal::where('affiliate_id', $affiliate->id)->latest()->paginate(10, ['*'], 'tarik_page');
+        $chatTemplates = \App\Models\ChatTemplate::with('businessCategory')->where('affiliate_id', $affiliate->id)->latest()->get();
+        $pointHistories = \App\Models\AffiliatePointHistory::where('affiliate_id', $affiliate->id)->latest()->paginate(5, ['*'], 'poin_page');
         
-        return view('admin.affiliates.show', compact('affiliate', 'commissions', 'withdrawals'));
+        return view('admin.affiliates.show', compact('affiliate', 'commissions', 'withdrawals', 'chatTemplates', 'pointHistories'));
     }
 
     public function addCommission(Request $request, Affiliate $affiliate)
