@@ -296,6 +296,18 @@ Route::get('/secret-deploy-trigger-12345', function () {
             '--path' => 'database/migrations/2026_08_13_123550_create_affiliate_point_histories_table.php',
             '--force' => true
         ]);
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_08_13_154647_add_business_category_id_to_chat_templates_table.php',
+            '--force' => true
+        ]);
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_08_14_121333_add_avatar_to_affiliates_table.php',
+            '--force' => true
+        ]);
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_08_14_122211_add_affiliate_id_to_chat_templates_table.php',
+            '--force' => true
+        ]);
         
         \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'ClientProposalSeeder', '--force' => true]);
         \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'BusinessCategorySeeder', '--force' => true]);
