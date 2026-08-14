@@ -18,6 +18,18 @@ class ClientProposalController extends Controller
         return view('admin.client-proposals.index', compact('proposals', 'chatTemplates'));
     }
 
+    public function proposalCafe($slug)
+    {
+        $client = ClientProposal::where('slug', $slug)->firstOrFail();
+        return view('client-proposals.cafe.proposal', compact('client'));
+    }
+
+    public function adminDemoRental($slug)
+    {
+        $client = ClientProposal::where('slug', $slug)->firstOrFail();
+        return view('client-proposals.rental-mobil.admin-demo', compact('client'));
+    }
+
     public function create()
     {
         $categories = BusinessCategory::all();

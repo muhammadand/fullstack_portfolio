@@ -257,7 +257,6 @@ Route::get('/generate-sitemap', function () {
 // LOGOUT
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-
 // portfolio
 // Route::get('/portfolio', [HomeController::class, 'portfolio_1'])->name('portfolio');
 
@@ -266,6 +265,9 @@ use App\Http\Controllers\ClientProposalController;
 
 Route::get('/landing/{slug}', [ClientProposalController::class, 'landing'])->name('landing.dynamic');
 Route::get('/proposal/{slug}', [ClientProposalController::class, 'proposal'])->name('proposal.dynamic');
+Route::get('/client/cafe/{slug}/landing', [ClientProposalController::class, 'landingCafe'])->name('landing.cafe');
+Route::get('/client/cafe/{slug}/proposal', [ClientProposalController::class, 'proposalCafe'])->name('proposal.cafe');
+Route::get('/client/rental-mobil/{slug}/admin-demo', [ClientProposalController::class, 'adminDemoRental'])->name('demo.admin.rental');
 
 // Endpoint rahasia untuk trigger deploy (migrasi & cache) dari GitHub Actions (Tanpa SSH)
 Route::get('/secret-deploy-trigger-12345', function () {

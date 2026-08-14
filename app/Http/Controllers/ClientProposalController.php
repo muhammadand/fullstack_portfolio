@@ -33,4 +33,22 @@ class ClientProposalController extends Controller
         
         return view("client-proposals.{$categorySlug}.proposal", compact('client'));
     }
+
+    public function landingCafe($slug)
+    {
+        $client = ClientProposal::where('slug', $slug)->firstOrFail();
+        return view('client-proposals.cafe.landing', compact('client'));
+    }
+
+    public function proposalCafe($slug)
+    {
+        $client = ClientProposal::where('slug', $slug)->firstOrFail();
+        return view('client-proposals.cafe.proposal', compact('client'));
+    }
+
+    public function adminDemoRental($slug)
+    {
+        $client = ClientProposal::where('slug', $slug)->firstOrFail();
+        return view('client-proposals.rental-mobil.admin-demo', compact('client'));
+    }
 }
