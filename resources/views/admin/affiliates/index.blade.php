@@ -140,7 +140,7 @@
                             @elseif($affiliate->status === 'approved')
                             <div class="flex items-center justify-end gap-1.5">
                                 @php
-                                $magicLoginUrl = \Illuminate\Support\Facades\URL::temporarySignedRoute('affiliate.magic_login', now()->addDays(7), ['affiliate' => $affiliate->id]);
+                                $magicLoginUrl = \Illuminate\Support\Facades\URL::signedRoute('affiliate.magic_login', ['affiliate' => $affiliate->id]);
                                 @endphp
                                 <button type="button" onclick="copyMagicLink('{{ $magicLoginUrl }}')" class="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 px-2 py-1 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-lg transition-colors shadow-sm min-w-[50px]" title="Salin Magic Login Link">
                                     <i class="fa-solid fa-link text-[10px] sm:text-[12px]"></i>
@@ -260,7 +260,7 @@
 
     function copyMagicLink(url) {
         navigator.clipboard.writeText(url).then(function() {
-            alert('Magic Login Link berhasil disalin!\nLink berlaku selama 7 hari.\nAnda dapat mengirimkan link ini kepada Partner.');
+            alert('Magic Login Link berhasil disalin!\nLink ini berlaku selamanya.\nAnda dapat mengirimkan link ini kepada Partner.');
         }, function(err) {
             alert('Gagal menyalin link: ' + err);
         });

@@ -48,7 +48,7 @@
 
             <h2 class="text-lg font-bold text-white mb-2">Magic Login Link</h2>
             <p class="text-xs text-slate-400 text-center mb-6 leading-relaxed">
-                Scan QR ini atau salin tautan di bawah untuk masuk ke akun Anda dari perangkat lain tanpa perlu memasukkan kata sandi. <b>Berlaku 7 hari.</b>
+                Scan QR ini atau salin tautan di bawah untuk masuk ke akun Anda dari perangkat lain tanpa perlu memasukkan kata sandi. <b>Berlaku selamanya.</b>
             </p>
 
             <div class="bg-white p-4 rounded-2xl mb-6 shadow-xl relative overflow-hidden">

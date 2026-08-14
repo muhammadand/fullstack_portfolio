@@ -374,7 +374,7 @@ class AffiliateController extends Controller
             return redirect()->route('affiliate.dashboard');
         }
 
-        $magicLoginUrl = \Illuminate\Support\Facades\URL::temporarySignedRoute('affiliate.magic_login', now()->addDays(7), ['affiliate' => $affiliate->id]);
+        $magicLoginUrl = \Illuminate\Support\Facades\URL::signedRoute('affiliate.magic_login', ['affiliate' => $affiliate->id]);
 
         return view('affiliate.magic_login_qr', compact('affiliate', 'magicLoginUrl'));
     }
