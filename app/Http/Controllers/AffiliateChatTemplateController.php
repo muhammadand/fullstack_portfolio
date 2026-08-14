@@ -1,27 +1,33 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\ChatTemplate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-class ChatTemplateController extends Controller
+class AffiliateChatTemplateController extends Controller
 {
     public function index()
     {
-        $templates = ChatTemplate::with('businessCategory')->whereNull('affiliate_id')->latest()->get();
+        $affiliate = Auth::guard('affiliate')->user();
+        $templates = ChatTemplate::where('affiliate_id', $affiliate->id)->latest()->get();
         $categories = \App\Models\BusinessCategory::all();
-        return view('admin.chat-templates.index', compact('templates', 'categories'));
+
+        return view('affiliate.chat_templates.index', compact('templates', 'affiliate', 'categories'));
     }
 
     public function store(Request $request)
     {
+        $affiliate = Auth::guard('affiliate')->user();
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'content' => 'required|string',
             'business_category_id' => 'required|exists:business_categories,id',
         ]);
+
+        $validated['affiliate_id'] = $affiliate->id;
 
         ChatTemplate::create($validated);
 
@@ -30,6 +36,12 @@ class ChatTemplateController extends Controller
 
     public function update(Request $request, ChatTemplate $chat_template)
     {
+        $affiliate = Auth::guard('affiliate')->user();
+
+        if ($chat_template->affiliate_id !== $affiliate->id) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'content' => 'required|string',
@@ -43,6 +55,12 @@ class ChatTemplateController extends Controller
 
     public function destroy(ChatTemplate $chat_template)
     {
+        $affiliate = Auth::guard('affiliate')->user();
+
+        if ($chat_template->affiliate_id !== $affiliate->id) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $chat_template->delete();
 
         return redirect()->back()->with('success', 'Template chat berhasil dihapus.');

@@ -151,7 +151,7 @@
     <noscript>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"></noscript>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" media="print" onload="this.media='all'">
-    
+
     @stack('meta')
     @stack('styles')
 </head>
@@ -166,83 +166,85 @@
     </main>
     <div class="@hasSection('hide_footer_mobile') hidden md:block @endif">
         <footer class="bg-brand-navy border-t border-white/5 pt-12 pb-8 px-6 text-white/60 text-xs">
-        <div class="max-w-5xl mx-auto flex flex-col md:flex-row items-center md:items-start justify-between gap-10 mb-8">
+            <div class="max-w-5xl mx-auto flex flex-col md:flex-row items-center md:items-start justify-between gap-10 mb-8">
 
-            {{-- Brand Section --}}
-            <div class="flex flex-col items-center md:items-start gap-4">
-                <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 rounded-lg bg-btn-gradient flex items-center justify-center shadow-glow-sm">
-                        <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                        </svg>
-                    </div>
-                    <span class="font-display font-bold text-lg text-white/80 tracking-wide">Scalify<span class="text-brand-accent"> Intelligence</span></span>
-                </div>
-                <p class="text-center md:text-left max-w-xs leading-relaxed text-white/50">
-                    Solusi cerdas automasi AI. Tingkatkan efisiensi dan performa bisnis Anda ke level berikutnya.
-                </p>
-            </div>
-
-            {{-- Tautan Khusus (Dinamis dari Database) --}}
-            <div class="flex flex-col items-center md:items-start gap-3">
-                <h3 class="text-white/80 font-bold mb-1 text-sm tracking-wider uppercase">Project Khusus</h3>
-
-                @foreach(\App\Models\ClientProposal::all() as $proposal)
-                <a href="{{ route('landing.dynamic', $proposal->slug) }}" class="flex items-center gap-3 text-white/60 hover:text-white transition-colors">
-                    <div class="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center shrink-0">
-                        <i class="fa-solid fa-globe text-brand-accent/80 text-[10px]"></i>
-                    </div>
-                    <span>{{ $proposal->brand_name }}</span>
-                </a>
-                @endforeach
-            </div>
-
-            {{-- Contact Information --}}
-            <div class="flex flex-col items-center md:items-start gap-3">
-                <h3 class="text-white/80 font-bold mb-1 text-sm tracking-wider uppercase">Hubungi Kami</h3>
-
-                <div class="flex items-center gap-3 text-white/60 hover:text-white transition-colors cursor-default">
-                    <div class="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center">
-                        <i class="fa-solid fa-map-pin text-brand-accent/80 text-[10px]"></i>
-                    </div>
-                    <span>Jakarta, Kuningan</span>
-                </div>
-
-                <a href="mailto:sales@scalifyintellegence.my.id" class="flex items-center gap-3 text-white/60 hover:text-white transition-colors">
-                    <div class="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center">
-                        <i class="fa-solid fa-envelope text-brand-accent/80 text-[10px]"></i>
-                    </div>
-                    <span>sales@scalifyintellegence.my.id</span>
-                </a>
-
-                <div class="flex flex-col gap-2 mt-1">
-                    <a href="https://wa.me/6287761036385" target="_blank" class="flex items-center gap-3 text-white/60 hover:text-white transition-colors">
-                        <div class="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center">
-                            <i class="fa-solid fa-phone text-brand-accent/80 text-[10px]"></i>
+                {{-- Brand Section --}}
+                <div class="flex flex-col items-center md:items-start gap-4">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-lg bg-btn-gradient flex items-center justify-center shadow-glow-sm">
+                            <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            </svg>
                         </div>
-                        <span><span class="text-white/70 mr-1">Bisnis:</span> +62 877 6103 6385</span>
+                        <span class="font-display font-bold text-lg text-white/80 tracking-wide">Scalify<span class="text-brand-accent"> Intelligence</span></span>
+                    </div>
+                    <p class="text-center md:text-left max-w-xs leading-relaxed text-white/50">
+                        Solusi cerdas automasi AI. Tingkatkan efisiensi dan performa bisnis Anda ke level berikutnya.
+                    </p>
+                </div>
+
+                {{-- Tautan Khusus (Dinamis dari Database) --}}
+                <div class="flex flex-col items-center md:items-start gap-3">
+                    <h3 class="text-white/80 font-bold mb-1 text-sm tracking-wider uppercase">Project Khusus</h3>
+
+                    @foreach(\App\Models\ClientProposal::all() as $proposal)
+                    <a href="{{ route('landing.dynamic', $proposal->slug) }}" class="flex items-center gap-3 text-white/60 hover:text-white transition-colors">
+                        <div class="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-globe text-brand-accent/80 text-[10px]"></i>
+                        </div>
+                        <span>{{ $proposal->brand_name }}</span>
+                    </a>
+                    @endforeach
+                </div>
+
+                {{-- Contact Information --}}
+                <div class="flex flex-col items-center md:items-start gap-3">
+                    <h3 class="text-white/80 font-bold mb-1 text-sm tracking-wider uppercase">Hubungi Kami</h3>
+
+                    <div class="flex items-center gap-3 text-white/60 hover:text-white transition-colors cursor-default">
+                        <div class="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center">
+                            <i class="fa-solid fa-map-pin text-brand-accent/80 text-[10px]"></i>
+                        </div>
+                        <span>Jakarta, Kuningan</span>
+                    </div>
+
+                    <a href="mailto:sales@scalifyintellegence.my.id" class="flex items-center gap-3 text-white/60 hover:text-white transition-colors">
+                        <div class="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center">
+                            <i class="fa-solid fa-envelope text-brand-accent/80 text-[10px]"></i>
+                        </div>
+                        <span>sales@scalifyintellegence.my.id</span>
                     </a>
 
-                    <a href="https://wa.me/6285221694067" target="_blank" class="flex items-center gap-3 text-white/60 hover:text-white transition-colors">
-                        <div class="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center">
-                            <i class="fa-brands fa-whatsapp text-green-400/80 text-[11px]"></i>
-                        </div>
-                        <span><span class="text-white/70 mr-1">Owner:</span> 0852 2169 4067</span>
-                    </a>
+                    <div class="flex flex-col gap-2 mt-1">
+                        <a href="https://wa.me/6287761036385" target="_blank" class="flex items-center gap-3 text-white/60 hover:text-white transition-colors">
+                            <div class="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center">
+                                <i class="fa-solid fa-phone text-brand-accent/80 text-[10px]"></i>
+                            </div>
+                            <span><span class="text-white/70 mr-1">Bisnis:</span> +62 877 6103 6385</span>
+                        </a>
+
+                        <a href="https://wa.me/6285221694067" target="_blank" class="flex items-center gap-3 text-white/60 hover:text-white transition-colors">
+                            <div class="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center">
+                                <i class="fa-brands fa-whatsapp text-green-400/80 text-[11px]"></i>
+                            </div>
+                            <span><span class="text-white/70 mr-1">Owner:</span> 0852 2169 4067</span>
+                        </a>
+                    </div>
                 </div>
+
             </div>
 
-        </div>
-
-        {{-- Copyright --}}
-        <div class="border-t border-white/5 pt-6 text-center text-white/50">
-            <p>© 2026 Scalify Intelligence · All rights reserved</p>
-        </div>
-    </footer>
+            {{-- Copyright --}}
+            <div class="border-t border-white/5 pt-6 text-center text-white/50">
+                <p>© 2026 Scalify Intelligence · All rights reserved</p>
+            </div>
+        </footer>
     </div>
 
 
+    @unless(View::hasSection('hide_chatbot'))
     @include("partials.flowise")
+    @endunless
 
     @stack('scripts')
 </body>

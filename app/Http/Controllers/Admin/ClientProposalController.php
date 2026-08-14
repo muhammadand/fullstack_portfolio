@@ -14,7 +14,7 @@ class ClientProposalController extends Controller
     public function index()
     {
         $proposals = ClientProposal::with('category')->latest()->get();
-        $chatTemplates = \App\Models\ChatTemplate::all();
+        $chatTemplates = \App\Models\ChatTemplate::whereNull('affiliate_id')->get();
         return view('admin.client-proposals.index', compact('proposals', 'chatTemplates'));
     }
 

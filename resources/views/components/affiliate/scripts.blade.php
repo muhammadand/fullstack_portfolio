@@ -105,23 +105,6 @@
         }, 300);
     }
 
-    function openGuideModal() {
-        const modal = document.getElementById('guideModal');
-        const content = document.getElementById('guideModalContent');
-
-        modal.classList.remove('opacity-0', 'pointer-events-none');
-        setTimeout(() => {
-            content.classList.remove('translate-y-full');
-        }, 10);
-    }
-
-    function closeGuideModal() {
-        const modal = document.getElementById('guideModal');
-        const content = document.getElementById('guideModalContent');
-
-        content.classList.add('translate-y-full');
-        setTimeout(() => {
-            modal.classList.add('opacity-0', 'pointer-events-none');
         }, 300);
     }
 

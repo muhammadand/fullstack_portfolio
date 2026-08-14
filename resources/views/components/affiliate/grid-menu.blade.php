@@ -54,7 +54,7 @@
     </div>
 
     <!-- 7. Cara Kerja -->
-    <div class="flex flex-col items-center gap-2 cursor-pointer relative" onclick="openGuideModal(); closeDashboardCoachMark();">
+    <a href="{{ route('affiliate.guide') }}" class="flex flex-col items-center gap-2 relative">
         <div class="w-12 h-12 rounded-2xl glass-panel flex items-center justify-center text-orange-400 text-lg shadow-inner transition-transform active:scale-95">
             <i class="fa-solid fa-book-open"></i>
         </div>
@@ -69,5 +69,13 @@
             <!-- Glow ring around the icon -->
             <div class="absolute top-[3rem] left-1/2 -translate-x-1/2 w-16 h-16 rounded-3xl border-2 border-blue-500 animate-ping"></div>
         </div>
-    </div>
+    </a>
+
+    <!-- 8. Template Chat -->
+    <a href="{{ route('affiliate.chat_templates.index') }}" class="flex flex-col items-center gap-2">
+        <div class="w-12 h-12 rounded-2xl glass-panel flex items-center justify-center text-teal-400 text-lg shadow-inner transition-transform active:scale-95">
+            <i class="fa-solid fa-message"></i>
+        </div>
+        <span class="text-[10px] text-slate-300 font-medium text-center leading-tight">Template<br>Chat</span>
+    </a>
 </div>

@@ -237,9 +237,18 @@ Route::get('/generate-sitemap', function () {
         Route::get('/partner/streak', [App\Http\Controllers\AffiliateController::class, 'streak'])->name('affiliate.streak');
         Route::get('/partner/store', [App\Http\Controllers\AffiliateController::class, 'store'])->name('affiliate.store');
         
+        // Guide
+        Route::get('/partner/guide', [App\Http\Controllers\AffiliateController::class, 'guide'])->name('affiliate.guide');
+
         // Profile
         Route::get('/partner/profile', [App\Http\Controllers\AffiliateController::class, 'profile'])->name('affiliate.profile');
         Route::post('/partner/profile', [App\Http\Controllers\AffiliateController::class, 'updateProfile'])->name('affiliate.profile.update');
+
+        // Chat Templates
+        Route::get('/partner/chat-templates', [App\Http\Controllers\AffiliateChatTemplateController::class, 'index'])->name('affiliate.chat_templates.index');
+        Route::post('/partner/chat-templates', [App\Http\Controllers\AffiliateChatTemplateController::class, 'store'])->name('affiliate.chat_templates.store');
+        Route::put('/partner/chat-templates/{chat_template}', [App\Http\Controllers\AffiliateChatTemplateController::class, 'update'])->name('affiliate.chat_templates.update');
+        Route::delete('/partner/chat-templates/{chat_template}', [App\Http\Controllers\AffiliateChatTemplateController::class, 'destroy'])->name('affiliate.chat_templates.destroy');
     });
     
 // LOGIN

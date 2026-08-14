@@ -64,8 +64,31 @@
     @endif
 
     <!-- Form Edit Profile -->
-    <form action="{{ route('affiliate.profile.update') }}" method="POST" class="space-y-5">
+    <form action="{{ route('affiliate.profile.update') }}" method="POST" enctype="multipart/form-data" class="space-y-5">
         @csrf
+
+        <!-- Profile Photo Section -->
+        <div class="glass-panel p-5 rounded-3xl flex flex-col items-center">
+            <div class="relative mb-4 group">
+                <div class="w-24 h-24 rounded-full bg-gradient-to-tr from-blue-500 to-indigo-500 flex items-center justify-center text-white text-3xl font-bold shadow-xl overflow-hidden border-2 border-white/20">
+                    @if($affiliate->avatar)
+                    <img src="{{ asset('storage/' . $affiliate->avatar) }}" alt="Avatar" class="w-full h-full object-cover">
+                    @else
+                    {{ substr($affiliate->name, 0, 1) }}
+                    @endif
+                </div>
+                <!-- Upload Overlay -->
+                <label for="avatar_upload" class="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                    <i class="fa-solid fa-camera text-white text-xl"></i>
+                </label>
+            </div>
+
+            <label for="avatar_upload" class="px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/10 rounded-xl text-xs font-medium cursor-pointer transition-colors flex items-center gap-2">
+                <i class="fa-solid fa-cloud-arrow-up"></i> Ubah Foto Profil
+            </label>
+            <input type="file" id="avatar_upload" name="avatar" accept="image/*" class="hidden" onchange="previewAvatar(this)">
+            <p class="text-[10px] text-slate-400 mt-2">Maks. 3 MB (JPEG, PNG, WEBP)</p>
+        </div>
 
         <div class="glass-panel p-5 rounded-3xl">
             <div class="space-y-4">
@@ -133,4 +156,25 @@
 <!-- Bottom Navigation -->
 <x-affiliate.bottom-nav />
 <x-affiliate.scripts />
+
+<script>
+    function previewAvatar(input) {
+        if (input.files && input.files[0]) {
+            if (input.files[0].size > 3 * 1024 * 1024) {
+                alert('Ukuran file maksimal adalah 3 MB.');
+                input.value = '';
+                return;
+            }
+
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                // Update avatar preview
+                const avatarContainer = input.parentElement.querySelector('.w-24.h-24');
+                avatarContainer.innerHTML = `<img src="${e.target.result}" alt="Preview" class="w-full h-full object-cover">`;
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+</script>
 @endsection

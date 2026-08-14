@@ -72,7 +72,12 @@
 
                 <div class="flex items-center gap-3">
                     <a href="{{ route('affiliate.profile') }}" class="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-blue-500/20 text-white/70 hover:text-blue-400 text-sm font-medium rounded-lg transition-all duration-300 border border-white/10 hover:border-blue-500/30 backdrop-blur-md">
-                        <i class="fa-solid fa-user"></i> Profil
+                        @if($affiliate->avatar)
+                        <img src="{{ asset('storage/' . $affiliate->avatar) }}" alt="Avatar" class="w-5 h-5 rounded-full object-cover">
+                        @else
+                        <i class="fa-solid fa-user"></i>
+                        @endif
+                        Profil
                     </a>
                     <form action="{{ route('affiliate.logout') }}" method="POST">
                         @csrf
@@ -127,6 +132,23 @@
         </div>
         @else
 
+        @if(!$hasTemplates)
+        <div class="bg-gradient-to-r from-teal-50 to-blue-50 rounded-2xl shadow-sm border border-teal-100 p-5 mb-6 flex items-start gap-4">
+            <div class="w-12 h-12 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center text-xl shrink-0 mt-1">
+                <i class="fa-solid fa-message"></i>
+            </div>
+            <div>
+                <h3 class="text-base font-bold text-slate-800 mb-1">Buat Template Chat Pertamamu!</h3>
+                <p class="text-sm text-slate-600 mb-3">
+                    Sebelum membagikan proposal ke calon klien, kamu wajib membuat Template Chat pribadi untuk memudahkan follow up via WhatsApp.
+                </p>
+                <a href="{{ route('affiliate.chat_templates.index') }}" class="inline-flex items-center justify-center px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white text-sm font-bold rounded-lg transition-colors shadow-sm gap-2">
+                    Buat Template Sekarang <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+        @endif
+
         <!-- Affiliate Link Box (Hero Style) -->
         <div class="bg-white rounded-2xl shadow-xl shadow-blue-900/5 border border-slate-100 p-6 mb-6 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
             <!-- Decoration -->
@@ -156,7 +178,7 @@
         </div>
 
         <!-- Quick Actions (New Features) -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <!-- Katalog Proposal -->
             <div class="bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 border border-slate-100 p-5 flex items-center justify-between group">
                 <div class="flex items-center gap-4">
@@ -185,6 +207,22 @@
                     </div>
                 </div>
                 <a href="{{ route('affiliate.magic_login_qr') }}" class="w-8 h-8 rounded-full bg-slate-50 text-slate-400 hover:bg-purple-50 hover:text-purple-600 flex items-center justify-center transition-colors shrink-0 text-sm">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <!-- Template Chat -->
+            <div class="bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 border border-slate-100 p-5 flex items-center justify-between group">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-xl bg-teal-50 text-teal-500 flex items-center justify-center text-lg group-hover:bg-teal-500 group-hover:text-white transition-colors">
+                        <i class="fa-solid fa-message"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-bold text-slate-800">Template Chat</h3>
+                        <p class="text-xs text-slate-500">Kelola template pesan kustom Anda</p>
+                    </div>
+                </div>
+                <a href="{{ route('affiliate.chat_templates.index') }}" class="w-8 h-8 rounded-full bg-slate-50 text-slate-400 hover:bg-teal-50 hover:text-teal-600 flex items-center justify-center transition-colors shrink-0 text-sm">
                     <i class="fa-solid fa-arrow-right"></i>
                 </a>
             </div>

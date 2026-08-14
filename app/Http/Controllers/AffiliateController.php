@@ -89,9 +89,10 @@ class AffiliateController extends Controller
         $totalProjects = \App\Models\Project::where('affiliate_id', $affiliate->id)->count();
         
         $withdrawals = \App\Models\Withdrawal::where('affiliate_id', $affiliate->id)->latest()->take(5)->get();
+        $hasTemplates = \App\Models\ChatTemplate::where('affiliate_id', $affiliate->id)->exists();
 
         // Tampilkan dashboard terpadu (Responsive Desktop + Mobile)
-        return view('affiliate.dashboard', compact('affiliate', 'totalClicks', 'totalProjects', 'withdrawals'));
+        return view('affiliate.dashboard', compact('affiliate', 'totalClicks', 'totalProjects', 'withdrawals', 'hasTemplates'));
     }
 
     public function history(Request $request)
@@ -208,6 +209,12 @@ class AffiliateController extends Controller
         return view('affiliate.scalify_store');
     }
 
+    public function guide()
+    {
+        $affiliate = Auth::guard('affiliate')->user();
+        return view('affiliate.guide', compact('affiliate'));
+    }
+
     public function trackClick(Request $request)
     {
         $code = $request->cookie('affiliate_ref') ?? $request->input('ref');
@@ -240,7 +247,8 @@ class AffiliateController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:affiliates,email,' . $affiliate->id,
             'bank_info' => 'nullable|string',
-            'password' => 'nullable|min:8'
+            'password' => 'nullable|min:8',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:3072' // 3MB Max
         ]);
 
         $data = [
@@ -248,6 +256,14 @@ class AffiliateController extends Controller
             'email' => $request->email,
             'bank_info' => $request->bank_info,
         ];
+
+        if ($request->hasFile('avatar')) {
+            // Delete old avatar if exists
+            if ($affiliate->avatar && \Storage::disk('public')->exists($affiliate->avatar)) {
+                \Storage::disk('public')->delete($affiliate->avatar);
+            }
+            $data['avatar'] = $request->file('avatar')->store('avatars/affiliates', 'public');
+        }
 
         if ($request->filled('password')) {
             $data['password'] = \Hash::make($request->password);
@@ -286,6 +302,12 @@ class AffiliateController extends Controller
             return redirect()->route('affiliate.dashboard')->with('error', 'Akun Anda belum disetujui.');
         }
 
+        // Force affiliate to create at least one personal chat template before accessing proposals
+        $hasTemplates = \App\Models\ChatTemplate::where('affiliate_id', $affiliate->id)->exists();
+        if (!$hasTemplates) {
+            return redirect()->route('affiliate.chat_templates.index')->with('error', 'Silakan buat minimal satu Template Chat pribadi terlebih dahulu sebelum membagikan proposal.');
+        }
+
         $query = ClientProposal::with('category')->latest();
         
         if ($request->filled('category_id')) {
@@ -294,7 +316,9 @@ class AffiliateController extends Controller
         
         $proposals = $query->simplePaginate(10)->withQueryString();
         $categories = \App\Models\BusinessCategory::all();
-        $chatTemplates = ChatTemplate::all();
+        $chatTemplates = ChatTemplate::whereNull('affiliate_id')
+            ->orWhere('affiliate_id', $affiliate->id)
+            ->get();
 
         return view('affiliate.proposals_mobile', compact('affiliate', 'proposals', 'categories', 'chatTemplates'));
     }
