@@ -325,6 +325,16 @@ Route::get('/secret-deploy-trigger-12345', function () {
     }
 });
 
+// Endpoint rahasia untuk trigger Pengingat Notifikasi Harian via GitHub Actions
+Route::get('/secret-trigger-reminders-999', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('affiliate:remind-checkin');
+        return "Notifikasi pengingat berhasil dikirim!";
+    } catch (\Exception $e) {
+        return "Error: " . $e->getMessage();
+    }
+});
+
 // Route webhook scraper sudah dipindahkan ke routes/api.php
 
 use Illuminate\Support\Facades\Artisan;

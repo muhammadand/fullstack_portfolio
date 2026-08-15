@@ -1,0 +1,17 @@
+name: Daily Push Notifications
+
+on:
+  schedule:
+    # 03:00 UTC sama dengan 10:00 WIB
+    - cron: '0 3 * * *'
+  workflow_dispatch: # Memungkinkan kita men-trigger secara manual dari tab Actions GitHub
+
+jobs:
+  run-reminders:
+    name: Trigger Daily Check-in Reminders
+    runs-on: ubuntu-latest
+    steps:
+    - name: Ping Webhook Scheduler
+      run: |
+        echo "Mengirim notifikasi pengingat harian ke semua partner..."
+        curl -s https://scalifyintellegence.my.id/secret-trigger-reminders-999
