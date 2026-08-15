@@ -103,61 +103,51 @@ class ClientProposalController extends Controller
     {
         // Validasi input dari scraper
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'phone' => 'required|string|max:20',
-            'category' => 'nullable|string|max:100',
+            'business_category_id' => 'nullable|integer',
+            'affiliate_id' => 'nullable|integer',
+            'contacts' => 'required|array',
+            'contacts.*.brand_name' => 'required|string|max:255',
+            'contacts.*.wa_number' => 'required|string|max:20',
         ]);
 
-        $slug = Str::slug($validated['name']);
+        $categoryId = $validated['business_category_id'] ?? null;
+        $category = $categoryId ? BusinessCategory::find($categoryId) : null;
         
-        // Pastikan slug unik
-        if (ClientProposal::where('slug', $slug)->exists()) {
-            $slug = $slug . '-' . time();
-        }
+        $projectPrice = $category ? ($category->project_price ?? 4500000) : 4500000;
+        $domainPrice = $category ? ($category->domain_price ?? 1200000) : 1200000;
 
-        $categoryId = null;
-        $projectPrice = 4500000;
-        $domainPrice = 1200000;
+        $proposals = [];
 
-        if (!empty($validated['category'])) {
-            $categoryName = $validated['category'];
-            $categorySlug = Str::slug($categoryName);
-
-            $category = BusinessCategory::where('name', $categoryName)
-                        ->orWhere('slug', $categorySlug)
-                        ->first();
+        foreach ($validated['contacts'] as $contact) {
+            $slug = Str::slug($contact['brand_name']);
             
-            if (!$category) {
-                $category = BusinessCategory::create([
-                    'name' => $categoryName,
-                    'slug' => $categorySlug,
-                    'wa_template' => null,
-                    'project_price' => $projectPrice,
-                    'domain_price' => $domainPrice,
-                ]);
+            // Pastikan slug unik
+            $originalSlug = $slug;
+            $counter = 1;
+            while (ClientProposal::where('slug', $slug)->exists()) {
+                $slug = $originalSlug . '-' . $counter;
+                $counter++;
             }
 
-            $categoryId = $category->id;
-            $projectPrice = $category->project_price ?? $projectPrice;
-            $domainPrice = $category->domain_price ?? $domainPrice;
-        }
+            // Simpan data otomatis ke database
+            $proposal = ClientProposal::create([
+                'business_category_id' => $categoryId,
+                'slug' => $slug,
+                'brand_name' => $contact['brand_name'],
+                'client_name' => $contact['brand_name'],
+                'wa_number' => $contact['wa_number'],
+                'wa_template' => null,
+                'project_price' => $projectPrice,
+                'domain_price' => $domainPrice,
+            ]);
 
-        // Simpan data otomatis ke database
-        $proposal = ClientProposal::create([
-            'business_category_id' => $categoryId,
-            'slug' => $slug,
-            'brand_name' => $validated['name'],
-            'client_name' => $validated['name'],
-            'wa_number' => $validated['phone'],
-            'wa_template' => null,
-            'project_price' => $projectPrice,
-            'domain_price' => $domainPrice,
-        ]);
+            $proposals[] = $proposal;
+        }
 
         return response()->json([
             'status' => 'success',
             'message' => 'Data dari scraper berhasil disimpan menjadi draft proposal!',
-            'data' => $proposal
+            'data' => $proposals
         ], 201);
     }
 
