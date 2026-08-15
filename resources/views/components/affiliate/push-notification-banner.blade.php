@@ -73,28 +73,38 @@
         });
 
         // Install Button Logic
-        installBtn.addEventListener('click', async () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                const {
-                    outcome
-                } = await deferredPrompt.userChoice;
-                if (outcome === 'accepted') {
-                    deferredPrompt = null;
-                    installBtn.classList.add('hidden');
-                    installedBadge.classList.remove('hidden');
-                    installedBadge.classList.add('flex');
-                }
-            } else {
-                // Deteksi iOS Safari
-                const isIos = /ipad|iphone|ipod/.test(navigator.userAgent.toLowerCase());
-                if (isIos) {
-                    alert('Untuk menginstall di iPhone/iPad:\n1. Tekan tombol Share (Kotak dengan panah ke atas) di menu bawah Safari\n2. Geser ke bawah lalu pilih "Add to Home Screen"');
+        if (installBtn) {
+            installBtn.addEventListener('click', async () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const {
+                        outcome
+                    } = await deferredPrompt.userChoice;
+                    if (outcome === 'accepted') {
+                        deferredPrompt = null;
+                        installBtn.classList.add('hidden');
+                        installedBadge.classList.remove('hidden');
+                        installedBadge.classList.add('flex');
+                    }
                 } else {
-                    alert('Untuk menginstall, tekan tombol opsi (tiga titik) di browser Anda, lalu cari menu "Install App" atau "Add to Home Screen".');
+                    // Deteksi iOS Safari
+                    const isIos = /ipad|iphone|ipod/.test(navigator.userAgent.toLowerCase());
+                    if (isIos) {
+                        if (typeof showToast === 'function') {
+                            showToast('Untuk install iPhone: Tekan Share ⬇️ lalu "Add to Home Screen"', 'info');
+                        } else {
+                            alert('Untuk menginstall di iPhone/iPad:\n1. Tekan tombol Share (Kotak dengan panah ke atas) di menu bawah Safari\n2. Geser ke bawah lalu pilih "Add to Home Screen"');
+                        }
+                    } else {
+                        if (typeof showToast === 'function') {
+                            showToast('Untuk install: Tekan menu opsi (tiga titik) lalu pilih "Install App"', 'info');
+                        } else {
+                            alert('Untuk menginstall, tekan tombol opsi (tiga titik) di browser Anda, lalu cari menu "Install App" atau "Add to Home Screen".');
+                        }
+                    }
                 }
-            }
-        });
+            });
+        }
 
         // VAPID Public Key
         const vapidPublicKey = "{{ config('webpush.vapid.public_key') }}";
@@ -111,33 +121,44 @@
         }
 
         // Toggle Logic
-        notifyToggle.addEventListener('change', async function() {
-            if (this.checked) {
-                // Coba request permission
-                this.disabled = true; // disable sementara saat loading
+        if (notifyToggle) {
+            notifyToggle.addEventListener('change', async function() {
+                if (this.checked) {
+                    // Coba request permission
+                    this.disabled = true; // disable sementara saat loading
 
-                try {
-                    const permission = await Notification.requestPermission();
+                    try {
+                        if (typeof Notification === 'undefined' || !Notification.requestPermission) {
+                            throw new Error("Browser/HP ini tidak mendukung notifikasi atau Anda belum menggunakan link HTTPS.");
+                        }
 
-                    if (permission === 'granted') {
-                        await subscribeUserToPush();
-                    } else {
-                        // User klik block atau dismiss
-                        this.checked = false;
-                        if (permission === 'denied') {
-                            this.disabled = true;
-                            if (typeof showToast === 'function') showToast('Izin notifikasi diblokir browser', 'error');
+                        const permission = await Notification.requestPermission();
+
+                        if (permission === 'granted') {
+                            await subscribeUserToPush();
                         } else {
-                            this.disabled = false;
+                            // User klik block atau dismiss
+                            this.checked = false;
+                            if (permission === 'denied') {
+                                this.disabled = true;
+                                if (typeof showToast === 'function') showToast('Izin notifikasi diblokir browser', 'error');
+                            } else {
+                                this.disabled = false;
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        this.checked = false;
+                        this.disabled = false;
+                        if (typeof showToast === 'function') {
+                            showToast(error.message, 'error');
+                        } else {
+                            alert("Gagal: " + error.message);
                         }
                     }
-                } catch (error) {
-                    console.error('Error:', error);
-                    this.checked = false;
-                    this.disabled = false;
                 }
-            }
-        });
+            });
+        }
 
         async function subscribeUserToPush() {
             try {
