@@ -11,11 +11,19 @@ use Illuminate\Support\Str;
 
 class ClientProposalController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $proposals = ClientProposal::with('category')->latest()->get();
+        $query = ClientProposal::with('category')->latest();
+
+        if ($request->filled('category_id')) {
+            $query->where('business_category_id', $request->category_id);
+        }
+
+        $proposals = $query->paginate(10)->appends($request->all());
         $chatTemplates = \App\Models\ChatTemplate::whereNull('affiliate_id')->get();
-        return view('admin.client-proposals.index', compact('proposals', 'chatTemplates'));
+        $categories = BusinessCategory::all();
+
+        return view('admin.client-proposals.index', compact('proposals', 'chatTemplates', 'categories'));
     }
 
     public function proposalCafe($slug)

@@ -7,9 +7,21 @@
             <h1 class="text-2xl font-bold text-slate-800">Client Proposals</h1>
             <p class="text-slate-500 text-sm mt-1">Kelola data klien untuk landing page dan proposal penawaran.</p>
         </div>
-        <a href="{{ route('admin.client_proposals.create') }}" class="w-full sm:w-auto px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm flex justify-center items-center gap-2">
-            <i class="fa-solid fa-plus"></i> Tambah Klien Baru
-        </a>
+        <div class="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+            <form action="{{ route('admin.client_proposals.index') }}" method="GET" class="w-full sm:w-auto">
+                <select name="category_id" onchange="this.form.submit()" class="w-full sm:w-auto px-3 py-2.5 bg-white border border-slate-300 text-slate-700 text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm">
+                    <option value="">Semua Kategori</option>
+                    @foreach($categories as $category)
+                    <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
+                        {{ $category->name }}
+                    </option>
+                    @endforeach
+                </select>
+            </form>
+            <a href="{{ route('admin.client_proposals.create') }}" class="w-full sm:w-auto px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm flex justify-center items-center gap-2">
+                <i class="fa-solid fa-plus"></i> Tambah Klien Baru
+            </a>
+        </div>
     </div>
 
     @if(session('success'))
@@ -112,6 +124,11 @@
                 </tbody>
             </table>
         </div>
+        @if($proposals->hasPages())
+        <div class="p-4 border-t border-slate-200">
+            {{ $proposals->links() }}
+        </div>
+        @endif
     </div>
 </div>
 
