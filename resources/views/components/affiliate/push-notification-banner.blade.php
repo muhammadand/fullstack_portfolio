@@ -2,20 +2,20 @@
     document.addEventListener('DOMContentLoaded', () => {
         const installBtn = document.getElementById('header-install-btn');
         const enablePushBtn = document.getElementById('header-notify-btn');
-        
+
         let deferredPrompt;
-        let isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-        let pushGranted = ('Notification' in window) ? (Notification.permission === 'granted') : false;
+        let isStandalone = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone === true;
+        let pushGranted = (typeof Notification !== 'undefined' && Notification.permission === 'granted');
 
         function evaluateVisibility() {
             // Cek status aplikasi terinstall
             if (!isStandalone) {
-                if(installBtn) {
+                if (installBtn) {
                     installBtn.classList.remove('hidden');
                     installBtn.classList.add('flex');
                 }
             } else {
-                if(installBtn) {
+                if (installBtn) {
                     installBtn.classList.add('hidden');
                     installBtn.classList.remove('flex');
                 }
@@ -24,13 +24,13 @@
             // Cek status push notification (jika belum diizinkan dan belum di-block)
             if ('serviceWorker' in navigator && 'PushManager' in window && !pushGranted) {
                 if (Notification.permission !== 'denied') {
-                    if(enablePushBtn) {
+                    if (enablePushBtn) {
                         enablePushBtn.classList.remove('hidden');
                         enablePushBtn.classList.add('flex');
                     }
                 }
             } else {
-                if(enablePushBtn) {
+                if (enablePushBtn) {
                     enablePushBtn.classList.add('hidden');
                     enablePushBtn.classList.remove('flex');
                 }
@@ -44,11 +44,13 @@
             evaluateVisibility();
         });
 
-        if(installBtn) {
+        if (installBtn) {
             installBtn.addEventListener('click', async () => {
                 if (deferredPrompt) {
                     deferredPrompt.prompt();
-                    const { outcome } = await deferredPrompt.userChoice;
+                    const {
+                        outcome
+                    } = await deferredPrompt.userChoice;
                     if (outcome === 'accepted') {
                         deferredPrompt = null;
                         isStandalone = true;
@@ -66,14 +68,14 @@
             });
         }
 
-        if(enablePushBtn) {
+        if (enablePushBtn) {
             enablePushBtn.addEventListener('click', async () => {
                 enablePushBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
                 enablePushBtn.disabled = true;
 
                 try {
                     const permission = await Notification.requestPermission();
-                    
+
                     if (permission === 'granted') {
                         pushGranted = true;
                         evaluateVisibility();
@@ -94,10 +96,10 @@
         }
 
         evaluateVisibility();
-        
+
         // VAPID Public Key
         const vapidPublicKey = "{{ config('webpush.vapid.public_key') }}";
-        
+
         function urlB64ToUint8Array(base64String) {
             const padding = '='.repeat((4 - base64String.length % 4) % 4);
             const base64 = (base64String + padding)
@@ -117,14 +119,14 @@
             try {
                 const registration = await navigator.serviceWorker.ready;
                 const subscribeOptions = {
-                    userVisibleOnly: true,
-                    applicationServerKey: urlB64ToUint8Array(vapidPublicKey)
+                    userVisibleOnly: true
+                    , applicationServerKey: urlB64ToUint8Array(vapidPublicKey)
                 };
 
                 const pushSubscription = await registration.pushManager.subscribe(subscribeOptions);
-                
+
                 await sendSubscriptionToBackEnd(pushSubscription);
-                
+
                 if (typeof showToast === 'function') {
                     showToast('Pengingat harian berhasil diaktifkan!', 'success');
                 }
@@ -138,12 +140,12 @@
 
         async function sendSubscriptionToBackEnd(subscription) {
             const response = await fetch("{{ route('affiliate.push.subscribe') }}", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || "{{ csrf_token() }}"
-                },
-                body: JSON.stringify(subscription)
+                method: 'POST'
+                , headers: {
+                    'Content-Type': 'application/json'
+                    , 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]') ? .getAttribute('content') || "{{ csrf_token() }}"
+                }
+                , body: JSON.stringify(subscription)
             });
 
             if (!response.ok) {
@@ -152,4 +154,5 @@
             return response.json();
         }
     });
+
 </script>

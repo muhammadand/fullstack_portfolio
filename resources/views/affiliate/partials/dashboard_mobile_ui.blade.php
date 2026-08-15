@@ -69,4 +69,5 @@
 <x-affiliate.modals :affiliate="$affiliate" />
 @endif
 
+<x-affiliate.push-notification-banner />
 <x-affiliate.scripts />

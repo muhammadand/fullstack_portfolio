@@ -54,7 +54,7 @@
     </div>
 
     <!-- 7. Cara Kerja -->
-    <a href="{{ route('affiliate.guide') }}" class="flex flex-col items-center gap-2 relative">
+    <a href="{{ route('affiliate.guide') }}" onclick="closeDashboardCoachMark()" class="flex flex-col items-center gap-2 relative">
         <div class="w-12 h-12 rounded-2xl glass-panel flex items-center justify-center text-orange-400 text-lg shadow-inner transition-transform active:scale-95">
             <i class="fa-solid fa-book-open"></i>
         </div>
