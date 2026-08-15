@@ -107,7 +107,8 @@ $activeRoute = \Illuminate\Support\Facades\Route::currentRouteName();
             @if (isset($menu['submenu']))
             @php
             $isSubActive = collect($menu['submenu'])->contains(function($sub) use ($activeRoute) {
-            return $activeRoute === $sub['route'] || str_starts_with($activeRoute, explode('.', $sub['route'])[0]);
+            $baseRoute = str_replace('.index', '', $sub['route']);
+            return $activeRoute === $sub['route'] || str_starts_with($activeRoute, $baseRoute . '.');
             });
             @endphp
             <div x-data="{ open: {{ $isSubActive ? 'true' : 'false' }} }" class="col-span-3 sm:col-span-4 lg:col-span-1">

@@ -228,6 +228,9 @@ Route::get('/generate-sitemap', function () {
         Route::post('/partner/logout', [App\Http\Controllers\AffiliateController::class, 'logout'])->name('affiliate.logout');
         Route::post('/partner/withdraw', [App\Http\Controllers\AffiliateController::class, 'withdraw'])->name('affiliate.withdraw');
         
+        // Push Subscriptions
+        Route::post('/partner/push/subscribe', [\App\Http\Controllers\PushSubscriptionController::class, 'update'])->name('affiliate.push.subscribe');
+        
         // Notifications
         Route::post('/partner/notifications/{id}/read', [App\Http\Controllers\AffiliateController::class, 'markNotificationRead'])->name('affiliate.notifications.read');
         Route::post('/partner/notifications/clear', [App\Http\Controllers\AffiliateController::class, 'clearNotifications'])->name('affiliate.notifications.clear');
@@ -306,6 +309,10 @@ Route::get('/secret-deploy-trigger-12345', function () {
         ]);
         \Illuminate\Support\Facades\Artisan::call('migrate', [
             '--path' => 'database/migrations/2026_08_14_122211_add_affiliate_id_to_chat_templates_table.php',
+            '--force' => true
+        ]);
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_08_15_060717_create_push_subscriptions_table.php',
             '--force' => true
         ]);
         

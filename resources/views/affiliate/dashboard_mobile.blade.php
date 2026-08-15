@@ -81,6 +81,8 @@
 
         <x-affiliate.check-in-card :affiliate="$affiliate" />
 
+        <x-affiliate.push-notification-banner />
+
         <x-affiliate.balance-card :affiliate="$affiliate" />
 
         <!-- Hidden input for copy -->
