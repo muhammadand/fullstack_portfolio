@@ -4,9 +4,9 @@
     <div class="flex items-center gap-3">
         <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-500 to-indigo-500 flex items-center justify-center text-white shadow-lg shadow-blue-500/30 font-bold overflow-hidden">
             @if($affiliate->avatar)
-                <img src="{{ asset('storage/' . $affiliate->avatar) }}" alt="Avatar" class="w-full h-full object-cover">
+            <img src="{{ asset('storage/' . $affiliate->avatar) }}" alt="Avatar" class="w-full h-full object-cover">
             @else
-                {{ substr($affiliate->name, 0, 1) }}
+            {{ substr($affiliate->name, 0, 1) }}
             @endif
         </div>
         <div>
@@ -15,11 +15,21 @@
         </div>
     </div>
     <div class="flex gap-2">
+        <!-- Install PWA Icon (Hidden by default) -->
+        <button id="header-install-btn" class="hidden w-10 h-10 rounded-full glass-panel items-center justify-center text-emerald-400 hover:text-white transition-colors relative" title="Install Aplikasi">
+            <i class="fa-solid fa-download"></i>
+        </button>
+
+        <!-- Enable Notification Icon (Hidden by default) -->
+        <button id="header-notify-btn" class="hidden w-10 h-10 rounded-full glass-panel items-center justify-center text-blue-400 hover:text-white transition-colors relative" title="Aktifkan Notifikasi">
+            <i class="fa-solid fa-bell-concierge"></i>
+        </button>
+
         <a href="{{ route('affiliate.profile') }}" class="w-10 h-10 rounded-full glass-panel flex items-center justify-center text-blue-300 hover:text-white transition-colors overflow-hidden border border-white/10">
             @if($affiliate->avatar)
-                <img src="{{ asset('storage/' . $affiliate->avatar) }}" alt="Avatar" class="w-full h-full object-cover">
+            <img src="{{ asset('storage/' . $affiliate->avatar) }}" alt="Avatar" class="w-full h-full object-cover">
             @else
-                <i class="fa-solid fa-user"></i>
+            <i class="fa-solid fa-user"></i>
             @endif
         </a>
         <button onclick="openNotificationModal()" class="w-10 h-10 rounded-full glass-panel flex items-center justify-center text-blue-300 hover:text-white transition-colors relative">
