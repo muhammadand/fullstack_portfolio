@@ -9,7 +9,6 @@
     <x-affiliate.pending-message />
     @else
     <x-affiliate.header :affiliate="$affiliate" />
-    <x-affiliate.push-notification-banner />
 
     {{-- Session Messages --}}
     @if(session('success'))

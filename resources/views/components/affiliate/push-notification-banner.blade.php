@@ -1,26 +1,7 @@
 <div id="quick-setup-card" class="mb-6 glass-card rounded-2xl p-4 border border-white/10">
     <h3 class="text-[11px] font-bold text-slate-400 mb-3 uppercase tracking-wider flex items-center gap-2">
-        <i class="fa-solid fa-bolt text-yellow-400"></i> Pengaturan Cepat
+        <i class="fa-solid fa-bell text-blue-400"></i> Pengingat Otomatis
     </h3>
-
-    <!-- Install App -->
-    <div class="flex items-center justify-between mb-3 pb-3 border-b border-white/5">
-        <div class="flex items-center gap-3">
-            <div class="w-8 h-8 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0">
-                <i class="fa-solid fa-mobile-screen"></i>
-            </div>
-            <div>
-                <p class="text-sm font-bold text-white leading-tight">Aplikasi HP</p>
-                <p class="text-[10px] text-slate-400 mt-0.5">Install ke layar utama</p>
-            </div>
-        </div>
-        <button id="quick-install-btn" class="px-3 py-1.5 bg-indigo-500 hover:bg-indigo-600 text-white text-[11px] font-bold rounded-lg transition-colors shadow-sm">
-            Install
-        </button>
-        <div id="quick-installed-badge" class="hidden px-3 py-1.5 bg-emerald-500/20 text-emerald-400 text-[11px] font-bold rounded-lg border border-emerald-500/30">
-            <i class="fa-solid fa-check mr-1"></i> Terinstall
-        </div>
-    </div>
 
     <!-- Push Notification Toggle -->
     <div class="flex items-center justify-between">
@@ -44,66 +25,15 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const installBtn = document.getElementById('quick-install-btn');
-        const installedBadge = document.getElementById('quick-installed-badge');
         const notifyToggle = document.getElementById('quick-notify-toggle');
-
-        let deferredPrompt;
-        let isStandalone = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone === true;
         let pushGranted = (typeof Notification !== 'undefined' && Notification.permission === 'granted');
 
         // Setup Initial UI State
-        if (isStandalone) {
-            installBtn.classList.add('hidden');
-            installedBadge.classList.remove('hidden');
-            installedBadge.classList.add('flex');
-        }
-
         if (pushGranted) {
             notifyToggle.checked = true;
             notifyToggle.disabled = true; // Kalau sudah diizinkan, browser tidak mengizinkan disable via script
         } else if (typeof Notification !== 'undefined' && Notification.permission === 'denied') {
             notifyToggle.disabled = true;
-        }
-
-        // Tangkap event PWA (Android / Chrome Desktop)
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-        });
-
-        // Install Button Logic
-        if (installBtn) {
-            installBtn.addEventListener('click', async () => {
-                if (deferredPrompt) {
-                    deferredPrompt.prompt();
-                    const {
-                        outcome
-                    } = await deferredPrompt.userChoice;
-                    if (outcome === 'accepted') {
-                        deferredPrompt = null;
-                        installBtn.classList.add('hidden');
-                        installedBadge.classList.remove('hidden');
-                        installedBadge.classList.add('flex');
-                    }
-                } else {
-                    // Deteksi iOS Safari
-                    const isIos = /ipad|iphone|ipod/.test(navigator.userAgent.toLowerCase());
-                    if (isIos) {
-                        if (typeof showToast === 'function') {
-                            showToast('Untuk install iPhone: Tekan Share ⬇️ lalu "Add to Home Screen"', 'info');
-                        } else {
-                            alert('Untuk menginstall di iPhone/iPad:\n1. Tekan tombol Share (Kotak dengan panah ke atas) di menu bawah Safari\n2. Geser ke bawah lalu pilih "Add to Home Screen"');
-                        }
-                    } else {
-                        if (typeof showToast === 'function') {
-                            showToast('Untuk install: Tekan menu opsi (tiga titik) lalu pilih "Install App"', 'info');
-                        } else {
-                            alert('Untuk menginstall, tekan tombol opsi (tiga titik) di browser Anda, lalu cari menu "Install App" atau "Add to Home Screen".');
-                        }
-                    }
-                }
-            });
         }
 
         // VAPID Public Key

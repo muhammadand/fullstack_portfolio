@@ -126,4 +126,65 @@
         }
     }
 
+    // --- PUSH NOTIFICATION LOGIC ---
+    const vapidPublicKey = "{{ config('webpush.vapid.public_key') }}";
+
+    function urlB64ToUint8Array(base64String) {
+        if (!base64String) return new Uint8Array(0);
+        const padding = '='.repeat((4 - base64String.length % 4) % 4);
+        const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
+        const rawData = window.atob(base64);
+        const outputArray = new Uint8Array(rawData.length);
+        for (let i = 0; i < rawData.length; ++i) {
+            outputArray[i] = rawData.charCodeAt(i);
+        }
+        return outputArray;
+    }
+
+    async function subscribeUserToPush() {
+        try {
+            if (typeof Notification === 'undefined' || !Notification.requestPermission) {
+                console.log('Browser tidak mendukung Push API (Atau Anda tidak menggunakan HTTPS)');
+                return false;
+            }
+
+            const permission = await Notification.requestPermission();
+            if (permission !== 'granted') return false;
+
+            if (!navigator.serviceWorker || !navigator.serviceWorker.ready) {
+                console.log('Service Worker tidak aktif.');
+                return false;
+            }
+
+            const registration = await navigator.serviceWorker.ready;
+            const subscribeOptions = {
+                userVisibleOnly: true
+                , applicationServerKey: urlB64ToUint8Array(vapidPublicKey)
+            };
+
+            const pushSubscription = await registration.pushManager.subscribe(subscribeOptions);
+            await sendSubscriptionToBackEnd(pushSubscription);
+            return true;
+        } catch (error) {
+            console.error('Error subscribing to push:', error);
+            return false;
+        }
+    }
+
+    async function sendSubscriptionToBackEnd(subscription) {
+        const response = await fetch("{{ route('affiliate.push.subscribe') }}", {
+            method: 'POST'
+            , headers: {
+                'Content-Type': 'application/json'
+                , 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]') ? .getAttribute('content') || "{{ csrf_token() }}"
+            }
+            , body: JSON.stringify(subscription)
+        });
+
+        if (!response.ok) {
+            throw new Error('Bad status code from server.');
+        }
+        return response.json();
+    }
+
 </script>

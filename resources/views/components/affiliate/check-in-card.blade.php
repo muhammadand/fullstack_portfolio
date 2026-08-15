@@ -50,12 +50,40 @@ if ($streak < 30) { $fireColor='text-orange-500' ; $fireBg='bg-orange-500/20' ; 
             <i class="fa-solid fa-fire text-orange-500"></i> Lihat Streak
         </a>
         @else
-        <form action="{{ route('affiliate.claim_points') }}" method="POST">
+        <form action="{{ route('affiliate.claim_points') }}" method="POST" id="claim-points-form">
             @csrf
-            <button type="submit" class="px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 shadow-lg shadow-orange-500/30 text-white text-xs font-bold rounded-xl flex items-center gap-1.5 transition-transform active:scale-95">
+            <button type="button" onclick="handleClaimClick()" class="px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 shadow-lg shadow-orange-500/30 text-white text-xs font-bold rounded-xl flex items-center gap-1.5 transition-transform active:scale-95">
                 <i class="fa-solid fa-fire"></i> Klaim
             </button>
         </form>
         @endif
     </div>
     </div>
+
+    <script>
+        async function handleClaimClick() {
+            const form = document.getElementById('claim-points-form');
+            const btn = form.querySelector('button');
+
+            // Ganti text tombol sementara saat loading
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Loading...';
+            btn.disabled = true;
+
+            try {
+                // Coba pancing popup notifikasi browser
+                if (typeof subscribeUserToPush === 'function') {
+                    // Hanya minta jika browser support dan belum pernah ditanya
+                    if (typeof Notification !== 'undefined' && Notification.permission === 'default') {
+                        await subscribeUserToPush();
+                    }
+                }
+            } catch (e) {
+                console.error('Push error:', e);
+            } finally {
+                // Lanjutkan submit form klaim poin (jangan sampai poin gagal diklaim)
+                form.submit();
+            }
+        }
+
+    </script>
