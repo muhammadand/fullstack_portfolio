@@ -105,14 +105,11 @@
         }, 300);
     }
 
-        }, 300);
-    }
-
     document.addEventListener('DOMContentLoaded', () => {
         // Coach Mark for Cara Kerja in Dashboard
         const hasSeenDashboardGuide = localStorage.getItem('hasSeenDashboardGuide');
         const coachMark = document.getElementById('dashboardCoachMark');
-        
+
         if (!hasSeenDashboardGuide && coachMark) {
             // Show after a short delay
             setTimeout(() => {

@@ -2,6 +2,7 @@
 
 @section('hide_navbar_mobile', true)
 @section('hide_footer_mobile', true)
+@section('hide_chatbot', true)
 
 @push('meta')
 <x-affiliate.pwa-meta />
