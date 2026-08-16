@@ -60,7 +60,7 @@
 
     <x-affiliate.promo-banner />
 
-    <x-affiliate.recent-activities :withdrawals="$withdrawals" />
+    <x-affiliate.target-ideas />
     @endif
 </div>
 
