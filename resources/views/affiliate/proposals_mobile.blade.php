@@ -147,7 +147,7 @@
                 <div>
                     <label class="block text-[10px] font-semibold text-emerald-400 mb-1.5"><i class="fa-brands fa-whatsapp mr-1"></i> Share via WhatsApp:</label>
                     <div class="relative">
-                        <select onchange="kirimWaLangsungAffiliate(this, '{{ $p->brand_name }}', '{{ route('landing.dynamic', $p->slug) }}?ref={{ $affiliate->affiliate_code }}', '{{ route('proposal.dynamic', $p->slug) }}?ref={{ $affiliate->affiliate_code }}')" class="w-full appearance-none pl-3 pr-8 py-2 bg-white/5 border border-emerald-500/30 text-emerald-300 text-xs font-medium rounded-xl focus:outline-none focus:border-emerald-500 cursor-pointer transition-all">
+                        <select onchange="kirimWaLangsungAffiliate(this, '{{ addslashes($p->brand_name) }}', '{{ $p->wa_number }}', '{{ route('landing.dynamic', $p->slug) }}?ref={{ $affiliate->affiliate_code }}', '{{ route('proposal.dynamic', $p->slug) }}?ref={{ $affiliate->affiliate_code }}')" class="w-full appearance-none pl-3 pr-8 py-2 bg-white/5 border border-emerald-500/30 text-emerald-300 text-xs font-medium rounded-xl focus:outline-none focus:border-emerald-500 cursor-pointer transition-all">
                             <option value="" disabled selected class="text-slate-800">Pilih Template Chat...</option>
                             @php
                             $filteredTemplates = $chatTemplates->filter(function($ct) use ($p) {
@@ -289,7 +289,7 @@
             }, 2500);
         }
 
-        function kirimWaLangsungAffiliate(selectElement, brandName, linkLandingPage, linkProposal) {
+        function kirimWaLangsungAffiliate(selectElement, brandName, waNumber, linkLandingPage, linkProposal) {
             if (!selectElement.value) return;
 
             // Decode template text
@@ -301,13 +301,25 @@
             }
             if (linkLandingPage) {
                 text = text.replace(/\{link_landing_page\}/g, linkLandingPage);
+                text = text.replace(/\{link_landing\}/g, linkLandingPage); // Support both placeholder names
             }
             if (linkProposal) {
                 text = text.replace(/\{link_proposal\}/g, linkProposal);
             }
 
-            // Open WA Share Link (tanpa nomor spesifik, jadi afiliator bisa pilih kontak di HP mereka)
-            const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+            // Format nomor WA (pastikan diawali 62)
+            let formattedNumber = waNumber ? waNumber.toString().replace(/[^0-9]/g, '') : '';
+            if (formattedNumber.startsWith('0')) {
+                formattedNumber = '62' + formattedNumber.substring(1);
+            }
+
+            // Open WA Share Link
+            let waUrl = '';
+            if (formattedNumber) {
+                waUrl = `https://api.whatsapp.com/send?phone=${formattedNumber}&text=${encodeURIComponent(text)}`;
+            } else {
+                waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+            }
 
             // Deteksi jika dibuka via HP (Mobile) agar langsung buka aplikasi tanpa diblokir browser
             if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
