@@ -52,6 +52,13 @@
         </button>
     </div>
 
+    <!-- Suggestion Button -->
+    <div class="mb-6">
+        <button type="button" onclick="openSuggestionModal()" class="w-full py-3 glass-panel rounded-2xl flex items-center justify-center gap-2 text-sm font-bold text-blue-400 hover:bg-white/5 transition-colors border-blue-500/30">
+            <i class="fa-solid fa-lightbulb text-yellow-400"></i> Lihat Contoh Template (Siap Salin)
+        </button>
+    </div>
+
     @if(session('success'))
     <div class="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 p-4 rounded-2xl mb-6 text-sm flex items-center gap-3">
         <i class="fa-solid fa-circle-check"></i>
@@ -118,6 +125,50 @@
     </div>
 </div>
 
+<!-- Suggestion Modal -->
+<div id="suggestionModal" class="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-slate-900/60 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 overflow-y-auto pb-safe">
+    <div class="bg-[#1e293b] w-full max-w-md p-6 rounded-t-3xl sm:rounded-3xl shadow-2xl transform translate-y-full sm:translate-y-0 sm:scale-95 transition-transform duration-300 sm:mx-4 border border-white/10 max-h-[85vh] overflow-y-auto flex flex-col my-auto" id="suggestionModalContent">
+        <div class="flex justify-between items-center mb-6 shrink-0">
+            <h3 class="text-lg font-bold text-white flex items-center gap-2"><i class="fa-solid fa-lightbulb text-yellow-400"></i> Contoh Template</h3>
+            <button type="button" onclick="closeSuggestionModal()" class="text-slate-400 hover:text-white w-8 h-8 rounded-full bg-white/5 flex items-center justify-center transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div class="space-y-4">
+            <!-- Template 1 -->
+            <div class="bg-slate-900/50 border border-slate-700/50 rounded-2xl p-4">
+                <h4 class="font-bold text-sm text-blue-400 mb-2">Perkenalan Singkat</h4>
+                <p class="text-xs text-slate-300 mb-3 whitespace-pre-wrap font-mono leading-relaxed" id="sug-1">Halo {nama_bisnis}, perkenalkan saya partner dari Scalify. Kami menyediakan solusi digitalisasi (website, kasir, dll) yang bisa membantu operasional bisnis Anda jadi lebih efisien dan modern. Boleh saya kirimkan proposal penawarannya? Info lengkap: {link_landing}</p>
+                <button type="button" onclick="useSuggestion('Perkenalan Singkat (General)', document.getElementById('sug-1').innerText)" class="w-full py-2 bg-white/5 hover:bg-white/10 text-white text-xs font-bold rounded-xl transition-colors border border-white/10 flex justify-center items-center gap-2">
+                    <i class="fa-regular fa-copy"></i> Gunakan Template Ini
+                </button>
+            </div>
+
+            <!-- Template 2 -->
+            <div class="bg-slate-900/50 border border-slate-700/50 rounded-2xl p-4">
+                <h4 class="font-bold text-sm text-blue-400 mb-2">Follow Up Proposal</h4>
+                <p class="text-xs text-slate-300 mb-3 whitespace-pre-wrap font-mono leading-relaxed" id="sug-2">Selamat siang {nama_bisnis}, menindaklanjuti obrolan kita sebelumnya, berikut adalah proposal lengkap mengenai solusi digital dari Scalify:
+                    {link_proposal}
+
+                    Jika ada yang ingin didiskusikan lebih lanjut, silakan hubungi saya kembali ya. Terima kasih!</p>
+                <button type="button" onclick="useSuggestion('Follow Up Proposal', document.getElementById('sug-2').innerText)" class="w-full py-2 bg-white/5 hover:bg-white/10 text-white text-xs font-bold rounded-xl transition-colors border border-white/10 flex justify-center items-center gap-2">
+                    <i class="fa-regular fa-copy"></i> Gunakan Template Ini
+                </button>
+            </div>
+
+            <!-- Template 3 -->
+            <div class="bg-slate-900/50 border border-slate-700/50 rounded-2xl p-4">
+                <h4 class="font-bold text-sm text-blue-400 mb-2">Penawaran Promo Khusus</h4>
+                <p class="text-xs text-slate-300 mb-3 whitespace-pre-wrap font-mono leading-relaxed" id="sug-3">Halo {nama_bisnis}! Khusus bulan ini, Scalify sedang mengadakan promo spesial untuk pembuatan website dan sistem kasir. Sangat cocok untuk meningkatkan penjualan bisnis Anda! Yuk cek promonya di sini: {link_landing}</p>
+                <button type="button" onclick="useSuggestion('Penawaran Promo Khusus', document.getElementById('sug-3').innerText)" class="w-full py-2 bg-white/5 hover:bg-white/10 text-white text-xs font-bold rounded-xl transition-colors border border-white/10 flex justify-center items-center gap-2">
+                    <i class="fa-regular fa-copy"></i> Gunakan Template Ini
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Template Form Modal -->
 <div id="templateModal" class="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-slate-900/60 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 overflow-y-auto pb-safe">
     <div class="bg-[#1e293b] w-full max-w-md p-6 rounded-t-3xl sm:rounded-3xl shadow-2xl transform translate-y-full sm:translate-y-0 sm:scale-95 transition-transform duration-300 sm:mx-4 border border-white/10 max-h-[85vh] overflow-y-auto flex flex-col my-auto" id="templateModalContent">
@@ -166,6 +217,44 @@
 <x-affiliate.scripts />
 
 <script>
+    function openSuggestionModal() {
+        const modal = document.getElementById('suggestionModal');
+        const modalContent = document.getElementById('suggestionModalContent');
+
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+        if (window.innerWidth < 640) {
+            modalContent.classList.remove('translate-y-full');
+        } else {
+            modalContent.classList.remove('sm:scale-95');
+            modalContent.classList.add('sm:scale-100');
+        }
+    }
+
+    function closeSuggestionModal() {
+        const modal = document.getElementById('suggestionModal');
+        const modalContent = document.getElementById('suggestionModalContent');
+
+        if (window.innerWidth < 640) {
+            modalContent.classList.add('translate-y-full');
+        } else {
+            modalContent.classList.remove('sm:scale-100');
+            modalContent.classList.add('sm:scale-95');
+        }
+
+        setTimeout(() => {
+            modal.classList.add('opacity-0', 'pointer-events-none');
+        }, 300);
+    }
+
+    function useSuggestion(name, content) {
+        closeSuggestionModal();
+        setTimeout(() => {
+            openTemplateModal();
+            document.getElementById('templateName').value = name;
+            document.getElementById('templateContent').value = content;
+        }, 300);
+    }
+
     function openTemplateModal(id = null, name = '', contentB64 = '', categoryId = '') {
         const modal = document.getElementById('templateModal');
         const modalContent = document.getElementById('templateModalContent');
