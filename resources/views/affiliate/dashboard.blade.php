@@ -190,7 +190,7 @@
                         <p class="text-xs text-slate-500">Pilih dan bagikan link spesifik klien</p>
                     </div>
                 </div>
-                <a href="{{ route('affiliate.proposals') }}" class="w-8 h-8 rounded-full bg-slate-50 text-slate-400 hover:bg-rose-50 hover:text-rose-600 flex items-center justify-center transition-colors shrink-0 text-sm">
+                <a href="{{ route('affiliate.proposals') }}" wire:navigate class="w-8 h-8 rounded-full bg-slate-50 text-slate-400 hover:bg-rose-50 hover:text-rose-600 flex items-center justify-center transition-colors shrink-0 text-sm">
                     <i class="fa-solid fa-arrow-right"></i>
                 </a>
             </div>
@@ -206,7 +206,7 @@
                         <p class="text-xs text-slate-500">Login otomatis via QR untuk device lain</p>
                     </div>
                 </div>
-                <a href="{{ route('affiliate.magic_login_qr') }}" class="w-8 h-8 rounded-full bg-slate-50 text-slate-400 hover:bg-purple-50 hover:text-purple-600 flex items-center justify-center transition-colors shrink-0 text-sm">
+                <a href="{{ route('affiliate.magic_login_qr') }}" wire:navigate class="w-8 h-8 rounded-full bg-slate-50 text-slate-400 hover:bg-purple-50 hover:text-purple-600 flex items-center justify-center transition-colors shrink-0 text-sm">
                     <i class="fa-solid fa-arrow-right"></i>
                 </a>
             </div>
@@ -222,7 +222,7 @@
                         <p class="text-xs text-slate-500">Kelola template pesan kustom Anda</p>
                     </div>
                 </div>
-                <a href="{{ route('affiliate.chat_templates.index') }}" class="w-8 h-8 rounded-full bg-slate-50 text-slate-400 hover:bg-teal-50 hover:text-teal-600 flex items-center justify-center transition-colors shrink-0 text-sm">
+                <a href="{{ route('affiliate.chat_templates.index') }}" wire:navigate class="w-8 h-8 rounded-full bg-slate-50 text-slate-400 hover:bg-teal-50 hover:text-teal-600 flex items-center justify-center transition-colors shrink-0 text-sm">
                     <i class="fa-solid fa-arrow-right"></i>
                 </a>
             </div>
@@ -286,7 +286,7 @@
 
         <!-- Links -->
         <div class="mt-6 flex justify-center">
-            <a href="{{ route('affiliate.history') }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-white border border-slate-200 text-slate-700 text-sm font-bold rounded-lg hover:bg-slate-50 transition-colors shadow-sm">
+            <a href="{{ route('affiliate.history') }}" wire:navigate class="inline-flex items-center gap-2 px-5 py-2.5 bg-white border border-slate-200 text-slate-700 text-sm font-bold rounded-lg hover:bg-slate-50 transition-colors shadow-sm">
                 <i class="fa-solid fa-clock-rotate-left"></i> Lihat Seluruh Riwayat Komisi & Penarikan
             </a>
         </div>

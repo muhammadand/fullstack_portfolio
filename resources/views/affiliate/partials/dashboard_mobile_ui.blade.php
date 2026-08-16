@@ -13,18 +13,22 @@
     {{-- Session Messages --}}
     @if(session('success'))
     <script>
-        window.addEventListener('DOMContentLoaded', () => {
-            showToast("{{ session('success') }}", 'success');
-        });
+        setTimeout(() => {
+            if (typeof showToast === 'function') {
+                showToast("{{ session('success') }}", 'success');
+            }
+        }, 100);
 
     </script>
     @endif
 
     @if(session('error') || $errors->any())
     <script>
-        window.addEventListener('DOMContentLoaded', () => {
-            showToast("{{ session('error') ?? $errors->first() }}", 'error');
-        });
+        setTimeout(() => {
+            if (typeof showToast === 'function') {
+                showToast("{{ session('error') ?? $errors->first() }}", 'error');
+            }
+        }, 100);
 
     </script>
     @endif

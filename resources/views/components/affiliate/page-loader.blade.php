@@ -59,6 +59,18 @@
             });
         });
 
+        // Livewire v3 SPA Navigation Events
+        document.addEventListener('livewire:navigating', () => {
+            loader.style.display = 'flex';
+            void loader.offsetWidth;
+            loader.style.opacity = '1';
+        });
+
+        document.addEventListener('livewire:navigated', () => {
+            loader.style.opacity = '0';
+            setTimeout(() => loader.style.display = 'none', 300);
+        });
+
         // Safety fallback: if load event didn't fire properly after 3 seconds, hide the loader anyway
         setTimeout(() => {
             if(loader.style.display !== 'none') {

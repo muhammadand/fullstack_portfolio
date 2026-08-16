@@ -39,7 +39,7 @@
     <!-- Top Bar -->
     <div class="flex items-center justify-between mb-8">
         <div class="flex items-center gap-4">
-            <a href="{{ route('affiliate.dashboard') }}" class="w-10 h-10 rounded-full glass-panel flex items-center justify-center text-slate-300 hover:text-white transition-colors">
+            <a href="{{ route('affiliate.dashboard') }}" wire:navigate class="w-10 h-10 rounded-full glass-panel flex items-center justify-center text-slate-300 hover:text-white transition-colors">
                 <i class="fa-solid fa-arrow-left"></i>
             </a>
             <h1 class="text-xl font-bold">Panduan Partner</h1>
@@ -126,10 +126,11 @@
                                     <span>Sistem akan menggenerate Link Website khusus lengkap dengan nama bisnis mereka!</span>
                                 </li>
                             </ul>
-
-                            <a href="{{ route('affiliate.proposals') }}" class="inline-flex items-center justify-center w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-bold rounded-xl transition-colors gap-2">
-                                Coba Katalog Proposal <i class="fa-solid fa-arrow-right"></i>
-                            </a>
+                            <div class="mt-4 pt-4 border-t border-white/5">
+                                <a href="{{ route('affiliate.proposals') }}" wire:navigate class="inline-flex items-center justify-center w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-bold rounded-xl transition-colors gap-2">
+                                    Buka Katalog <i class="fa-solid fa-arrow-right"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -143,20 +144,21 @@
                             <p class="text-sm text-slate-400 leading-relaxed mb-3">
                                 Agar Anda tidak perlu mengetik ulang saat follow up klien di WhatsApp, buatlah <b>Template Chat</b>. Anda bisa menggunakan *placeholder* seperti <code>{nama_bisnis}</code> yang akan terisi otomatis saat Anda mengirim proposal.
                             </p>
-                            <a href="{{ route('affiliate.chat_templates.index') }}" class="inline-flex items-center text-sm font-semibold text-purple-400 hover:text-purple-300">
-                                Kelola Template Chat <i class="fa-solid fa-chevron-right ml-1 text-xs"></i>
-                            </a>
+                            <div class="mt-4 pt-4 border-t border-white/5 flex justify-end">
+                                <a href="{{ route('affiliate.chat_templates.index') }}" wire:navigate class="inline-flex items-center text-sm font-semibold text-purple-400 hover:text-purple-300">
+                                    Template Chat <i class="fa-solid fa-arrow-right ml-2"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="glass-panel p-6 rounded-3xl text-center">
-            <h3 class="text-white font-bold mb-2">Siap Mulai Menghasilkan?</h3>
-            <p class="text-sm text-slate-400 mb-6">Mulai dari hal kecil, sebarkan link Anda ke kontak terdekat.</p>
-            <a href="{{ route('affiliate.dashboard') }}" class="inline-flex items-center justify-center w-full py-3.5 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition-all shadow-[0_0_15px_rgba(37,99,235,0.3)]">
-                Kembali ke Dashboard
+        <!-- Call to Action -->
+        <div class="mt-8 mb-4 px-2">
+            <a href="{{ route('affiliate.dashboard') }}" wire:navigate class="inline-flex items-center justify-center w-full py-3.5 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition-all shadow-[0_0_15px_rgba(37,99,235,0.3)]">
+                Kembali ke Dashboard <i class="fa-solid fa-house ml-2"></i>
             </a>
         </div>
     </div>

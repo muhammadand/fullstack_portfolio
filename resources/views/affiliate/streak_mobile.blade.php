@@ -33,7 +33,7 @@
     <!-- Header -->
     <div class="fixed top-0 left-0 w-full z-50 glass-panel border-b border-white/10 px-5 py-4 flex items-center justify-between">
         <div class="flex items-center gap-4">
-            <a href="{{ route('affiliate.dashboard') }}" class="w-10 h-10 rounded-full bg-slate-800/80 flex items-center justify-center text-slate-300 hover:text-white transition-colors">
+            <a href="{{ route('affiliate.dashboard') }}" wire:navigate class="w-10 h-10 rounded-full bg-slate-800/80 flex items-center justify-center text-slate-300 hover:text-white transition-colors">
                 <i class="fa-solid fa-arrow-left"></i>
             </a>
             <h1 class="text-lg font-bold text-white">Progres Api</h1>
@@ -191,7 +191,7 @@
                         Tukarkan poin Anda dengan <b>Saldo E-Wallet</b>, <b>Voucher Makanan</b> (GoFood), <b>Fashion & Merchandise</b>, atau diskon layanan Scalify eksklusif di <b>Scalify Store</b>.
                     </p>
 
-                    <a href="{{ route('affiliate.store') }}" class="block text-center w-full py-3 bg-blue-500 hover:bg-blue-600 text-white text-xs font-bold rounded-xl transition-colors relative z-10 shadow-lg shadow-blue-500/30">
+                    <a href="{{ route('affiliate.store') }}" wire:navigate class="block text-center w-full py-3 bg-blue-500 hover:bg-blue-600 text-white text-xs font-bold rounded-xl transition-colors relative z-10 shadow-lg shadow-blue-500/30">
                         Kunjungi Scalify Store <i class="fa-solid fa-arrow-right ml-1"></i>
                     </a>
                 </div>

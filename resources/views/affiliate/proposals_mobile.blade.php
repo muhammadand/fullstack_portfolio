@@ -63,7 +63,7 @@
         <!-- Header -->
         <div class="flex items-center justify-between mb-6 z-20 relative">
             <div class="flex items-center gap-4">
-                <a href="{{ route('affiliate.dashboard') }}" class="w-10 h-10 rounded-full glass-panel flex items-center justify-center text-slate-300 hover:text-white transition-colors">
+                <a href="{{ route('affiliate.dashboard') }}" wire:navigate class="w-10 h-10 rounded-full glass-panel flex items-center justify-center text-slate-300 hover:text-white transition-colors">
                     <i class="fa-solid fa-arrow-left"></i>
                 </a>
                 <div>
@@ -103,21 +103,21 @@
 
         <!-- Tabs: Global Leads & Follow Up -->
         <div class="flex p-1 bg-white/5 rounded-2xl mb-5">
-            <a href="{{ route('affiliate.proposals', ['tab' => 'global', 'category_id' => request('category_id')]) }}" class="flex-1 py-2.5 text-xs font-bold text-center rounded-xl transition-all {{ $tab === 'global' ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/30' : 'text-slate-400 hover:text-white' }}">
+            <a href="{{ route('affiliate.proposals', ['tab' => 'global', 'category_id' => request('category_id')]) }}" wire:navigate class="flex-1 py-2.5 text-xs font-bold text-center rounded-xl transition-all {{ $tab === 'global' ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/30' : 'text-slate-400 hover:text-white' }}">
                 <i class="fa-solid fa-globe mr-1"></i> Global Leads
             </a>
-            <a href="{{ route('affiliate.proposals', ['tab' => 'follow_up', 'category_id' => request('category_id')]) }}" class="flex-1 py-2.5 text-xs font-bold text-center rounded-xl transition-all {{ $tab === 'follow_up' ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/30' : 'text-slate-400 hover:text-white' }}">
+            <a href="{{ route('affiliate.proposals', ['tab' => 'follow_up', 'category_id' => request('category_id')]) }}" wire:navigate class="flex-1 py-2.5 text-xs font-bold text-center rounded-xl transition-all {{ $tab === 'follow_up' ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/30' : 'text-slate-400 hover:text-white' }}">
                 <i class="fa-solid fa-bookmark mr-1"></i> Follow Up Saya
             </a>
         </div>
 
         <!-- Category Filter (Horizontal Scroll) -->
         <div class="flex overflow-x-auto hide-scrollbar gap-2 mb-6 pb-2">
-            <a href="{{ route('affiliate.proposals', ['tab' => $tab]) }}" class="px-4 py-2 rounded-full whitespace-nowrap text-xs font-semibold transition-colors {{ !request('category_id') ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/30' : 'glass-panel text-slate-400 hover:text-white' }}">
+            <a href="{{ route('affiliate.proposals', ['tab' => $tab]) }}" wire:navigate class="px-4 py-2 rounded-full whitespace-nowrap text-xs font-semibold transition-colors {{ !request('category_id') ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/30' : 'glass-panel text-slate-400 hover:text-white' }}">
                 Semua Kategori
             </a>
             @foreach($categories as $cat)
-            <a href="{{ route('affiliate.proposals', ['tab' => $tab, 'category_id' => $cat->id]) }}" class="px-4 py-2 rounded-full whitespace-nowrap text-xs font-semibold transition-colors {{ request('category_id') == $cat->id ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/30' : 'glass-panel text-slate-400 hover:text-white' }}">
+            <a href="{{ route('affiliate.proposals', ['tab' => $tab, 'category_id' => $cat->id]) }}" wire:navigate class="px-4 py-2 rounded-full whitespace-nowrap text-xs font-semibold transition-colors {{ request('category_id') == $cat->id ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/30' : 'glass-panel text-slate-400 hover:text-white' }}">
                 {{ $cat->name }}
             </a>
             @endforeach
@@ -197,13 +197,13 @@
                     <i class="fa-solid fa-chevron-left mr-1"></i> Sebelumnya
                 </div>
                 @else
-                <a href="{{ $proposals->previousPageUrl() }}" class="px-4 py-2 text-xs text-rose-400 hover:text-rose-300 font-medium transition-colors">
+                <a href="{{ $proposals->previousPageUrl() }}" wire:navigate class="px-4 py-2 text-xs text-rose-400 hover:text-rose-300 font-medium transition-colors">
                     <i class="fa-solid fa-chevron-left mr-1"></i> Sebelumnya
                 </a>
                 @endif
 
                 @if ($proposals->hasMorePages())
-                <a href="{{ $proposals->nextPageUrl() }}" class="px-4 py-2 text-xs text-white bg-rose-500 hover:bg-rose-600 rounded-lg shadow-lg shadow-rose-500/30 font-medium transition-colors">
+                <a href="{{ $proposals->nextPageUrl() }}" wire:navigate class="px-4 py-2 text-xs text-white bg-rose-500 hover:bg-rose-600 rounded-lg shadow-lg shadow-rose-500/30 font-medium transition-colors">
                     Selanjutnya <i class="fa-solid fa-chevron-right ml-1"></i>
                 </a>
                 @else
@@ -398,31 +398,34 @@
             localStorage.setItem('has_seen_proposal_tutorial', 'true');
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
+        // Initialization Logic (Runs on initial load and Livewire navigation)
+        setTimeout(() => {
             // Tampilkan tutorial coach mark jika belum pernah lihat
             if (!localStorage.getItem('has_seen_proposal_tutorial')) {
                 const coachMark = document.getElementById('coach-mark');
-                coachMark.classList.remove('hidden');
+                if (coachMark) {
+                    coachMark.classList.remove('hidden');
 
-                // Animate pop-in
-                setTimeout(() => {
-                    coachMark.classList.remove('scale-0', 'opacity-0');
-                    coachMark.classList.add('scale-100', 'opacity-100');
-
-                    // Add floating animation after pop-in is done
+                    // Animate pop-in
                     setTimeout(() => {
-                        coachMark.classList.add('animate-floating');
-                    }, 500);
-                }, 600);
+                        coachMark.classList.remove('scale-0', 'opacity-0');
+                        coachMark.classList.add('scale-100', 'opacity-100');
+
+                        // Add floating animation after pop-in is done
+                        setTimeout(() => {
+                            coachMark.classList.add('animate-floating');
+                        }, 500);
+                    }, 600);
+                }
             }
 
             @if(session('success'))
-            setTimeout(() => showToast("{{ session('success') }}", 'success'), 500);
+            showToast("{{ session('success') }}", 'success');
             @endif
             @if(session('error'))
-            setTimeout(() => showToast("{{ session('error') }}", 'error'), 500);
+            showToast("{{ session('error') }}", 'error');
             @endif
-        });
+        }, 100);
 
     </script>
 </body>
