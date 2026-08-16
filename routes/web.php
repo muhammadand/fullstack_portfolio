@@ -273,6 +273,7 @@ Route::get('/proposal/{slug}', [ClientProposalController::class, 'proposal'])->n
 Route::get('/client/cafe/{slug}/landing', [ClientProposalController::class, 'landingCafe'])->name('landing.cafe');
 Route::get('/client/cafe/{slug}/proposal', [ClientProposalController::class, 'proposalCafe'])->name('proposal.cafe');
 Route::get('/client/rental-mobil/{slug}/admin-demo', [ClientProposalController::class, 'adminDemoRental'])->name('demo.admin.rental');
+Route::get('/client/parfum/{slug}/admin-demo', [ClientProposalController::class, 'adminDemoParfum'])->name('demo.admin.parfum');
 
 // Endpoint rahasia untuk trigger deploy (migrasi & cache) dari GitHub Actions (Tanpa SSH)
 Route::get('/secret-deploy-trigger-12345', function () {

@@ -51,4 +51,10 @@ class ClientProposalController extends Controller
         $client = ClientProposal::where('slug', $slug)->firstOrFail();
         return view('client-proposals.rental-mobil.admin-demo', compact('client'));
     }
+
+    public function adminDemoParfum($slug)
+    {
+        $client = ClientProposal::where('slug', $slug)->firstOrFail();
+        return view('client-proposals.parfum.admin-demo', compact('client'));
+    }
 }
