@@ -317,6 +317,10 @@ Route::get('/secret-deploy-trigger-12345', function () {
             '--path' => 'database/migrations/2026_08_15_060717_create_push_subscriptions_table.php',
             '--force' => true
         ]);
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_08_16_103711_add_affiliate_id_and_status_to_client_proposals_table.php',
+            '--force' => true
+        ]);
         
         \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'ClientProposalSeeder', '--force' => true]);
         \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'BusinessCategorySeeder', '--force' => true]);
