@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Progres Api Streak - Partner</title>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
     <x-affiliate.pwa-meta />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -25,6 +27,9 @@
     </style>
 </head>
 <body class="pb-10 overflow-x-hidden min-h-screen relative">
+    
+    <x-affiliate.page-loader />
+
     <!-- Header -->
     <div class="fixed top-0 left-0 w-full z-50 glass-panel border-b border-white/10 px-5 py-4 flex items-center justify-between">
         <div class="flex items-center gap-4">
