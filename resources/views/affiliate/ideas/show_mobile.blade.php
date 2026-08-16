@@ -155,5 +155,9 @@
         }, 300);
     }
 
+    // Expose functions globally for Livewire SPA compatibility
+    window.openModalProposal = openModalProposal;
+    window.closeModalProposal = closeModalProposal;
+
 </script>
 @endsection

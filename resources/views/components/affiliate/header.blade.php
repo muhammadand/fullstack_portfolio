@@ -15,7 +15,7 @@
         </div>
     </a>
     <div class="flex gap-2">
-        <button onclick="openNotificationModal()" class="w-10 h-10 rounded-full glass-panel flex items-center justify-center text-blue-300 hover:text-white transition-colors relative">
+        <button onclick="openNotificationModal()" class="w-10 h-10 rounded-full glass-panel flex items-center justify-center text-blue-300 hover:text-white transition-colors relative z-50 cursor-pointer">
             <i class="fa-solid fa-bell"></i>
             @if($affiliate->unreadNotifications->count() > 0)
             <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>

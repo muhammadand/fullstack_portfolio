@@ -236,6 +236,10 @@
             }, 300);
         }
 
+        // Expose functions globally for Livewire SPA compatibility
+        window.openInfoModal = openInfoModal;
+        window.closeInfoModal = closeInfoModal;
+
     </script>
 </body>
 </html>

@@ -398,6 +398,14 @@
             localStorage.setItem('has_seen_proposal_tutorial', 'true');
         }
 
+        // Expose functions globally for Livewire SPA compatibility
+        window.copyLink = copyLink;
+        window.showToast = showToast;
+        window.kirimWaLangsungAffiliate = kirimWaLangsungAffiliate;
+        window.openModal = openModal;
+        window.closeModal = closeModal;
+        window.dismissCoachMark = dismissCoachMark;
+
         // Initialization Logic (Runs on initial load and Livewire navigation)
         setTimeout(() => {
             // Tampilkan tutorial coach mark jika belum pernah lihat

@@ -172,11 +172,13 @@
     }
 
     async function sendSubscriptionToBackEnd(subscription) {
+        const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+        const csrfToken = csrfMeta ? csrfMeta.getAttribute('content') : "{{ csrf_token() }}";
         const response = await fetch("{{ route('affiliate.push.subscribe') }}", {
             method: 'POST'
             , headers: {
                 'Content-Type': 'application/json'
-                , 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]') ? .getAttribute('content') || "{{ csrf_token() }}"
+                , 'X-CSRF-TOKEN': csrfToken
             }
             , body: JSON.stringify(subscription)
         });
@@ -186,5 +188,18 @@
         }
         return response.json();
     }
+
+    // Expose all functions to global window object for Livewire SPA compatibility
+    window.showToast = showToast;
+    window.copyLink = copyLink;
+    window.copyLoginLink = copyLoginLink;
+    window.openWithdrawModal = openWithdrawModal;
+    window.closeWithdrawModal = closeWithdrawModal;
+    window.openNotificationModal = openNotificationModal;
+    window.closeNotificationModal = closeNotificationModal;
+    window.openShareModal = openShareModal;
+    window.closeShareModal = closeShareModal;
+    window.closeDashboardCoachMark = closeDashboardCoachMark;
+    window.subscribeUserToPush = subscribeUserToPush;
 
 </script>
