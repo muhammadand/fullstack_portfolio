@@ -2,29 +2,38 @@
     <div class="flex items-center justify-between mb-3 px-1">
         <h2 class="text-sm font-bold text-white"><i class="fa-solid fa-lightbulb text-yellow-400 mr-2"></i>Ide Target Bisnis</h2>
     </div>
-    
+
     <p class="text-xs text-slate-400 mb-4 px-1 leading-relaxed">
         Temukan inspirasi bisnis apa saja yang paling butuh website dan pelajari cara menawarkannya.
     </p>
 
     @php
-        $ideas = \App\Http\Controllers\Affiliate\TargetIdeaController::getIdeas();
+    $ideas = \App\Http\Controllers\Affiliate\TargetIdeaController::getIdeas();
     @endphp
 
     <!-- Horizontal Marquee Container -->
     <style>
         @keyframes marquee {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(calc(-50% - 0.5rem)); }
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(calc(-50% - 0.5rem));
+            }
         }
+
         .animate-marquee {
             animation: marquee 35s linear infinite;
         }
-        .animate-marquee:hover, .animate-marquee:active {
+
+        .animate-marquee:hover,
+        .animate-marquee:active {
             animation-play-state: paused;
         }
+
     </style>
-    
+
     <div class="overflow-hidden pb-4 -mx-4 px-4 relative">
         <div class="flex gap-4 w-max animate-marquee">
             <!-- First Set -->
@@ -67,7 +76,7 @@
             </a>
             @endforeach
         </div>
-        
+
         <!-- Subtle fade edges for aesthetics -->
         <div class="absolute top-0 left-0 h-full w-8 bg-gradient-to-r from-[#0B1120] to-transparent pointer-events-none"></div>
         <div class="absolute top-0 right-0 h-full w-8 bg-gradient-to-l from-[#0B1120] to-transparent pointer-events-none"></div>
