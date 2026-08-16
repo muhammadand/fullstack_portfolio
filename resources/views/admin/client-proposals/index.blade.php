@@ -39,6 +39,7 @@
                         <th class="hidden sm:table-cell px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Kategori</th>
                         <th class="hidden md:table-cell px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Kontak WA</th>
                         <th class="hidden lg:table-cell px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Harga Project</th>
+                        <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Status / Owner</th>
                         <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">Aksi</th>
                     </tr>
                 </thead>
@@ -61,6 +62,18 @@
                         <td class="hidden lg:table-cell px-6 py-4">
                             <div class="text-sm font-bold text-emerald-600">Rp {{ number_format($p->project_price, 0, ',', '.') }}</div>
                             <div class="text-xs text-slate-500">+ Domain: Rp {{ number_format($p->domain_price, 0, ',', '.') }}</div>
+                        </td>
+                        <td class="px-6 py-4">
+                            @if($p->affiliate_id)
+                            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-medium bg-emerald-100 text-emerald-800 border border-emerald-200" title="Prospek ini sedang di-follow up oleh {{ $p->affiliate->name }}">
+                                <i class="fa-solid fa-lock text-emerald-600"></i>
+                                <span class="max-w-[100px] truncate">{{ $p->affiliate->name }}</span>
+                            </div>
+                            @else
+                            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-medium bg-slate-100 text-slate-600 border border-slate-200">
+                                <i class="fa-solid fa-globe text-slate-400"></i> Global
+                            </div>
+                            @endif
                         </td>
                         <td class="px-6 py-4 text-right whitespace-nowrap">
                             <!-- Pop Up Menu Action -->

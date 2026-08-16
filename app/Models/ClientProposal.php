@@ -15,4 +15,9 @@ class ClientProposal extends Model
     {
         return $this->belongsTo(BusinessCategory::class, 'business_category_id');
     }
+
+    public function affiliate()
+    {
+        return $this->belongsTo(Affiliate::class);
+    }
 }

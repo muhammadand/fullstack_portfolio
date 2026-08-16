@@ -97,13 +97,23 @@
             Pilih dan bagikan link proposal atau landing page di bawah ini ke calon klien Anda. Link sudah otomatis tertaut dengan kode affiliate Anda.
         </p>
 
+        <!-- Tabs: Global Leads & Follow Up -->
+        <div class="flex p-1 bg-white/5 rounded-2xl mb-5">
+            <a href="{{ route('affiliate.proposals', ['tab' => 'global', 'category_id' => request('category_id')]) }}" class="flex-1 py-2.5 text-xs font-bold text-center rounded-xl transition-all {{ $tab === 'global' ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/30' : 'text-slate-400 hover:text-white' }}">
+                <i class="fa-solid fa-globe mr-1"></i> Global Leads
+            </a>
+            <a href="{{ route('affiliate.proposals', ['tab' => 'follow_up', 'category_id' => request('category_id')]) }}" class="flex-1 py-2.5 text-xs font-bold text-center rounded-xl transition-all {{ $tab === 'follow_up' ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/30' : 'text-slate-400 hover:text-white' }}">
+                <i class="fa-solid fa-bookmark mr-1"></i> Follow Up Saya
+            </a>
+        </div>
+
         <!-- Category Filter (Horizontal Scroll) -->
         <div class="flex overflow-x-auto hide-scrollbar gap-2 mb-6 pb-2">
-            <a href="{{ route('affiliate.proposals') }}" class="px-4 py-2 rounded-full whitespace-nowrap text-xs font-semibold transition-colors {{ !request('category_id') ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/30' : 'glass-panel text-slate-400 hover:text-white' }}">
+            <a href="{{ route('affiliate.proposals', ['tab' => $tab]) }}" class="px-4 py-2 rounded-full whitespace-nowrap text-xs font-semibold transition-colors {{ !request('category_id') ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/30' : 'glass-panel text-slate-400 hover:text-white' }}">
                 Semua Kategori
             </a>
             @foreach($categories as $cat)
-            <a href="{{ route('affiliate.proposals', ['category_id' => $cat->id]) }}" class="px-4 py-2 rounded-full whitespace-nowrap text-xs font-semibold transition-colors {{ request('category_id') == $cat->id ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/30' : 'glass-panel text-slate-400 hover:text-white' }}">
+            <a href="{{ route('affiliate.proposals', ['tab' => $tab, 'category_id' => $cat->id]) }}" class="px-4 py-2 rounded-full whitespace-nowrap text-xs font-semibold transition-colors {{ request('category_id') == $cat->id ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/30' : 'glass-panel text-slate-400 hover:text-white' }}">
                 {{ $cat->name }}
             </a>
             @endforeach
@@ -147,7 +157,7 @@
                 <div>
                     <label class="block text-[10px] font-semibold text-emerald-400 mb-1.5"><i class="fa-brands fa-whatsapp mr-1"></i> Share via WhatsApp:</label>
                     <div class="relative">
-                        <select onchange="kirimWaLangsungAffiliate(this, '{{ addslashes($p->brand_name) }}', '{{ $p->wa_number }}', '{{ route('landing.dynamic', $p->slug) }}?ref={{ $affiliate->affiliate_code }}', '{{ route('proposal.dynamic', $p->slug) }}?ref={{ $affiliate->affiliate_code }}')" class="w-full appearance-none pl-3 pr-8 py-2 bg-white/5 border border-emerald-500/30 text-emerald-300 text-xs font-medium rounded-xl focus:outline-none focus:border-emerald-500 cursor-pointer transition-all">
+                        <select onchange="kirimWaLangsungAffiliate(this, '{{ $p->id }}', '{{ addslashes($p->brand_name) }}', '{{ $p->wa_number }}', '{{ route('landing.dynamic', $p->slug) }}?ref={{ $affiliate->affiliate_code }}', '{{ route('proposal.dynamic', $p->slug) }}?ref={{ $affiliate->affiliate_code }}')" class="w-full appearance-none pl-3 pr-8 py-2 bg-white/5 border border-emerald-500/30 text-emerald-300 text-xs font-medium rounded-xl focus:outline-none focus:border-emerald-500 cursor-pointer transition-all">
                             <option value="" disabled selected class="text-slate-800">Pilih Template Chat...</option>
                             @php
                             $filteredTemplates = $chatTemplates->filter(function($ct) use ($p) {
@@ -289,7 +299,7 @@
             }, 2500);
         }
 
-        function kirimWaLangsungAffiliate(selectElement, brandName, waNumber, linkLandingPage, linkProposal) {
+        async function kirimWaLangsungAffiliate(selectElement, proposalId, brandName, waNumber, linkLandingPage, linkProposal) {
             if (!selectElement.value) return;
 
             // Decode template text
@@ -319,6 +329,28 @@
                 waUrl = `https://api.whatsapp.com/send?phone=${formattedNumber}&text=${encodeURIComponent(text)}`;
             } else {
                 waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+            }
+
+            // AJAX Claim Lead in Background
+            if ('{{ $tab }}' === 'global') {
+                try {
+                    await fetch(`/partner/proposals/${proposalId}/claim`, {
+                        method: 'POST'
+                        , headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            , 'Content-Type': 'application/json'
+                            , 'Accept': 'application/json'
+                        }
+                    });
+
+                    // Pindah ke Follow Up setelah kembali dari WA
+                    setTimeout(() => {
+                        showToast('Berhasil mengklaim prospek! Halaman akan direfresh...', 'success');
+                        setTimeout(() => window.location.reload(), 1500);
+                    }, 2000);
+                } catch (e) {
+                    console.error("Gagal melakukan claim lead", e);
+                }
             }
 
             // Deteksi jika dibuka via HP (Mobile) agar langsung buka aplikasi tanpa diblokir browser

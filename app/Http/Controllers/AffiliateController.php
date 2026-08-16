@@ -308,10 +308,18 @@ class AffiliateController extends Controller
             return redirect()->route('affiliate.chat_templates.index')->with('error', 'Silakan buat minimal satu Template Chat pribadi terlebih dahulu sebelum membagikan proposal.');
         }
 
+        $tab = $request->get('tab', 'global'); // 'global' or 'follow_up'
+
         $query = ClientProposal::with('category')->latest();
         
         if ($request->filled('category_id')) {
             $query->where('business_category_id', $request->category_id);
+        }
+
+        if ($tab === 'follow_up') {
+            $query->where('affiliate_id', $affiliate->id);
+        } else {
+            $query->whereNull('affiliate_id');
         }
         
         $proposals = $query->simplePaginate(10)->withQueryString();
@@ -320,7 +328,7 @@ class AffiliateController extends Controller
             ->orWhere('affiliate_id', $affiliate->id)
             ->get();
 
-        return view('affiliate.proposals_mobile', compact('affiliate', 'proposals', 'categories', 'chatTemplates'));
+        return view('affiliate.proposals_mobile', compact('affiliate', 'proposals', 'categories', 'chatTemplates', 'tab'));
     }
 
     public function generateProposal(Request $request)
@@ -351,6 +359,8 @@ class AffiliateController extends Controller
             'wa_number' => $request->wa_number,
             'project_price' => 4500000,
             'domain_price' => 1200000,
+            'affiliate_id' => $affiliate->id,
+            'status' => 'contacted',
         ]);
 
         return redirect()->back()->with('success', 'Website & Proposal berhasil dibuat!');
@@ -377,5 +387,20 @@ class AffiliateController extends Controller
         $magicLoginUrl = \Illuminate\Support\Facades\URL::signedRoute('affiliate.magic_login', ['affiliate' => $affiliate->id]);
 
         return view('affiliate.magic_login_qr', compact('affiliate', 'magicLoginUrl'));
+    }
+
+    public function claimProposal(Request $request, $id)
+    {
+        $affiliate = Auth::guard('affiliate')->user();
+        $proposal = ClientProposal::findOrFail($id);
+
+        if ($proposal->affiliate_id === null) {
+            $proposal->affiliate_id = $affiliate->id;
+            $proposal->status = 'contacted';
+            $proposal->save();
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Proposal sudah diklaim.'], 403);
     }
 }

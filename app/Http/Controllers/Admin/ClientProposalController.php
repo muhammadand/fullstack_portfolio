@@ -13,7 +13,7 @@ class ClientProposalController extends Controller
 {
     public function index(Request $request)
     {
-        $query = ClientProposal::with('category')->latest();
+        $query = ClientProposal::with(['category', 'affiliate'])->latest();
 
         if ($request->filled('category_id')) {
             $query->where('business_category_id', $request->category_id);

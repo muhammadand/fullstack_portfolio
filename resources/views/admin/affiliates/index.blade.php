@@ -2,12 +2,12 @@
 
 @section('content')
 <div class="px-4 sm:px-6 py-4 sm:py-8">
-    <div class="hidden sm:flex mb-6 justify-between items-end">
+    <div class="flex flex-col sm:flex-row mb-6 justify-between items-start sm:items-end gap-4 sm:gap-0">
         <div>
             <h1 class="text-2xl font-bold text-slate-800 tracking-tight">Affiliate Dashboard</h1>
             <p class="text-slate-500 text-xs mt-1">Pantau performa partner dan kelola komisi di satu tempat.</p>
         </div>
-        <button onclick="openAddPartnerModal()" class="flex items-center gap-1.5 px-3 py-1.5 text-sm bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors shadow-sm">
+        <button onclick="openAddPartnerModal()" class="flex items-center justify-center w-full sm:w-auto gap-1.5 px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors shadow-sm">
             <i class="fa-solid fa-plus"></i> Tambah Partner
         </button>
     </div>
@@ -76,7 +76,9 @@
     @endif
 
     <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-        <div class="overflow-x-auto">
+
+        <!-- Desktop Table View -->
+        <div class="hidden md:block overflow-x-auto">
             <table class="w-full text-left border-collapse text-sm">
                 <thead>
                     <tr class="bg-slate-50 border-b border-slate-200">
@@ -172,6 +174,90 @@
                     @endforelse
                 </tbody>
             </table>
+        </div>
+
+        <!-- Mobile Card View -->
+        <div class="md:hidden divide-y divide-slate-100">
+            @forelse($affiliates as $affiliate)
+            <div class="p-4 hover:bg-slate-50 transition-colors">
+                <div class="flex justify-between items-start mb-3">
+                    <div>
+                        <div class="font-bold text-slate-800 text-sm">{{ $affiliate->name }}</div>
+                        <div class="text-[11px] text-slate-500">{{ $affiliate->email }}</div>
+                    </div>
+                    <div>
+                        @if($affiliate->status === 'pending')
+                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-yellow-100 text-yellow-800">Pending</span>
+                        @elseif($affiliate->status === 'approved')
+                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-green-100 text-green-800">Approved</span>
+                        @else
+                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-red-100 text-red-800">Rejected</span>
+                        @endif
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 mb-4 bg-slate-50 rounded-lg p-3 border border-slate-100">
+                    <div>
+                        <p class="text-[10px] text-slate-500 mb-0.5">Kode Referral</p>
+                        <p class="text-xs font-bold text-blue-600">{{ $affiliate->affiliate_code }}</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-slate-500 mb-0.5">Performa</p>
+                        <p class="text-xs font-medium text-purple-700"><i class="fa-solid fa-hand-pointer mr-1"></i> {{ $affiliate->clicks_count ?? 0 }} Klik</p>
+                    </div>
+                    <div class="col-span-2 pt-2 border-t border-slate-200">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-[10px] text-slate-500 mb-0.5">Saldo Komisi</p>
+                                <p class="text-sm font-bold text-emerald-600">Rp {{ number_format($affiliate->balance, 0, ',', '.') }}</p>
+                            </div>
+                            <div class="text-right max-w-[50%]">
+                                <p class="text-[10px] text-slate-500 mb-0.5">Bank</p>
+                                <p class="text-[10px] font-medium text-slate-700 truncate">{{ $affiliate->bank_info ?: '-' }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap gap-2 justify-end">
+                    @if($affiliate->status === 'pending')
+                    <form action="{{ route('admin.affiliates.approve', $affiliate->id) }}" method="POST" class="flex-1">
+                        @csrf
+                        <button type="submit" class="w-full flex items-center justify-center gap-1.5 px-3 py-2 bg-green-600 hover:bg-green-700 text-white text-xs font-bold rounded-lg transition-colors" onclick="return confirm('Setujui partner ini?')">
+                            <i class="fa-solid fa-check"></i> Approve
+                        </button>
+                    </form>
+                    <form action="{{ route('admin.affiliates.reject', $affiliate->id) }}" method="POST" class="flex-1">
+                        @csrf
+                        <button type="submit" class="w-full flex items-center justify-center gap-1.5 px-3 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-lg transition-colors" onclick="return confirm('Tolak partner ini?')">
+                            <i class="fa-solid fa-xmark"></i> Reject
+                        </button>
+                    </form>
+                    @elseif($affiliate->status === 'approved')
+                    @php
+                    $magicLoginUrl = \Illuminate\Support\Facades\URL::signedRoute('affiliate.magic_login', ['affiliate' => $affiliate->id]);
+                    @endphp
+                    <button type="button" onclick="copyMagicLink('{{ $magicLoginUrl }}')" class="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold rounded-lg transition-colors shadow-sm">
+                        <i class="fa-solid fa-link"></i> Link
+                    </button>
+                    <a href="{{ route('admin.affiliates.show', $affiliate->id) }}" class="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition-colors border border-slate-200">
+                        <i class="fa-solid fa-eye"></i> Detail
+                    </a>
+                    <button type="button" onclick="openCommissionModal({{ $affiliate->id }}, '{{ addslashes($affiliate->name) }}')" class="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg transition-colors shadow-sm">
+                        <i class="fa-solid fa-plus"></i> Komisi
+                    </button>
+                    @else
+                    <a href="{{ route('admin.affiliates.show', $affiliate->id) }}" class="w-full flex items-center justify-center gap-1.5 px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition-colors border border-slate-200">
+                        <i class="fa-solid fa-eye"></i> Detail
+                    </a>
+                    @endif
+                </div>
+            </div>
+            @empty
+            <div class="p-8 text-center text-slate-500 text-sm">
+                Belum ada pendaftar affiliate.
+            </div>
+            @endforelse
         </div>
     </div>
 </div>
