@@ -44,38 +44,46 @@
     </div>
 
     <!-- 6. Total Klik -->
-    <div class="flex flex-col items-center gap-2">
+    {{-- <div class="flex flex-col items-center gap-2">
         <div class="w-12 h-12 rounded-2xl glass-panel flex items-center justify-center text-yellow-400 text-lg shadow-inner">
             <div class="flex items-center gap-1">
                 <span class="font-bold text-sm">{{ $totalClicks }}</span>
-            </div>
-        </div>
-        <span class="text-[10px] text-slate-300 font-medium text-center leading-tight">Total<br>Klik</span>
+</div>
+</div>
+<span class="text-[10px] text-slate-300 font-medium text-center leading-tight">Total<br>Klik</span>
+</div> --}}
+
+<!-- 7. Cara Kerja -->
+<a href="{{ route('affiliate.guide') }}" onclick="closeDashboardCoachMark()" class="flex flex-col items-center gap-2 relative">
+    <div class="w-12 h-12 rounded-2xl glass-panel flex items-center justify-center text-orange-400 text-lg shadow-inner transition-transform active:scale-95">
+        <i class="fa-solid fa-book-open"></i>
     </div>
+    <span class="text-[10px] text-slate-300 font-medium text-center leading-tight">Cara<br>Kerja</span>
 
-    <!-- 7. Cara Kerja -->
-    <a href="{{ route('affiliate.guide') }}" onclick="closeDashboardCoachMark()" class="flex flex-col items-center gap-2 relative">
-        <div class="w-12 h-12 rounded-2xl glass-panel flex items-center justify-center text-orange-400 text-lg shadow-inner transition-transform active:scale-95">
-            <i class="fa-solid fa-book-open"></i>
+    <!-- Coach Mark -->
+    <div id="dashboardCoachMark" class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden z-[60] w-44 pointer-events-none">
+        <div class="bg-blue-600 text-white text-[11px] font-medium p-3 rounded-2xl shadow-xl shadow-blue-500/30 relative animate-bounce text-center">
+            Yuk baca panduan Cara Kerja dulu!
+            <div class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-blue-600 rotate-45"></div>
         </div>
-        <span class="text-[10px] text-slate-300 font-medium text-center leading-tight">Cara<br>Kerja</span>
+        <!-- Glow ring around the icon -->
+        <div class="absolute top-[3rem] left-1/2 -translate-x-1/2 w-16 h-16 rounded-3xl border-2 border-blue-500 animate-ping"></div>
+    </div>
+</a>
 
-        <!-- Coach Mark -->
-        <div id="dashboardCoachMark" class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden z-[60] w-44 pointer-events-none">
-            <div class="bg-blue-600 text-white text-[11px] font-medium p-3 rounded-2xl shadow-xl shadow-blue-500/30 relative animate-bounce text-center">
-                Yuk baca panduan Cara Kerja dulu!
-                <div class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-blue-600 rotate-45"></div>
-            </div>
-            <!-- Glow ring around the icon -->
-            <div class="absolute top-[3rem] left-1/2 -translate-x-1/2 w-16 h-16 rounded-3xl border-2 border-blue-500 animate-ping"></div>
-        </div>
-    </a>
+<!-- 8. Template Chat -->
+<a href="{{ route('affiliate.chat_templates.index') }}" class="flex flex-col items-center gap-2">
+    <div class="w-12 h-12 rounded-2xl glass-panel flex items-center justify-center text-teal-400 text-lg shadow-inner transition-transform active:scale-95">
+        <i class="fa-solid fa-message"></i>
+    </div>
+    <span class="text-[10px] text-slate-300 font-medium text-center leading-tight">Template<br>Chat</span>
+</a>
 
-    <!-- 8. Template Chat -->
-    <a href="{{ route('affiliate.chat_templates.index') }}" class="flex flex-col items-center gap-2">
-        <div class="w-12 h-12 rounded-2xl glass-panel flex items-center justify-center text-teal-400 text-lg shadow-inner transition-transform active:scale-95">
-            <i class="fa-solid fa-message"></i>
-        </div>
-        <span class="text-[10px] text-slate-300 font-medium text-center leading-tight">Template<br>Chat</span>
-    </a>
+<!-- 9. Data Mahasiswa -->
+<a href="{{ route('affiliate.student_leads.index') }}" class="flex flex-col items-center gap-2">
+    <div class="w-12 h-12 rounded-2xl glass-panel flex items-center justify-center text-cyan-400 text-lg shadow-inner transition-transform active:scale-95">
+        <i class="fa-solid fa-users"></i>
+    </div>
+    <span class="text-[10px] text-slate-300 font-medium text-center leading-tight">Data<br>Mahasiswa</span>
+</a>
 </div>

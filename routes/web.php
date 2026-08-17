@@ -248,6 +248,12 @@ Route::get('/generate-sitemap', function () {
         // Student Services
         Route::get('/partner/student-services', [App\Http\Controllers\Affiliate\StudentServiceController::class, 'index'])->name('affiliate.student_services.index');
         Route::post('/partner/student-services/generate', [App\Http\Controllers\Affiliate\StudentServiceController::class, 'generateProposal'])->name('affiliate.student_services.generate');
+        
+        // Student Leads
+        Route::get('/partner/student-leads', [App\Http\Controllers\Affiliate\StudentLeadController::class, 'index'])->name('affiliate.student_leads.index');
+        Route::post('/partner/student-leads', [App\Http\Controllers\Affiliate\StudentLeadController::class, 'store'])->name('affiliate.student_leads.store');
+        Route::post('/partner/student-leads/{id}/claim', [App\Http\Controllers\Affiliate\StudentLeadController::class, 'claim'])->name('affiliate.student_leads.claim');
+
         // Profile
         Route::get('/partner/profile', [App\Http\Controllers\AffiliateController::class, 'profile'])->name('affiliate.profile');
         Route::post('/partner/profile', [App\Http\Controllers\AffiliateController::class, 'updateProfile'])->name('affiliate.profile.update');

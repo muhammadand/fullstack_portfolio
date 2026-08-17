@@ -28,7 +28,9 @@ class StudentServiceController extends Controller
                   ->whereNull('affiliate_id');
         })->orWhere('affiliate_id', $affiliate->id)->get();
         
-        return view('affiliate.student_services.index', compact('servicesByCategory', 'affiliate', 'chatTemplates'));
+        $myLeads = \App\Models\StudentLead::where('affiliate_id', $affiliate->id)->latest()->get();
+        
+        return view('affiliate.student_services.index', compact('servicesByCategory', 'affiliate', 'chatTemplates', 'myLeads'));
     }
 
     public function generateProposal(Request $request)
@@ -36,10 +38,26 @@ class StudentServiceController extends Controller
         $affiliate = Auth::guard('affiliate')->user();
         
         $request->validate([
-            'wa_number' => 'required|string',
+            'wa_number' => 'nullable|string',
+            'student_lead_id' => 'nullable|exists:student_leads,id',
             'service_name' => 'required|string',
             'chat_message' => 'required|string'
         ]);
+        
+        $waNumber = $request->wa_number;
+        $existingLead = null;
+
+        if ($request->student_lead_id) {
+            $existingLead = \App\Models\StudentLead::find($request->student_lead_id);
+            if ($existingLead) {
+                $waNumber = $existingLead->wa_number;
+            }
+        }
+
+        // Pastikan waNumber tidak kosong
+        if (empty($waNumber)) {
+            return redirect()->back()->with('error', 'Nomor WA harus diisi atau pilih prospek.');
+        }
 
         // Cari atau gunakan kategori default untuk student services
         $category = BusinessCategory::firstOrCreate(
@@ -51,16 +69,31 @@ class StudentServiceController extends Controller
         // Kita gunakan nama service + timestamp acak
         $slug = Str::slug($request->service_name . '-' . time() . '-' . rand(100, 999));
 
-        ClientProposal::create([
+        $proposal = ClientProposal::create([
             'business_category_id' => $category->id,
             'brand_name' => $request->service_name,
             'slug' => $slug,
-            'wa_number' => $request->wa_number,
+            'wa_number' => $waNumber,
             'project_price' => 1500000,
             'domain_price' => 0, // Mungkin mhs tdk butuh domain di awal
             'affiliate_id' => $affiliate->id,
             'status' => 'contacted',
         ]);
+
+        if ($existingLead) {
+            $existingLead->update([
+                'client_proposal_id' => $proposal->id,
+                'status' => 'contacted',
+            ]);
+        } else {
+            \App\Models\StudentLead::create([
+                'wa_number' => $waNumber,
+                'needs' => $request->service_name,
+                'affiliate_id' => $affiliate->id,
+                'client_proposal_id' => $proposal->id,
+                'status' => 'contacted',
+            ]);
+        }
 
         // Buat link landing page
         $landingUrl = url("/landing/{$slug}");
