@@ -67,6 +67,30 @@ class StudentLeadController extends Controller
             'status' => 'new',
         ]);
 
+        if ($request->has('redirect_to') && $request->redirect_to === 'student_services') {
+            return redirect()->route('affiliate.student_services.index')->with('success', 'Prospek Mahasiswa berhasil ditambahkan.');
+        }
+
         return redirect()->route('affiliate.student_leads.index', ['tab' => 'my_leads'])->with('success', 'Prospek Mahasiswa berhasil ditambahkan.');
+    }
+
+    public function update(Request $request, $id)
+    {
+        $affiliate = Auth::guard('affiliate')->user();
+        $lead = StudentLead::where('id', $id)->where('affiliate_id', $affiliate->id)->firstOrFail();
+
+        $request->validate([
+            'wa_number' => 'required|string',
+            'name' => 'nullable|string|max:255',
+            'needs' => 'nullable|string|max:255',
+        ]);
+
+        $lead->update([
+            'wa_number' => $request->wa_number,
+            'name' => $request->name,
+            'needs' => $request->needs ?? 'Belum Diketahui',
+        ]);
+
+        return redirect()->route('affiliate.student_leads.index', ['tab' => 'my_leads'])->with('success', 'Data Prospek berhasil diperbarui.');
     }
 }

@@ -126,13 +126,20 @@
                         <h3 class="font-bold text-sm text-white mb-1">{{ $lead->name ?? 'Anonim' }}</h3>
                         <p class="text-[11px] text-slate-400"><i class="fa-solid fa-graduation-cap mr-1 text-cyan-400"></i> {{ $lead->university ?? 'Universitas Belum Diisi' }}</p>
                     </div>
-                    @if($lead->status === 'new')
-                    <span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded-md text-[10px] font-bold">Baru</span>
-                    @elseif($lead->status === 'contacted')
-                    <span class="px-2 py-1 bg-blue-500/20 text-blue-400 rounded-md text-[10px] font-bold">Dihubungi</span>
-                    @elseif($lead->status === 'deal')
-                    <span class="px-2 py-1 bg-emerald-500/20 text-emerald-400 rounded-md text-[10px] font-bold">Deal</span>
-                    @endif
+                    <div class="flex items-center gap-2">
+                        @if($tab === 'my_leads')
+                        <button onclick="openEditLeadModal('{{ $lead->id }}', '{{ addslashes($lead->name) }}', '{{ $lead->wa_number }}', '{{ addslashes($lead->needs) }}')" class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-slate-300 flex items-center justify-center transition-colors">
+                            <i class="fa-solid fa-pen text-[10px]"></i>
+                        </button>
+                        @endif
+                        @if($lead->status === 'new')
+                        <span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded-md text-[10px] font-bold">Baru</span>
+                        @elseif($lead->status === 'contacted')
+                        <span class="px-2 py-1 bg-blue-500/20 text-blue-400 rounded-md text-[10px] font-bold">Dihubungi</span>
+                        @elseif($lead->status === 'deal')
+                        <span class="px-2 py-1 bg-emerald-500/20 text-emerald-400 rounded-md text-[10px] font-bold">Deal</span>
+                        @endif
+                    </div>
                 </div>
 
                 <div class="bg-white/5 rounded-xl p-3 mb-4">
@@ -212,6 +219,50 @@
         </div>
     </div>
 
+    <!-- Modal Edit Prospek -->
+    <div id="editLeadModal" class="fixed inset-0 z-[60] hidden">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeEditLeadModal()"></div>
+        <div class="absolute bottom-0 left-0 w-full bg-[#0B1120] border-t border-white/10 rounded-t-[2rem] p-6 transform transition-transform translate-y-full" id="editLeadModalContent">
+
+            <div class="w-12 h-1.5 bg-white/20 rounded-full mx-auto mb-6"></div>
+
+            <h3 class="text-lg font-bold text-white mb-2">Edit Data Mahasiswa</h3>
+            <p class="text-xs text-slate-400 mb-6">Perbarui nama, nomor WA, atau kebutuhan prospek.</p>
+
+            <form action="" method="POST" id="editLeadForm">
+                @csrf
+                @method('PUT')
+                <div class="mb-4">
+                    <label class="block text-xs font-semibold text-slate-300 mb-2">Nomor WhatsApp <span class="text-red-400">*</span></label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"><i class="fa-brands fa-whatsapp"></i></span>
+                        <input type="tel" name="wa_number" id="editWaNumber" required placeholder="Contoh: 08123456789" class="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-cyan-500 transition-colors">
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-xs font-semibold text-slate-300 mb-2">Nama (Opsional)</label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"><i class="fa-solid fa-user"></i></span>
+                        <input type="text" name="name" id="editName" placeholder="Nama Mahasiswa" class="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-cyan-500 transition-colors">
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <label class="block text-xs font-semibold text-slate-300 mb-2">Kebutuhan / Project (Opsional)</label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"><i class="fa-solid fa-briefcase"></i></span>
+                        <input type="text" name="needs" id="editNeeds" placeholder="Contoh: Skripsi E-Commerce, Tugas Akhir..." class="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-cyan-500 transition-colors">
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white rounded-xl text-sm font-bold shadow-lg shadow-cyan-500/30 transition-all flex justify-center items-center gap-2">
+                    <i class="fa-solid fa-save"></i> Perbarui Data
+                </button>
+            </form>
+        </div>
+    </div>
+
     <x-affiliate.bottom-nav />
     <x-affiliate.scripts />
 
@@ -256,6 +307,34 @@
 
             setTimeout(() => {
                 document.getElementById('addLeadModal').classList.add('hidden');
+            }, 300);
+        }
+
+        function openEditLeadModal(id, name, waNumber, needs) {
+            const modal = document.getElementById('editLeadModal');
+            const content = document.getElementById('editLeadModalContent');
+            const form = document.getElementById('editLeadForm');
+
+            // Set form values
+            document.getElementById('editName').value = name === 'Anonim' ? '' : name;
+            document.getElementById('editWaNumber').value = waNumber;
+            document.getElementById('editNeeds').value = needs === 'Belum Diketahui' ? '' : needs;
+
+            // Set form action route
+            form.action = `/partner/student-leads/${id}`;
+
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                content.classList.remove('translate-y-full');
+            }, 10);
+        }
+
+        function closeEditLeadModal() {
+            const content = document.getElementById('editLeadModalContent');
+            content.classList.add('translate-y-full');
+
+            setTimeout(() => {
+                document.getElementById('editLeadModal').classList.add('hidden');
             }, 300);
         }
 

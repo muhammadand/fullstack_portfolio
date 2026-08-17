@@ -55,11 +55,26 @@
             </button>
         </div>
 
+        {{-- Alerts --}}
+        @if(session('success'))
+        <div class="bg-green-500/20 border border-green-500/50 text-green-400 p-3 rounded-xl mb-4 text-xs font-semibold">
+            {{ session('success') }}
+        </div>
+        @endif
+        @if(session('error'))
+        <div class="bg-red-500/20 border border-red-500/50 text-red-400 p-3 rounded-xl mb-4 text-xs font-semibold">
+            {{ session('error') }}
+        </div>
+        @endif
+
         <div class="glass-panel p-4 rounded-2xl mb-6">
             <h2 class="font-bold text-white mb-2"><i class="fa-solid fa-graduation-cap text-blue-400 mr-2"></i>Tawarkan Ke Teman</h2>
             <p class="text-xs text-slate-300 leading-relaxed mb-4">
-                Pilih layanan di bawah ini, masukkan nomor WhatsApp temanmu (target market), dan langsung kirimkan penawaran instan via WhatsApp!
+                Pilih layanan di bawah ini, pilih prospek, dan langsung kirimkan penawaran instan via WhatsApp!
             </p>
+            <button type="button" onclick="openAddLeadModal()" class="w-full py-2 bg-blue-600/20 hover:bg-blue-600/40 text-blue-400 border border-blue-500/30 rounded-xl text-xs font-bold transition-colors flex items-center justify-center gap-2">
+                <i class="fa-solid fa-user-plus"></i> Tambah Nomor Teman (Target)
+            </button>
         </div>
 
         <!-- Services List -->
@@ -105,9 +120,9 @@
     <!-- Modal Form WhatsApp -->
     <div id="offerModal" class="fixed inset-0 z-50 hidden">
         <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeOfferModal()"></div>
-        <div class="absolute bottom-0 left-0 w-full bg-[#0B1120] border-t border-white/10 rounded-t-[2rem] p-6 transform transition-transform translate-y-full" id="offerModalContent">
+        <div class="absolute bottom-0 left-0 w-full bg-[#0B1120] border-t border-white/10 rounded-t-[2rem] p-6 transform transition-transform translate-y-full min-h-[70vh] max-h-[90vh] overflow-y-auto" id="offerModalContent">
 
-            <div class="w-12 h-1.5 bg-white/20 rounded-full mx-auto mb-6"></div>
+            <div class="w-12 h-1.5 bg-white/20 rounded-full mx-auto mb-6 shrink-0"></div>
 
             <h3 class="text-lg font-bold text-white mb-2" id="modalServiceName">Kirim Penawaran</h3>
             <p class="text-xs text-slate-400 mb-6">Masukkan nomor WhatsApp target dan sesuaikan pesan penawarannya jika perlu.</p>
@@ -117,14 +132,30 @@
                 <div class="mb-4">
                     <label class="block text-xs font-semibold text-slate-300 mb-2">Pilih Prospek (Mahasiswa)</label>
                     <div class="relative">
-                        <select id="leadSelect" name="student_lead_id" onchange="toggleManualInput()" class="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors appearance-none">
-                            <option value="" class="bg-[#0B1120]">-- Input Nomor WA Baru Manual --</option>
-                            @foreach($myLeads as $lead)
-                            <option value="{{ $lead->id }}" class="bg-[#0B1120]">
-                                {{ $lead->name ? $lead->name . ' (' . $lead->wa_number . ')' : $lead->wa_number }}
-                                {{ $lead->needs && $lead->needs != 'Belum Diketahui' ? ' - Bth: ' . $lead->needs : '' }}
-                            </option>
-                            @endforeach
+                        <select id="leadSelect" name="student_lead_id" onchange="toggleManualInput()" class="w-full bg-white/5 border border-white/10 rounded-xl py-3.5 px-4 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors appearance-none">
+                            <option value="" class="bg-[#0B1120] font-bold text-blue-400">-- Input Nomor WA Baru Manual --</option>
+
+                            @if($myLeads->count() > 0)
+                            <optgroup label="Mahasiswaku (CRM)" class="bg-[#0B1120] text-slate-400">
+                                @foreach($myLeads as $lead)
+                                <option value="{{ $lead->id }}" class="bg-[#0B1120] text-white">
+                                    {{ $lead->name ? $lead->name . ' (' . $lead->wa_number . ')' : $lead->wa_number }}
+                                    {{ $lead->needs && $lead->needs != 'Belum Diketahui' ? ' - Bth: ' . $lead->needs : '' }}
+                                </option>
+                                @endforeach
+                            </optgroup>
+                            @endif
+
+                            @if($globalLeads->count() > 0)
+                            <optgroup label="Data Global (Terbuka)" class="bg-[#0B1120] text-slate-400">
+                                @foreach($globalLeads as $lead)
+                                <option value="{{ $lead->id }}" class="bg-[#0B1120] text-white">
+                                    {{ $lead->name ? $lead->name . ' (' . $lead->wa_number . ')' : $lead->wa_number }}
+                                    {{ $lead->needs && $lead->needs != 'Belum Diketahui' ? ' - Bth: ' . $lead->needs : '' }}
+                                </option>
+                                @endforeach
+                            </optgroup>
+                            @endif
                         </select>
                         <div class="absolute inset-y-0 right-4 flex items-center pointer-events-none text-slate-400">
                             <i class="fa-solid fa-chevron-down text-xs"></i>
@@ -222,6 +253,51 @@
         </div>
     </div>
 
+    <!-- Modal Tambah Prospek Manual -->
+    <div id="addLeadModal" class="fixed inset-0 z-[60] hidden">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeAddLeadModal()"></div>
+        <div class="absolute bottom-0 left-0 w-full bg-[#0B1120] border-t border-white/10 rounded-t-[2rem] p-6 transform transition-transform translate-y-full" id="addLeadModalContent">
+
+            <div class="w-12 h-1.5 bg-white/20 rounded-full mx-auto mb-6"></div>
+
+            <h3 class="text-lg font-bold text-white mb-2">Simpan Nomor Baru</h3>
+            <p class="text-xs text-slate-400 mb-6">Simpan nomor teman kamu ke dalam daftar sebelum membuat penawaran.</p>
+
+            <form action="{{ route('affiliate.student_leads.store') }}" method="POST">
+                @csrf
+                <input type="hidden" name="redirect_to" value="student_services">
+
+                <div class="mb-4">
+                    <label class="block text-xs font-semibold text-slate-300 mb-2">Nomor WhatsApp <span class="text-red-400">*</span></label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"><i class="fa-brands fa-whatsapp"></i></span>
+                        <input type="tel" name="wa_number" required placeholder="Contoh: 08123456789" class="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors">
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-xs font-semibold text-slate-300 mb-2">Nama (Opsional)</label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"><i class="fa-solid fa-user"></i></span>
+                        <input type="text" name="name" placeholder="Nama Mahasiswa" class="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors">
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <label class="block text-xs font-semibold text-slate-300 mb-2">Kebutuhan / Project (Opsional)</label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"><i class="fa-solid fa-briefcase"></i></span>
+                        <input type="text" name="needs" placeholder="Contoh: Skripsi E-Commerce, Tugas Akhir..." class="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors">
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl text-sm font-bold shadow-lg shadow-blue-500/30 transition-all flex justify-center items-center gap-2">
+                    <i class="fa-solid fa-save"></i> Simpan & Lanjutkan
+                </button>
+            </form>
+        </div>
+    </div>
+
     <x-affiliate.scripts />
 
     <script>
@@ -256,6 +332,25 @@
             // Set default template
             select.value = 'default';
             changeTemplate();
+        }
+
+        function openAddLeadModal() {
+            const modal = document.getElementById('addLeadModal');
+            const content = document.getElementById('addLeadModalContent');
+
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                content.classList.remove('translate-y-full');
+            }, 10);
+        }
+
+        function closeAddLeadModal() {
+            const content = document.getElementById('addLeadModalContent');
+            content.classList.add('translate-y-full');
+
+            setTimeout(() => {
+                document.getElementById('addLeadModal').classList.add('hidden');
+            }, 300);
         }
 
         function toggleMessageSettings() {

@@ -29,8 +29,9 @@ class StudentServiceController extends Controller
         })->orWhere('affiliate_id', $affiliate->id)->get();
         
         $myLeads = \App\Models\StudentLead::where('affiliate_id', $affiliate->id)->latest()->get();
+        $globalLeads = \App\Models\StudentLead::whereNull('affiliate_id')->latest()->get();
         
-        return view('affiliate.student_services.index', compact('servicesByCategory', 'affiliate', 'chatTemplates', 'myLeads'));
+        return view('affiliate.student_services.index', compact('servicesByCategory', 'affiliate', 'chatTemplates', 'myLeads', 'globalLeads'));
     }
 
     public function generateProposal(Request $request)
@@ -104,7 +105,7 @@ class StudentServiceController extends Controller
 
         // Redirect ke whatsapp
         // Format wa
-        $phone = preg_replace('/[^0-9]/', '', $request->wa_number);
+        $phone = preg_replace('/[^0-9]/', '', $waNumber);
         if (str_starts_with($phone, '0')) {
             $phone = '62' . substr($phone, 1);
         }
