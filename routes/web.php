@@ -245,6 +245,9 @@ Route::get('/generate-sitemap', function () {
         // Guide
         Route::get('/partner/guide', [App\Http\Controllers\AffiliateController::class, 'guide'])->name('affiliate.guide');
 
+        // Student Services
+        Route::get('/partner/student-services', [App\Http\Controllers\Affiliate\StudentServiceController::class, 'index'])->name('affiliate.student_services.index');
+        Route::post('/partner/student-services/generate', [App\Http\Controllers\Affiliate\StudentServiceController::class, 'generateProposal'])->name('affiliate.student_services.generate');
         // Profile
         Route::get('/partner/profile', [App\Http\Controllers\AffiliateController::class, 'profile'])->name('affiliate.profile');
         Route::post('/partner/profile', [App\Http\Controllers\AffiliateController::class, 'updateProfile'])->name('affiliate.profile.update');

@@ -95,6 +95,8 @@
         <x-affiliate.promo-banner />
 
         <x-affiliate.target-ideas />
+
+        <x-affiliate.student-target-ideas />
         @endif
     </div>
 

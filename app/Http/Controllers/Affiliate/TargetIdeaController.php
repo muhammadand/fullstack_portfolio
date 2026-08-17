@@ -101,9 +101,47 @@ class TargetIdeaController extends Controller
         ];
     }
 
+    public static function getStudentIdeas()
+    {
+        return [
+            'jasa-joki-tugas-it' => [
+                'title' => 'Joki Tugas & Project IT',
+                'category_id' => null,
+                'image' => asset('img/ideas/joki_tugas.jpg'),
+                'short_desc' => 'Bantu teman kampus kerjain tugas web, aplikasi, atau project akhir.',
+                'reason' => 'Banyak mahasiswa non-IT atau bahkan IT yang kesulitan menyelesaikan project akhir atau tugas besar mereka. Kamu bisa jadi perantara! Tawarkan jasa pembuatan sistem, dan biar tim kami yang kerjakan. Kamu tinggal terima komisi bersih!',
+                'features' => ['Pembuatan Website/Web App', 'Sistem Informasi (CRUD)', 'Aplikasi Mobile (Android/iOS)', 'Source Code Lengkap', 'Revisi & Garansi Error']
+            ],
+            'joki-skripsi-sistem' => [
+                'title' => 'Joki Aplikasi Skripsi',
+                'category_id' => null,
+                'image' => asset('img/ideas/joki_skripsi.jpg'),
+                'short_desc' => 'Tawarkan solusi pembuatan program untuk skripsi atau TA temanmu.',
+                'reason' => 'Mahasiswa tingkat akhir sering stuck di pembuatan program skripsi (Sistem Pakar, SPK, Machine Learning, Web E-Commerce dll). Ini pasar yang sangat basah dengan budget yang cukup besar. Dapatkan komisi besar dari setiap project skripsi yang deal!',
+                'features' => ['Bimbingan Program', 'Bebas Pilih Framework (Laravel/CodeIgniter)', 'Database Relasional', 'Algoritma Khusus (SPK dll)', 'Dokumentasi & Flowchart']
+            ],
+            'website-organisasi-kampus' => [
+                'title' => 'Website BEM, HIMA & UKM',
+                'category_id' => null,
+                'image' => asset('img/ideas/web_kampus.jpg'),
+                'short_desc' => 'Tawarkan pembuatan profil organisasi kampus agar lebih profesional.',
+                'reason' => 'Organisasi kampus (BEM, Himpunan, UKM) butuh wadah digital untuk branding, dokumentasi proker, dan rekrutmen anggota (Open Recruitment). Kamu bisa approach ketua organisasinya untuk bikin website resmi mereka.',
+                'features' => ['Portal Berita Organisasi', 'Formulir Pendaftaran Oprec', 'Galeri Program Kerja', 'Struktur Kepengurusan', 'Integrasi Sosial Media']
+            ],
+            'jasa-desain-ui-ux' => [
+                'title' => 'Jasa Desain UI/UX & Figma',
+                'category_id' => null,
+                'image' => asset('img/ideas/uiux_idea.jpg'),
+                'short_desc' => 'Desain antarmuka aplikasi untuk tugas mahasiswa / perlombaan.',
+                'reason' => 'Banyak mahasiswa yang ikut lomba bisnis plan, hackathon, atau tugas UI/UX tapi nggak punya skill desain. Kamu bisa tawarkan jasa desain UI/UX (Figma) dari tim kami dengan hasil profesional dan estetik.',
+                'features' => ['Wireframing & Prototyping', 'Desain Figma/Adobe XD', 'Aset Desain Lengkap', 'Revisi Desain', 'Konsultasi Konsep']
+            ]
+        ];
+    }
+
     public function show($slug)
     {
-        $ideas = self::getIdeas();
+        $ideas = array_merge(self::getIdeas(), self::getStudentIdeas());
         
         if (!array_key_exists($slug, $ideas)) {
             abort(404);
