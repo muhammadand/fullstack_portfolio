@@ -336,6 +336,14 @@ Route::get('/secret-deploy-trigger-12345', function () {
             '--path' => 'database/migrations/2026_08_17_015317_create_student_services_table.php',
             '--force' => true
         ]);
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_08_17_041006_create_student_leads_table.php',
+            '--force' => true
+        ]);
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_08_17_041052_add_client_proposal_id_to_student_leads_table.php',
+            '--force' => true
+        ]);
         
         \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'ClientProposalSeeder', '--force' => true]);
         \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'BusinessCategorySeeder', '--force' => true]);
