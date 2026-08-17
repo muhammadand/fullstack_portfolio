@@ -325,9 +325,14 @@ Route::get('/secret-deploy-trigger-12345', function () {
             '--path' => 'database/migrations/2026_08_16_103711_add_affiliate_id_and_status_to_client_proposals_table.php',
             '--force' => true
         ]);
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_08_17_015317_create_student_services_table.php',
+            '--force' => true
+        ]);
         
         \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'ClientProposalSeeder', '--force' => true]);
         \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'BusinessCategorySeeder', '--force' => true]);
+        \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'StudentServiceSeeder', '--force' => true]);
         \Illuminate\Support\Facades\Artisan::call('optimize:clear');
         return "Deploy commands executed successfully!";
     } catch (\Exception $e) {
