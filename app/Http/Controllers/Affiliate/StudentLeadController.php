@@ -29,7 +29,12 @@ class StudentLeadController extends Controller
         
         $leads = $query->simplePaginate(10)->withQueryString();
 
-        return view('affiliate.student_leads.index', compact('affiliate', 'leads', 'tab'));
+        $chatTemplates = \App\Models\ChatTemplate::where(function($query) use ($affiliate) {
+            $query->where('affiliate_id', $affiliate->id)
+                  ->orWhereNull('affiliate_id');
+        })->get();
+
+        return view('affiliate.student_leads.index', compact('affiliate', 'leads', 'tab', 'chatTemplates'));
     }
 
     public function claim($id)

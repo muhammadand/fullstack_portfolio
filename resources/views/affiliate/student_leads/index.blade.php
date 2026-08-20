@@ -155,16 +155,28 @@
                     </button>
                 </form>
                 @else
-                <div class="flex gap-2">
-                    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $lead->wa_number) }}" target="_blank" class="flex-1 py-2 bg-green-500 hover:bg-green-600 text-white text-center text-xs font-bold rounded-xl transition-colors">
-                        <i class="fa-brands fa-whatsapp mr-1"></i> Hubungi WA
-                    </a>
-                    @if($lead->clientProposal)
+                <div class="mt-2">
+                    <label class="block text-[10px] font-semibold text-emerald-400 mb-1.5"><i class="fa-brands fa-whatsapp mr-1"></i> Share via WhatsApp:</label>
+                    <div class="relative">
+                        <select onchange="kirimWaLangsungAffiliate(this, '{{ $lead->id }}', '{{ addslashes($lead->name) }}', '{{ $lead->wa_number }}', '{{ $lead->clientProposal ? route('landing.dynamic', $lead->clientProposal->slug) . '?ref=' . $affiliate->affiliate_code : '' }}', '{{ $lead->clientProposal ? route('proposal.dynamic', $lead->clientProposal->slug) . '?ref=' . $affiliate->affiliate_code : '' }}')" class="w-full appearance-none pl-3 pr-8 py-2 bg-white/5 border border-emerald-500/30 text-emerald-300 text-xs font-medium rounded-xl focus:outline-none focus:border-emerald-500 cursor-pointer transition-all">
+                            <option value="" disabled selected class="text-slate-800">Pilih Template Chat...</option>
+                            @foreach($chatTemplates as $ct)
+                            <option value="{{ base64_encode($ct->content) }}" class="text-slate-800">{{ $ct->name }}</option>
+                            @endforeach
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-emerald-400/70">
+                            <i class="fa-solid fa-chevron-down text-[10px]"></i>
+                        </div>
+                    </div>
+                </div>
+
+                @if($lead->clientProposal)
+                <div class="flex gap-2 mt-3">
                     <a href="{{ route('landing.dynamic', $lead->clientProposal->slug) }}" target="_blank" class="flex-1 py-2 bg-white/10 hover:bg-white/20 text-white text-center text-xs font-bold rounded-xl transition-colors">
                         <i class="fa-solid fa-globe mr-1"></i> Lihat Proposal
                     </a>
-                    @endif
                 </div>
+                @endif
                 @endif
             </div>
             @endforeach
@@ -336,6 +348,44 @@
             setTimeout(() => {
                 document.getElementById('editLeadModal').classList.add('hidden');
             }, 300);
+        }
+
+        async function kirimWaLangsungAffiliate(selectElement, leadId, leadName, waNumber, linkLandingPage, linkProposal) {
+            if (!selectElement.value) return;
+
+            let text = decodeURIComponent(escape(window.atob(selectElement.value)));
+
+            if (leadName && leadName !== 'Anonim') {
+                text = text.replace(/\{nama_bisnis\}/g, leadName);
+                text = text.replace(/\{nama\}/g, leadName);
+            }
+            if (linkLandingPage) {
+                text = text.replace(/\{link_landing_page\}/g, linkLandingPage);
+                text = text.replace(/\{link_landing\}/g, linkLandingPage);
+            }
+            if (linkProposal) {
+                text = text.replace(/\{link_proposal\}/g, linkProposal);
+            }
+
+            let formattedNumber = waNumber ? waNumber.toString().replace(/[^0-9]/g, '') : '';
+            if (formattedNumber.startsWith('0')) {
+                formattedNumber = '62' + formattedNumber.substring(1);
+            }
+
+            let waUrl = '';
+            if (formattedNumber) {
+                waUrl = `https://api.whatsapp.com/send?phone=${formattedNumber}&text=${encodeURIComponent(text)}`;
+            } else {
+                waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+            }
+
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                window.location.href = waUrl;
+            } else {
+                window.open(waUrl, '_blank');
+            }
+
+            selectElement.value = "";
         }
 
     </script>

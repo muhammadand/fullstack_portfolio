@@ -165,6 +165,15 @@
                     <i class="fa-regular fa-copy"></i> Gunakan Template Ini
                 </button>
             </div>
+
+            <!-- Template 4 -->
+            <div class="bg-slate-900/50 border border-slate-700/50 rounded-2xl p-4">
+                <h4 class="font-bold text-sm text-blue-400 mb-2">Penawaran Bantuan Skripsi/Tugas Akhir</h4>
+                <p class="text-xs text-slate-300 mb-3 whitespace-pre-wrap font-mono leading-relaxed" id="sug-4">Halo {nama}, kenalin aku {{ auth()->guard('affiliate')->user()->name }}. Sebentar lagi kamu mau skripsian ya, aku ada penawaran barangkali kamu mau bikin website nya disini itu bisa banget ya, ini ada beberapa methode yang bisa dibuat atau costume juga boleh. Kamu bisa cek detailnya di sini: {{ url('/sobat-scalify') }}?ref={{ auth()->guard('affiliate')->user()->affiliate_code }}</p>
+                <button type="button" onclick="useSuggestion('Bantuan Project Skripsi', document.getElementById('sug-4').innerText)" class="w-full py-2 bg-white/5 hover:bg-white/10 text-white text-xs font-bold rounded-xl transition-colors border border-white/10 flex justify-center items-center gap-2">
+                    <i class="fa-regular fa-copy"></i> Gunakan Template Ini
+                </button>
+            </div>
         </div>
     </div>
 </div>
