@@ -44,9 +44,11 @@ class BlogController extends Controller
         $affiliate = Auth::guard('affiliate')->user();
 
         // Handle image upload
-        $imagePath = null;
         if ($request->hasFile('featured_image')) {
             $imagePath = $request->file('featured_image')->store('blogs', 'public');
+        } else {
+            // Default ke logo Scalify jika tidak ada gambar
+            $imagePath = 'scalify.png';
         }
         
         // Find default blog category (fallback)
@@ -65,7 +67,7 @@ class BlogController extends Controller
         $blog->is_published = false;
         
         // Generate simple meta for SEO
-        $blog->meta_title = $request->title;
+        $blog->meta_title = Str::limit($request->title, 60, '');
         $blog->meta_description = Str::limit(strip_tags($request->content), 150);
         $blog->reading_time = max(1, ceil(str_word_count(strip_tags($request->content)) / 200));
         
@@ -102,8 +104,9 @@ Instruksi Format:
 - Panjang artikel sekitar 300-400 kata. Buat paragraf pendek agar nyaman dibaca di mobile.
 ";
 
+
         try {
-            $response = Gemini::gemini15Flash()->generateContent($prompt);
+            $response = Gemini::generativeModel('gemini-3.1-flash-lite')->generateContent($prompt);
             $responseText = $response->text();
 
             // Bersihkan markdown wrapper untuk parsing JSON
