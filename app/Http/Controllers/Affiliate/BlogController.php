@@ -54,13 +54,16 @@ class BlogController extends Controller
         // Find default blog category (fallback)
         $defaultBlogCategory = \App\Models\BlogCategory::first();
 
+        // Find default admin user for author_id
+        $defaultAdmin = \App\Models\User::first();
+
         $blog = new Blog();
         $blog->title = $request->title;
         $blog->slug = Str::slug($request->title) . '-' . time();
         $blog->content = $request->content;
         $blog->excerpt = Str::limit(strip_tags($request->content), 150);
         $blog->featured_image = $imagePath;
-        $blog->author_id = 1; // Default Admin as author (will be overridden by affiliate_id in UI if needed)
+        $blog->author_id = $defaultAdmin ? $defaultAdmin->id : 1;
         $blog->affiliate_id = $affiliate->id;
         $blog->business_category_id = $request->business_category_id;
         $blog->category_id = $defaultBlogCategory ? $defaultBlogCategory->id : 1;
