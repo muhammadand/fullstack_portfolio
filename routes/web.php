@@ -258,6 +258,7 @@ Route::get('/generate-sitemap', function () {
         // Affiliate Blogs
         Route::get('/partner/blogs', [App\Http\Controllers\Affiliate\BlogController::class, 'index'])->name('affiliate.blogs.index');
         Route::get('/partner/blogs/create', [App\Http\Controllers\Affiliate\BlogController::class, 'create'])->name('affiliate.blogs.create');
+        Route::post('/partner/blogs/generate-ai', [App\Http\Controllers\Affiliate\BlogController::class, 'generateAi'])->name('affiliate.blogs.generate_ai');
         Route::post('/partner/blogs', [App\Http\Controllers\Affiliate\BlogController::class, 'store'])->name('affiliate.blogs.store');
 
         // Profile

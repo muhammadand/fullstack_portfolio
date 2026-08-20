@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Gemini\Laravel\Facades\Gemini;
 
 class BlogController extends Controller
 {
@@ -37,13 +38,16 @@ class BlogController extends Controller
             'title' => 'required|string|max:200',
             'business_category_id' => 'required|exists:business_categories,id',
             'content' => 'required|string',
-            'featured_image' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048'
+            'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048'
         ]);
 
         $affiliate = Auth::guard('affiliate')->user();
 
         // Handle image upload
-        $imagePath = $request->file('featured_image')->store('blogs', 'public');
+        $imagePath = null;
+        if ($request->hasFile('featured_image')) {
+            $imagePath = $request->file('featured_image')->store('blogs', 'public');
+        }
         
         // Find default blog category (fallback)
         $defaultBlogCategory = \App\Models\BlogCategory::first();
@@ -68,5 +72,72 @@ class BlogController extends Controller
         $blog->save();
 
         return redirect()->route('affiliate.blogs.index')->with('success', 'Artikel berhasil dikirim! Menunggu review dari Admin.');
+    }
+
+    public function generateAi(Request $request)
+    {
+        $request->validate([
+            'title' => 'nullable|string|max:200',
+            'business_category_id' => 'required|exists:business_categories,id',
+        ]);
+
+        $affiliate = Auth::guard('affiliate')->user();
+        $category = BusinessCategory::findOrFail($request->business_category_id);
+
+        $titleInstruction = $request->title 
+            ? "Topik/Judul: {$request->title}" 
+            : "Judul: Buatkan judul SEO-friendly yang sangat clickbait dan sedang hype/tren mengenai layanan '{$category->name}'.";
+
+        $prompt = "Tulis artikel blog dalam bahasa Indonesia yang menarik dan SEO-friendly.
+Target Market: Orang-orang yang tertarik dengan layanan '{$category->name}'.
+{$titleInstruction}
+
+Instruksi Format:
+- Kembalikan respons MURNI dalam format JSON. JANGAN sertakan teks apapun di luar blok JSON.
+- Struktur JSON HANYA boleh berisi dua key ini:
+{
+    \"title\": \"Judul artikel yang dihasilkan\",
+    \"content\": \"Isi artikel murni dalam format HTML (gunakan <h2>, <p>, dll. Jangan ada tag <html> atau <body>)\"
+}
+- Panjang artikel sekitar 300-400 kata. Buat paragraf pendek agar nyaman dibaca di mobile.
+";
+
+        try {
+            $response = Gemini::gemini15Flash()->generateContent($prompt);
+            $responseText = $response->text();
+
+            // Bersihkan markdown wrapper untuk parsing JSON
+            $responseText = preg_replace('/^```json\s*|\s*```$/i', '', trim($responseText));
+            
+            $data = json_decode($responseText, true);
+            
+            if (!$data || !isset($data['content']) || !isset($data['title'])) {
+                throw new \Exception("Format respons AI tidak valid atau JSON rusak.");
+            }
+
+            $htmlContent = trim($data['content']);
+            $generatedTitle = trim($data['title']);
+
+            // Buat CTA (Call to Action) link
+            $promoUrl = url('/sobat-scalify?ref=' . $affiliate->affiliate_code);
+            $ctaHtml = "
+            <br>
+            <div style='background-color: #fff7ed; padding: 15px; border-radius: 8px; border-left: 4px solid #f97316; margin-top: 20px;'>
+                <p style='margin: 0; color: #9a3412;'><strong>Butuh layanan {$category->name} profesional?</strong></p>
+                <p style='margin: 5px 0 0 0; color: #c2410c;'>Tingkatkan konversi dan branding bisnis Anda sekarang. <a href='{$promoUrl}' style='color: #ea580c; text-decoration: underline; font-weight: bold;'>Konsultasi Gratis di Sini!</a></p>
+            </div>";
+
+            return response()->json([
+                'status' => 'success',
+                'title' => $generatedTitle,
+                'html' => $htmlContent . $ctaHtml
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Gagal menghasilkan artikel AI: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

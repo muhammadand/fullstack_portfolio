@@ -95,8 +95,8 @@
                 <!-- Judul -->
                 <div>
                     <label class="block text-xs font-bold text-slate-300 mb-1.5 ml-1">Judul Artikel <span class="text-red-400">*</span></label>
-                    <input type="text" name="title" required value="{{ old('title') }}" class="form-input" placeholder="Contoh: 5 Alasan Bisnis Kamu Butuh Website" maxlength="150">
-                    <p class="text-[10px] text-slate-500 mt-1.5 ml-1">Usahakan judul menarik dan bikin penasaran.</p>
+                    <input type="text" name="title" value="{{ old('title') }}" class="form-input" placeholder="Contoh: 5 Alasan Bisnis Kamu Butuh Website (Kosongkan untuk AI)" maxlength="150">
+                    <p class="text-[10px] text-slate-500 mt-1.5 ml-1">Usahakan judul menarik. Kosongkan jika ingin AI otomatis mencari judul tren/hype.</p>
                 </div>
 
                 <!-- Kategori (Target Jualan) -->
@@ -123,14 +123,19 @@
 
                 <!-- Gambar -->
                 <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1.5 ml-1">Gambar Utama <span class="text-red-400">*</span></label>
-                    <input type="file" name="featured_image" accept="image/*" required class="form-input">
-                    <p class="text-[10px] text-slate-500 mt-1.5 ml-1">Format: JPG, PNG, WEBP. Maks: 2MB.</p>
+                    <label class="block text-xs font-bold text-slate-300 mb-1.5 ml-1">Gambar Utama</label>
+                    <input type="file" name="featured_image" accept="image/*" class="form-input">
+                    <p class="text-[10px] text-slate-500 mt-1.5 ml-1">Format: JPG, PNG, WEBP. Maks: 2MB. (Opsional)</p>
                 </div>
 
                 <!-- Isi Artikel -->
                 <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1.5 ml-1">Isi Artikel <span class="text-red-400">*</span></label>
+                    <div class="flex items-center justify-between mb-1.5 ml-1 mr-1">
+                        <label class="block text-xs font-bold text-slate-300">Isi Artikel <span class="text-red-400">*</span></label>
+                        <button type="button" id="btnGenerateAi" class="text-[10px] bg-purple-500/20 text-purple-400 hover:bg-purple-500/40 px-2 py-1 rounded border border-purple-500/30 transition-colors font-bold flex items-center gap-1 active:scale-95 shadow-sm shadow-purple-500/10">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> Auto Generate (AI)
+                        </button>
+                    </div>
                     <div class="glass-panel overflow-hidden rounded-xl" style="background: rgba(0,0,0,0.2);">
                         <div id="quillEditor" class="min-h-[250px] text-sm text-white"></div>
                     </div>
@@ -175,8 +180,64 @@
             }
         });
 
-        // Event listener saat form dikirim
+        // Fitur Auto Generate AI
+        document.getElementById('btnGenerateAi').addEventListener('click', async function() {
+            const title = document.querySelector('input[name="title"]').value;
+            const categoryId = document.querySelector('select[name="business_category_id"]').value;
+
+            if (!categoryId) {
+                alert('Silakan pilih Topik Kategori terlebih dahulu sebelum generate AI!');
+                return;
+            }
+
+            const btn = this;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Menyusun...';
+            btn.disabled = true;
+
+            try {
+                const response = await fetch('{{ route("affiliate.blogs.generate_ai") }}', {
+                    method: 'POST'
+                    , headers: {
+                        'Content-Type': 'application/json'
+                        , 'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                    , body: JSON.stringify({
+                        title: title
+                        , business_category_id: categoryId
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    // Update field judul jika AI memberikan judul
+                    if (data.title && data.title !== "") {
+                        document.querySelector('input[name="title"]').value = data.title;
+                    }
+                    // Paste konten HTML dari AI ke Editor
+                    quill.clipboard.dangerouslyPasteHTML(data.html);
+                } else {
+                    alert(data.message || 'Gagal menghasilkan artikel.');
+                }
+            } catch (error) {
+                console.error(error);
+                alert('Terjadi kesalahan jaringan.');
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        });
+
         document.querySelector('form').addEventListener('submit', function(e) {
+            // Validasi manual judul
+            const titleInput = document.querySelector('input[name="title"]');
+            if (titleInput.value.trim() === '') {
+                e.preventDefault();
+                alert('Judul Artikel tidak boleh kosong saat dikirim! Klik tombol AI atau isi secara manual.');
+                return false;
+            }
+
             // Pindahkan isi Quill ke input tersembunyi
             const contentInput = document.getElementById('contentInput');
             const htmlContent = quill.root.innerHTML;
