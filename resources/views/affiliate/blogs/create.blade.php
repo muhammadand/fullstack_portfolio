@@ -89,7 +89,7 @@
         @endif
 
         <div class="glass-panel rounded-2xl p-5 mb-8">
-            <form action="{{ route('affiliate.blogs.store') }}" method="POST" enctype="multipart/form-data" class="space-y-5" onsubmit="document.getElementById('submitBtn').disabled = true;">
+            <form action="{{ route('affiliate.blogs.store') }}" method="POST" enctype="multipart/form-data" class="space-y-5">
                 @csrf
 
                 <!-- Judul -->
@@ -245,7 +245,7 @@
             // Validasi jika editor kosong (hanya berisi <p><br></p>)
             if (quill.getText().trim().length === 0) {
                 e.preventDefault();
-                alert('Isi artikel tidak boleh kosong!');
+                alert('Isi artikel tidak boleh kosong! Silakan tulis sesuatu atau gunakan tombol AI.');
                 return false;
             }
 
@@ -253,6 +253,7 @@
 
             // Efek loading tombol
             const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
             btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1.5"></i> Mengirim...';
             btn.classList.add('opacity-70');
         });
