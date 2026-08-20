@@ -24,8 +24,21 @@ class AffiliateChatTemplateController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'content' => 'required|string',
-            'business_category_id' => 'required|exists:business_categories,id',
+            'business_category_id' => 'nullable',
+            'new_business_category' => 'nullable|string|max:255',
         ]);
+
+        if (!empty($validated['new_business_category'])) {
+            $newCategory = \App\Models\BusinessCategory::create([
+                'name' => $validated['new_business_category'],
+                'slug' => \Illuminate\Support\Str::slug($validated['new_business_category'])
+            ]);
+            $validated['business_category_id'] = $newCategory->id;
+        } elseif (isset($validated['business_category_id']) && $validated['business_category_id'] === 'new') {
+            $validated['business_category_id'] = null;
+        }
+
+        unset($validated['new_business_category']);
 
         $validated['affiliate_id'] = $affiliate->id;
 
@@ -45,8 +58,21 @@ class AffiliateChatTemplateController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'content' => 'required|string',
-            'business_category_id' => 'required|exists:business_categories,id',
+            'business_category_id' => 'nullable',
+            'new_business_category' => 'nullable|string|max:255',
         ]);
+
+        if (!empty($validated['new_business_category'])) {
+            $newCategory = \App\Models\BusinessCategory::create([
+                'name' => $validated['new_business_category'],
+                'slug' => \Illuminate\Support\Str::slug($validated['new_business_category'])
+            ]);
+            $validated['business_category_id'] = $newCategory->id;
+        } elseif (isset($validated['business_category_id']) && $validated['business_category_id'] === 'new') {
+            $validated['business_category_id'] = null;
+        }
+
+        unset($validated['new_business_category']);
 
         $chat_template->update($validated);
 

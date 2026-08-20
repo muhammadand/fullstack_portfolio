@@ -198,13 +198,19 @@
             </div>
 
             <div class="mb-4">
-                <label class="block text-xs font-medium text-slate-400 mb-1.5 ml-1">Kategori Bisnis</label>
-                <select name="business_category_id" id="businessCategoryId" required class="w-full bg-slate-900/50 border border-slate-700/50 text-white rounded-xl py-3 px-4 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all text-sm appearance-none">
+                <label class="block text-xs font-medium text-slate-400 mb-1.5 ml-1">Kategori Bisnis (Opsional)</label>
+                <select name="business_category_id" id="businessCategoryId" class="w-full bg-slate-900/50 border border-slate-700/50 text-white rounded-xl py-3 px-4 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all text-sm appearance-none" onchange="toggleNewCategory(this)">
                     <option value="" class="bg-slate-800">-- Pilih Kategori --</option>
                     @foreach($categories as $cat)
                     <option value="{{ $cat->id }}" class="bg-slate-800">{{ $cat->name }}</option>
                     @endforeach
+                    <option value="new" class="bg-slate-800 font-bold text-blue-400">+ Tambah Kategori Baru</option>
                 </select>
+            </div>
+
+            <div class="mb-4 hidden" id="newCategoryContainer">
+                <label class="block text-xs font-medium text-slate-400 mb-1.5 ml-1">Nama Kategori Baru</label>
+                <input type="text" name="new_business_category" id="newBusinessCategory" class="w-full bg-slate-900/50 border border-slate-700/50 text-white rounded-xl py-3 px-4 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all text-sm placeholder:text-slate-600" placeholder="Contoh: Kuliner">
             </div>
 
             <div class="mb-6 flex-1">
@@ -315,6 +321,21 @@
         setTimeout(() => {
             modal.classList.add('opacity-0', 'pointer-events-none');
         }, 300);
+    }
+
+    function toggleNewCategory(select) {
+        const container = document.getElementById('newCategoryContainer');
+        const input = document.getElementById('newBusinessCategory');
+
+        if (select.value === 'new') {
+            container.classList.remove('hidden');
+            input.setAttribute('required', 'required');
+            input.focus();
+        } else {
+            container.classList.add('hidden');
+            input.removeAttribute('required');
+            input.value = '';
+        }
     }
 
 </script>
