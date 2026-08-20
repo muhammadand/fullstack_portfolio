@@ -17,4 +17,9 @@ class BusinessCategory extends Model
     {
         return $this->hasMany(ChatTemplate::class);
     }
+
+    public function blogs()
+    {
+        return $this->hasMany(Blog::class, 'business_category_id');
+    }
 }

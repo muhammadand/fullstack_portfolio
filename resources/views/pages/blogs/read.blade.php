@@ -1,4 +1,4 @@
-@extends('pages.layouts.app')
+@extends('layouts.app')
 
 @section('meta_tags')
 <title>{{ $blog->meta_title ?? $blog->title }} — Scalify Intelligence</title>
@@ -138,7 +138,7 @@ $tagsString = is_array($blog->tags) ? implode(', ', $blog->tags) : $blog->tags;
     }
 
     .ql-content a:hover {
-        color: #1e40af;
+        color: #93c5fd;
         border-color: #2563eb;
     }
 
@@ -227,15 +227,15 @@ $tagsString = is_array($blog->tags) ? implode(', ', $blog->tags) : $blog->tags;
 @endpush
 
 @section('content')
-<div class="min-h-screen bg-slate-50 pt-24 pb-16">
+<div class="min-h-screen bg-brand-dark pt-28 pb-32">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Breadcrumb -->
         <div class="mb-8 flex items-center gap-3">
-            <a href="{{ route('landing.blogs') }}" class="text-sm font-semibold text-slate-500 hover:text-blue-600 transition-colors inline-flex items-center gap-2">
+            <a href="{{ route('landing.blogs') }}" class="text-sm font-semibold text-white/60 hover:text-white transition-colors inline-flex items-center gap-2">
                 <i class="fas fa-arrow-left"></i> Kembali ke Blog
             </a>
-            <span class="text-slate-300">/</span>
-            <span class="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-[10px] font-bold tracking-widest uppercase">
+            <span class="text-white/30">/</span>
+            <span class="px-3 py-1 bg-white/5 border border-white/10 text-brand-accent rounded-full text-[10px] font-bold tracking-widest uppercase">
                 {{ $blog->category->name ?? 'Artikel' }}
             </span>
         </div>
@@ -243,45 +243,44 @@ $tagsString = is_array($blog->tags) ? implode(', ', $blog->tags) : $blog->tags;
         <div class="grid lg:grid-cols-12 gap-8 lg:gap-12">
             <!-- Main Content -->
             <div class="lg:col-span-8 min-w-0">
-                <article class="bg-white rounded-3xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] overflow-hidden">
+                <article class="bg-brand-dark md:bg-brand-navy border border-transparent md:border-white/10 md:rounded-3xl md:shadow-xl overflow-visible md:overflow-hidden relative">
                     <!-- Featured Image -->
                     @if ($blog->featured_image)
-                    <div class="aspect-video w-full overflow-hidden relative">
+                    <div class="aspect-video w-screen relative left-1/2 -translate-x-1/2 md:w-full md:static md:translate-x-0 overflow-hidden md:rounded-t-3xl">
                         <img src="{{ asset('storage/' . $blog->featured_image) }}" alt="{{ $blog->title }}" class="w-full h-full object-cover">
-                        <div class="absolute inset-0 bg-gradient-to-t from-[#0f172a]/30 to-transparent"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-brand-dark via-transparent to-transparent md:from-[#0f172a]/30"></div>
                     </div>
                     @endif
 
-                    <div class="p-6 sm:p-8 md:p-12 min-w-0">
+                    <div class="pt-6 pb-12 md:p-12 min-w-0">
                         <!-- Title -->
-                        <h1 class="text-xl md:text-2xl font-display font-bold text-slate-900 mb-6 leading-tight break-words">
+                        <h1 class="text-[22px] md:text-2xl font-display font-bold text-white mb-6 leading-[1.3] break-words">
                             {{ $blog->title }}
                         </h1>
 
                         <!-- Author & Meta -->
-                        <div class="flex items-center justify-between flex-wrap gap-4 pb-8 border-b border-slate-100 mb-8">
-                            <div class="flex items-center gap-4 min-w-0">
-                                <div class="w-12 h-12 rounded-full bg-[#0f172a] flex items-center justify-center text-white font-bold text-lg shadow-md flex-shrink-0">
+                        <div class="flex items-center justify-between pb-6 border-b border-white/5 mb-8">
+                            <div class="flex items-center gap-3 min-w-0">
+                                <div class="w-10 h-10 rounded-full bg-brand-accent flex items-center justify-center text-white font-bold text-sm shadow-md flex-shrink-0">
                                     {{ substr($blog->author->name ?? 'A', 0, 1) }}
                                 </div>
-                                <div class="min-w-0">
-                                    <p class="font-semibold text-slate-900 text-base truncate">
+                                <div class="min-w-0 flex flex-col justify-center">
+                                    <p class="font-semibold text-white/90 text-[13px] leading-tight truncate">
                                         {{ $blog->author->name ?? 'Admin' }}
                                     </p>
-                                    <p class="text-sm text-slate-500 font-medium truncate">
-                                        {{ $blog->published_at?->format('d M Y') }} &bull;
-                                        {{ $blog->reading_time ?? '5' }} min read
+                                    <p class="text-[11px] text-white/50 font-medium leading-tight truncate mt-0.5">
+                                        {{ $blog->published_at?->format('d M Y') }} &bull; {{ $blog->reading_time ?? '5' }} min read
                                     </p>
                                 </div>
                             </div>
 
                             <!-- Share Buttons -->
                             <div class="flex items-center gap-2 flex-shrink-0">
-                                <button onclick="sharePost(this)" data-title="{{ $blog->title }}" data-text="{{ $blog->excerpt ?? Str::limit(strip_tags($blog->content), 100) }}" data-url="{{ url()->current() }}" class="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-slate-50 text-slate-600 hover:bg-[#0f172a] hover:text-white rounded-full transition-all shadow-sm" title="Share">
+                                <button onclick="sharePost(this)" data-title="{{ $blog->title }}" data-text="{{ $blog->excerpt ?? Str::limit(strip_tags($blog->content), 100) }}" data-url="{{ url()->current() }}" class="w-8 h-8 flex-shrink-0 flex items-center justify-center bg-white/5 text-white/70 hover:bg-brand-accent hover:text-white rounded-full transition-all shadow-sm text-xs" title="Share">
                                     <i class="fas fa-share-nodes"></i>
                                 </button>
 
-                                <a href="https://t.me/share/url?url={{ urlencode(url()->current()) }}&text={{ urlencode($blog->title) }}" target="_blank" class="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-slate-50 text-[#229ED9] hover:bg-[#229ED9] hover:text-white rounded-full transition-all shadow-sm" title="Share to Telegram">
+                                <a href="https://t.me/share/url?url={{ urlencode(url()->current()) }}&text={{ urlencode($blog->title) }}" target="_blank" class="w-8 h-8 flex-shrink-0 flex items-center justify-center bg-white/5 text-[#229ED9] hover:bg-[#229ED9] hover:text-white rounded-full transition-all shadow-sm text-xs" title="Share to Telegram">
                                     <i class="fab fa-telegram-plane"></i>
                                 </a>
                             </div>
@@ -289,7 +288,7 @@ $tagsString = is_array($blog->tags) ? implode(', ', $blog->tags) : $blog->tags;
 
                         <!-- Excerpt -->
                         @if ($blog->excerpt)
-                        <p class="text-slate-600 text-sm md:text-md leading-relaxed mb-8 font-medium italic border-l-4 border-blue-500 pl-6 bg-slate-50 py-5 pr-5 rounded-r-xl">
+                        <p class="text-white/70 text-sm md:text-md leading-relaxed mb-8 font-medium italic border-l-4 border-brand-accent pl-6 bg-white/5 py-5 pr-5 rounded-r-xl">
                             {{ $blog->excerpt }}
                         </p>
                         @endif
@@ -303,8 +302,9 @@ $tagsString = is_array($blog->tags) ? implode(', ', $blog->tags) : $blog->tags;
                             /* ═══ Quill Content Renderer ═══════════════════════════════════ */
                             .quill-content {
                                 font-size: 16px;
-                                line-height: 1.8;
-                                color: #374151;
+                                line-height: 1.85;
+                                color: rgba(255, 255, 255, 0.85);
+                                font-weight: 400;
                                 overflow-wrap: anywhere;
                                 word-break: break-word;
                             }
@@ -313,23 +313,23 @@ $tagsString = is_array($blog->tags) ? implode(', ', $blog->tags) : $blog->tags;
                             .quill-content h1 {
                                 font-size: 2rem;
                                 font-weight: 700;
-                                color: #111827;
+                                color: #ffffff;
                                 margin: 1.5rem 0 0.75rem;
                             }
 
                             .quill-content h2 {
                                 font-size: 1.5rem;
                                 font-weight: 700;
-                                color: #111827;
+                                color: #ffffff;
                                 margin: 1.5rem 0 0.75rem;
-                                border-bottom: 2px solid #e5e7eb;
+                                border-bottom: 2px solid rgba(255, 255, 255, 0.1);
                                 padding-bottom: 0.4rem;
                             }
 
                             .quill-content h3 {
                                 font-size: 1.25rem;
                                 font-weight: 600;
-                                color: #1e3a8a;
+                                color: #60a5fa;
                                 margin: 1.25rem 0 0.5rem;
                             }
 
@@ -338,7 +338,7 @@ $tagsString = is_array($blog->tags) ? implode(', ', $blog->tags) : $blog->tags;
                             .quill-content h6 {
                                 font-size: 1rem;
                                 font-weight: 600;
-                                color: #374151;
+                                color: rgba(255, 255, 255, 0.7);
                                 margin: 1rem 0 0.4rem;
                             }
 
@@ -354,7 +354,7 @@ $tagsString = is_array($blog->tags) ? implode(', ', $blog->tags) : $blog->tags;
                             /* Bold / Italic / Underline / Strike */
                             .quill-content strong {
                                 font-weight: 700;
-                                color: #111827;
+                                color: #ffffff;
                             }
 
                             .quill-content em {
@@ -371,13 +371,13 @@ $tagsString = is_array($blog->tags) ? implode(', ', $blog->tags) : $blog->tags;
 
                             /* Links */
                             .quill-content a {
-                                color: #1e3a8a;
+                                color: #60a5fa;
                                 text-decoration: underline;
                                 transition: color .2s;
                             }
 
                             .quill-content a:hover {
-                                color: #1e40af;
+                                color: #93c5fd;
                             }
 
                             /* Images - semua alignment dari Quill */
@@ -424,7 +424,7 @@ $tagsString = is_array($blog->tags) ? implode(', ', $blog->tags) : $blog->tags;
 
                             .quill-content li {
                                 margin-bottom: 0.35rem;
-                                color: #374151;
+                                color: rgba(255, 255, 255, 0.7);
                             }
 
                             /* Indented list items (Quill uses data-indent) */
@@ -442,9 +442,9 @@ $tagsString = is_array($blog->tags) ? implode(', ', $blog->tags) : $blog->tags;
 
                             /* Blockquote */
                             .quill-content blockquote {
-                                border-left: 4px solid #1e3a8a;
-                                background: #f0f4ff;
-                                color: #374151;
+                                border-left: 4px solid #3b82f6;
+                                background: rgba(255, 255, 255, 0.05);
+                                color: rgba(255, 255, 255, 0.7);
                                 padding: 1rem 1.25rem;
                                 border-radius: 0 8px 8px 0;
                                 margin: 1.25rem 0;
@@ -453,8 +453,8 @@ $tagsString = is_array($blog->tags) ? implode(', ', $blog->tags) : $blog->tags;
 
                             /* Code */
                             .quill-content code {
-                                background: #f3f4f6;
-                                color: #1e3a8a;
+                                background: rgba(255, 255, 255, 0.1);
+                                color: #60a5fa;
                                 padding: 0.15rem 0.45rem;
                                 border-radius: 4px;
                                 font-size: 0.875em;
@@ -489,22 +489,22 @@ $tagsString = is_array($blog->tags) ? implode(', ', $blog->tags) : $blog->tags;
                             }
 
                             .quill-content table th {
-                                background: #f0f4ff;
-                                color: #111827;
+                                background: rgba(255, 255, 255, 0.05);
+                                color: #ffffff;
                                 font-weight: 600;
                                 padding: 0.75rem 1rem;
-                                border: 1px solid #e5e7eb;
+                                border: 1px solid rgba(255, 255, 255, 0.1);
                                 text-align: left;
                             }
 
                             .quill-content table td {
                                 padding: 0.65rem 1rem;
-                                border: 1px solid #e5e7eb;
-                                color: #374151;
+                                border: 1px solid rgba(255, 255, 255, 0.1);
+                                color: rgba(255, 255, 255, 0.7);
                             }
 
                             .quill-content table tr:nth-child(even) td {
-                                background: #f9fafb;
+                                background: rgba(255, 255, 255, 0.02);
                             }
 
                             /* Subscript / Superscript */
@@ -522,7 +522,7 @@ $tagsString = is_array($blog->tags) ? implode(', ', $blog->tags) : $blog->tags;
 
                         <!-- Tags -->
                         @if ($blog->tags)
-                        <div class="mt-12 pt-8 border-t border-slate-100">
+                        <div class="mt-12 pt-8 border-t border-white/10">
                             <div class="flex flex-wrap gap-2">
                                 @php
                                 $tags = [];
@@ -541,11 +541,33 @@ $tagsString = is_array($blog->tags) ? implode(', ', $blog->tags) : $blog->tags;
                                 @endphp
 
                                 @foreach ($tags as $tag)
-                                <span class="px-4 py-1.5 bg-slate-50 border border-slate-100 text-slate-600 rounded-full text-sm font-medium hover:bg-[#0f172a] hover:text-white transition-colors cursor-pointer">
+                                <span class="px-4 py-1.5 bg-white/5 border border-white/10 text-white/70 rounded-full text-sm font-medium hover:bg-brand-accent hover:text-white transition-colors cursor-pointer">
                                     #{{ $tag }}
                                 </span>
                                 @endforeach
                             </div>
+                        </div>
+                        @endif
+
+                        <!-- CTA Banner -->
+                        @if($blog->businessCategory)
+                        <div class="mt-12 bg-gradient-to-br from-blue-900 to-slate-900 rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden text-center text-white border border-brand-accent/20">
+                            <div class="absolute -right-12 -top-12 w-40 h-40 bg-white/100/30 rounded-full blur-3xl pointer-events-none"></div>
+                            <div class="absolute -left-12 -bottom-12 w-40 h-40 bg-purple-500/30 rounded-full blur-3xl pointer-events-none"></div>
+
+                            <h3 class="text-lg font-bold mb-3 relative z-10">Tertarik Membuat {{ $blog->businessCategory->name }}?</h3>
+                            <p class="text-white/30 mb-6 max-w-lg mx-auto relative z-10 text-sm sm:text-base leading-relaxed">Konsultasikan kebutuhan digital Anda bersama tim profesional kami dan dapatkan penawaran spesial!</p>
+
+                            @php
+                            $waText = $blog->businessCategory->wa_template ?? "Halo, saya tertarik dengan layanan " . $blog->businessCategory->name;
+                            if ($blog->affiliate_id && $blog->affiliate) {
+                            $waText .= " (Ref: " . $blog->affiliate->affiliate_code . ")";
+                            }
+                            @endphp
+
+                            <a href="https://wa.me/6285221694067?text={{ urlencode($waText) }}" target="_blank" class="inline-flex items-center justify-center gap-2 px-6 py-3.5 sm:px-8 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-xl shadow-[0_0_20px_rgba(249,115,22,0.4)] transition-all transform hover:scale-105 active:scale-95 relative z-10 text-sm sm:text-base">
+                                <i class="fa-brands fa-whatsapp text-xl"></i> Konsultasi Gratis Sekarang
+                            </a>
                         </div>
                         @endif
                     </div>
@@ -556,9 +578,9 @@ $tagsString = is_array($blog->tags) ? implode(', ', $blog->tags) : $blog->tags;
             <aside class="lg:col-span-4">
                 <div class="sticky top-28 space-y-8">
                     <!-- Recent Articles -->
-                    <div class="bg-white rounded-3xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] p-6 sm:p-8">
-                        <h3 class="text-xl font-display font-bold text-slate-900 mb-6 flex items-center gap-3">
-                            <span class="w-1.5 h-6 bg-blue-600 rounded-full"></span>
+                    <div class="bg-brand-navy border border-white/10 rounded-3xl shadow-xl p-6 sm:p-8">
+                        <h3 class="text-lg font-display font-bold text-white mb-6 flex items-center gap-3">
+                            <span class="w-1.5 h-6 bg-brand-accent rounded-full"></span>
                             Artikel Terkini
                         </h3>
 
@@ -571,28 +593,28 @@ $tagsString = is_array($blog->tags) ? implode(', ', $blog->tags) : $blog->tags;
                                     <img src="{{ asset('storage/' . $item->featured_image) }}" alt="{{ $item->title }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                                 </div>
                                 @else
-                                <div class="w-24 h-20 flex-shrink-0 rounded-xl bg-slate-100 flex items-center justify-center">
-                                    <i class="fas fa-image text-slate-300"></i>
+                                <div class="w-24 h-20 flex-shrink-0 rounded-xl bg-white/5 flex items-center justify-center">
+                                    <i class="fas fa-image text-white/30"></i>
                                 </div>
                                 @endif
 
                                 <div class="flex-1 min-w-0 py-1">
-                                    <h4 class="font-display font-semibold text-[15px] text-slate-900 mb-1.5 line-clamp-2 group-hover:text-blue-600 transition-colors leading-snug">
+                                    <h4 class="font-display font-semibold text-[13px] text-white mb-1.5 line-clamp-2 group-hover:text-brand-accent transition-colors leading-snug">
                                         {{ $item->title }}
                                     </h4>
-                                    <p class="text-[11px] font-semibold tracking-widest uppercase text-slate-400">
+                                    <p class="text-[11px] font-semibold tracking-widest uppercase text-white/50">
                                         {{ $item->published_at?->format('d M Y') }}
                                     </p>
                                 </div>
                             </a>
                             @endforeach
                             @else
-                            <p class="text-sm text-slate-500 italic">Belum ada artikel terkait.</p>
+                            <p class="text-sm text-white/60 italic">Belum ada artikel terkait.</p>
                             @endif
                         </div>
 
                         @if ($related->count())
-                        <a href="{{ route('landing.blogs') }}" class="mt-8 block w-full text-center px-4 py-3 bg-slate-900 text-white rounded-xl hover:bg-blue-600 transition-colors font-semibold text-sm">
+                        <a href="{{ route('landing.blogs') }}" class="mt-8 block w-full text-center px-4 py-3 bg-white/10 text-white rounded-xl hover:bg-brand-accent transition-colors font-semibold text-sm">
                             Lihat Semua Artikel
                         </a>
                         @endif
@@ -605,40 +627,40 @@ $tagsString = is_array($blog->tags) ? implode(', ', $blog->tags) : $blog->tags;
         @if ($related->count() > 5)
         <div class="mt-20">
             <div class="flex items-center justify-between mb-8">
-                <h2 class="text-2xl md:text-3xl font-display font-bold text-slate-900">
-                    Baca Juga dari <span class="text-blue-600">{{ $blog->category->name ?? 'Kategori Ini' }}</span>
+                <h2 class="text-xl md:text-2xl font-display font-bold text-white">
+                    Baca Juga dari <span class="text-brand-accent">{{ $blog->category->name ?? 'Kategori Ini' }}</span>
                 </h2>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 @foreach ($related->skip(5)->take(3) as $item)
-                <div class="bg-white border border-slate-100 text-slate-800 rounded-2xl overflow-hidden shadow-[0_2px_15px_rgb(0,0,0,0.02)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:-translate-y-1 transition-all duration-300 flex flex-col group">
-                    <div class="aspect-video bg-slate-50 relative overflow-hidden">
+                <div class="bg-white border border-white/10 text-white/80 rounded-2xl overflow-hidden shadow-[0_2px_15px_rgb(0,0,0,0.02)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:-translate-y-1 transition-all duration-300 flex flex-col group">
+                    <div class="aspect-video bg-white/5 relative overflow-hidden">
                         @if ($item->featured_image)
                         <img src="{{ asset('storage/' . $item->featured_image) }}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out">
                         @else
                         <div class="absolute inset-0 flex items-center justify-center">
-                            <i class="fas fa-image text-3xl text-slate-200"></i>
+                            <i class="fas fa-image text-3xl text-white/20"></i>
                         </div>
                         @endif
                     </div>
 
                     <div class="p-4 flex flex-col flex-1">
-                        <div class="flex items-center gap-2 mb-2 text-[9px] font-semibold tracking-widest text-slate-400 uppercase">
-                            <span class="text-blue-500 bg-blue-50 px-2 py-0.5 rounded-md">
+                        <div class="flex items-center gap-2 mb-2 text-[9px] font-semibold tracking-widest text-white/50 uppercase">
+                            <span class="text-brand-accent bg-white/10 px-2 py-0.5 rounded-md">
                                 {{ $item->category->name ?? 'Blog' }}
                             </span>
                         </div>
 
-                        <h3 class="font-display text-sm font-semibold mb-1.5 text-slate-900 leading-snug group-hover:text-blue-600 transition-colors line-clamp-2">
+                        <h3 class="font-display text-[13px] font-semibold mb-1.5 text-white leading-snug group-hover:text-brand-accent transition-colors line-clamp-2">
                             {{ $item->title }}
                         </h3>
 
-                        <p class="text-slate-500 text-xs mb-4 flex-1 line-clamp-2 leading-relaxed">
+                        <p class="text-white/60 text-[11px] mb-4 flex-1 line-clamp-2 leading-relaxed">
                             {{ $item->excerpt }}
                         </p>
 
-                        <a href="{{ route('blogs.read', $item->slug) }}" class="text-slate-900 text-xs font-semibold inline-flex items-center gap-1.5 hover:text-blue-600 transition-colors mt-auto group/btn">
+                        <a href="{{ route('blogs.read', $item->slug) }}" class="text-white text-xs font-semibold inline-flex items-center gap-1.5 hover:text-brand-accent transition-colors mt-auto group/btn">
                             Baca Selengkapnya <i class="fas fa-arrow-right text-[8px] group-hover/btn:translate-x-1 transition-transform"></i>
                         </a>
                     </div>

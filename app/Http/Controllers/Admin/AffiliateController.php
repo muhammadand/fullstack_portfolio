@@ -79,14 +79,25 @@ class AffiliateController extends Controller
             'status' => 'Paid' // Mark as Paid because it goes straight to balance
         ]);
 
+        // Tambah saldo komisi
         $affiliate->increment('balance', $request->amount);
+
+        // Tambah bonus poin (100 Poin) setiap kali deal project (komisi turun)
+        $affiliate->increment('points', 100);
+
+        // Catat di riwayat poin
+        \App\Models\AffiliatePointHistory::create([
+            'affiliate_id' => $affiliate->id,
+            'points_earned' => 100,
+            'description' => 'Bonus Closing Project: ' . $request->description,
+        ]);
 
         $affiliate->notify(new \App\Notifications\AffiliateNotification(
             'Komisi Baru!', 
-            'Anda mendapatkan komisi sebesar Rp ' . number_format($request->amount, 0, ',', '.') . ' (' . $request->description . ').', 
+            'Anda mendapatkan komisi sebesar Rp ' . number_format($request->amount, 0, ',', '.') . ' dan Bonus +100 Poin!', 
             'success'
         ));
 
-        return back()->with('success', 'Komisi berhasil ditambahkan ke partner ' . $affiliate->name);
+        return back()->with('success', 'Komisi dan Bonus Poin berhasil ditambahkan ke partner ' . $affiliate->name);
     }
 }

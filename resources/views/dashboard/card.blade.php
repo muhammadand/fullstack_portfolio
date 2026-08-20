@@ -1,5 +1,5 @@
 {{-- ===== STATS CARDS ===== --}}
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 mb-6">
 
     {{-- Total Views (Combined) --}}
     <div class="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group">
@@ -54,6 +54,23 @@
                 <div class="h-1.5 rounded-full bg-indigo-500 transition-all duration-500" style="width: {{ $portPct }}%"></div>
             </div>
             <p class="text-[11px] text-slate-400 mt-1.5">{{ $portPct }}% dari total views</p>
+        </div>
+    </div>
+
+    {{-- Affiliate Traffic --}}
+    <div class="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+        <div class="flex items-center justify-between mb-4">
+            <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background: linear-gradient(135deg, #FEF2F2, #FEE2E2);">
+                <i class="fa-solid fa-users-viewfinder text-red-600" style="font-size:13px;"></i>
+            </div>
+            <span class="text-[10px] text-slate-400">Partner Traffic</span>
+        </div>
+        <p class="text-2xl font-bold text-slate-900 mb-0.5 tracking-tight">{{ number_format($totalAffiliateClicks ?? 0) }}</p>
+        <p class="text-xs text-slate-400 font-medium">Total Klik Link Affiliate</p>
+        <div class="mt-3 pt-3 border-t border-slate-50 flex items-center justify-between text-[11px] text-slate-400">
+            <a href="{{ route('admin.affiliates.index') }}" class="text-red-500 hover:text-red-600 font-semibold inline-flex items-center gap-1">
+                Kelola Partner <i class="fa-solid fa-arrow-right text-[9px]"></i>
+            </a>
         </div>
     </div>
 

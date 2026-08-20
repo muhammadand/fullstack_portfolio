@@ -57,6 +57,18 @@ class Blog extends Model
         return $this->belongsTo(User::class, 'author_id');
     }
 
+    // Relasi ke affiliate
+    public function affiliate()
+    {
+        return $this->belongsTo(Affiliate::class, 'affiliate_id');
+    }
+
+    // Relasi ke business category
+    public function businessCategory()
+    {
+        return $this->belongsTo(BusinessCategory::class, 'business_category_id');
+    }
+
     /*
     |--------------------------------------------------------------------------
     | SCOPES
@@ -82,7 +94,7 @@ class Blog extends Model
     |--------------------------------------------------------------------------
     */
 
-    // Slug otomatis berdasarkan judul
+    // Slug otomatis berdasarkan judul dan event reward poin
     protected static function boot()
     {
         parent::boot();
@@ -90,6 +102,35 @@ class Blog extends Model
         static::creating(function ($blog) {
             if (empty($blog->slug)) {
                 $blog->slug = Str::slug($blog->title);
+            }
+        });
+
+        static::updated(function ($blog) {
+            // Jika status berubah jadi published, ditulis oleh affiliate, dan belum di-reward
+            if ($blog->isDirty('is_published') && $blog->is_published && $blog->affiliate_id && !$blog->is_rewarded) {
+                
+                $affiliate = $blog->affiliate;
+                
+                // Beri 10 Poin
+                $affiliate->increment('points', 10);
+                
+                // Catat di Point History
+                \App\Models\AffiliatePointHistory::create([
+                    'affiliate_id' => $affiliate->id,
+                    'points_earned' => 10,
+                    'description' => 'Bonus Submit Artikel (Approved): ' . $blog->title
+                ]);
+                
+                // Kirim notifikasi
+                $affiliate->notify(new \App\Notifications\AffiliateNotification(
+                    'Artikel Diterima!', 
+                    'Artikel kamu "' . Str::limit($blog->title, 20) . '" telah diterbitkan. Kamu mendapat Bonus +10 Poin!', 
+                    'success'
+                ));
+
+                // Tandai bahwa blog ini sudah diberi reward poin
+                $blog->is_rewarded = true;
+                $blog->saveQuietly(); // saveQuietly agar tidak men-trigger event 'updated' lagi
             }
         });
     }

@@ -27,4 +27,9 @@ class Affiliate extends Authenticatable
     {
         return $this->hasMany(AffiliatePointHistory::class);
     }
+
+    public function blogs()
+    {
+        return $this->hasMany(Blog::class, 'affiliate_id');
+    }
 }

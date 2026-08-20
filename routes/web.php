@@ -255,6 +255,11 @@ Route::get('/generate-sitemap', function () {
         Route::put('/partner/student-leads/{id}', [App\Http\Controllers\Affiliate\StudentLeadController::class, 'update'])->name('affiliate.student_leads.update');
         Route::post('/partner/student-leads/{id}/claim', [App\Http\Controllers\Affiliate\StudentLeadController::class, 'claim'])->name('affiliate.student_leads.claim');
 
+        // Affiliate Blogs
+        Route::get('/partner/blogs', [App\Http\Controllers\Affiliate\BlogController::class, 'index'])->name('affiliate.blogs.index');
+        Route::get('/partner/blogs/create', [App\Http\Controllers\Affiliate\BlogController::class, 'create'])->name('affiliate.blogs.create');
+        Route::post('/partner/blogs', [App\Http\Controllers\Affiliate\BlogController::class, 'store'])->name('affiliate.blogs.store');
+
         // Profile
         Route::get('/partner/profile', [App\Http\Controllers\AffiliateController::class, 'profile'])->name('affiliate.profile');
         Route::post('/partner/profile', [App\Http\Controllers\AffiliateController::class, 'updateProfile'])->name('affiliate.profile.update');
@@ -342,6 +347,10 @@ Route::get('/secret-deploy-trigger-12345', function () {
         ]);
         \Illuminate\Support\Facades\Artisan::call('migrate', [
             '--path' => 'database/migrations/2026_08_17_041052_add_client_proposal_id_to_student_leads_table.php',
+            '--force' => true
+        ]);
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_08_20_041543_add_affiliate_and_business_category_to_blogs_table.php',
             '--force' => true
         ]);
         

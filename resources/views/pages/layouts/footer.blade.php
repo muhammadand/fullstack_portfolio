@@ -14,7 +14,7 @@
                         <li><a href="#" class="hover:text-white transition">Website Development</a></li>
                         <li><a href="#" class="hover:text-white transition">Copywriting</a></li>
                         <li><a href="#" class="hover:text-white transition">Konsultasi</a></li>
-                        <li><a href="{{ route('landing.permata_qiana_wedding') }}" class="hover:text-white transition">Permata Qiana Wedding</a></li>
+                        <li><a href="{{ route('landing.dynamic', 'permata-qiana-wedding') }}" class="hover:text-white transition">Permata Qiana Wedding</a></li>
                     </ul>
                 </div>
 

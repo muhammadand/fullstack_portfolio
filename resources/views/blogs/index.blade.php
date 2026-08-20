@@ -57,7 +57,15 @@
                     <td class="py-2 px-3">{{ $blogs->firstItem() + $i }}</td>
                     <td class="py-2 px-3 font-medium text-gray-800 max-w-[240px] truncate">{{ $blog->title }}</td>
                     <td class="py-2 px-3 text-gray-600">{{ $blog->category->name ?? '-' }}</td>
-                    <td class="py-2 px-3 text-gray-600">{{ $blog->author->name ?? '-' }}</td>
+                    <td class="py-2 px-3 text-gray-600">
+                        @if($blog->affiliate_id)
+                        <span class="text-orange-600 font-semibold flex items-center gap-1.5" title="Partner Affiliate">
+                            <i class="fa-solid fa-handshake text-[10px]"></i> {{ $blog->affiliate->name }}
+                        </span>
+                        @else
+                        {{ $blog->author->name ?? '-' }}
+                        @endif
+                    </td>
                     <td class="py-2 px-3">
                         @if ($blog->published_at)
                         <span class="text-gray-600">{{ $blog->published_at->format('d M Y') }}</span>
@@ -68,6 +76,8 @@
                     <td class="py-2 px-3">
                         @if ($blog->is_published)
                         <span class="px-2 py-0.5 bg-green-50 text-green-600 border border-green-200 rounded-md text-[11px] font-medium">Published</span>
+                        @elseif($blog->affiliate_id)
+                        <span class="px-2 py-0.5 bg-orange-50 text-orange-600 border border-orange-200 rounded-md text-[11px] font-medium animate-pulse">Menunggu Review</span>
                         @else
                         <span class="px-2 py-0.5 bg-yellow-50 text-yellow-600 border border-yellow-200 rounded-md text-[11px] font-medium">Draft</span>
                         @endif

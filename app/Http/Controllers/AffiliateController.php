@@ -86,7 +86,7 @@ class AffiliateController extends Controller
         $affiliate = Auth::guard('affiliate')->user(); 
         
         $totalClicks = AffiliateClick::where('affiliate_id', $affiliate->id)->count();
-        $totalProjects = \App\Models\Project::where('affiliate_id', $affiliate->id)->count();
+        $totalProjects = \App\Models\Commission::where('affiliate_id', $affiliate->id)->count();
         
         $withdrawals = \App\Models\Withdrawal::where('affiliate_id', $affiliate->id)->latest()->take(5)->get();
         $hasTemplates = \App\Models\ChatTemplate::where('affiliate_id', $affiliate->id)->exists();
