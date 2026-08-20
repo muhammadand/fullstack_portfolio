@@ -104,7 +104,7 @@
                         <div class="flex items-center justify-between mt-auto">
                             <span class="text-[10px] text-slate-500">{{ $blog->created_at->format('d M Y') }}</span>
                             @if($blog->is_published && $blog->slug)
-                            <a href="{{ url('/blog/' . $blog->slug) }}?ref={{ $affiliate->affiliate_code }}" target="_blank" class="text-[10px] text-blue-400 font-medium flex items-center gap-1">
+                            <a href="{{ route('blogs.read', $blog->slug) }}?ref={{ $affiliate->affiliate_code }}" target="_blank" class="text-[10px] text-blue-400 font-medium flex items-center gap-1">
                                 Lihat Web <i class="fa-solid fa-arrow-up-right-from-square"></i>
                             </a>
                             @endif
