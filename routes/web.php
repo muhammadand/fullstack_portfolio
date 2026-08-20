@@ -294,64 +294,8 @@ Route::get('/client/parfum/{slug}/admin-demo', [ClientProposalController::class,
 // Endpoint rahasia untuk trigger deploy (migrasi & cache) dari GitHub Actions (Tanpa SSH)
 Route::get('/secret-deploy-trigger-12345', function () {
     try {
+        // Jalankan semua migrasi yang belum ter-migrate
         \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_08_10_032737_create_client_proposals_table.php',
-            '--force' => true
-        ]);
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_08_10_044737_create_business_categories_table.php',
-            '--force' => true
-        ]);
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_08_10_044909_add_business_category_id_to_client_proposals_table.php',
-            '--force' => true
-        ]);
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_08_11_081437_create_chat_templates_table.php',
-            '--force' => true
-        ]);
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_08_13_123448_add_points_and_streak_to_affiliates_table.php',
-            '--force' => true
-        ]);
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_08_13_123550_create_affiliate_point_histories_table.php',
-            '--force' => true
-        ]);
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_08_13_154647_add_business_category_id_to_chat_templates_table.php',
-            '--force' => true
-        ]);
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_08_14_121333_add_avatar_to_affiliates_table.php',
-            '--force' => true
-        ]);
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_08_14_122211_add_affiliate_id_to_chat_templates_table.php',
-            '--force' => true
-        ]);
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_08_15_060717_create_push_subscriptions_table.php',
-            '--force' => true
-        ]);
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_08_16_103711_add_affiliate_id_and_status_to_client_proposals_table.php',
-            '--force' => true
-        ]);
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_08_17_015317_create_student_services_table.php',
-            '--force' => true
-        ]);
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_08_17_041006_create_student_leads_table.php',
-            '--force' => true
-        ]);
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_08_17_041052_add_client_proposal_id_to_student_leads_table.php',
-            '--force' => true
-        ]);
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_08_20_041543_add_affiliate_and_business_category_to_blogs_table.php',
             '--force' => true
         ]);
         
