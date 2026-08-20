@@ -62,11 +62,7 @@ class BlogController extends Controller
             $imagePath = $request->file('featured_image')->store('blogs', 'public');
         } else {
             // Default ke logo Scalify jika tidak ada gambar
-            $imagePath = 'scalify-blog-default.jpg';
-            // Pastikan file scalify-blog-default.jpg ada di storage agar bisa diakses via asset('storage/...')
-            if (!\Illuminate\Support\Facades\Storage::disk('public')->exists('scalify-blog-default.jpg')) {
-                \Illuminate\Support\Facades\Storage::disk('public')->put('scalify-blog-default.jpg', file_get_contents(public_path('scalify-blog-default.jpg')));
-            }
+            $imagePath = 'scalify-blog-default.webp';
         }
         
         // Find default blog category (fallback)
