@@ -673,6 +673,15 @@ $tagsString = is_array($blog->tags) ? implode(', ', $blog->tags) : $blog->tags;
 </div>
 
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Track affiliate CTA clicks from this blog
+        document.querySelectorAll('a[href*="sobat-scalify?ref="]').forEach(function(link) {
+            link.addEventListener('click', function(e) {
+                navigator.sendBeacon("{{ url('/api/blogs/' . $blog->id . '/track-click') }}");
+            });
+        });
+    });
+
     function sharePost(btn) {
         const title = btn.getAttribute('data-title');
         const text = btn.getAttribute('data-text');

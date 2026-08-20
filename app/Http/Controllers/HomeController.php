@@ -172,4 +172,13 @@ class HomeController extends Controller
     public function partnerProgram(){
         return view('company.partner_program');
     }
+
+    /**
+     * API for tracking affiliate links clicked from inside a blog
+     */
+    public function trackBlogClick(\App\Models\Blog $blog)
+    {
+        $blog->increment('link_clicks');
+        return response()->json(['status' => 'success']);
+    }
 }

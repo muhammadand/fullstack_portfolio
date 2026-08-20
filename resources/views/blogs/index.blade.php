@@ -83,6 +83,15 @@
                         @endif
                     </td>
                     <td class="py-2 px-3 text-center flex gap-1.5 justify-center">
+                        @if (!$blog->is_published)
+                        <form action="{{ route('blogs.publish', $blog->id) }}" method="POST" onsubmit="return confirm('Publish artikel ini sekarang?')">
+                            @csrf
+                            @method('PATCH')
+                            <button type="submit" class="px-2.5 py-1 bg-green-50 text-green-600 hover:bg-green-100 border border-green-200 rounded-md text-[11px] font-medium transition" title="Langsung Publish">
+                                Publish
+                            </button>
+                        </form>
+                        @endif
                         <a href="{{ route('blogs.show', $blog->id) }}" class="px-2.5 py-1 bg-blue-50 text-blue-600 hover:bg-blue-100 border border-blue-200 rounded-md text-[11px] font-medium transition">
                             Lihat
                         </a>

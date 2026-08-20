@@ -68,19 +68,24 @@
                             {{ $item->is_active ? 'Aktif' : 'Nonaktif' }}
                         </span>
                     </td>
-                    <td class="py-2 px-3 text-center flex gap-1.5 justify-center">
-                        <a href="{{ route('users.edit', $item->id) }}" class="px-2.5 py-1 bg-yellow-50 text-yellow-600 hover:bg-yellow-100 border border-yellow-200 rounded-md text-[11px] font-medium transition">
-                            Edit
-                        </a>
-                        @if(auth()->id() !== $item->id)
-                        <form action="{{ route('users.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Yakin hapus data ini?')" class="inline-block">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="px-2.5 py-1 bg-red-50 text-red-600 hover:bg-red-100 border border-red-200 rounded-md text-[11px] font-medium transition">
-                                Hapus
+                    <td class="py-2 px-3 text-center">
+                        <div class="flex items-center justify-center gap-2">
+                            <button onclick="navigator.clipboard.writeText('{{ URL::signedRoute('users.magic_login', $item->id) }}'); alert('Magic Link berhasil disalin! Simpan link ini untuk login otomatis tanpa password.')" class="w-8 h-8 flex items-center justify-center bg-purple-50 text-purple-600 hover:bg-purple-100 hover:text-purple-700 border border-purple-200 rounded-lg transition-colors shadow-sm" title="Copy Magic Link">
+                                <i class="fa-solid fa-link"></i>
                             </button>
-                        </form>
-                        @endif
+                            <a href="{{ route('users.edit', $item->id) }}" class="w-8 h-8 flex items-center justify-center bg-blue-50 text-blue-600 hover:bg-blue-100 hover:text-blue-700 border border-blue-200 rounded-lg transition-colors shadow-sm" title="Edit User">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </a>
+                            @if(auth()->id() !== $item->id)
+                            <form action="{{ route('users.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Yakin hapus data ini?')" class="m-0 p-0">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="w-8 h-8 flex items-center justify-center bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 border border-red-200 rounded-lg transition-colors shadow-sm" title="Hapus User">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            </form>
+                            @endif
+                        </div>
                     </td>
                 </tr>
                 @empty

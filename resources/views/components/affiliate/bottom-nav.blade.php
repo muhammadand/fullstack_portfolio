@@ -4,6 +4,10 @@
             <i class="fa-solid fa-house text-xl"></i>
             <span class="text-[10px] font-medium">Beranda</span>
         </a>
+        <a href="{{ route('affiliate.blogs.performance') }}" wire:navigate class="flex flex-col items-center gap-1 {{ request()->routeIs('affiliate.blogs.performance') ? 'text-blue-400' : 'text-slate-400 hover:text-blue-300' }} transition-colors">
+            <i class="fa-solid fa-chart-line text-xl"></i>
+            <span class="text-[10px] font-medium">Performa</span>
+        </a>
         <a href="{{ route('affiliate.history') }}" wire:navigate class="flex flex-col items-center gap-1 {{ request()->routeIs('affiliate.history') ? 'text-blue-400' : 'text-slate-400 hover:text-blue-300' }} transition-colors">
             <i class="fa-solid fa-clock-rotate-left text-xl"></i>
             <span class="text-[10px] font-medium">Riwayat</span>

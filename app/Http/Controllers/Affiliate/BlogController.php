@@ -18,10 +18,24 @@ class BlogController extends Controller
         $affiliate = Auth::guard('affiliate')->user();
         
         $blogs = Blog::where('affiliate_id', $affiliate->id)
+            ->with('businessCategory')
             ->latest()
             ->paginate(10);
             
         return view('affiliate.blogs.index', compact('affiliate', 'blogs'));
+    }
+
+    public function performance()
+    {
+        $affiliate = Auth::guard('affiliate')->user();
+        
+        $blogs = Blog::where('affiliate_id', $affiliate->id)
+            ->where('is_published', true)
+            ->with('businessCategory')
+            ->latest('published_at')
+            ->get();
+            
+        return view('affiliate.blogs.performance', compact('affiliate', 'blogs'));
     }
 
     public function create()
@@ -129,7 +143,12 @@ Instruksi Format:
             $generatedTitle = trim($data['title']);
 
             // Buat CTA (Call to Action) link
-            $promoUrl = url('/sobat-scalify?ref=' . $affiliate->affiliate_code);
+            $proposal = \App\Models\ClientProposal::where('business_category_id', $category->id)->inRandomOrder()->first();
+            if ($proposal) {
+                $promoUrl = route('landing.dynamic', $proposal->slug) . '?ref=' . $affiliate->affiliate_code;
+            } else {
+                $promoUrl = url('/sobat-scalify?ref=' . $affiliate->affiliate_code);
+            }
             $ctaHtml = "
             <br>
             <div style='background-color: #fff7ed; padding: 15px; border-radius: 8px; border-left: 4px solid #f97316; margin-top: 20px;'>

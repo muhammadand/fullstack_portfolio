@@ -30,6 +30,7 @@ class Blog extends Model
         'is_featured',
         'is_published',
         'published_at',
+        'link_clicks',
     ];
 
     protected $casts = [

@@ -141,8 +141,13 @@ $activeRoute = \Illuminate\Support\Facades\Route::currentRouteName();
                 <span class="hidden lg:block absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 rounded-full" style="background: #3B82F6; box-shadow: 0 0 8px rgba(59,130,246,0.8);"></span>
                 @endif
                 <i class="{{ $menu['icon'] }} text-lg lg:text-sm w-4 text-center transition-colors duration-200 {{ $isActive ? 'text-blue-400' : 'text-white/40 group-hover:text-white/70' }}"></i>
-                <span class="text-[10px] lg:text-sm font-medium transition-colors duration-200 text-center lg:text-left leading-tight {{ $isActive ? 'text-white' : 'text-white/55 group-hover:text-white/90' }}">
+                <span class="text-[10px] lg:text-sm font-medium transition-colors duration-200 text-center lg:text-left leading-tight {{ $isActive ? 'text-white' : 'text-white/55 group-hover:text-white/90' }} flex items-center justify-center lg:justify-start">
                     {{ $menu['label'] }}
+                    @if($menu['route'] === 'blogs.index' && \App\Models\Blog::where('is_published', false)->whereNotNull('affiliate_id')->count() > 0)
+                    <span class="ml-1.5 inline-flex items-center justify-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-red-500/20 text-red-400 border border-red-500/30">
+                        {{ \App\Models\Blog::where('is_published', false)->whereNotNull('affiliate_id')->count() }}
+                    </span>
+                    @endif
                 </span>
             </a>
             @endif

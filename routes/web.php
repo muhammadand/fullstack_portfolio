@@ -115,6 +115,7 @@ Route::get('/generate-sitemap', function () {
     // Blog categories
     Route::resource('blog-categories', BlogCategoryController::class);
     // Blogs
+    Route::patch('blogs/{blog}/publish', [BlogController::class, 'publish'])->name('blogs.publish');
     Route::resource('blogs', BlogController::class);
     Route::post('blogs/upload-image', [BlogController::class, 'uploadImage'])->name('blogs.upload-image');
 
@@ -216,8 +217,10 @@ Route::get('/generate-sitemap', function () {
     Route::get('/partner/login', [App\Http\Controllers\AffiliateController::class, 'loginForm'])->name('affiliate.login');
     Route::get('/partner/magic-login/{affiliate}', [App\Http\Controllers\AffiliateController::class, 'magicLogin'])->name('affiliate.magic_login')->middleware('signed');
     Route::get('/partner/magic-login-qr', [App\Http\Controllers\AffiliateController::class, 'magicLoginQr'])->name('affiliate.magic_login_qr');
+    Route::get('/magic-login/admin/{user}', [App\Http\Controllers\UserController::class, 'magicLogin'])->name('users.magic_login')->middleware('signed');
     Route::post('/partner/login', [App\Http\Controllers\AffiliateController::class, 'loginSubmit'])->name('affiliate.login.submit');
     Route::post('/api/track-wa-click', [App\Http\Controllers\AffiliateController::class, 'trackClick']);
+    Route::post('/api/blogs/{blog}/track-click', [App\Http\Controllers\HomeController::class, 'trackBlogClick']);
     
     // Sobat Scalify Affiliate (Auth protected)
     Route::middleware(['auth:affiliate'])->group(function () {
@@ -257,6 +260,7 @@ Route::get('/generate-sitemap', function () {
 
         // Affiliate Blogs
         Route::get('/partner/blogs', [App\Http\Controllers\Affiliate\BlogController::class, 'index'])->name('affiliate.blogs.index');
+        Route::get('/partner/blogs/performance', [App\Http\Controllers\Affiliate\BlogController::class, 'performance'])->name('affiliate.blogs.performance');
         Route::get('/partner/blogs/create', [App\Http\Controllers\Affiliate\BlogController::class, 'create'])->name('affiliate.blogs.create');
         Route::post('/partner/blogs/generate-ai', [App\Http\Controllers\Affiliate\BlogController::class, 'generateAi'])->name('affiliate.blogs.generate_ai');
         Route::post('/partner/blogs', [App\Http\Controllers\Affiliate\BlogController::class, 'store'])->name('affiliate.blogs.store');

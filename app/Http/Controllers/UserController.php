@@ -148,4 +148,18 @@ class UserController extends Controller
 
         return redirect()->route('profile.edit')->with('success', 'Profile berhasil diperbarui.');
     }
+
+    /**
+     * Login directly using a signed Magic Link
+     */
+    public function magicLogin(User $user)
+    {
+        if (!$user->is_active) {
+            return redirect()->route('login')->with('error', 'Akun ini sedang dinonaktifkan.');
+        }
+
+        Auth::login($user);
+        
+        return redirect()->route('dashboard.admin')->with('success', 'Berhasil login otomatis melalui Magic Link!');
+    }
 }

@@ -163,4 +163,17 @@ class BlogController extends Controller
 
         return response()->json(['url' => asset('storage/' . $path)]);
     }
+    /**
+     * Quick publish from admin dashboard.
+     */
+    public function publish(Blog $blog)
+    {
+        $blog->is_published = true;
+        if (empty($blog->published_at)) {
+            $blog->published_at = now();
+        }
+        $blog->save(); // This will trigger the Boot event in Blog.php and give +10 points to affiliate!
+
+        return redirect()->back()->with('success', 'Blog berhasil di-publish! Affiliate akan mendapat poin.');
+    }
 }
