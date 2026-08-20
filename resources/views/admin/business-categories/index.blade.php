@@ -30,6 +30,7 @@
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="bg-slate-50 border-b border-slate-200">
+                        <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">ID</th>
                         <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Nama Kategori</th>
                         <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Slug Tema</th>
                         <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Harga Default</th>
@@ -39,6 +40,9 @@
                 <tbody class="divide-y divide-slate-200">
                     @forelse($categories as $cat)
                     <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-6 py-4 text-sm font-medium text-slate-500">
+                            #{{ $cat->id }}
+                        </td>
                         <td class="px-6 py-4">
                             <div class="font-bold text-slate-800">{{ $cat->name }}</div>
                         </td>
@@ -63,7 +67,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="4" class="px-6 py-8 text-center text-slate-500">
+                        <td colspan="5" class="px-6 py-8 text-center text-slate-500">
                             Belum ada data kategori bisnis yang ditambahkan.
                         </td>
                     </tr>
