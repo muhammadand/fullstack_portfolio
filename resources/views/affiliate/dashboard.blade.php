@@ -277,7 +277,7 @@
                     <i class="fa-solid fa-money-bill-transfer"></i> Tarik Komisi (Min. 50rb)
                     </button>
                     @else
-                    <button onclick="openWithdrawModal()" class="relative z-10 w-full py-2 bg-yellow-400 hover:bg-yellow-500 text-yellow-900 text-sm font-bold rounded-lg transition-all shadow-sm flex items-center justify-center gap-2 transform hover:-translate-y-0.5">
+                    <button onclick="openDesktopWithdrawModal()" class="relative z-10 w-full py-2 bg-yellow-400 hover:bg-yellow-500 text-yellow-900 text-sm font-bold rounded-lg transition-all shadow-sm flex items-center justify-center gap-2 transform hover:-translate-y-0.5">
                         <i class="fa-solid fa-money-bill-transfer"></i> Tarik Komisi
                     </button>
                     @endif
@@ -296,11 +296,11 @@
 </div>
 
 <!-- Withdraw Modal -->
-<div id="withdrawModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300">
-    <div class="bg-white w-full max-w-md p-6 rounded-3xl shadow-2xl transform scale-95 transition-transform duration-300" id="withdrawModalContent">
+<div id="desktopWithdrawModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300">
+    <div class="bg-white w-full max-w-md p-6 rounded-3xl shadow-2xl transform scale-95 transition-transform duration-300" id="desktopWithdrawModalContent">
         <div class="flex justify-between items-center mb-6">
             <h3 class="text-xl font-bold text-slate-800">Tarik Komisi</h3>
-            <button type="button" onclick="closeWithdrawModal()" class="text-slate-400 hover:text-slate-600 bg-slate-100 hover:bg-slate-200 w-8 h-8 rounded-full flex items-center justify-center transition-colors">
+            <button type="button" onclick="closeDesktopWithdrawModal()" class="text-slate-400 hover:text-slate-600 bg-slate-100 hover:bg-slate-200 w-8 h-8 rounded-full flex items-center justify-center transition-colors">
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
@@ -311,7 +311,7 @@
             </div>
             <h4 class="text-lg font-bold text-slate-800 mb-2">Saldo Belum Cukup</h4>
             <p class="text-sm text-slate-600 mb-6">Maaf, saldo komisi Anda saat ini <b>Rp {{ number_format($affiliate->balance, 0, ',', '.') }}</b>. Minimal penarikan adalah Rp 50.000.</p>
-            <button type="button" onclick="closeWithdrawModal()" class="w-full py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition-all">
+            <button type="button" onclick="closeDesktopWithdrawModal()" class="w-full py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition-all">
                 Tutup
             </button>
     </div>
@@ -357,18 +357,18 @@
         }, 3000);
     }
 
-    function openWithdrawModal() {
-        const modal = document.getElementById('withdrawModal');
-        const content = document.getElementById('withdrawModalContent');
+    function openDesktopWithdrawModal() {
+        const modal = document.getElementById('desktopWithdrawModal');
+        const content = document.getElementById('desktopWithdrawModalContent');
 
         modal.classList.remove('opacity-0', 'pointer-events-none');
         content.classList.remove('scale-95');
         content.classList.add('scale-100');
     }
 
-    function closeWithdrawModal() {
-        const modal = document.getElementById('withdrawModal');
-        const content = document.getElementById('withdrawModalContent');
+    function closeDesktopWithdrawModal() {
+        const modal = document.getElementById('desktopWithdrawModal');
+        const content = document.getElementById('desktopWithdrawModalContent');
 
         content.classList.remove('scale-100');
         content.classList.add('scale-95');

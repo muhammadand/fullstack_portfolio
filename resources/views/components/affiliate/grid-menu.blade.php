@@ -75,6 +75,14 @@
                 </div>
                 <span class="text-[10px] text-slate-300 font-medium text-center leading-tight group-hover:text-white transition-colors">Tulis<br>Artikel</span>
             </a>
+
+            <!-- 5. Scalify Store (Tukar Poin) -->
+            <a href="{{ route('affiliate.store') }}" class="flex flex-col items-center gap-2 group">
+                <div class="w-12 h-12 rounded-2xl glass-panel flex items-center justify-center text-pink-400 text-lg shadow-inner transition-all active:scale-95 group-hover:bg-pink-500/10 group-hover:border-pink-500/30">
+                    <i class="fa-solid fa-store"></i>
+                </div>
+                <span class="text-[10px] text-slate-300 font-medium text-center leading-tight group-hover:text-white transition-colors">Tukar<br>Poin</span>
+            </a>
         </div>
     </div>
 
