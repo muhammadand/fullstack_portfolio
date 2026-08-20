@@ -143,17 +143,20 @@ Instruksi Format:
             $generatedTitle = trim($data['title']);
 
             // Buat CTA (Call to Action) link
-            $proposal = \App\Models\ClientProposal::where('business_category_id', $category->id)->inRandomOrder()->first();
-            if ($proposal) {
-                $promoUrl = route('landing.dynamic', $proposal->slug) . '?ref=' . $affiliate->affiliate_code;
-            } else {
-                $promoUrl = url('/sobat-scalify?ref=' . $affiliate->affiliate_code);
-            }
+            $konsultasiUrl = url('/sobat-scalify?ref=' . $affiliate->affiliate_code);
+            
+            // Ambil proposal sesuai kategori, jika tidak ada ambil random proposal apapun agar tidak error
+            $proposal = \App\Models\ClientProposal::where('business_category_id', $category->id)->inRandomOrder()->first() 
+                ?? \App\Models\ClientProposal::inRandomOrder()->first();
+                
+            $promoUrl = $proposal ? route('landing.dynamic', $proposal->slug) . '?ref=' . $affiliate->affiliate_code : $konsultasiUrl;
+
             $ctaHtml = "
             <br>
             <div style='background-color: #fff7ed; padding: 15px; border-radius: 8px; border-left: 4px solid #f97316; margin-top: 20px;'>
                 <p style='margin: 0; color: #9a3412;'><strong>Butuh layanan {$category->name} profesional?</strong></p>
-                <p style='margin: 5px 0 0 0; color: #c2410c;'>Tingkatkan konversi dan branding bisnis Anda sekarang. <a href='{$promoUrl}' style='color: #ea580c; text-decoration: underline; font-weight: bold;'>Konsultasi Gratis di Sini!</a></p>
+                <p style='margin: 5px 0 0 0; color: #c2410c;'>Tingkatkan konversi dan branding bisnis Anda sekarang. <a href='{$konsultasiUrl}' style='color: #ea580c; text-decoration: underline; font-weight: bold;'>Konsultasi Gratis di Sini!</a></p>
+                <p style='margin: 10px 0 0 0; color: #c2410c;'>Atau mau bikin website murah dan gratis tentang {$category->name}? <a href='{$promoUrl}' style='color: #ea580c; text-decoration: underline; font-weight: bold;'>Lihat demonya di sini!</a></p>
             </div>";
 
             return response()->json([
