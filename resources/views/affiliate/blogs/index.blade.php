@@ -91,9 +91,7 @@
                         @if($blog->featured_image)
                         <img src="{{ asset('storage/' . $blog->featured_image) }}" alt="Thumbnail" class="w-full h-full object-cover">
                         @else
-                        <div class="w-full h-full bg-slate-800 flex items-center justify-center text-slate-600">
-                            <i class="fa-solid fa-image text-2xl"></i>
-                        </div>
+                        <img src="{{ asset('storage/scalify-blog-default.webp') }}" alt="Thumbnail" class="w-full h-full object-cover">
                         @endif
                         <div class="absolute inset-0 bg-gradient-to-r from-transparent to-[#0B1120]/90"></div>
                     </div>
