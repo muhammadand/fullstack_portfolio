@@ -13,7 +13,8 @@ $tagsString = is_array($blog->tags) ? implode(', ', $blog->tags) : $blog->tags;
 @endif
 
 <meta name="author" content="{{ $blog->author->name ?? 'Scalify Intelligence' }}" />
-<meta name="robots" content="index, follow" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+<link rel="canonical" href="{{ url()->current() }}" />
 
 {{-- Open Graph / Facebook --}}
 <meta property="og:type" content="article" />
@@ -21,6 +22,8 @@ $tagsString = is_array($blog->tags) ? implode(', ', $blog->tags) : $blog->tags;
 <meta property="og:title" content="{{ $blog->meta_title ?? $blog->title }}" />
 <meta property="og:description" content="{{ $blog->meta_description ?? $blog->excerpt ?? Str::limit(strip_tags($blog->content), 150) }}" />
 <meta property="og:image" content="{{ $blog->featured_image ? asset('storage/' . $blog->featured_image) : asset('og-image.png') }}" />
+<meta property="article:published_time" content="{{ $blog->published_at ? $blog->published_at->toIso8601String() : $blog->created_at->toIso8601String() }}" />
+<meta property="article:modified_time" content="{{ $blog->updated_at->toIso8601String() }}" />
 
 {{-- Twitter --}}
 <meta name="twitter:card" content="summary_large_image" />
@@ -28,6 +31,36 @@ $tagsString = is_array($blog->tags) ? implode(', ', $blog->tags) : $blog->tags;
 <meta name="twitter:title" content="{{ $blog->meta_title ?? $blog->title }}" />
 <meta name="twitter:description" content="{{ $blog->meta_description ?? $blog->excerpt ?? Str::limit(strip_tags($blog->content), 150) }}" />
 <meta name="twitter:image" content="{{ $blog->featured_image ? asset('storage/' . $blog->featured_image) : asset('og-image.png') }}" />
+
+{{-- Schema.org JSON-LD (Rahasia Google Rich Results) --}}
+<script type="application/ld+json">
+    {
+        "@context": "https://schema.org"
+        , "@type": "BlogPosting"
+        , "mainEntityOfPage": {
+            "@type": "WebPage"
+            , "@id": "{{ url()->current() }}"
+        }
+        , "headline": "{{ $blog->meta_title ?? $blog->title }}"
+        , "description": "{{ $blog->meta_description ?? $blog->excerpt ?? Str::limit(strip_tags($blog->content), 150) }}"
+        , "image": "{{ $blog->featured_image ? asset('storage/' . $blog->featured_image) : asset('og-image.png') }}"
+        , "author": {
+            "@type": "Person"
+            , "name": "{{ $blog->author->name ?? 'Admin Scalify' }}"
+        }
+        , "publisher": {
+            "@type": "Organization"
+            , "name": "Scalify Intelligence"
+            , "logo": {
+                "@type": "ImageObject"
+                , "url": "{{ asset('logo.png') }}"
+            }
+        }
+        , "datePublished": "{{ $blog->published_at ? $blog->published_at->toIso8601String() : $blog->created_at->toIso8601String() }}"
+        , "dateModified": "{{ $blog->updated_at->toIso8601String() }}"
+    }
+
+</script>
 @endsection
 
 @push('styles')
