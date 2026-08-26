@@ -35,24 +35,24 @@ $tagsString = is_array($blog->tags) ? implode(', ', $blog->tags) : $blog->tags;
 {{-- Schema.org JSON-LD (Rahasia Google Rich Results) --}}
 <script type="application/ld+json">
     {
-        "@context": "https://schema.org"
-        , "@type": "BlogPosting"
+        "@@context": "https://schema.org"
+        , "@@type": "BlogPosting"
         , "mainEntityOfPage": {
-            "@type": "WebPage"
-            , "@id": "{{ url()->current() }}"
+            "@@type": "WebPage"
+            , "@@id": "{{ url()->current() }}"
         }
         , "headline": "{{ $blog->meta_title ?? $blog->title }}"
         , "description": "{{ $blog->meta_description ?? $blog->excerpt ?? Str::limit(strip_tags($blog->content), 150) }}"
         , "image": "{{ $blog->featured_image ? asset('storage/' . $blog->featured_image) : asset('og-image.png') }}"
         , "author": {
-            "@type": "Person"
+            "@@type": "Person"
             , "name": "{{ $blog->author->name ?? 'Admin Scalify' }}"
         }
         , "publisher": {
-            "@type": "Organization"
+            "@@type": "Organization"
             , "name": "Scalify Intelligence"
             , "logo": {
-                "@type": "ImageObject"
+                "@@type": "ImageObject"
                 , "url": "{{ asset('logo.png') }}"
             }
         }
