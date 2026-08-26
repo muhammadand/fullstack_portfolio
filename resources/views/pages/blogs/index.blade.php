@@ -10,9 +10,7 @@
         @if ($popular->featured_image)
         <img src="{{ asset('storage/' . $popular->featured_image) }}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out">
         @else
-        <div class="absolute inset-0 bg-slate-800 flex items-center justify-center">
-            <i class="fas fa-image text-6xl text-slate-600"></i>
-        </div>
+        <img src="{{ asset('scalify-blog-default.webp') }}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out">
         @endif
 
         {{-- Midnight Blue Gradient Overlay --}}
@@ -66,9 +64,7 @@
                     @if ($blog->featured_image)
                     <img src="{{ asset('storage/' . $blog->featured_image) }}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out">
                     @else
-                    <div class="absolute inset-0 flex items-center justify-center">
-                        <i class="fas fa-image text-3xl text-white/20"></i>
-                    </div>
+                    <img src="{{ asset('scalify-blog-default.webp') }}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out">
                     @endif
                 </div>
 

@@ -245,12 +245,14 @@ $tagsString = is_array($blog->tags) ? implode(', ', $blog->tags) : $blog->tags;
             <div class="lg:col-span-8 min-w-0">
                 <article class="bg-brand-dark md:bg-brand-navy border border-transparent md:border-white/10 md:rounded-3xl md:shadow-xl overflow-visible md:overflow-hidden relative">
                     <!-- Featured Image -->
-                    @if ($blog->featured_image)
                     <div class="aspect-video w-screen relative left-1/2 -translate-x-1/2 md:w-full md:static md:translate-x-0 overflow-hidden md:rounded-t-3xl">
+                        @if ($blog->featured_image)
                         <img src="{{ asset('storage/' . $blog->featured_image) }}" alt="{{ $blog->title }}" class="w-full h-full object-cover">
+                        @else
+                        <img src="{{ asset('scalify-blog-default.webp') }}" alt="{{ $blog->title }}" class="w-full h-full object-cover">
+                        @endif
                         <div class="absolute inset-0 bg-gradient-to-t from-brand-dark via-transparent to-transparent md:from-[#0f172a]/30"></div>
                     </div>
-                    @endif
 
                     <div class="pt-6 pb-12 md:p-12 min-w-0">
                         <!-- Title -->
@@ -588,15 +590,13 @@ $tagsString = is_array($blog->tags) ? implode(', ', $blog->tags) : $blog->tags;
                             @if ($related->count())
                             @foreach ($related->take(5) as $item)
                             <a href="{{ route('blogs.read', $item->slug) }}" class="flex gap-4 group items-center">
-                                @if ($item->featured_image)
                                 <div class="w-24 h-20 flex-shrink-0 rounded-xl overflow-hidden shadow-sm">
+                                    @if ($item->featured_image)
                                     <img src="{{ asset('storage/' . $item->featured_image) }}" alt="{{ $item->title }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                    @else
+                                    <img src="{{ asset('scalify-blog-default.webp') }}" alt="{{ $item->title }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                    @endif
                                 </div>
-                                @else
-                                <div class="w-24 h-20 flex-shrink-0 rounded-xl bg-white/5 flex items-center justify-center">
-                                    <i class="fas fa-image text-white/30"></i>
-                                </div>
-                                @endif
 
                                 <div class="flex-1 min-w-0 py-1">
                                     <h4 class="font-display font-semibold text-[13px] text-white mb-1.5 line-clamp-2 group-hover:text-brand-accent transition-colors leading-snug">
@@ -639,9 +639,7 @@ $tagsString = is_array($blog->tags) ? implode(', ', $blog->tags) : $blog->tags;
                         @if ($item->featured_image)
                         <img src="{{ asset('storage/' . $item->featured_image) }}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out">
                         @else
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <i class="fas fa-image text-3xl text-white/20"></i>
-                        </div>
+                        <img src="{{ asset('scalify-blog-default.webp') }}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out">
                         @endif
                     </div>
 
