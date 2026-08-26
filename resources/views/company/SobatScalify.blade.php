@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
 @section('meta_tags')
-<title>Sobat Scalify — Jasa Pembuatan Website, Skripsi & Sistem Cerdas</title>
-<meta name="title" content="Sobat Scalify — Jasa Pembuatan Website, Skripsi & Sistem Cerdas" />
-<meta name="description" content="Sobat Scalify menyediakan layanan jasa pembuatan skripsi, website custom, dan implementasi metode cerdas (SCM, CRM, Forecasting, SPK, Data Science). Wujudkan proyek IT Anda bersama kami." />
-<meta name="keywords" content="jasa buat skripsi, jasa bikin website, metode SCM, CRM, Forecasting, SPK, sistem pendukung keputusan, data sains, pembuatan aplikasi IT, mahasiswa IT, tugas akhir IT, Sobat Scalify" />
+<title>Jasa Pembuatan Website Bisnis UMKM & Skripsi IT Terpercaya - Sobat Scalify</title>
+<meta name="title" content="Jasa Pembuatan Website Bisnis UMKM & Skripsi IT Terpercaya - Sobat Scalify" />
+<meta name="description" content="Sobat Scalify melayani jasa pembuatan website profesional untuk UMKM dan mahasiswa IT. Spesialis sistem cerdas SCM, CRM, Forecasting, SPK, dan Data Science untuk Tugas Akhir/Skripsi." />
+<meta name="keywords" content="jasa pembuatan website, jasa website umkm, jasa pembuatan skripsi informatika, website metode skripsi, implementasi algoritma skripsi, SPK, SCM, CRM, Forecasting, Data Science, Sobat Scalify" />
 <meta name="author" content="Sobat Scalify" />
 <meta name="robots" content="index, follow" />
-<meta property="og:title" content="Sobat Scalify — Jasa Pembuatan Website, Skripsi & Sistem Cerdas" />
-<meta property="og:description" content="Layanan jasa pembuatan website dan implementasi berbagai metode (SCM, CRM, Forecasting, SPK, Data Science) untuk skripsi dan bisnis." />
+<meta property="og:title" content="Jasa Pembuatan Website Bisnis UMKM & Skripsi IT Terpercaya - Sobat Scalify" />
+<meta property="og:description" content="Sobat Scalify melayani jasa pembuatan website profesional untuk UMKM dan mahasiswa IT. Spesialis sistem cerdas SCM, CRM, Forecasting, SPK, dan Data Science." />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="{{ url()->current() }}" />
 @endsection
@@ -70,10 +70,10 @@
                         <i class="fa-solid fa-graduation-cap mr-2"></i> Partner Tugas Akhir & Bisnis
                     </div>
                     <h1 class="text-4xl sm:text-5xl lg:text-5xl lg:leading-tight font-bold font-display leading-tight mb-6 text-white drop-shadow-lg">
-                        Wujudkan <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300 relative inline-block">Proyek IT</span> & Skripsi Anda
+                        Jasa Pembuatan <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300 relative inline-block">Website UMKM</span> & Metode Skripsi IT
                     </h1>
                     <p class="text-lg text-blue-100/80 mb-8 leading-relaxed max-w-2xl mx-auto lg:mx-0">
-                        Pusing dengan coding error atau bingung penerapan algoritma? Kami hadir untuk membantu penyelesaian website, tugas akhir, dan skripsi dengan implementasi metode komputasi terkini.
+                        Solusi terbaik untuk digitalisasi bisnis UMKM Anda dan penyelesaian Tugas Akhir/Skripsi Informatika. Kami ahlinya implementasi algoritma sistem cerdas (SPK, SCM, Forecasting, CRM).
                     </p>
                     <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                         <a href="https://wa.me/6285221694067?text=Halo%20Sobat%20Scalify,%20saya%20ingin%20konsultasi%20mengenai%20pembuatan%20website/skripsi.{{ $waTextRef }}" target="_blank" class="wa-btn-track px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold rounded-xl shadow-[0_0_20px_rgba(59,130,246,0.4)] hover:shadow-[0_0_30px_rgba(59,130,246,0.6)] transition-all duration-300 transform hover:-translate-y-1 flex items-center justify-center gap-2 border border-blue-500/50">
