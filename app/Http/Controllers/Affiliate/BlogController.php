@@ -93,7 +93,7 @@ class BlogController extends Controller
         $blog->is_published = false;
 
         // Gunakan meta SEO dari AI (jika ada), kalau tidak auto-generate
-        $blog->meta_title = $request->meta_title ?: Str::limit($request->title, 60, '');
+        $blog->meta_title = \Illuminate\Support\Str::limit($request->meta_title ?: $request->title, 60, '');
         $blog->meta_description = $request->meta_description ?: Str::limit(strip_tags($request->content), 150);
         $blog->reading_time = max(1, ceil(str_word_count(strip_tags($request->content)) / 200));
 
