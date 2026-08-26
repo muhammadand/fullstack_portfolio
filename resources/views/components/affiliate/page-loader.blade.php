@@ -17,14 +17,22 @@
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const loader = document.getElementById('global-page-loader');
-        
-        // Hide loader when page is fully loaded
-        window.addEventListener('load', () => {
+
+        // Sembunyikan loader secepat mungkin tanpa menunggu semua gambar ter-load
+        const hideLoader = () => {
             loader.style.opacity = '0';
             setTimeout(() => {
                 loader.style.display = 'none';
             }, 300);
-        });
+        };
+
+        // Panggil saat DOM sudah siap
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+            setTimeout(hideLoader, 150);
+        } else {
+            document.addEventListener('DOMContentLoaded', hideLoader);
+            window.addEventListener('load', hideLoader); // Fallback
+        }
 
         // Intercept clicks on links to show loader (only internal navigation)
         const links = document.querySelectorAll('a');
@@ -73,10 +81,11 @@
 
         // Safety fallback: if load event didn't fire properly after 3 seconds, hide the loader anyway
         setTimeout(() => {
-            if(loader.style.display !== 'none') {
+            if (loader.style.display !== 'none') {
                 loader.style.opacity = '0';
                 setTimeout(() => loader.style.display = 'none', 300);
             }
         }, 3000);
     });
+
 </script>

@@ -17,9 +17,19 @@ class BlogController extends Controller
     {
         $affiliate = Auth::guard('affiliate')->user();
 
-        $blogs = Blog::where('affiliate_id', $affiliate->id)
-            ->with('businessCategory')
-            ->latest()
+        $blogs = \Illuminate\Support\Facades\DB::table('blogs')
+            ->where('blogs.affiliate_id', $affiliate->id)
+            ->leftJoin('business_categories', 'blogs.business_category_id', '=', 'business_categories.id')
+            ->select(
+                'blogs.id',
+                'blogs.title',
+                'blogs.featured_image',
+                'blogs.is_published',
+                'blogs.slug',
+                'blogs.created_at',
+                'business_categories.name as category_name'
+            )
+            ->orderByDesc('blogs.created_at')
             ->paginate(10);
 
         return view('affiliate.blogs.index', compact('affiliate', 'blogs'));
@@ -33,7 +43,7 @@ class BlogController extends Controller
             ->where('is_published', true)
             ->with('businessCategory')
             ->latest('published_at')
-            ->get();
+            ->paginate(10);
 
         return view('affiliate.blogs.performance', compact('affiliate', 'blogs'));
     }

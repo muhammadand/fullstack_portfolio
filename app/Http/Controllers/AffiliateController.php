@@ -324,21 +324,26 @@ class AffiliateController extends Controller
 
         $tab = $request->get('tab', 'global'); // 'global' or 'follow_up'
 
-        $query = ClientProposal::with('category')->latest();
+        $query = \Illuminate\Support\Facades\DB::table('client_proposals')
+            ->leftJoin('business_categories', 'client_proposals.business_category_id', '=', 'business_categories.id')
+            ->select('client_proposals.*', 'business_categories.name as category_name')
+            ->orderByDesc('client_proposals.created_at');
 
         if ($request->filled('category_id')) {
-            $query->where('business_category_id', $request->category_id);
+            $query->where('client_proposals.business_category_id', $request->category_id);
         }
 
         if ($tab === 'follow_up') {
-            $query->where('affiliate_id', $affiliate->id);
+            $query->where('client_proposals.affiliate_id', $affiliate->id);
         } else {
-            $query->whereNull('affiliate_id');
+            $query->whereNull('client_proposals.affiliate_id');
         }
 
         $proposals = $query->simplePaginate(10)->withQueryString();
-        $categories = \App\Models\BusinessCategory::all();
-        $chatTemplates = ChatTemplate::whereNull('affiliate_id')
+        $categories = \Illuminate\Support\Facades\DB::table('business_categories')->get();
+
+        $chatTemplates = \Illuminate\Support\Facades\DB::table('chat_templates')
+            ->whereNull('affiliate_id')
             ->orWhere('affiliate_id', $affiliate->id)
             ->get();
 

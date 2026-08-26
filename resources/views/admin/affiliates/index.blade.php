@@ -7,9 +7,14 @@
             <h1 class="text-2xl font-bold text-slate-800 tracking-tight">Affiliate Dashboard</h1>
             <p class="text-slate-500 text-xs mt-1">Pantau performa partner dan kelola komisi di satu tempat.</p>
         </div>
-        <button onclick="openAddPartnerModal()" class="flex items-center justify-center w-full sm:w-auto gap-1.5 px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors shadow-sm">
-            <i class="fa-solid fa-plus"></i> Tambah Partner
-        </button>
+        <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+            <button onclick="sendPushNotification()" class="flex items-center justify-center w-full sm:w-auto gap-1.5 px-4 py-2 text-sm bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors shadow-sm">
+                <i class="fa-solid fa-bell"></i> Broadcast Notif
+            </button>
+            <button onclick="openAddPartnerModal()" class="flex items-center justify-center w-full sm:w-auto gap-1.5 px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors shadow-sm">
+                <i class="fa-solid fa-plus"></i> Tambah Partner
+            </button>
+        </div>
     </div>
 
     <!-- Dashboard Stats Grid -->
@@ -260,6 +265,11 @@
             @endforelse
         </div>
     </div>
+
+    <!-- Pagination Links -->
+    <div class="mt-6">
+        {{ $affiliates->links() }}
+    </div>
 </div>
 
 <!-- Add Commission Modal -->
@@ -322,6 +332,23 @@
         setTimeout(() => {
             modal.classList.add('opacity-0', 'pointer-events-none');
         }, 150);
+    }
+
+    function sendPushNotification() {
+        if (!confirm('Kirim notifikasi Push ("Semangat Pagi") ke semua Partner sekarang?')) return;
+
+        fetch('/api/cron/send-daily-push?secret=cuan-tiap-hari')
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Sukses: ' + data.message);
+                } else {
+                    alert('Info: ' + (data.message || data.error || 'Gagal mengirim notifikasi.'));
+                }
+            })
+            .catch(err => {
+                alert('Terjadi kesalahan sistem: ' + err);
+            });
     }
 
     function openAddPartnerModal() {

@@ -97,10 +97,10 @@
                     </div>
                     <div class="w-2/3 p-3 flex flex-col justify-center">
                         <h3 class="text-sm font-bold text-white mb-1 line-clamp-2 leading-tight">{{ $blog->title }}</h3>
-                        <p class="text-[10px] text-slate-400 mb-2">Kategori: {{ $blog->businessCategory->name ?? 'Umum' }}</p>
+                        <p class="text-[10px] text-slate-400 mb-2">Kategori: {{ $blog->category_name ?? 'Umum' }}</p>
 
                         <div class="flex items-center justify-between mt-auto">
-                            <span class="text-[10px] text-slate-500">{{ $blog->created_at->format('d M Y') }}</span>
+                            <span class="text-[10px] text-slate-500">{{ \Carbon\Carbon::parse($blog->created_at)->format('d M Y') }}</span>
                             @if($blog->is_published && $blog->slug)
                             <a href="{{ route('blogs.read', $blog->slug) }}?ref={{ $affiliate->affiliate_code }}" target="_blank" class="text-[10px] text-blue-400 font-medium flex items-center gap-1">
                                 Lihat Web <i class="fa-solid fa-arrow-up-right-from-square"></i>

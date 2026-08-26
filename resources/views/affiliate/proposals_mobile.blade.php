@@ -131,8 +131,8 @@
                     <div>
                         <h3 class="text-base font-bold text-white mb-0.5">{{ $p->brand_name }}</h3>
                         <div class="flex items-center gap-2 text-[10px] text-slate-400">
-                            <span class="px-2 py-0.5 rounded {{ $p->category ? 'bg-blue-500/20 text-blue-400' : 'bg-slate-700/50 text-slate-300' }}">
-                                {{ $p->category ? $p->category->name : 'Tanpa Kategori' }}
+                            <span class="px-2 py-0.5 rounded {{ $p->category_name ? 'bg-blue-500/20 text-blue-400' : 'bg-slate-700/50 text-slate-300' }}">
+                                {{ $p->category_name ?? 'Tanpa Kategori' }}
                             </span>
                             @if($p->project_price)
                             <span><i class="fa-solid fa-tag mr-1 text-slate-500"></i>Rp {{ number_format($p->project_price, 0, ',', '.') }}</span>

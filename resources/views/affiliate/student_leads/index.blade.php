@@ -87,10 +87,10 @@
 
         {{-- Tabs --}}
         <div class="flex p-1 bg-white/5 rounded-xl mb-6 relative z-10 border border-white/5">
-            <a href="{{ route('affiliate.student_leads.index', ['tab' => 'global']) }}" class="flex-1 py-2 text-center text-xs font-semibold rounded-lg transition-all {{ $tab == 'global' ? 'bg-cyan-500 text-white shadow-lg' : 'text-slate-400 hover:text-white' }}">
+            <a href="{{ route('affiliate.student_leads.index', ['tab' => 'global']) }}" wire:navigate class="flex-1 py-2 text-center text-xs font-semibold rounded-lg transition-all {{ $tab == 'global' ? 'bg-cyan-500 text-white shadow-lg' : 'text-slate-400 hover:text-white' }}">
                 Data Global
             </a>
-            <a href="{{ route('affiliate.student_leads.index', ['tab' => 'my_leads']) }}" class="flex-1 py-2 text-center text-xs font-semibold rounded-lg transition-all {{ $tab == 'my_leads' ? 'bg-cyan-500 text-white shadow-lg' : 'text-slate-400 hover:text-white' }}">
+            <a href="{{ route('affiliate.student_leads.index', ['tab' => 'my_leads']) }}" wire:navigate class="flex-1 py-2 text-center text-xs font-semibold rounded-lg transition-all {{ $tab == 'my_leads' ? 'bg-cyan-500 text-white shadow-lg' : 'text-slate-400 hover:text-white' }}">
                 Mahasiswaku
             </a>
         </div>
@@ -158,7 +158,7 @@
                 <div class="mt-2">
                     <label class="block text-[10px] font-semibold text-emerald-400 mb-1.5"><i class="fa-brands fa-whatsapp mr-1"></i> Share via WhatsApp:</label>
                     <div class="relative">
-                        <select onchange="kirimWaLangsungAffiliate(this, '{{ $lead->id }}', '{{ addslashes($lead->name) }}', '{{ $lead->wa_number }}', '{{ $lead->clientProposal ? route('landing.dynamic', $lead->clientProposal->slug) . '?ref=' . $affiliate->affiliate_code : '' }}', '{{ $lead->clientProposal ? route('proposal.dynamic', $lead->clientProposal->slug) . '?ref=' . $affiliate->affiliate_code : '' }}')" class="w-full appearance-none pl-3 pr-8 py-2 bg-white/5 border border-emerald-500/30 text-emerald-300 text-xs font-medium rounded-xl focus:outline-none focus:border-emerald-500 cursor-pointer transition-all">
+                        <select onchange="kirimWaLangsungAffiliate(this, '{{ $lead->id }}', '{{ addslashes($lead->name) }}', '{{ $lead->wa_number }}', '{{ $lead->proposal_slug ? route('landing.dynamic', $lead->proposal_slug) . '?ref=' . $affiliate->affiliate_code : '' }}', '{{ $lead->proposal_slug ? route('proposal.dynamic', $lead->proposal_slug) . '?ref=' . $affiliate->affiliate_code : '' }}')" class="w-full appearance-none pl-3 pr-8 py-2 bg-white/5 border border-emerald-500/30 text-emerald-300 text-xs font-medium rounded-xl focus:outline-none focus:border-emerald-500 cursor-pointer transition-all">
                             <option value="" disabled selected class="text-slate-800">Pilih Template Chat...</option>
                             @foreach($chatTemplates as $ct)
                             <option value="{{ base64_encode($ct->content) }}" class="text-slate-800">{{ $ct->name }}</option>
@@ -170,9 +170,9 @@
                     </div>
                 </div>
 
-                @if($lead->clientProposal)
+                @if($lead->proposal_slug)
                 <div class="flex gap-2 mt-3">
-                    <a href="{{ route('landing.dynamic', $lead->clientProposal->slug) }}" target="_blank" class="flex-1 py-2 bg-white/10 hover:bg-white/20 text-white text-center text-xs font-bold rounded-xl transition-colors">
+                    <a href="{{ route('landing.dynamic', $lead->proposal_slug) }}" target="_blank" class="flex-1 py-2 bg-white/10 hover:bg-white/20 text-white text-center text-xs font-bold rounded-xl transition-colors">
                         <i class="fa-solid fa-globe mr-1"></i> Lihat Proposal
                     </a>
                 </div>

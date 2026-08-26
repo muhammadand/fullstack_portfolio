@@ -12,27 +12,39 @@ class StudentLeadController extends Controller
     public function index(Request $request)
     {
         $affiliate = Auth::guard('affiliate')->user();
-        
+
         if ($affiliate->status !== 'approved') {
             return redirect()->route('affiliate.dashboard')->with('error', 'Akun Anda belum disetujui.');
         }
 
         $tab = $request->get('tab', 'global'); // 'global' or 'my_leads'
 
-        $query = StudentLead::latest();
+        $query = \Illuminate\Support\Facades\DB::table('student_leads')
+            ->leftJoin('client_proposals', 'student_leads.client_proposal_id', '=', 'client_proposals.id')
+            ->select(
+                'student_leads.id',
+                'student_leads.name',
+                'student_leads.university',
+                'student_leads.wa_number',
+                'student_leads.needs',
+                'student_leads.status',
+                'client_proposals.slug as proposal_slug'
+            )
+            ->orderByDesc('student_leads.created_at');
 
         if ($tab === 'my_leads') {
-            $query->where('affiliate_id', $affiliate->id);
+            $query->where('student_leads.affiliate_id', $affiliate->id);
         } else {
-            $query->whereNull('affiliate_id');
+            $query->whereNull('student_leads.affiliate_id');
         }
-        
+
         $leads = $query->simplePaginate(10)->withQueryString();
 
-        $chatTemplates = \App\Models\ChatTemplate::where(function($query) use ($affiliate) {
-            $query->where('affiliate_id', $affiliate->id)
-                  ->orWhereNull('affiliate_id');
-        })->get();
+        $chatTemplates = \Illuminate\Support\Facades\DB::table('chat_templates')
+            ->select('name', 'content')
+            ->whereNull('affiliate_id')
+            ->orWhere('affiliate_id', $affiliate->id)
+            ->get();
 
         return view('affiliate.student_leads.index', compact('affiliate', 'leads', 'tab', 'chatTemplates'));
     }
@@ -57,7 +69,7 @@ class StudentLeadController extends Controller
     public function store(Request $request)
     {
         $affiliate = Auth::guard('affiliate')->user();
-        
+
         $request->validate([
             'wa_number' => 'required|string',
             'name' => 'nullable|string|max:255',

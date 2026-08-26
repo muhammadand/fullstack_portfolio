@@ -17,7 +17,7 @@
             </div>
 
             <!-- 2. Katalog Proposal -->
-            <a href="{{ route('affiliate.proposals') }}" class="flex flex-col items-center gap-2 group">
+            <a href="{{ route('affiliate.proposals') }}" wire:navigate class="flex flex-col items-center gap-2 group">
                 <div class="w-12 h-12 rounded-2xl glass-panel flex items-center justify-center text-rose-400 text-lg shadow-inner relative transition-all active:scale-95 group-hover:bg-rose-500/10 group-hover:border-rose-500/30">
                     <i class="fa-solid fa-folder-open"></i>
                 </div>
@@ -25,7 +25,7 @@
             </a>
 
             <!-- 3. Template Chat -->
-            <a href="{{ route('affiliate.chat_templates.index') }}" class="flex flex-col items-center gap-2 group">
+            <a href="{{ route('affiliate.chat_templates.index') }}" wire:navigate class="flex flex-col items-center gap-2 group">
                 <div class="w-12 h-12 rounded-2xl glass-panel flex items-center justify-center text-teal-400 text-lg shadow-inner transition-all active:scale-95 group-hover:bg-teal-500/10 group-hover:border-teal-500/30">
                     <i class="fa-solid fa-message"></i>
                 </div>
@@ -33,7 +33,7 @@
             </a>
 
             <!-- 4. Data Mahasiswa -->
-            <a href="{{ route('affiliate.student_leads.index') }}" class="flex flex-col items-center gap-2 group">
+            <a href="{{ route('affiliate.student_leads.index') }}" wire:navigate class="flex flex-col items-center gap-2 group">
                 <div class="w-12 h-12 rounded-2xl glass-panel flex items-center justify-center text-cyan-400 text-lg shadow-inner transition-all active:scale-95 group-hover:bg-cyan-500/10 group-hover:border-cyan-500/30">
                     <i class="fa-solid fa-users"></i>
                 </div>
@@ -41,7 +41,7 @@
             </a>
 
             <!-- 5. Project Deal -->
-            <a href="{{ route('affiliate.history') }}" class="flex flex-col items-center gap-2 group">
+            <a href="{{ route('affiliate.history') }}" wire:navigate class="flex flex-col items-center gap-2 group">
                 <div class="w-12 h-12 rounded-2xl glass-panel flex items-center justify-center text-emerald-400 text-lg shadow-inner transition-all active:scale-95 group-hover:bg-emerald-500/10 group-hover:border-emerald-500/30">
                     <div class="flex items-center gap-1">
                         <span class="font-bold text-sm">{{ $totalProjects }}</span>
@@ -51,7 +51,7 @@
             </a>
 
             <!-- 6. Riwayat Dana -->
-            <a href="{{ route('affiliate.history') }}" class="flex flex-col items-center gap-2 group">
+            <a href="{{ route('affiliate.history') }}" wire:navigate class="flex flex-col items-center gap-2 group">
                 <div class="w-12 h-12 rounded-2xl glass-panel flex items-center justify-center text-blue-400 text-lg shadow-inner transition-all active:scale-95 group-hover:bg-blue-500/10 group-hover:border-blue-500/30">
                     <i class="fa-solid fa-clock-rotate-left"></i>
                 </div>
@@ -67,7 +67,7 @@
         </h3>
         <div class="grid grid-cols-4 gap-y-4 gap-x-2">
             <!-- 4. Tulis Artikel -->
-            <a href="{{ route('affiliate.blogs.index') }}" class="flex flex-col items-center gap-2 group">
+            <a href="{{ route('affiliate.blogs.index') }}" wire:navigate class="flex flex-col items-center gap-2 group">
                 <div class="w-12 h-12 rounded-2xl glass-panel flex items-center justify-center text-orange-400 text-lg shadow-inner transition-all active:scale-95 group-hover:bg-orange-500/10 group-hover:border-orange-500/30 relative">
                     <i class="fa-solid fa-pen-nib"></i>
                     <!-- Badge Point -->
@@ -77,7 +77,7 @@
             </a>
 
             <!-- 5. Scalify Store (Tukar Poin) -->
-            <a href="{{ route('affiliate.store') }}" class="flex flex-col items-center gap-2 group">
+            <a href="{{ route('affiliate.store') }}" wire:navigate class="flex flex-col items-center gap-2 group">
                 <div class="w-12 h-12 rounded-2xl glass-panel flex items-center justify-center text-pink-400 text-lg shadow-inner transition-all active:scale-95 group-hover:bg-pink-500/10 group-hover:border-pink-500/30">
                     <i class="fa-solid fa-store"></i>
                 </div>
@@ -95,7 +95,7 @@
         </h3>
         <div class="grid grid-cols-4 gap-y-4 gap-x-2">
             <!-- 8. Cara Kerja -->
-            <a href="{{ route('affiliate.guide') }}" onclick="closeDashboardCoachMark()" class="flex flex-col items-center gap-2 relative group">
+            <a href="{{ route('affiliate.guide') }}" wire:navigate onclick="closeDashboardCoachMark()" class="flex flex-col items-center gap-2 relative group">
                 <div class="w-12 h-12 rounded-2xl glass-panel flex items-center justify-center text-yellow-400 text-lg shadow-inner transition-all active:scale-95 group-hover:bg-yellow-500/10 group-hover:border-yellow-500/30">
                     <i class="fa-solid fa-book-open"></i>
                 </div>
@@ -113,7 +113,7 @@
             </a>
 
             <!-- 9. Bagikan Akses -->
-            <a href="{{ route('affiliate.magic_login_qr') }}" class="flex flex-col items-center gap-2 group">
+            <a href="{{ route('affiliate.magic_login_qr') }}" wire:navigate class="flex flex-col items-center gap-2 group">
                 <div class="w-12 h-12 rounded-2xl glass-panel flex items-center justify-center text-purple-400 text-lg shadow-inner transition-all active:scale-95 group-hover:bg-purple-500/10 group-hover:border-purple-500/30">
                     <i class="fa-solid fa-key"></i>
                 </div>
