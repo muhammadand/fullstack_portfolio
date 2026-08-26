@@ -9,6 +9,8 @@ use App\Models\ClientProposal;
 use App\Models\ChatTemplate;
 use App\Models\BusinessCategory;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Hash;
 
 class AffiliateController extends Controller
 {
@@ -37,8 +39,8 @@ class AffiliateController extends Controller
         ]);
 
         $affiliate->notify(new \App\Notifications\AffiliateNotification(
-            'Selamat Datang!', 
-            'Terima kasih telah bergabung sebagai Partner. Akun Anda sedang direview.', 
+            'Selamat Datang!',
+            'Terima kasih telah bergabung sebagai Partner. Akun Anda sedang direview.',
             'info'
         ));
 
@@ -61,14 +63,15 @@ class AffiliateController extends Controller
 
         // Attempt to login using the affiliate guard
         if (Auth::guard('affiliate')->attempt($credentials)) {
+            /** @var \App\Models\Affiliate $affiliate */
             $affiliate = Auth::guard('affiliate')->user();
-            
+
             // Check if rejected
             if ($affiliate->status === 'rejected') {
                 Auth::guard('affiliate')->logout();
                 return redirect()->back()->with('error', 'Akun Anda telah ditolak oleh Admin.');
             }
-            
+
             return redirect()->route('affiliate.dashboard');
         }
 
@@ -83,11 +86,12 @@ class AffiliateController extends Controller
 
     public function dashboard(Request $request)
     {
-        $affiliate = Auth::guard('affiliate')->user(); 
-        
+        /** @var \App\Models\Affiliate $affiliate */
+        $affiliate = Auth::guard('affiliate')->user();
+
         $totalClicks = AffiliateClick::where('affiliate_id', $affiliate->id)->count();
         $totalProjects = \App\Models\Commission::where('affiliate_id', $affiliate->id)->count();
-        
+
         $withdrawals = \App\Models\Withdrawal::where('affiliate_id', $affiliate->id)->latest()->take(5)->get();
         $hasTemplates = \App\Models\ChatTemplate::where('affiliate_id', $affiliate->id)->exists();
 
@@ -97,8 +101,9 @@ class AffiliateController extends Controller
 
     public function history(Request $request)
     {
+        /** @var \App\Models\Affiliate $affiliate */
         $affiliate = Auth::guard('affiliate')->user();
-        
+
         $commissions = \App\Models\Commission::where('affiliate_id', $affiliate->id)
             ->latest()
             ->paginate(10, ['*'], 'komisi_page');
@@ -112,8 +117,9 @@ class AffiliateController extends Controller
 
     public function withdraw(Request $request)
     {
+        /** @var \App\Models\Affiliate $affiliate */
         $affiliate = Auth::guard('affiliate')->user();
-        
+
         $request->validate([
             'amount' => 'required|numeric|min:50000|max:' . $affiliate->balance,
         ]);
@@ -130,8 +136,8 @@ class AffiliateController extends Controller
         ]);
 
         $affiliate->notify(new \App\Notifications\AffiliateNotification(
-            'Penarikan Diajukan', 
-            'Pengajuan penarikan sebesar Rp ' . number_format($request->amount, 0, ',', '.') . ' sedang diproses.', 
+            'Penarikan Diajukan',
+            'Pengajuan penarikan sebesar Rp ' . number_format($request->amount, 0, ',', '.') . ' sedang diproses.',
             'success'
         ));
 
@@ -140,14 +146,15 @@ class AffiliateController extends Controller
 
     public function claimDailyPoints(Request $request)
     {
+        /** @var \App\Models\Affiliate $affiliate */
         $affiliate = Auth::guard('affiliate')->user();
-        
+
         if ($affiliate->status !== 'approved') {
             return redirect()->back()->with('error', 'Akun Anda belum disetujui.');
         }
 
         $today = now()->format('Y-m-d');
-        
+
         if ($affiliate->last_claim_date === $today) {
             return redirect()->back()->with('error', 'Anda sudah melakukan klaim hari ini.');
         }
@@ -155,7 +162,7 @@ class AffiliateController extends Controller
         $yesterday = now()->subDay()->format('Y-m-d');
         $pointsEarned = 10;
         $description = 'Klaim Poin Harian';
-        
+
         if ($affiliate->last_claim_date === $yesterday) {
             $affiliate->current_streak += 1;
         } else {
@@ -186,21 +193,22 @@ class AffiliateController extends Controller
 
     public function streak(Request $request)
     {
+        /** @var \App\Models\Affiliate $affiliate */
         $affiliate = Auth::guard('affiliate')->user();
-        
+
         $today = now()->format('Y-m-d');
         $yesterday = now()->subDay()->format('Y-m-d');
         $streak = $affiliate->current_streak;
-        
+
         if ($affiliate->last_claim_date !== $today && $affiliate->last_claim_date !== $yesterday) {
             $streak = 0;
         }
-        
+
         $currentWeekDay = $streak % 7;
         if ($currentWeekDay == 0 && $streak > 0) {
             $currentWeekDay = 7;
         }
-        
+
         return view('affiliate.streak_mobile', compact('affiliate', 'streak', 'currentWeekDay', 'today'));
     }
 
@@ -211,6 +219,7 @@ class AffiliateController extends Controller
 
     public function guide()
     {
+        /** @var \App\Models\Affiliate $affiliate */
         $affiliate = Auth::guard('affiliate')->user();
         return view('affiliate.guide', compact('affiliate'));
     }
@@ -218,7 +227,7 @@ class AffiliateController extends Controller
     public function trackClick(Request $request)
     {
         $code = $request->cookie('affiliate_ref') ?? $request->input('ref');
-        
+
         if ($code) {
             $affiliate = Affiliate::where('affiliate_code', $code)->first();
             if ($affiliate) {
@@ -229,18 +238,20 @@ class AffiliateController extends Controller
                 ]);
             }
         }
-        
+
         return response()->json(['status' => 'success']);
     }
 
     public function profile()
     {
+        /** @var \App\Models\Affiliate $affiliate */
         $affiliate = Auth::guard('affiliate')->user();
         return view('affiliate.profile', compact('affiliate'));
     }
 
     public function updateProfile(Request $request)
     {
+        /** @var \App\Models\Affiliate $affiliate */
         $affiliate = Auth::guard('affiliate')->user();
 
         $request->validate([
@@ -259,14 +270,14 @@ class AffiliateController extends Controller
 
         if ($request->hasFile('avatar')) {
             // Delete old avatar if exists
-            if ($affiliate->avatar && \Storage::disk('public')->exists($affiliate->avatar)) {
-                \Storage::disk('public')->delete($affiliate->avatar);
+            if ($affiliate->avatar && Storage::disk('public')->exists($affiliate->avatar)) {
+                Storage::disk('public')->delete($affiliate->avatar);
             }
             $data['avatar'] = $request->file('avatar')->store('avatars/affiliates', 'public');
         }
 
         if ($request->filled('password')) {
-            $data['password'] = \Hash::make($request->password);
+            $data['password'] = Hash::make($request->password);
         }
 
         $affiliate->update($data);
@@ -276,28 +287,31 @@ class AffiliateController extends Controller
 
     public function markNotificationRead($id)
     {
+        /** @var \App\Models\Affiliate $affiliate */
         $affiliate = Auth::guard('affiliate')->user();
         $notification = $affiliate->notifications()->find($id);
-        
+
         if ($notification) {
             $notification->markAsRead();
         }
-        
+
         return redirect()->back();
     }
 
     public function clearNotifications()
     {
+        /** @var \App\Models\Affiliate $affiliate */
         $affiliate = Auth::guard('affiliate')->user();
         $affiliate->notifications()->delete();
-        
+
         return redirect()->back();
     }
 
     public function proposals(Request $request)
     {
+        /** @var \App\Models\Affiliate $affiliate */
         $affiliate = Auth::guard('affiliate')->user();
-        
+
         if ($affiliate->status !== 'approved') {
             return redirect()->route('affiliate.dashboard')->with('error', 'Akun Anda belum disetujui.');
         }
@@ -311,7 +325,7 @@ class AffiliateController extends Controller
         $tab = $request->get('tab', 'global'); // 'global' or 'follow_up'
 
         $query = ClientProposal::with('category')->latest();
-        
+
         if ($request->filled('category_id')) {
             $query->where('business_category_id', $request->category_id);
         }
@@ -321,7 +335,7 @@ class AffiliateController extends Controller
         } else {
             $query->whereNull('affiliate_id');
         }
-        
+
         $proposals = $query->simplePaginate(10)->withQueryString();
         $categories = \App\Models\BusinessCategory::all();
         $chatTemplates = ChatTemplate::whereNull('affiliate_id')
@@ -333,8 +347,9 @@ class AffiliateController extends Controller
 
     public function generateProposal(Request $request)
     {
+        /** @var \App\Models\Affiliate $affiliate */
         $affiliate = Auth::guard('affiliate')->user();
-        
+
         if ($affiliate->status !== 'approved') {
             return redirect()->route('affiliate.dashboard')->with('error', 'Akun Anda belum disetujui.');
         }
@@ -346,7 +361,7 @@ class AffiliateController extends Controller
         ]);
 
         $slug = \Illuminate\Support\Str::slug($request->brand_name);
-        
+
         // Ensure slug is unique
         if (ClientProposal::where('slug', $slug)->exists()) {
             $slug = $slug . '-' . time();
@@ -379,6 +394,7 @@ class AffiliateController extends Controller
 
     public function magicLoginQr()
     {
+        /** @var \App\Models\Affiliate $affiliate */
         $affiliate = Auth::guard('affiliate')->user();
         if ($affiliate->status !== 'approved') {
             return redirect()->route('affiliate.dashboard');
@@ -391,6 +407,7 @@ class AffiliateController extends Controller
 
     public function claimProposal(Request $request, $id)
     {
+        /** @var \App\Models\Affiliate $affiliate */
         $affiliate = Auth::guard('affiliate')->user();
         $proposal = ClientProposal::findOrFail($id);
 
