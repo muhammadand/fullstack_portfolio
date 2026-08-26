@@ -16,7 +16,7 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '20' # Diubah ke 20 karena tailwindcss/oxide membutuhkan Node >= 20
+        node-version: '22' # Menggunakan Node 22 untuk menghindari warning deprecation GitHub Actions
         
     - name: Install NPM & Build
       run: |
