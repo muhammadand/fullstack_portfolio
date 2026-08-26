@@ -16,25 +16,25 @@ class BlogController extends Controller
     public function index()
     {
         $affiliate = Auth::guard('affiliate')->user();
-        
+
         $blogs = Blog::where('affiliate_id', $affiliate->id)
             ->with('businessCategory')
             ->latest()
             ->paginate(10);
-            
+
         return view('affiliate.blogs.index', compact('affiliate', 'blogs'));
     }
 
     public function performance()
     {
         $affiliate = Auth::guard('affiliate')->user();
-        
+
         $blogs = Blog::where('affiliate_id', $affiliate->id)
             ->where('is_published', true)
             ->with('businessCategory')
             ->latest('published_at')
             ->get();
-            
+
         return view('affiliate.blogs.performance', compact('affiliate', 'blogs'));
     }
 
@@ -42,7 +42,7 @@ class BlogController extends Controller
     {
         $affiliate = Auth::guard('affiliate')->user();
         $categories = BusinessCategory::all();
-        
+
         return view('affiliate.blogs.create', compact('affiliate', 'categories'));
     }
 
@@ -61,10 +61,9 @@ class BlogController extends Controller
         if ($request->hasFile('featured_image')) {
             $imagePath = $request->file('featured_image')->store('blogs', 'public');
         } else {
-            // Default ke logo Scalify jika tidak ada gambar
-            $imagePath = 'scalify-blog-default.webp';
+            $imagePath = null;
         }
-        
+
         // Find default blog category (fallback)
         $defaultBlogCategory = \App\Models\BlogCategory::first();
 
@@ -82,12 +81,12 @@ class BlogController extends Controller
         $blog->business_category_id = $request->business_category_id;
         $blog->category_id = $defaultBlogCategory ? $defaultBlogCategory->id : 1;
         $blog->is_published = false;
-        
+
         // Generate simple meta for SEO
         $blog->meta_title = Str::limit($request->title, 60, '');
         $blog->meta_description = Str::limit(strip_tags($request->content), 150);
         $blog->reading_time = max(1, ceil(str_word_count(strip_tags($request->content)) / 200));
-        
+
         $blog->save();
 
         return redirect()->route('affiliate.blogs.index')->with('success', 'Artikel berhasil dikirim! Menunggu review dari Admin.');
@@ -103,8 +102,8 @@ class BlogController extends Controller
         $affiliate = Auth::guard('affiliate')->user();
         $category = BusinessCategory::findOrFail($request->business_category_id);
 
-        $titleInstruction = $request->title 
-            ? "Topik/Judul: {$request->title}" 
+        $titleInstruction = $request->title
+            ? "Topik/Judul: {$request->title}"
             : "Judul: Buatkan judul SEO-friendly yang sangat clickbait dan sedang hype/tren mengenai layanan '{$category->name}'.";
 
         $prompt = "Tulis artikel blog dalam bahasa Indonesia yang menarik dan SEO-friendly.
@@ -128,9 +127,9 @@ Instruksi Format:
 
             // Bersihkan markdown wrapper untuk parsing JSON
             $responseText = preg_replace('/^```json\s*|\s*```$/i', '', trim($responseText));
-            
+
             $data = json_decode($responseText, true);
-            
+
             if (!$data || !isset($data['content']) || !isset($data['title'])) {
                 throw new \Exception("Format respons AI tidak valid atau JSON rusak.");
             }
@@ -140,11 +139,11 @@ Instruksi Format:
 
             // Buat CTA (Call to Action) link
             $konsultasiUrl = url('/sobat-scalify?ref=' . $affiliate->affiliate_code);
-            
+
             // Ambil proposal sesuai kategori, jika tidak ada ambil random proposal apapun agar tidak error
-            $proposal = \App\Models\ClientProposal::where('business_category_id', $category->id)->inRandomOrder()->first() 
+            $proposal = \App\Models\ClientProposal::where('business_category_id', $category->id)->inRandomOrder()->first()
                 ?? \App\Models\ClientProposal::inRandomOrder()->first();
-                
+
             $promoUrl = $proposal ? route('landing.dynamic', $proposal->slug) . '?ref=' . $affiliate->affiliate_code : $konsultasiUrl;
 
             $ctaHtml = "
@@ -160,7 +159,6 @@ Instruksi Format:
                 'title' => $generatedTitle,
                 'html' => $htmlContent . $ctaHtml
             ]);
-            
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
