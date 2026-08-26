@@ -82,9 +82,9 @@ class BlogController extends Controller
         $blog->category_id = $defaultBlogCategory ? $defaultBlogCategory->id : 1;
         $blog->is_published = false;
 
-        // Generate simple meta for SEO
-        $blog->meta_title = Str::limit($request->title, 60, '');
-        $blog->meta_description = Str::limit(strip_tags($request->content), 150);
+        // Gunakan meta SEO dari AI (jika ada), kalau tidak auto-generate
+        $blog->meta_title = $request->meta_title ?: Str::limit($request->title, 60, '');
+        $blog->meta_description = $request->meta_description ?: Str::limit(strip_tags($request->content), 150);
         $blog->reading_time = max(1, ceil(str_word_count(strip_tags($request->content)) / 200));
 
         $blog->save();
@@ -112,10 +112,12 @@ Target Market: Orang-orang yang tertarik dengan layanan '{$category->name}'.
 
 Instruksi Format:
 - Kembalikan respons MURNI dalam format JSON. JANGAN sertakan teks apapun di luar blok JSON.
-- Struktur JSON HANYA boleh berisi dua key ini:
+- Struktur JSON HANYA boleh berisi 4 key ini:
 {
     \"title\": \"Judul artikel yang dihasilkan\",
-    \"content\": \"Isi artikel murni dalam format HTML (gunakan <h2>, <p>, dll. Jangan ada tag <html> atau <body>)\"
+    \"content\": \"Isi artikel murni dalam format HTML (gunakan <h2>, <p>, dll. Jangan ada tag <html> atau <body>)\",
+    \"meta_title\": \"Judul SEO singkat max 60 karakter\",
+    \"meta_description\": \"Deskripsi SEO memikat max 150 karakter\"
 }
 - Panjang artikel sekitar 300-400 kata. Buat paragraf pendek agar nyaman dibaca di mobile.
 ";
@@ -157,7 +159,9 @@ Instruksi Format:
             return response()->json([
                 'status' => 'success',
                 'title' => $generatedTitle,
-                'html' => $htmlContent . $ctaHtml
+                'html' => $htmlContent . $ctaHtml,
+                'meta_title' => $data['meta_title'] ?? '',
+                'meta_description' => $data['meta_description'] ?? ''
             ]);
         } catch (\Exception $e) {
             return response()->json([

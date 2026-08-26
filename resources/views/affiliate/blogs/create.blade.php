@@ -140,6 +140,8 @@
                         <div id="quillEditor" class="min-h-[250px] text-sm text-white"></div>
                     </div>
                     <input type="hidden" name="content" id="contentInput" required>
+                    <input type="hidden" name="meta_title" id="metaTitleInput">
+                    <input type="hidden" name="meta_description" id="metaDescInput">
                     <p class="text-[10px] text-slate-500 mt-1.5 ml-1">Tulis secara santai. Anda bisa menggunakan pemformatan teks di atas.</p>
                 </div>
 
@@ -215,6 +217,11 @@
                     if (data.title && data.title !== "") {
                         document.querySelector('input[name="title"]').value = data.title;
                     }
+
+                    // Update meta SEO hidden inputs
+                    if (data.meta_title) document.getElementById('metaTitleInput').value = data.meta_title;
+                    if (data.meta_description) document.getElementById('metaDescInput').value = data.meta_description;
+
                     // Paste konten HTML dari AI ke Editor
                     quill.clipboard.dangerouslyPasteHTML(data.html);
                 } else {

@@ -45,6 +45,7 @@
                     <th class="py-2.5 px-3">Judul</th>
                     <th class="py-2.5 px-3">Kategori</th>
                     <th class="py-2.5 px-3">Penulis</th>
+                    <th class="py-2.5 px-3">Views</th>
                     <th class="py-2.5 px-3">Diterbitkan</th>
                     <th class="py-2.5 px-3">Status</th>
                     <th class="py-2.5 px-3 text-center">Aksi</th>
@@ -65,6 +66,11 @@
                         @else
                         {{ $blog->author->name ?? '-' }}
                         @endif
+                    </td>
+                    <td class="py-2 px-3 text-gray-600">
+                        <span class="flex items-center gap-1.5 font-medium">
+                            <i class="fa-regular fa-eye text-gray-400"></i> {{ number_format($blog->view_count ?? 0) }}
+                        </span>
                     </td>
                     <td class="py-2 px-3">
                         @if ($blog->published_at)
@@ -109,7 +115,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="7" class="py-6 text-center text-gray-500 italic text-sm">
+                    <td colspan="8" class="py-6 text-center text-gray-500 italic text-sm">
                         Belum ada blog yang ditambahkan.
                     </td>
                 </tr>
