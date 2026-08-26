@@ -8,12 +8,13 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Gemini\Laravel\Facades\Gemini;
 
 use App\Helpers\AuthHelper;
 
 class BlogController extends Controller
 {
-     public function __construct()
+    public function __construct()
     {
         // Jika belum login -> stop di sini
         if ($resp = AuthHelper::mustLogin()) {
@@ -175,5 +176,69 @@ class BlogController extends Controller
         $blog->save(); // This will trigger the Boot event in Blog.php and give +10 points to affiliate!
 
         return redirect()->back()->with('success', 'Blog berhasil di-publish! Affiliate akan mendapat poin.');
+    }
+
+    /**
+     * Generate content and meta using Gemini AI
+     */
+    public function generateAi(Request $request)
+    {
+        $request->validate([
+            'title' => 'nullable|string|max:200',
+            'category_id' => 'required|exists:blog_categories,id',
+        ]);
+
+        $category = BlogCategory::findOrFail($request->category_id);
+
+        $titleInstruction = $request->title
+            ? "Topik/Judul: {$request->title}"
+            : "Judul: Buatkan judul SEO-friendly yang sangat clickbait dan sedang hype/tren mengenai kategori '{$category->name}'.";
+
+        $prompt = "Tulis artikel blog dalam bahasa Indonesia yang menarik dan SEO-friendly.
+Kategori: '{$category->name}'.
+{$titleInstruction}
+
+Instruksi Format:
+- Kembalikan respons MURNI dalam format JSON. JANGAN sertakan teks apapun di luar blok JSON.
+- Struktur JSON HANYA boleh berisi 6 key ini:
+{
+    \"title\": \"Judul artikel yang dihasilkan\",
+    \"content\": \"Isi artikel murni dalam format HTML (gunakan <h2>, <p>, dll. Jangan ada tag <html> atau <body>)\",
+    \"excerpt\": \"Ringkasan artikel max 150 karakter\",
+    \"meta_title\": \"Judul SEO singkat max 60 karakter\",
+    \"meta_description\": \"Deskripsi SEO memikat max 150 karakter\",
+    \"tags\": \"kata kunci 1, kata kunci 2, kata kunci 3\"
+}
+- Panjang artikel sekitar 300-400 kata. Buat paragraf pendek agar nyaman dibaca di mobile.
+";
+
+        try {
+            $response = Gemini::generativeModel('gemini-3.1-flash-lite')->generateContent($prompt);
+            $responseText = $response->text();
+
+            // Bersihkan markdown wrapper untuk parsing JSON
+            $responseText = preg_replace('/^```json\s*|\s*```$/i', '', trim($responseText));
+
+            $data = json_decode($responseText, true);
+
+            if (!$data || !isset($data['content']) || !isset($data['title'])) {
+                throw new \Exception("Format respons AI tidak valid atau JSON rusak.");
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'title' => trim($data['title']),
+                'html' => trim($data['content']),
+                'excerpt' => $data['excerpt'] ?? '',
+                'meta_title' => $data['meta_title'] ?? '',
+                'meta_description' => $data['meta_description'] ?? '',
+                'tags' => $data['tags'] ?? ''
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Gagal menghasilkan artikel AI: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

@@ -1,8 +1,8 @@
 @extends('layouts.admin.app')
 
 @section('content')
-<div class="min-h-screen bg-white py-6 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-6xl mx-auto">
+<div class="min-h-screen bg-slate-50/50 py-6 px-4 sm:px-6 lg:px-8">
+    <div class="w-full">
         {{-- Header --}}
         <div class="mb-6">
             <div class="flex items-center gap-2 mb-1">
@@ -55,17 +55,22 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
                 {{-- Main Content --}}
-                <div class="lg:col-span-2 space-y-4">
+                <div class="lg:col-span-2 space-y-6">
                     {{-- Title --}}
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
-                        <label class="block text-[13px] font-medium tracking-wide text-slate-700 text-gray-700 mb-2">
-                            Judul Blog <span class="text-red-500">*</span>
-                        </label>
-                        <input type="text" name="title" id="titleInput" value="{{ old('title', $blog->title) }}" required placeholder="Masukkan judul blog yang menarik..." class="w-full text-lg font-semibold border-0 border-b-2 border-gray-200 px-0 py-2 focus:border-slate-800 focus:ring-0 placeholder-gray-400">
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200/60 p-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <label class="block text-[13px] font-medium tracking-wide text-slate-700 text-gray-700">
+                                Judul Blog <span class="text-red-500">*</span>
+                            </label>
+                            <button type="button" id="btnGenerateAi" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 rounded-lg text-xs font-semibold transition-colors">
+                                <i class="fas fa-magic"></i> Auto Generate (AI)
+                            </button>
+                        </div>
+                        <input type="text" name="title" id="titleInput" value="{{ old('title', $blog->title) }}" required placeholder="Masukkan judul blog yang menarik (jika kosong AI akan membuat random)..." class="w-full text-base font-semibold border-0 border-b-2 border-gray-200 px-0 py-2 focus:border-slate-800 focus:ring-0 placeholder-gray-400">
                     </div>
 
                     {{-- Featured Image --}}
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200/60 p-6">
                         <label class="block text-[13px] font-medium tracking-wide text-slate-700 text-gray-700 mb-2">Gambar Unggulan</label>
 
                         {{-- Current Image --}}
@@ -110,7 +115,7 @@
                     </div>
 
                     {{-- Content Editor --}}
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200/60 p-6">
                         <label class="block text-[13px] font-medium tracking-wide text-slate-700 text-gray-700 mb-2">
                             Konten Blog <span class="text-red-500">*</span>
                         </label>
@@ -130,7 +135,7 @@
                     </div>
 
                     {{-- Excerpt --}}
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200/60 p-6">
                         <label class="block text-[13px] font-medium tracking-wide text-slate-700 text-gray-700 mb-2">Excerpt (Opsional)</label>
                         <textarea name="excerpt" id="excerptInput" rows="2" placeholder="Ringkasan singkat artikel (otomatis diambil dari konten jika kosong)" class="w-full border border-gray-300 rounded-xl px-3 py-2 text-[13px] focus:ring-2 focus:ring-slate-800 focus:border-transparent resize-none">{{ old('excerpt', $blog->excerpt) }}</textarea>
                         <p class="mt-1 text-[11px] text-gray-500">Maksimal 160 karakter untuk hasil optimal</p>
@@ -138,9 +143,9 @@
                 </div>
 
                 {{-- Sidebar --}}
-                <div class="lg:col-span-1 space-y-4">
+                <div class="lg:col-span-1 space-y-6">
                     {{-- Publish Settings --}}
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 lg:sticky lg:top-4">
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200/60 p-6 lg:sticky lg:top-4">
                         <h3 class="text-base font-semibold text-gray-900 mb-3 flex items-center gap-2">
                             <svg class="w-4 h-4 text-slate-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
@@ -511,6 +516,65 @@
     document.getElementById('titleInput').addEventListener('input', (e) => {
         const metaTitleInput = document.querySelector('input[name="meta_title"]');
         if (!metaTitleInput.value) metaTitleInput.placeholder = e.target.value || 'Otomatis dari judul jika kosong';
+    });
+
+    // ═══ 8. AUTO GENERATE AI ══════════════════════════════════════════
+    document.getElementById('btnGenerateAi').addEventListener('click', async function() {
+        const btn = this;
+        const categorySelect = document.querySelector('select[name="category_id"]');
+        const titleInput = document.getElementById('titleInput');
+
+        if (!categorySelect.value) {
+            alert('Pilih Kategori terlebih dahulu agar AI tahu konteks yang dibahas!');
+            categorySelect.focus();
+            return;
+        }
+
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+        btn.disabled = true;
+        btn.classList.add('opacity-75', 'cursor-not-allowed');
+
+        try {
+            const response = await fetch('{{ route("blogs.generate_ai") }}', {
+                method: 'POST'
+                , headers: {
+                    'Content-Type': 'application/json'
+                    , 'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+                , body: JSON.stringify({
+                    title: titleInput.value
+                    , category_id: categorySelect.value
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.status === 'success') {
+                if (data.title) titleInput.value = data.title;
+                if (data.meta_title) document.querySelector('input[name="meta_title"]').value = data.meta_title;
+                if (data.meta_description) document.querySelector('textarea[name="meta_description"]').value = data.meta_description;
+                if (data.excerpt) document.querySelector('textarea[name="excerpt"]').value = data.excerpt;
+                if (data.tags) document.querySelector('input[name="tags[]"]').value = data.tags;
+
+                // Auto-select first author if empty
+                const authorSelect = document.querySelector('select[name="author_id"]');
+                if (authorSelect && !authorSelect.value && authorSelect.options.length > 1) {
+                    authorSelect.value = authorSelect.options[1].value;
+                }
+
+                quill.clipboard.dangerouslyPasteHTML(data.html);
+            } else {
+                alert(data.message || 'Terjadi kesalahan saat generate AI');
+            }
+        } catch (error) {
+            alert('Terjadi kesalahan koneksi saat generate AI');
+            console.error(error);
+        } finally {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+            btn.classList.remove('opacity-75', 'cursor-not-allowed');
+        }
     });
 
 </script>

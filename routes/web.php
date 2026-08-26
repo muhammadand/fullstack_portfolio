@@ -116,6 +116,7 @@ Route::resource('portfolio-categories', PortfolioCategoryController::class);
 Route::resource('blog-categories', BlogCategoryController::class);
 // Blogs
 Route::patch('blogs/{blog}/publish', [BlogController::class, 'publish'])->name('blogs.publish');
+Route::post('blogs/generate-ai', [BlogController::class, 'generateAi'])->name('blogs.generate_ai');
 Route::resource('blogs', BlogController::class);
 Route::post('blogs/upload-image', [BlogController::class, 'uploadImage'])->name('blogs.upload-image');
 
