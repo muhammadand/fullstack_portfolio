@@ -20,6 +20,7 @@ class PushSubscriptionController extends Controller
         $key = $request->keys['p256dh'];
 
         // Get the authenticated affiliate
+        /** @var \App\Models\Affiliate $affiliate */
         $affiliate = auth()->guard('affiliate')->user();
 
         if (!$affiliate) {
