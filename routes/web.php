@@ -100,185 +100,185 @@ Route::get('/generate-sitemap', function () {
 
 
 //administrator
-    Route::get('/dashboard/admin', [AdminController::class, 'admin'])->name('dashboard.admin');
-    Route::get('/admin/view-stats', [AdminController::class, 'viewStats'])->name('admin.view.stats');
+Route::get('/dashboard/admin', [AdminController::class, 'admin'])->name('dashboard.admin');
+Route::get('/admin/view-stats', [AdminController::class, 'viewStats'])->name('admin.view.stats');
+
+// Notifications
+Route::post('/notifications/{id}/mark-as-read', [App\Http\Controllers\Admin\NotificationController::class, 'markAsRead'])->name('notifications.mark-as-read');
+Route::delete('/notifications/{id}', [App\Http\Controllers\Admin\NotificationController::class, 'destroy'])->name('notifications.destroy');
+
+// Portfolio
+Route::resource('portfolio', PortfolioController::class);
+Route::post('portfolio/upload-image', [PortfolioController::class, 'uploadImage'])->name('portfolio.upload-image');
+Route::resource('portfolio-categories', PortfolioCategoryController::class);
+// Dashboard admin
+// Blog categories
+Route::resource('blog-categories', BlogCategoryController::class);
+// Blogs
+Route::patch('blogs/{blog}/publish', [BlogController::class, 'publish'])->name('blogs.publish');
+Route::resource('blogs', BlogController::class);
+Route::post('blogs/upload-image', [BlogController::class, 'uploadImage'])->name('blogs.upload-image');
+
+// Careers
+Route::resource('careers', CareersController::class);
+Route::post('careers/upload-image', [CareersController::class, 'uploadImage'])->name('careers.upload-image');
+
+// Careers Application
+Route::resource('career-applications', CareerApplicationController::class);
+
+// Users
+Route::resource('users', UserController::class);
+
+// Affiliate Partners Management
+Route::get('admin/affiliates', [App\Http\Controllers\Admin\AffiliateController::class, 'index'])->name('admin.affiliates.index');
+Route::post('admin/affiliates', [App\Http\Controllers\Admin\AffiliateController::class, 'store'])->name('admin.affiliates.store');
+Route::get('admin/affiliates/{affiliate}', [App\Http\Controllers\Admin\AffiliateController::class, 'show'])->name('admin.affiliates.show');
+Route::post('admin/affiliates/{affiliate}/approve', [App\Http\Controllers\Admin\AffiliateController::class, 'approve'])->name('admin.affiliates.approve');
+Route::post('admin/affiliates/{affiliate}/reject', [App\Http\Controllers\Admin\AffiliateController::class, 'reject'])->name('admin.affiliates.reject');
+Route::post('admin/affiliates/{affiliate}/commission', [App\Http\Controllers\Admin\AffiliateController::class, 'addCommission'])->name('admin.affiliates.commission');
+
+// Withdrawals Management
+Route::get('admin/withdrawals', [App\Http\Controllers\Admin\WithdrawalController::class, 'index'])->name('admin.withdrawals.index');
+Route::post('admin/withdrawals/{withdrawal}/approve', [App\Http\Controllers\Admin\WithdrawalController::class, 'approve'])->name('admin.withdrawals.approve');
+
+// Manajemen Client Proposals
+Route::resource('admin/business-categories', App\Http\Controllers\Admin\BusinessCategoryController::class)->names([
+    'index' => 'admin.business_categories.index',
+    'create' => 'admin.business_categories.create',
+    'store' => 'admin.business_categories.store',
+    'edit' => 'admin.business_categories.edit',
+    'update' => 'admin.business_categories.update',
+    'destroy' => 'admin.business_categories.destroy',
+]);
+
+Route::resource('admin/client-proposals', App\Http\Controllers\Admin\ClientProposalController::class)->names([
+    'index' => 'admin.client_proposals.index',
+    'create' => 'admin.client_proposals.create',
+    'store' => 'admin.client_proposals.store',
+    'edit' => 'admin.client_proposals.edit',
+    'update' => 'admin.client_proposals.update',
+    'destroy' => 'admin.client_proposals.destroy',
+]);
+Route::post('admin/client-proposals/{client_proposal}/wa-template', [App\Http\Controllers\Admin\ClientProposalController::class, 'updateWaTemplate'])->name('admin.client_proposals.update_wa');
+
+Route::resource('admin/chat-templates', App\Http\Controllers\Admin\ChatTemplateController::class)->except(['create', 'show', 'edit'])->names([
+    'index' => 'admin.chat_templates.index',
+    'store' => 'admin.chat_templates.store',
+    'update' => 'admin.chat_templates.update',
+    'destroy' => 'admin.chat_templates.destroy',
+]);
+
+// Profile
+Route::get('profile', [UserController::class, 'editProfile'])->name('profile.edit');
+Route::put('profile', [UserController::class, 'updateProfile'])->name('profile.update');
+
+//Public Routes
+Route::get('/', [HomeController::class, 'indexCompanyProfile'])->name('index.company.profile');
+
+// Redirect 301 dari route lama (landing/*) ke route baru (s/*) untuk menjaga SEO
+Route::redirect('landing/blogs', '/s/blogs', 301);
+Route::redirect('landing/blog/{slug}', '/s/blog/{slug}', 301);
+Route::redirect('landing/portfolio', '/s/portfolio', 301);
+Route::redirect('landing/portfolio/{slug}', '/s/portfolio/{slug}', 301);
+Route::redirect('landing/careers', '/s/careers', 301);
+Route::redirect('landing/careers/{slug}', '/s/careers/{slug}', 301);
+
+//blogs user
+Route::get('s/blogs', [HomeController::class, 'blogs'])->name('landing.blogs');
+Route::get('s/blog/{slug}', [HomeController::class, 'readBlog'])->name('blogs.read');
+//portfolio users
+Route::get('s/portfolio', [HomeController::class, 'portfolio'])->name('landing.portfolio');
+Route::get('s/portfolio/{slug}', [HomeController::class, 'readPortfolio'])->name('portfolio.read');
+
+//careers users
+Route::get('s/careers', [App\Http\Controllers\CareersController::class, 'listCareers'])->name('landing.careers');
+Route::get('s/careers/{slug}', [App\Http\Controllers\CareersController::class, 'getByslug'])->name('careers.read');
+
+//service users
+Route::get('service', [HomeController::class, 'service'])->name('service');
+//about users
+Route::get('about', [HomeController::class, 'about'])->name('about');
+//contact users
+Route::get('contact', [HomeController::class, 'contact'])->name('contact');
+// REGISTER
+Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
+Route::post('/register', [AuthController::class, 'register'])->name('register.post');
+
+
+// Sobat Scalify
+Route::get('/sobat-scalify', [HomeController::class, 'SobatScalify'])->name('sobat-scalify');
+Route::get('/partner-program', [HomeController::class, 'partnerProgram'])->name('partner.program');
+//Documentation
+Route::resource('documentation', DocumentationController::class);
+
+// Sobat Scalify Affiliate (Public/Guest)
+Route::get('/partner/register', [App\Http\Controllers\AffiliateController::class, 'registerForm'])->name('affiliate.register');
+Route::post('/partner/register', [App\Http\Controllers\AffiliateController::class, 'registerSubmit'])->name('affiliate.register.submit');
+Route::get('/partner/login', [App\Http\Controllers\AffiliateController::class, 'loginForm'])->name('affiliate.login');
+Route::get('/partner/magic-login/{affiliate}', [App\Http\Controllers\AffiliateController::class, 'magicLogin'])->name('affiliate.magic_login')->middleware('signed');
+Route::get('/partner/magic-login-qr', [App\Http\Controllers\AffiliateController::class, 'magicLoginQr'])->name('affiliate.magic_login_qr');
+Route::get('/magic-login/admin/{user}', [App\Http\Controllers\UserController::class, 'magicLogin'])->name('users.magic_login')->middleware('signed');
+Route::post('/partner/login', [App\Http\Controllers\AffiliateController::class, 'loginSubmit'])->name('affiliate.login.submit');
+Route::post('/api/track-wa-click', [App\Http\Controllers\AffiliateController::class, 'trackClick']);
+Route::post('/api/blogs/{blog}/track-click', [App\Http\Controllers\HomeController::class, 'trackBlogClick']);
+
+// Sobat Scalify Affiliate (Auth protected)
+Route::middleware(['auth:affiliate'])->group(function () {
+    Route::get('/partner/dashboard', [App\Http\Controllers\AffiliateController::class, 'dashboard'])->name('affiliate.dashboard');
+    Route::get('/partner/history', [App\Http\Controllers\AffiliateController::class, 'history'])->name('affiliate.history');
+    Route::get('/partner/ideas/{slug}', [\App\Http\Controllers\Affiliate\TargetIdeaController::class, 'show'])->name('affiliate.ideas.show');
+    Route::get('/partner/proposals', [App\Http\Controllers\AffiliateController::class, 'proposals'])->name('affiliate.proposals');
+    Route::post('/partner/proposals', [App\Http\Controllers\AffiliateController::class, 'generateProposal'])->name('affiliate.proposals.generate');
+    Route::post('/partner/proposals/{id}/claim', [App\Http\Controllers\AffiliateController::class, 'claimProposal'])->name('affiliate.proposals.claim');
+    Route::post('/partner/logout', [App\Http\Controllers\AffiliateController::class, 'logout'])->name('affiliate.logout');
+    Route::post('/partner/withdraw', [App\Http\Controllers\AffiliateController::class, 'withdraw'])->name('affiliate.withdraw');
+
+    // Push Subscriptions
+    Route::post('/partner/push/subscribe', [\App\Http\Controllers\PushSubscriptionController::class, 'update'])->name('affiliate.push.subscribe');
 
     // Notifications
-    Route::post('/notifications/{id}/mark-as-read', [App\Http\Controllers\Admin\NotificationController::class, 'markAsRead'])->name('notifications.mark-as-read');
-    Route::delete('/notifications/{id}', [App\Http\Controllers\Admin\NotificationController::class, 'destroy'])->name('notifications.destroy');
+    Route::post('/partner/notifications/{id}/read', [App\Http\Controllers\AffiliateController::class, 'markNotificationRead'])->name('affiliate.notifications.read');
+    Route::post('/partner/notifications/clear', [App\Http\Controllers\AffiliateController::class, 'clearNotifications'])->name('affiliate.notifications.clear');
 
-    // Portfolio
-    Route::resource('portfolio', PortfolioController::class);
-    Route::post('portfolio/upload-image', [PortfolioController::class, 'uploadImage'])->name('portfolio.upload-image');
-    Route::resource('portfolio-categories', PortfolioCategoryController::class);
-    // Dashboard admin
-    // Blog categories
-    Route::resource('blog-categories', BlogCategoryController::class);
-    // Blogs
-    Route::patch('blogs/{blog}/publish', [BlogController::class, 'publish'])->name('blogs.publish');
-    Route::resource('blogs', BlogController::class);
-    Route::post('blogs/upload-image', [BlogController::class, 'uploadImage'])->name('blogs.upload-image');
+    // Gamification / Points
+    Route::post('/partner/claim-points', [App\Http\Controllers\AffiliateController::class, 'claimDailyPoints'])->name('affiliate.claim_points');
+    Route::get('/partner/streak', [App\Http\Controllers\AffiliateController::class, 'streak'])->name('affiliate.streak');
+    Route::get('/partner/store', [App\Http\Controllers\AffiliateController::class, 'store'])->name('affiliate.store');
 
-    // Careers
-    Route::resource('careers', CareersController::class);
-    Route::post('careers/upload-image', [CareersController::class, 'uploadImage'])->name('careers.upload-image');
+    // Guide
+    Route::get('/partner/guide', [App\Http\Controllers\AffiliateController::class, 'guide'])->name('affiliate.guide');
 
-    // Careers Application
-    Route::resource('career-applications', CareerApplicationController::class);
+    // Student Services
+    Route::get('/partner/student-services', [App\Http\Controllers\Affiliate\StudentServiceController::class, 'index'])->name('affiliate.student_services.index');
+    Route::post('/partner/student-services/generate', [App\Http\Controllers\Affiliate\StudentServiceController::class, 'generateProposal'])->name('affiliate.student_services.generate');
 
-    // Users
-    Route::resource('users', UserController::class);
+    // Student Leads
+    Route::get('/partner/student-leads', [App\Http\Controllers\Affiliate\StudentLeadController::class, 'index'])->name('affiliate.student_leads.index');
+    Route::post('/partner/student-leads', [App\Http\Controllers\Affiliate\StudentLeadController::class, 'store'])->name('affiliate.student_leads.store');
+    Route::put('/partner/student-leads/{id}', [App\Http\Controllers\Affiliate\StudentLeadController::class, 'update'])->name('affiliate.student_leads.update');
+    Route::post('/partner/student-leads/{id}/claim', [App\Http\Controllers\Affiliate\StudentLeadController::class, 'claim'])->name('affiliate.student_leads.claim');
 
-    // Affiliate Partners Management
-    Route::get('admin/affiliates', [App\Http\Controllers\Admin\AffiliateController::class, 'index'])->name('admin.affiliates.index');
-    Route::post('admin/affiliates', [App\Http\Controllers\Admin\AffiliateController::class, 'store'])->name('admin.affiliates.store');
-    Route::get('admin/affiliates/{affiliate}', [App\Http\Controllers\Admin\AffiliateController::class, 'show'])->name('admin.affiliates.show');
-    Route::post('admin/affiliates/{affiliate}/approve', [App\Http\Controllers\Admin\AffiliateController::class, 'approve'])->name('admin.affiliates.approve');
-    Route::post('admin/affiliates/{affiliate}/reject', [App\Http\Controllers\Admin\AffiliateController::class, 'reject'])->name('admin.affiliates.reject');
-    Route::post('admin/affiliates/{affiliate}/commission', [App\Http\Controllers\Admin\AffiliateController::class, 'addCommission'])->name('admin.affiliates.commission');
-    
-    // Withdrawals Management
-    Route::get('admin/withdrawals', [App\Http\Controllers\Admin\WithdrawalController::class, 'index'])->name('admin.withdrawals.index');
-    Route::post('admin/withdrawals/{withdrawal}/approve', [App\Http\Controllers\Admin\WithdrawalController::class, 'approve'])->name('admin.withdrawals.approve');
-
-    // Manajemen Client Proposals
-    Route::resource('admin/business-categories', App\Http\Controllers\Admin\BusinessCategoryController::class)->names([
-        'index' => 'admin.business_categories.index',
-        'create' => 'admin.business_categories.create',
-        'store' => 'admin.business_categories.store',
-        'edit' => 'admin.business_categories.edit',
-        'update' => 'admin.business_categories.update',
-        'destroy' => 'admin.business_categories.destroy',
-    ]);
-    
-    Route::resource('admin/client-proposals', App\Http\Controllers\Admin\ClientProposalController::class)->names([
-        'index' => 'admin.client_proposals.index',
-        'create' => 'admin.client_proposals.create',
-        'store' => 'admin.client_proposals.store',
-        'edit' => 'admin.client_proposals.edit',
-        'update' => 'admin.client_proposals.update',
-        'destroy' => 'admin.client_proposals.destroy',
-    ]);
-    Route::post('admin/client-proposals/{client_proposal}/wa-template', [App\Http\Controllers\Admin\ClientProposalController::class, 'updateWaTemplate'])->name('admin.client_proposals.update_wa');
-
-    Route::resource('admin/chat-templates', App\Http\Controllers\Admin\ChatTemplateController::class)->except(['create', 'show', 'edit'])->names([
-        'index' => 'admin.chat_templates.index',
-        'store' => 'admin.chat_templates.store',
-        'update' => 'admin.chat_templates.update',
-        'destroy' => 'admin.chat_templates.destroy',
-    ]);
+    // Affiliate Blogs
+    Route::get('/partner/blogs', [App\Http\Controllers\Affiliate\BlogController::class, 'index'])->name('affiliate.blogs.index');
+    Route::get('/partner/blogs/performance', [App\Http\Controllers\Affiliate\BlogController::class, 'performance'])->name('affiliate.blogs.performance');
+    Route::get('/partner/blogs/create', [App\Http\Controllers\Affiliate\BlogController::class, 'create'])->name('affiliate.blogs.create');
+    Route::post('/partner/blogs/generate-ai', [App\Http\Controllers\Affiliate\BlogController::class, 'generateAi'])->name('affiliate.blogs.generate_ai');
+    Route::post('/partner/blogs', [App\Http\Controllers\Affiliate\BlogController::class, 'store'])->name('affiliate.blogs.store');
 
     // Profile
-    Route::get('profile', [UserController::class, 'editProfile'])->name('profile.edit');
-    Route::put('profile', [UserController::class, 'updateProfile'])->name('profile.update');
+    Route::get('/partner/profile', [App\Http\Controllers\AffiliateController::class, 'profile'])->name('affiliate.profile');
+    Route::post('/partner/profile', [App\Http\Controllers\AffiliateController::class, 'updateProfile'])->name('affiliate.profile.update');
 
-    //Public Routes
-    Route::get('/',[HomeController::class,'indexCompanyProfile'])->name('index.company.profile');
+    // Chat Templates
+    Route::get('/partner/chat-templates', [App\Http\Controllers\AffiliateChatTemplateController::class, 'index'])->name('affiliate.chat_templates.index');
+    Route::post('/partner/chat-templates', [App\Http\Controllers\AffiliateChatTemplateController::class, 'store'])->name('affiliate.chat_templates.store');
+    Route::put('/partner/chat-templates/{chat_template}', [App\Http\Controllers\AffiliateChatTemplateController::class, 'update'])->name('affiliate.chat_templates.update');
+    Route::delete('/partner/chat-templates/{chat_template}', [App\Http\Controllers\AffiliateChatTemplateController::class, 'destroy'])->name('affiliate.chat_templates.destroy');
+});
 
-    // Redirect 301 dari route lama (landing/*) ke route baru (s/*) untuk menjaga SEO
-    Route::redirect('landing/blogs', '/s/blogs', 301);
-    Route::redirect('landing/blog/{slug}', '/s/blog/{slug}', 301);
-    Route::redirect('landing/portfolio', '/s/portfolio', 301);
-    Route::redirect('landing/portfolio/{slug}', '/s/portfolio/{slug}', 301);
-    Route::redirect('landing/careers', '/s/careers', 301);
-    Route::redirect('landing/careers/{slug}', '/s/careers/{slug}', 301);
-
-    //blogs user
-    Route::get('s/blogs', [HomeController::class, 'blogs'])->name('landing.blogs');
-    Route::get('s/blog/{slug}', [HomeController::class, 'readBlog'])->name('blogs.read');
-    //portfolio users
-    Route::get('s/portfolio', [HomeController::class, 'portfolio'])->name('landing.portfolio');
-    Route::get('s/portfolio/{slug}', [HomeController::class, 'readPortfolio'])->name('portfolio.read');
-    
-    //careers users
-    Route::get('s/careers', [App\Http\Controllers\CareersController::class, 'listCareers'])->name('landing.careers');
-    Route::get('s/careers/{slug}', [App\Http\Controllers\CareersController::class, 'getByslug'])->name('careers.read');
-
-    //service users
-    Route::get('service',[HomeController::class,'service'])->name('service');
-    //about users
-    Route::get('about',[HomeController::class,'about'])->name('about');
-    //contact users
-    Route::get('contact',[HomeController::class,'contact'])->name('contact');
-    // REGISTER
-    Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
-    Route::post('/register', [AuthController::class, 'register'])->name('register.post');
-
-
-    // Sobat Scalify
-    Route::get('/sobat-scalify',[HomeController::class,'SobatScalify'])->name('sobat-scalify');
-    Route::get('/partner-program',[HomeController::class,'partnerProgram'])->name('partner.program');
-    //Documentation
-    Route::resource('documentation',DocumentationController::class);
-
-    // Sobat Scalify Affiliate (Public/Guest)
-    Route::get('/partner/register', [App\Http\Controllers\AffiliateController::class, 'registerForm'])->name('affiliate.register');
-    Route::post('/partner/register', [App\Http\Controllers\AffiliateController::class, 'registerSubmit'])->name('affiliate.register.submit');
-    Route::get('/partner/login', [App\Http\Controllers\AffiliateController::class, 'loginForm'])->name('affiliate.login');
-    Route::get('/partner/magic-login/{affiliate}', [App\Http\Controllers\AffiliateController::class, 'magicLogin'])->name('affiliate.magic_login')->middleware('signed');
-    Route::get('/partner/magic-login-qr', [App\Http\Controllers\AffiliateController::class, 'magicLoginQr'])->name('affiliate.magic_login_qr');
-    Route::get('/magic-login/admin/{user}', [App\Http\Controllers\UserController::class, 'magicLogin'])->name('users.magic_login')->middleware('signed');
-    Route::post('/partner/login', [App\Http\Controllers\AffiliateController::class, 'loginSubmit'])->name('affiliate.login.submit');
-    Route::post('/api/track-wa-click', [App\Http\Controllers\AffiliateController::class, 'trackClick']);
-    Route::post('/api/blogs/{blog}/track-click', [App\Http\Controllers\HomeController::class, 'trackBlogClick']);
-    
-    // Sobat Scalify Affiliate (Auth protected)
-    Route::middleware(['auth:affiliate'])->group(function () {
-        Route::get('/partner/dashboard', [App\Http\Controllers\AffiliateController::class, 'dashboard'])->name('affiliate.dashboard');
-        Route::get('/partner/history', [App\Http\Controllers\AffiliateController::class, 'history'])->name('affiliate.history');
-        Route::get('/partner/ideas/{slug}', [\App\Http\Controllers\Affiliate\TargetIdeaController::class, 'show'])->name('affiliate.ideas.show');
-        Route::get('/partner/proposals', [App\Http\Controllers\AffiliateController::class, 'proposals'])->name('affiliate.proposals');
-        Route::post('/partner/proposals', [App\Http\Controllers\AffiliateController::class, 'generateProposal'])->name('affiliate.proposals.generate');
-        Route::post('/partner/proposals/{id}/claim', [App\Http\Controllers\AffiliateController::class, 'claimProposal'])->name('affiliate.proposals.claim');
-        Route::post('/partner/logout', [App\Http\Controllers\AffiliateController::class, 'logout'])->name('affiliate.logout');
-        Route::post('/partner/withdraw', [App\Http\Controllers\AffiliateController::class, 'withdraw'])->name('affiliate.withdraw');
-        
-        // Push Subscriptions
-        Route::post('/partner/push/subscribe', [\App\Http\Controllers\PushSubscriptionController::class, 'update'])->name('affiliate.push.subscribe');
-        
-        // Notifications
-        Route::post('/partner/notifications/{id}/read', [App\Http\Controllers\AffiliateController::class, 'markNotificationRead'])->name('affiliate.notifications.read');
-        Route::post('/partner/notifications/clear', [App\Http\Controllers\AffiliateController::class, 'clearNotifications'])->name('affiliate.notifications.clear');
-        
-        // Gamification / Points
-        Route::post('/partner/claim-points', [App\Http\Controllers\AffiliateController::class, 'claimDailyPoints'])->name('affiliate.claim_points');
-        Route::get('/partner/streak', [App\Http\Controllers\AffiliateController::class, 'streak'])->name('affiliate.streak');
-        Route::get('/partner/store', [App\Http\Controllers\AffiliateController::class, 'store'])->name('affiliate.store');
-        
-        // Guide
-        Route::get('/partner/guide', [App\Http\Controllers\AffiliateController::class, 'guide'])->name('affiliate.guide');
-
-        // Student Services
-        Route::get('/partner/student-services', [App\Http\Controllers\Affiliate\StudentServiceController::class, 'index'])->name('affiliate.student_services.index');
-        Route::post('/partner/student-services/generate', [App\Http\Controllers\Affiliate\StudentServiceController::class, 'generateProposal'])->name('affiliate.student_services.generate');
-        
-        // Student Leads
-        Route::get('/partner/student-leads', [App\Http\Controllers\Affiliate\StudentLeadController::class, 'index'])->name('affiliate.student_leads.index');
-        Route::post('/partner/student-leads', [App\Http\Controllers\Affiliate\StudentLeadController::class, 'store'])->name('affiliate.student_leads.store');
-        Route::put('/partner/student-leads/{id}', [App\Http\Controllers\Affiliate\StudentLeadController::class, 'update'])->name('affiliate.student_leads.update');
-        Route::post('/partner/student-leads/{id}/claim', [App\Http\Controllers\Affiliate\StudentLeadController::class, 'claim'])->name('affiliate.student_leads.claim');
-
-        // Affiliate Blogs
-        Route::get('/partner/blogs', [App\Http\Controllers\Affiliate\BlogController::class, 'index'])->name('affiliate.blogs.index');
-        Route::get('/partner/blogs/performance', [App\Http\Controllers\Affiliate\BlogController::class, 'performance'])->name('affiliate.blogs.performance');
-        Route::get('/partner/blogs/create', [App\Http\Controllers\Affiliate\BlogController::class, 'create'])->name('affiliate.blogs.create');
-        Route::post('/partner/blogs/generate-ai', [App\Http\Controllers\Affiliate\BlogController::class, 'generateAi'])->name('affiliate.blogs.generate_ai');
-        Route::post('/partner/blogs', [App\Http\Controllers\Affiliate\BlogController::class, 'store'])->name('affiliate.blogs.store');
-
-        // Profile
-        Route::get('/partner/profile', [App\Http\Controllers\AffiliateController::class, 'profile'])->name('affiliate.profile');
-        Route::post('/partner/profile', [App\Http\Controllers\AffiliateController::class, 'updateProfile'])->name('affiliate.profile.update');
-
-        // Chat Templates
-        Route::get('/partner/chat-templates', [App\Http\Controllers\AffiliateChatTemplateController::class, 'index'])->name('affiliate.chat_templates.index');
-        Route::post('/partner/chat-templates', [App\Http\Controllers\AffiliateChatTemplateController::class, 'store'])->name('affiliate.chat_templates.store');
-        Route::put('/partner/chat-templates/{chat_template}', [App\Http\Controllers\AffiliateChatTemplateController::class, 'update'])->name('affiliate.chat_templates.update');
-        Route::delete('/partner/chat-templates/{chat_template}', [App\Http\Controllers\AffiliateChatTemplateController::class, 'destroy'])->name('affiliate.chat_templates.destroy');
-    });
-    
 // LOGIN
-    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 // LOGOUT
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
@@ -298,11 +298,12 @@ Route::get('/client/parfum/{slug}/admin-demo', [ClientProposalController::class,
 // Endpoint rahasia untuk trigger deploy (migrasi & cache) dari GitHub Actions (Tanpa SSH)
 Route::get('/secret-deploy-trigger-12345', function () {
     try {
-        // Jalankan semua migrasi yang belum ter-migrate
+        // Jalankan migrasi spesifik
         \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_08_26_065451_make_featured_image_nullable_on_blogs_table.php',
             '--force' => true
         ]);
-        
+
         \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'ClientProposalSeeder', '--force' => true]);
         \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'BusinessCategorySeeder', '--force' => true]);
         \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'StudentServiceSeeder', '--force' => true]);
@@ -333,11 +334,9 @@ Route::get('/fix-storage', function () {
     if (File::exists(public_path('storage'))) {
         File::deleteDirectory(public_path('storage'));
     }
-    
+
     // 2. Buat symlink baru
     Artisan::call('storage:link');
-    
+
     return 'Symlink storage berhasil dibuat!';
 });
-
-
