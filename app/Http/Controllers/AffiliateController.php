@@ -11,6 +11,7 @@ use App\Models\BusinessCategory;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
+use Gemini\Laravel\Facades\Gemini;
 
 class AffiliateController extends Controller
 {
@@ -61,8 +62,8 @@ class AffiliateController extends Controller
             'password' => 'required'
         ]);
 
-        // Attempt to login using the affiliate guard
-        if (Auth::guard('affiliate')->attempt($credentials)) {
+        // Attempt to login using the affiliate guard (true for remember me)
+        if (Auth::guard('affiliate')->attempt($credentials, true)) {
             /** @var \App\Models\Affiliate $affiliate */
             $affiliate = Auth::guard('affiliate')->user();
 
@@ -72,7 +73,7 @@ class AffiliateController extends Controller
                 return redirect()->back()->with('error', 'Akun Anda telah ditolak oleh Admin.');
             }
 
-            return redirect()->route('affiliate.dashboard');
+            return redirect()->intended(route('affiliate.dashboard'));
         }
 
         return redirect()->back()->withErrors(['email' => 'Email atau Password salah.'])->withInput($request->except('password'));
@@ -392,7 +393,8 @@ class AffiliateController extends Controller
             abort(401, 'Link login sudah kedaluwarsa atau tidak valid.');
         }
 
-        Auth::guard('affiliate')->login($affiliate);
+        // Set parameter kedua ke true agar 'Remember Me' aktif (Sesi tidak expired 5 tahun)
+        Auth::guard('affiliate')->login($affiliate, true);
 
         return redirect()->route('affiliate.dashboard')->with('success', 'Berhasil login via QR Akses.');
     }
@@ -424,5 +426,43 @@ class AffiliateController extends Controller
         }
 
         return response()->json(['success' => false, 'message' => 'Proposal sudah diklaim.'], 403);
+    }
+
+    public function generateAiChat(Request $request, $id)
+    {
+        $affiliate = Auth::guard('affiliate')->user();
+        $proposal = \App\Models\ClientProposal::findOrFail($id);
+
+        $profileLink = "https://scalifyintellegence.my.id/sobat-scalify?ref=" . $affiliate->affiliate_code;
+        $landingPageUrl = route('landing.dynamic', $proposal->slug) . '?ref=' . $affiliate->affiliate_code;
+        $proposalUrl = route('proposal.dynamic', $proposal->slug) . '?ref=' . $affiliate->affiliate_code;
+
+        $prompt = "Kamu adalah seorang UX Copywriter dan Content Strategist B2B profesional.\n";
+        $prompt .= "Buatkan 1 pesan WhatsApp yang soft-selling, profesional namun ramah, menarik, dan pendek (maksimal 3-4 kalimat) untuk menawarkan solusi digital / website ke sebuah bisnis atau perusahaan.\n";
+        $prompt .= "Informasi Prospek Bisnis:\n";
+        $prompt .= "- Nama Bisnis/Brand: " . ($proposal->brand_name ?? 'Bapak/Ibu') . "\n";
+        $prompt .= "- Kategori Bisnis: " . ($proposal->category->name ?? 'Bisnis') . "\n";
+        $prompt .= "- Nama Saya (Pengirim): " . ($affiliate->name) . "\n\n";
+        $prompt .= "Instruksi Khusus:\n";
+        $prompt .= "1. Tawarkan solusi digital/website untuk membantu bisnis mereka berkembang, buat agar terkesan personal dan relevan dengan kategori bisnis mereka.\n";
+        $prompt .= "2. Sertakan link landing page khusus untuk mereka ini di dalam pesan: " . $landingPageUrl . "\n";
+        $prompt .= "3. Opsional, sertakan link proposal PDF jika dirasa pas: " . $proposalUrl . "\n";
+        $prompt .= "4. Sertakan link profil ini di akhir pesan agar mereka lebih percaya: " . $profileLink . "\n";
+        $prompt .= "5. Jangan berikan opsi, jangan tambahkan karakter markdown seperti bintang (**) atau pembuka/penutup, langsung berikan isi teksnya saja agar bisa langsung dikirim via WhatsApp.";
+
+        try {
+            $response = Gemini::generativeModel('gemini-3.1-flash-lite')->generateContent($prompt);
+            $text = trim($response->text());
+
+            return response()->json([
+                'success' => true,
+                'text' => $text
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal generate AI: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

@@ -20,23 +20,24 @@ class HomeController extends Controller
             ->take(3)
             ->get();
         $latestPortfolios = Portfolio::active()
-        ->orderBy('completion_date', 'desc')
-        ->take(3)
-        ->get();
+            ->orderBy('completion_date', 'desc')
+            ->take(3)
+            ->get();
 
-        return view('pages.landing.index', compact('latestBlogs','latestPortfolios'));
+        return view('pages.landing.index', compact('latestBlogs', 'latestPortfolios'));
     }
 
-    public function indexCompanyProfile(){
+    public function indexCompanyProfile()
+    {
         $latestBlogs = Blog::published()
             ->latest('published_at')
             ->take(3)
             ->get();
         $latestPortfolios = Portfolio::active()
-        ->orderBy('completion_date', 'desc')
-        ->take(3)
-        ->get();
-        return view('company.landing', compact('latestBlogs','latestPortfolios'));
+            ->orderBy('completion_date', 'desc')
+            ->take(3)
+            ->get();
+        return view('company.landing', compact('latestBlogs', 'latestPortfolios'));
     }
 
 
@@ -76,7 +77,7 @@ class HomeController extends Controller
 
         // Tambah view count
         $blog->increment('view_count');
-        
+
         // Tambah view count harian
         $dailyView = DailyView::firstOrCreate(
             [
@@ -99,23 +100,23 @@ class HomeController extends Controller
     }
 
     public function portfolio()
-{
-    // Gunakan paginate agar ada ->total()
-    $portfolios = Portfolio::active()
-        ->orderBy('display_order', 'asc')
-        ->paginate(12); // bebas mau 6, 9, 12, dll
+    {
+        // Gunakan paginate agar ada ->total()
+        $portfolios = Portfolio::active()
+            ->orderBy('display_order', 'asc')
+            ->paginate(12); // bebas mau 6, 9, 12, dll
 
-    // Ambil portfolio populer
-    $popularPortfolios = Portfolio::active()
-        ->orderBy('view_count', 'desc')
-        ->take(5)
-        ->get();
-    $featuredPortfolio = Portfolio::active()
+        // Ambil portfolio populer
+        $popularPortfolios = Portfolio::active()
+            ->orderBy('view_count', 'desc')
+            ->take(5)
+            ->get();
+        $featuredPortfolio = Portfolio::active()
             ->orderByDesc('view_count')
             ->first();
 
-    return view('pages.portfolio.index', compact('portfolios', 'popularPortfolios','featuredPortfolio'));
-}
+        return view('pages.portfolio.index', compact('portfolios', 'popularPortfolios', 'featuredPortfolio'));
+    }
 
 
     public function readPortfolio($slug)
@@ -149,28 +150,39 @@ class HomeController extends Controller
     }
 
 
-    public function service(){
-        return view('pages.service.index'); 
+    public function service()
+    {
+        return view('pages.service.index');
     }
-    public function about(){
-        return view('pages.about.index'); 
+    public function about()
+    {
+        return view('pages.about.index');
     }
-    public function contact(){
+    public function contact()
+    {
         return view('pages.contact');
     }
 
-    public function portfolio_1(){
+    public function portfolio_1()
+    {
         return view('portfolio.landingPage.index');
     }
 
 
-    public function SobatScalify(){
-        $documentation=Documentation::get();
-        return view('company.SobatScalify',compact('documentation'));
+    public function SobatScalify()
+    {
+        $documentation = Documentation::get();
+        return view('company.SobatScalify', compact('documentation'));
     }
 
-    public function partnerProgram(){
+    public function partnerProgram()
+    {
         return view('company.partner_program');
+    }
+
+    public function scmService()
+    {
+        return view('company.services.scm');
     }
 
     /**

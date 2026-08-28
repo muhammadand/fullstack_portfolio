@@ -114,16 +114,19 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
 
                 {{-- Card 1: SCM --}}
-                <div class="group bg-white rounded-3xl p-8 shadow-sm hover:shadow-2xl transition-all duration-500 border border-slate-100 relative overflow-hidden transform hover:-translate-y-2">
+                <a href="{{ route('layanan.scm') }}" class="group bg-white rounded-3xl p-8 shadow-sm hover:shadow-2xl transition-all duration-500 border border-slate-100 relative overflow-hidden transform hover:-translate-y-2 block cursor-pointer">
                     <i class="fa-solid fa-boxes-packing absolute -bottom-6 -right-6 text-9xl text-slate-50 group-hover:text-blue-50 transition-colors duration-500 transform -rotate-12"></i>
                     <div class="relative z-10">
                         <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center mb-6 shadow-lg shadow-blue-200">
                             <i class="fa-solid fa-truck-fast text-2xl text-white"></i>
                         </div>
-                        <h3 class="text-2xl font-bold mb-3 text-slate-800">Supply Chain (SCM)</h3>
-                        <p class="text-slate-500 font-medium leading-relaxed text-sm">Optimasi jalur distribusi, inventory control cerdas, & tracking logistik terpadu untuk efisiensi bisnis.</p>
+                        <h3 class="text-2xl font-bold mb-3 text-slate-800 group-hover:text-blue-600 transition-colors">Supply Chain (SCM)</h3>
+                        <p class="text-slate-500 font-medium leading-relaxed text-sm mb-4">Optimasi jalur distribusi, inventory control cerdas, & tracking logistik terpadu untuk efisiensi bisnis.</p>
+                        <div class="text-blue-600 font-bold text-sm flex items-center gap-2 group-hover:gap-3 transition-all">
+                            Pelajari Metode & Rumus <i class="fa-solid fa-arrow-right"></i>
+                        </div>
                     </div>
-                </div>
+                </a>
 
                 {{-- Card 2: CRM --}}
                 <div class="group bg-white rounded-3xl p-8 shadow-sm hover:shadow-2xl transition-all duration-500 border border-slate-100 relative overflow-hidden transform hover:-translate-y-2">

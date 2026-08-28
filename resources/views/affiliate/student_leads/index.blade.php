@@ -118,67 +118,11 @@
         @else
         <div class="flex flex-col gap-4">
             @foreach($leads as $lead)
-            <div class="glass-panel p-4 rounded-2xl relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-20 h-20 bg-cyan-500/10 rounded-bl-full blur-xl pointer-events-none"></div>
-
-                <div class="flex justify-between items-start mb-3">
-                    <div>
-                        <h3 class="font-bold text-sm text-white mb-1">{{ $lead->name ?? 'Anonim' }}</h3>
-                        <p class="text-[11px] text-slate-400"><i class="fa-solid fa-graduation-cap mr-1 text-cyan-400"></i> {{ $lead->university ?? 'Universitas Belum Diisi' }}</p>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        @if($tab === 'my_leads')
-                        <button onclick="openEditLeadModal('{{ $lead->id }}', '{{ addslashes($lead->name) }}', '{{ $lead->wa_number }}', '{{ addslashes($lead->needs) }}')" class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-slate-300 flex items-center justify-center transition-colors">
-                            <i class="fa-solid fa-pen text-[10px]"></i>
-                        </button>
-                        @endif
-                        @if($lead->status === 'new')
-                        <span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded-md text-[10px] font-bold">Baru</span>
-                        @elseif($lead->status === 'contacted')
-                        <span class="px-2 py-1 bg-blue-500/20 text-blue-400 rounded-md text-[10px] font-bold">Dihubungi</span>
-                        @elseif($lead->status === 'deal')
-                        <span class="px-2 py-1 bg-emerald-500/20 text-emerald-400 rounded-md text-[10px] font-bold">Deal</span>
-                        @endif
-                    </div>
-                </div>
-
-                <div class="bg-white/5 rounded-xl p-3 mb-4">
-                    <p class="text-[11px] text-slate-300 font-medium mb-1"><i class="fa-solid fa-clipboard-list mr-1"></i> Kebutuhan:</p>
-                    <p class="text-xs text-white font-bold">{{ $lead->needs }}</p>
-                </div>
-
-                @if($tab === 'global')
-                <form action="{{ route('affiliate.student_leads.claim', $lead->id) }}" method="POST">
-                    @csrf
-                    <button type="submit" class="w-full py-2 bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold rounded-xl transition-colors">
-                        Klaim Prospek Ini
-                    </button>
-                </form>
-                @else
-                <div class="mt-2">
-                    <label class="block text-[10px] font-semibold text-emerald-400 mb-1.5"><i class="fa-brands fa-whatsapp mr-1"></i> Share via WhatsApp:</label>
-                    <div class="relative">
-                        <select onchange="kirimWaLangsungAffiliate(this, '{{ $lead->id }}', '{{ addslashes($lead->name) }}', '{{ $lead->wa_number }}', '{{ $lead->proposal_slug ? route('landing.dynamic', $lead->proposal_slug) . '?ref=' . $affiliate->affiliate_code : '' }}', '{{ $lead->proposal_slug ? route('proposal.dynamic', $lead->proposal_slug) . '?ref=' . $affiliate->affiliate_code : '' }}')" class="w-full appearance-none pl-3 pr-8 py-2 bg-white/5 border border-emerald-500/30 text-emerald-300 text-xs font-medium rounded-xl focus:outline-none focus:border-emerald-500 cursor-pointer transition-all">
-                            <option value="" disabled selected class="text-slate-800">Pilih Template Chat...</option>
-                            @foreach($chatTemplates as $ct)
-                            <option value="{{ base64_encode($ct->content) }}" class="text-slate-800">{{ $ct->name }}</option>
-                            @endforeach
-                        </select>
-                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-emerald-400/70">
-                            <i class="fa-solid fa-chevron-down text-[10px]"></i>
-                        </div>
-                    </div>
-                </div>
-
-                @if($lead->proposal_slug)
-                <div class="flex gap-2 mt-3">
-                    <a href="{{ route('landing.dynamic', $lead->proposal_slug) }}" target="_blank" class="flex-1 py-2 bg-white/10 hover:bg-white/20 text-white text-center text-xs font-bold rounded-xl transition-colors">
-                        <i class="fa-solid fa-globe mr-1"></i> Lihat Proposal
-                    </a>
-                </div>
-                @endif
-                @endif
-            </div>
+            @if($tab === 'global')
+            @include('affiliate.student_leads.partials.global_leads')
+            @else
+            @include('affiliate.student_leads.partials.my_leads')
+            @endif
             @endforeach
         </div>
 
@@ -350,7 +294,7 @@
             }, 300);
         }
 
-        async function kirimWaLangsungAffiliate(selectElement, leadId, leadName, waNumber, linkLandingPage, linkProposal) {
+        async function kirimWaLangsungAffiliate(selectElement, leadId, leadName, waNumber, linkLandingPage, linkProposal, claimUrl = null) {
             if (!selectElement.value) return;
 
             let text = decodeURIComponent(escape(window.atob(selectElement.value)));
@@ -379,6 +323,21 @@
                 waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
             }
 
+            if (claimUrl) {
+                try {
+                    await fetch(claimUrl, {
+                        method: 'POST'
+                        , headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            , 'Accept': 'application/json'
+                            , 'Content-Type': 'application/json'
+                        }
+                    });
+                } catch (e) {
+                    console.error('Failed to claim lead', e);
+                }
+            }
+
             if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
                 window.location.href = waUrl;
             } else {
@@ -386,8 +345,110 @@
             }
 
             selectElement.value = "";
+
+            if (claimUrl) {
+                // Wait briefly before redirecting so the new tab has time to open (if desktop)
+                setTimeout(() => {
+                    window.location.href = "{{ route('affiliate.student_leads.index', ['tab' => 'my_leads']) }}";
+                }, 500);
+            }
+        }
+
+        async function generateAiChatAndSend(btnElement, leadId, waNumber, generateUrl, claimUrl = null) {
+            const originalHtml = btnElement.innerHTML;
+            btnElement.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+            btnElement.disabled = true;
+
+            // Show AI loading modal
+            const aiModal = document.getElementById('aiLoadingModal');
+            aiModal.classList.remove('hidden');
+
+            try {
+                const response = await fetch(generateUrl, {
+                    method: 'POST'
+                    , headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        , 'Accept': 'application/json'
+                        , 'Content-Type': 'application/json'
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success && data.text) {
+                    if (claimUrl) {
+                        try {
+                            await fetch(claimUrl, {
+                                method: 'POST'
+                                , headers: {
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                    , 'Accept': 'application/json'
+                                    , 'Content-Type': 'application/json'
+                                }
+                            });
+                        } catch (e) {
+                            console.error('Failed to claim lead', e);
+                        }
+                    }
+
+                    let formattedNumber = waNumber ? waNumber.toString().replace(/[^0-9]/g, '') : '';
+                    if (formattedNumber.startsWith('0')) {
+                        formattedNumber = '62' + formattedNumber.substring(1);
+                    }
+
+                    let waUrl = '';
+                    if (formattedNumber) {
+                        waUrl = `https://api.whatsapp.com/send?phone=${formattedNumber}&text=${encodeURIComponent(data.text)}`;
+                    } else {
+                        waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(data.text)}`;
+                    }
+
+                    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                        let a = document.createElement('a');
+                        a.href = waUrl;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                    } else {
+                        let a = document.createElement('a');
+                        a.target = '_blank';
+                        a.href = waUrl;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                    }
+
+                    if (claimUrl) {
+                        setTimeout(() => {
+                            window.location.href = "{{ route('affiliate.student_leads.index', ['tab' => 'my_leads']) }}";
+                        }, 2500);
+                    }
+                } else {
+                    alert('Gagal: ' + (data.message || 'Terjadi kesalahan'));
+                }
+            } catch (e) {
+                console.error(e);
+                alert('Gagal menghubungi AI.');
+            } finally {
+                btnElement.innerHTML = originalHtml;
+                btnElement.disabled = false;
+                aiModal.classList.add('hidden');
+            }
         }
 
     </script>
+
+    <!-- AI Loading Modal -->
+    <div id="aiLoadingModal" class="fixed inset-0 z-[70] hidden">
+        <div class="absolute inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+            <div class="bg-[#0B1120] border border-indigo-500/30 rounded-2xl p-6 text-center shadow-2xl shadow-indigo-500/20 max-w-xs w-full animate-pulse">
+                <div class="w-16 h-16 bg-indigo-500/20 text-indigo-400 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fa-solid fa-robot text-3xl"></i>
+                </div>
+                <h3 class="text-white font-bold text-sm mb-2">AI Sedang Bekerja...</h3>
+                <p class="text-xs text-slate-400">Merangkai kata-kata paling menarik khusus untuk prospek ini.</p>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

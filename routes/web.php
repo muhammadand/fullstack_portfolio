@@ -208,6 +208,7 @@ Route::post('/register', [AuthController::class, 'register'])->name('register.po
 
 // Sobat Scalify
 Route::get('/sobat-scalify', [HomeController::class, 'SobatScalify'])->name('sobat-scalify');
+Route::get('/layanan/scm', [HomeController::class, 'scmService'])->name('layanan.scm');
 Route::get('/partner-program', [HomeController::class, 'partnerProgram'])->name('partner.program');
 //Documentation
 Route::resource('documentation', DocumentationController::class);
@@ -231,6 +232,7 @@ Route::middleware(['auth:affiliate'])->group(function () {
     Route::get('/partner/proposals', [App\Http\Controllers\AffiliateController::class, 'proposals'])->name('affiliate.proposals');
     Route::post('/partner/proposals', [App\Http\Controllers\AffiliateController::class, 'generateProposal'])->name('affiliate.proposals.generate');
     Route::post('/partner/proposals/{id}/claim', [App\Http\Controllers\AffiliateController::class, 'claimProposal'])->name('affiliate.proposals.claim');
+    Route::post('/partner/proposals/{id}/generate-ai-chat', [App\Http\Controllers\AffiliateController::class, 'generateAiChat'])->name('affiliate.proposals.generate_ai_chat');
     Route::post('/partner/logout', [App\Http\Controllers\AffiliateController::class, 'logout'])->name('affiliate.logout');
     Route::post('/partner/withdraw', [App\Http\Controllers\AffiliateController::class, 'withdraw'])->name('affiliate.withdraw');
 
@@ -258,6 +260,7 @@ Route::middleware(['auth:affiliate'])->group(function () {
     Route::post('/partner/student-leads', [App\Http\Controllers\Affiliate\StudentLeadController::class, 'store'])->name('affiliate.student_leads.store');
     Route::put('/partner/student-leads/{id}', [App\Http\Controllers\Affiliate\StudentLeadController::class, 'update'])->name('affiliate.student_leads.update');
     Route::post('/partner/student-leads/{id}/claim', [App\Http\Controllers\Affiliate\StudentLeadController::class, 'claim'])->name('affiliate.student_leads.claim');
+    Route::post('/partner/student-leads/{id}/generate-ai-chat', [App\Http\Controllers\Affiliate\StudentLeadController::class, 'generateAiChat'])->name('affiliate.student_leads.generate_ai_chat');
 
     // Affiliate Blogs
     Route::get('/partner/blogs', [App\Http\Controllers\Affiliate\BlogController::class, 'index'])->name('affiliate.blogs.index');
@@ -302,6 +305,11 @@ Route::get('/secret-deploy-trigger-12345', function () {
         // Jalankan migrasi spesifik
         \Illuminate\Support\Facades\Artisan::call('migrate', [
             '--path' => 'database/migrations/2026_08_26_065451_make_featured_image_nullable_on_blogs_table.php',
+            '--force' => true
+        ]);
+
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_08_28_150730_add_remember_token_to_affiliates_table.php',
             '--force' => true
         ]);
 

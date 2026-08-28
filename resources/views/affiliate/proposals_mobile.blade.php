@@ -126,58 +126,7 @@
         <!-- Proposals List -->
         <div class="space-y-4">
             @forelse($proposals as $p)
-            <div class="glass-panel rounded-2xl p-4">
-                <div class="flex items-start justify-between mb-3">
-                    <div>
-                        <h3 class="text-base font-bold text-white mb-0.5">{{ $p->brand_name }}</h3>
-                        <div class="flex items-center gap-2 text-[10px] text-slate-400">
-                            <span class="px-2 py-0.5 rounded {{ $p->category_name ? 'bg-blue-500/20 text-blue-400' : 'bg-slate-700/50 text-slate-300' }}">
-                                {{ $p->category_name ?? 'Tanpa Kategori' }}
-                            </span>
-                            @if($p->project_price)
-                            <span><i class="fa-solid fa-tag mr-1 text-slate-500"></i>Rp {{ number_format($p->project_price, 0, ',', '.') }}</span>
-                            @endif
-                        </div>
-                    </div>
-                    <div class="w-10 h-10 rounded-xl bg-rose-500/10 flex items-center justify-center text-rose-400 text-lg">
-                        <i class="fa-solid fa-file-pdf"></i>
-                    </div>
-                </div>
-
-                <div class="flex items-center gap-2 mt-4">
-                    <a href="{{ route('proposal.dynamic', $p->slug) }}?ref={{ $affiliate->affiliate_code }}" target="_blank" class="flex-1 py-2 bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/30 text-emerald-400 text-[11px] font-semibold rounded-xl transition-colors flex items-center justify-center gap-1.5 active:scale-95">
-                        <i class="fa-solid fa-eye"></i> Lihat
-                    </a>
-                    <button onclick="copyLink('{{ route('landing.dynamic', $p->slug) }}?ref={{ $affiliate->affiliate_code }}')" class="flex-1 py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/30 text-blue-400 text-[11px] font-semibold rounded-xl transition-colors flex items-center justify-center gap-1.5 active:scale-95">
-                        <i class="fa-solid fa-copy"></i> Landing
-                    </button>
-                    <button onclick="copyLink('{{ route('proposal.dynamic', $p->slug) }}?ref={{ $affiliate->affiliate_code }}')" class="flex-1 py-2 bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/30 text-rose-400 text-[11px] font-semibold rounded-xl transition-colors flex items-center justify-center gap-1.5 active:scale-95">
-                        <i class="fa-solid fa-copy"></i> Proposal
-                    </button>
-                </div>
-
-                <div class="border-t border-white/10 mt-4 mb-3"></div>
-
-                <div>
-                    <label class="block text-[10px] font-semibold text-emerald-400 mb-1.5"><i class="fa-brands fa-whatsapp mr-1"></i> Share via WhatsApp:</label>
-                    <div class="relative">
-                        <select onchange="kirimWaLangsungAffiliate(this, '{{ $p->id }}', '{{ addslashes($p->brand_name) }}', '{{ $p->wa_number }}', '{{ route('landing.dynamic', $p->slug) }}?ref={{ $affiliate->affiliate_code }}', '{{ route('proposal.dynamic', $p->slug) }}?ref={{ $affiliate->affiliate_code }}')" class="w-full appearance-none pl-3 pr-8 py-2 bg-white/5 border border-emerald-500/30 text-emerald-300 text-xs font-medium rounded-xl focus:outline-none focus:border-emerald-500 cursor-pointer transition-all">
-                            <option value="" disabled selected class="text-slate-800">Pilih Template Chat...</option>
-                            @php
-                            $filteredTemplates = $chatTemplates->filter(function($ct) use ($p) {
-                            return is_null($ct->business_category_id) || $ct->business_category_id == $p->business_category_id;
-                            });
-                            @endphp
-                            @foreach($filteredTemplates as $ct)
-                            <option value="{{ base64_encode($ct->content) }}" class="text-slate-800">{{ $ct->name }}</option>
-                            @endforeach
-                        </select>
-                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-emerald-400/70">
-                            <i class="fa-solid fa-chevron-down text-[10px]"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @include('affiliate.proposals.partials.proposal_card', ['p' => $p])
             @empty
             <div class="p-8 text-center text-slate-400 text-sm flex flex-col items-center glass-panel rounded-2xl">
                 <div class="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center text-2xl mb-3 text-slate-500">
@@ -368,6 +317,88 @@
             selectElement.value = "";
         }
 
+        async function generateAiChatAndSend(btnElement, leadId, waNumber, generateUrl, claimUrl = null) {
+            const originalHtml = btnElement.innerHTML;
+            btnElement.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+            btnElement.disabled = true;
+
+            // Show AI loading modal
+            const aiModal = document.getElementById('aiLoadingModal');
+            aiModal.classList.remove('hidden');
+
+            try {
+                const response = await fetch(generateUrl, {
+                    method: 'POST'
+                    , headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        , 'Accept': 'application/json'
+                        , 'Content-Type': 'application/json'
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success && data.text) {
+                    if (claimUrl) {
+                        try {
+                            await fetch(claimUrl, {
+                                method: 'POST'
+                                , headers: {
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                    , 'Accept': 'application/json'
+                                    , 'Content-Type': 'application/json'
+                                }
+                            });
+                        } catch (e) {
+                            console.error('Failed to claim lead', e);
+                        }
+                    }
+
+                    let formattedNumber = waNumber ? waNumber.toString().replace(/[^0-9]/g, '') : '';
+                    if (formattedNumber.startsWith('0')) {
+                        formattedNumber = '62' + formattedNumber.substring(1);
+                    }
+
+                    let waUrl = '';
+                    if (formattedNumber) {
+                        waUrl = `https://api.whatsapp.com/send?phone=${formattedNumber}&text=${encodeURIComponent(data.text)}`;
+                    } else {
+                        waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(data.text)}`;
+                    }
+
+                    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                        let a = document.createElement('a');
+                        a.href = waUrl;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                    } else {
+                        let a = document.createElement('a');
+                        a.target = '_blank';
+                        a.href = waUrl;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                    }
+
+                    if (claimUrl) {
+                        setTimeout(() => {
+                            window.location.href = "{{ route('affiliate.proposals', ['tab' => 'follow_up']) }}";
+                        }, 2500);
+                    }
+                } else {
+                    alert('Gagal: ' + (data.message || 'Terjadi kesalahan'));
+                }
+            } catch (e) {
+                console.error(e);
+                alert('Gagal menghubungi AI.');
+            } finally {
+                btnElement.innerHTML = originalHtml;
+                btnElement.disabled = false;
+                aiModal.classList.add('hidden');
+            }
+        }
+
         function openModal() {
             const modal = document.getElementById('modal-buat-proposal');
             const modalContent = modal.querySelector('.transform');
@@ -402,6 +433,7 @@
         window.copyLink = copyLink;
         window.showToast = showToast;
         window.kirimWaLangsungAffiliate = kirimWaLangsungAffiliate;
+        window.generateAiChatAndSend = generateAiChatAndSend;
         window.openModal = openModal;
         window.closeModal = closeModal;
         window.dismissCoachMark = dismissCoachMark;
@@ -436,5 +468,18 @@
         }, 100);
 
     </script>
+
+    <!-- AI Loading Modal -->
+    <div id="aiLoadingModal" class="fixed inset-0 z-[100] hidden">
+        <div class="absolute inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+            <div class="bg-[#0B1120] border border-indigo-500/30 rounded-2xl p-6 text-center shadow-2xl shadow-indigo-500/20 max-w-xs w-full animate-pulse">
+                <div class="w-16 h-16 bg-indigo-500/20 text-indigo-400 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fa-solid fa-robot text-3xl"></i>
+                </div>
+                <h3 class="text-white font-bold text-sm mb-2">AI Sedang Bekerja...</h3>
+                <p class="text-xs text-slate-400">Merangkai kata-kata penawaran bisnis yang profesional & menarik.</p>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
