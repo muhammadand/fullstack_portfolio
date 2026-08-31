@@ -699,7 +699,51 @@ $tagsString = is_array($blog->tags) ? implode(', ', $blog->tags) : $blog->tags;
                 @endforeach
             </div>
         </div>
-        @endif
+    </div>
+    @endif
+</div>
+</div>
+
+<!-- Promotional Modal (Surprise CTA) -->
+<div id="promo-modal" class="fixed inset-0 z-[100] flex items-center justify-center px-4 opacity-0 pointer-events-none transition-all duration-500">
+    <!-- Backdrop -->
+    <div class="absolute inset-0 bg-[#0f172a]/80 backdrop-blur-md transition-opacity" onclick="closePromoModal()"></div>
+
+    <!-- Modal Content -->
+    <div class="bg-white/10 backdrop-blur-2xl border border-white/10 rounded-[24px] shadow-[0_8px_32px_rgba(0,0,0,0.5)] relative w-full max-w-[360px] transform scale-95 transition-transform duration-500 ease-out p-6" id="promo-modal-content">
+        <!-- Close Button -->
+        <button onclick="closePromoModal()" class="absolute top-4 right-4 w-7 h-7 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/20 text-white/50 hover:text-white transition-all z-20 focus:outline-none">
+            <i class="fas fa-times text-xs"></i>
+        </button>
+
+        <div class="relative z-10 text-center">
+            <!-- Subtle Glows -->
+            <div class="absolute -top-10 -right-10 w-24 h-24 bg-blue-400/20 blur-[30px] rounded-full pointer-events-none"></div>
+            <div class="absolute -bottom-10 -left-10 w-24 h-24 bg-purple-400/20 blur-[30px] rounded-full pointer-events-none"></div>
+
+            <!-- Spectacular Prize Illustration (3D Render) -->
+            <div class="mb-4 relative z-10 mx-auto w-full h-auto flex items-center justify-center">
+                <img src="{{ asset('assets/images/promo_prizes.jpg') }}" class="w-full h-auto object-cover rounded-xl shadow-lg border border-white/5" alt="Hadiah Promo Eksklusif">
+            </div>
+
+            <!-- Typography & Copy -->
+            <h3 class="text-[1.15rem] font-display font-semibold text-white mb-1.5 relative z-10 tracking-wide">
+                Voucher <span class="text-blue-400">Kejutan!</span>
+            </h3>
+
+            <p class="text-white/70 text-[11px] leading-relaxed mb-5 relative z-10 font-light px-2">
+                Buat website impian Anda bersama kami dan bawa pulang hadiah eksklusif.
+            </p>
+
+            <!-- CTA Button -->
+            <button onclick="claimAndNotify()" class="w-full relative group flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-blue-600/80 to-blue-800/80 hover:from-blue-500 hover:to-blue-700 border border-blue-500/30 text-white text-[13px] font-medium rounded-xl shadow-lg backdrop-blur-md transition-all transform hover:scale-[1.02] active:scale-95 z-10">
+                <i class="fas fa-bell text-blue-200 origin-top group-hover:animate-bounce"></i>
+                Klaim & Aktifkan Notifikasi
+            </button>
+            <p class="mt-2.5 text-[9px] text-white/30 italic relative z-10 leading-snug px-3 font-light">
+                *Dengan menekan tombol di atas, Anda mengizinkan notifikasi artikel & promo.
+            </p>
+        </div>
     </div>
 </div>
 
@@ -711,7 +755,66 @@ $tagsString = is_array($blog->tags) ? implode(', ', $blog->tags) : $blog->tags;
                 navigator.sendBeacon("{{ url('/api/blogs/' . $blog->id . '/track-click') }}");
             });
         });
+
+        // Trigger Promo Modal on Scroll
+        const modal = document.getElementById('promo-modal');
+        const modalContent = document.getElementById('promo-modal-content');
+        let hasShownModal = false;
+
+        window.addEventListener('scroll', () => {
+            // Show modal after scrolling roughly halfway down the page
+            if (!hasShownModal && window.scrollY > 1200) {
+                hasShownModal = true;
+                // Add a small delay for natural feeling
+                setTimeout(() => {
+                    modal.classList.remove('opacity-0', 'pointer-events-none');
+                    modalContent.classList.remove('scale-95');
+                    modalContent.classList.add('scale-100');
+                }, 800);
+            }
+        });
     });
+
+    // Close Modal Function
+    function closePromoModal() {
+        const modal = document.getElementById('promo-modal');
+        const modalContent = document.getElementById('promo-modal-content');
+        modalContent.classList.remove('scale-100');
+        modalContent.classList.add('scale-95');
+        modal.classList.add('opacity-0', 'pointer-events-none');
+    }
+
+    // Logic for Notifications and Redirect
+    function claimAndNotify() {
+        if (!("Notification" in window)) {
+            // Fallback if browser doesn't support notifications
+            alert("Browser Anda tidak mendukung notifikasi. Kami akan mengarahkan Anda ke WhatsApp.");
+            redirectToPromo();
+        } else if (Notification.permission === "granted") {
+            // Already granted, just redirect
+            alert("Notifikasi Anda sudah aktif! Mari klaim voucher Anda.");
+            redirectToPromo();
+        } else if (Notification.permission !== "denied") {
+            // Request permission native UI will pop up
+            Notification.requestPermission().then((permission) => {
+                if (permission === "granted") {
+                    // Success! In a real app, send subscription object to backend here
+                    alert("Notifikasi berhasil diaktifkan! Anda tidak akan ketinggalan blog & promo terbaru.");
+                }
+                // Redirect regardless of whether they accepted or denied
+                redirectToPromo();
+            });
+        } else {
+            // They previously denied notifications
+            redirectToPromo();
+        }
+    }
+
+    function redirectToPromo() {
+        closePromoModal();
+        const waText = encodeURIComponent("Halo Tim Scalify! Saya mau klaim voucher undian (Motor/iPhone) untuk pembuatan website.");
+        window.open(`https://wa.me/6285221694067?text=${waText}`, '_blank');
+    }
 
     function sharePost(btn) {
         const title = btn.getAttribute('data-title');
