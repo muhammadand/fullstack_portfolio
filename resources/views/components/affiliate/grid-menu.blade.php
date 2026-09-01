@@ -94,12 +94,14 @@
             <i class="fa-solid fa-circle-question text-purple-400 text-[10px]"></i> Panduan & Akses
         </h3>
         <div class="grid grid-cols-4 gap-y-4 gap-x-2">
-            <!-- 8. Cara Kerja -->
+            <!-- 8. Panduan & AI Hub -->
             <a href="{{ route('affiliate.guide') }}" wire:navigate onclick="closeDashboardCoachMark()" class="flex flex-col items-center gap-2 relative group">
-                <div class="w-12 h-12 rounded-2xl glass-panel flex items-center justify-center text-yellow-400 text-lg shadow-inner transition-all duration-200 ease-out active:scale-90 active:opacity-60 group-hover:bg-yellow-500/10 group-hover:border-yellow-500/30">
-                    <i class="fa-solid fa-book-open"></i>
+                <div class="w-12 h-12 rounded-2xl glass-panel flex items-center justify-center text-yellow-400 text-lg shadow-inner transition-all duration-200 ease-out active:scale-90 active:opacity-60 group-hover:bg-yellow-500/10 group-hover:border-yellow-500/30 relative">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    <!-- AI Badge -->
+                    <span class="absolute -top-1.5 -right-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full shadow-md shadow-blue-500/40 animate-pulse">AI Hub</span>
                 </div>
-                <span class="text-[10px] text-slate-300 font-medium text-center leading-tight group-hover:text-white transition-colors">Cara<br>Kerja</span>
+                <span class="text-[10px] text-slate-300 font-medium text-center leading-tight group-hover:text-white transition-colors">Edukasi<br>& AI Hub</span>
 
                 <!-- Coach Mark -->
                 <div id="dashboardCoachMark" class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden z-[60] w-44 pointer-events-none">

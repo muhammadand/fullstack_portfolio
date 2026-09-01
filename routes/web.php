@@ -248,8 +248,10 @@ Route::middleware(['auth:affiliate'])->group(function () {
     Route::get('/partner/streak', [App\Http\Controllers\AffiliateController::class, 'streak'])->name('affiliate.streak');
     Route::get('/partner/store', [App\Http\Controllers\AffiliateController::class, 'store'])->name('affiliate.store');
 
-    // Guide
+    // Guide & Growth Hub
     Route::get('/partner/guide', [App\Http\Controllers\AffiliateController::class, 'guide'])->name('affiliate.guide');
+    Route::post('/partner/ai-social-post', [App\Http\Controllers\AffiliateController::class, 'generateSocialPost'])->name('affiliate.ai_social_post');
+    Route::post('/partner/ai-handle-objection', [App\Http\Controllers\AffiliateController::class, 'handleObjection'])->name('affiliate.ai_handle_objection');
 
     // Student Services
     Route::get('/partner/student-services', [App\Http\Controllers\Affiliate\StudentServiceController::class, 'index'])->name('affiliate.student_services.index');

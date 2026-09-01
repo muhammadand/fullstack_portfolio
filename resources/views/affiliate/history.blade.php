@@ -13,11 +13,6 @@
                         <i class="fa-solid fa-clock-rotate-left mr-2"></i> Riwayat Transaksi
                     </div>
                     <h1 class="text-3xl md:text-5xl font-bold text-white font-display tracking-tight mb-2">Riwayat Dana</h1>
-                    <p class="text-blue-100/70 text-lg">
-                        <a href="{{ route('affiliate.dashboard') }}" class="text-white hover:text-blue-300 transition-colors">
-                            <i class="fa-solid fa-arrow-left"></i> Kembali ke Dashboard
-                        </a>
-                    </p>
                 </div>
             </div>
         </div>

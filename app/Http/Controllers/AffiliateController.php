@@ -8,6 +8,8 @@ use App\Models\AffiliateClick;
 use App\Models\ClientProposal;
 use App\Models\ChatTemplate;
 use App\Models\BusinessCategory;
+use App\Models\Portfolio;
+use App\Http\Controllers\Affiliate\TargetIdeaController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
@@ -238,7 +240,11 @@ class AffiliateController extends Controller
     {
         /** @var \App\Models\Affiliate $affiliate */
         $affiliate = Auth::guard('affiliate')->user();
-        return view('affiliate.guide', compact('affiliate'));
+        $businessCategories = BusinessCategory::with('chatTemplates')->get();
+        $portfolios = Portfolio::active()->latest()->take(6)->get();
+        $targetIdeas = TargetIdeaController::getIdeas();
+
+        return view('affiliate.guide', compact('affiliate', 'businessCategories', 'portfolios', 'targetIdeas'));
     }
 
     public function trackClick(Request $request)
@@ -483,6 +489,123 @@ class AffiliateController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Gagal generate AI: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function generateSocialPost(Request $request)
+    {
+        $request->validate([
+            'platform' => 'required|string',
+            'persona' => 'required|string',
+            'category' => 'nullable|string',
+            'custom_topic' => 'nullable|string',
+        ]);
+
+        /** @var \App\Models\Affiliate $affiliate */
+        $affiliate = Auth::guard('affiliate')->user();
+        $refUrl = url('/sobat-scalify?ref=' . $affiliate->affiliate_code);
+
+        $platformName = [
+            'wa_story' => 'WhatsApp Story / Status WA (singkat, padat, persuasif, max 2-3 paragraf pendek)',
+            'facebook' => 'Facebook Post / Status Facebook / Grup Bisnis & UMKM (storytelling menarik, edukatif, ada ajakan interaksi)',
+            'instagram' => 'Caption Instagram Feed / Reels (hook kuat di awal, body edukasi/solusi, call to action jelas)',
+            'telegram' => 'Telegram Channel / Grup Broadcast (singkat, padat, bullet points fitur & solusi, ada link konsultasi)',
+            'twitter' => 'Twitter / X Post (singkat, tajam, hook kuat, link di akhir)',
+            'linkedin' => 'LinkedIn Post Profesional (tone bisnis strategis, digital transformation, insight UMKM)'
+        ][$request->platform] ?? 'Media Sosial';
+
+        $personaDesc = [
+            'agency_consultant' => 'Konsultan Digital Agency terpercaya yang membagikan tips bisnis & pentingnya website modern di 2026',
+            'case_study' => 'Praktisi yang membagikan kisah sukses UMKM bertransformasi dari sepi jadi banjir order berkat website',
+            'promo_limited' => 'Pemberi promo eksklusif slot pembuatan website profesional bergaransi + bonus domain & automasi AI',
+            'student_helper' => 'Sahabat mahasiswa yang menawarkan bantuan pembuatan website tugas akhir, portofolio skripsi & koding kilat'
+        ][$request->persona] ?? 'Digital Strategist';
+
+        $prompt = "Kamu adalah seorang pakar Digital Copywriting & Social Media Strategist tingkat tinggi.\n";
+        $prompt .= "Tugasmu: Tulis 1 postingan {$platformName} berbahasa Indonesia yang sangat memikat dan berkonversi tinggi, seakan-akan ditulis oleh seorang {$personaDesc}.\n\n";
+        $prompt .= "Konteks:\n";
+        $prompt .= "- Nama Partner / Pengirim: {$affiliate->name}\n";
+        $prompt .= "- Agency: Scalify Intelligence (Creative Tech & Web Agency)\n";
+        if ($request->category) {
+            $prompt .= "- Niche/Fokus Industri: {$request->category}\n";
+        }
+        if ($request->custom_topic) {
+            $prompt .= "- Topik Spesifik yang diinginkan: {$request->custom_topic}\n";
+        }
+        $prompt .= "- Link Referral Partner: {$refUrl}\n\n";
+        $prompt .= "Aturan Penulisan:\n";
+        $prompt .= "1. Awali dengan Hook / Judul pembuka yang bikin pembaca langsung berhenti scrolling.\n";
+        $prompt .= "2. Masukkan masalah nyata calon klien (pain point) dan berikan solusinya (website profesional & automasi Scalify).\n";
+        $prompt .= "3. Jangan gunakan tanda kutip pembuka atau penutup berlebihan.\n";
+        $prompt .= "4. WAJIB mengakhiri postingan dengan Call To Action (CTA) yang jelas, mengajak pembaca untuk klik link portofolio resmi atau konsultasi di link: {$refUrl}\n";
+        $prompt .= "5. Format langsung siap diposting ke {$platformName}.";
+
+        try {
+            $response = Gemini::generativeModel('gemini-3.1-flash-lite')->generateContent($prompt);
+            $text = trim($response->text());
+
+            // Jaminan link referral selalu terpasang di postingan
+            if (!str_contains($text, $refUrl) && !str_contains($text, $affiliate->affiliate_code)) {
+                $text .= "\n\nKonsultasi & Cek Demo Portofolio:\n👉 " . $refUrl;
+            }
+
+            return response()->json([
+                'success' => true,
+                'content' => $text
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal membuat konten AI: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function handleObjection(Request $request)
+    {
+        $request->validate([
+            'objection_type' => 'required|string',
+            'custom_objection' => 'nullable|string',
+            'business_type' => 'nullable|string',
+        ]);
+
+        /** @var \App\Models\Affiliate $affiliate */
+        $affiliate = Auth::guard('affiliate')->user();
+        $refUrl = url('/sobat-scalify?ref=' . $affiliate->affiliate_code);
+
+        $objectionText = [
+            'too_expensive' => 'Jasa website mahal banget ya, kan bisnis saya masih kecil/baru rintis?',
+            'already_have_sosmed' => 'Kan saya udah jualan di Instagram/TikTok & WhatsApp, buat apa bikin website lagi?',
+            'no_budget_now' => 'Lagi sepi kak orderan, nanti-nanti aja kalau ada budget lebih.',
+            'dont_understand_tech' => 'Saya gaptek dan ga ngerti cara kelola website, ribet nanti perawatannya.',
+            'custom' => $request->custom_objection ?? 'Saya masih ragu pakai website.'
+        ][$request->objection_type] ?? 'Keberatan klien';
+
+        $prompt = "Kamu adalah Master Sales Closer dan Business Consultant kelas dunia di agensi digital Scalify Intelligence.\n";
+        $prompt .= "Seorang calon klien memberikan penolakan / keberatan (objection) berikut:\n";
+        $prompt .= "\"{$objectionText}\"\n\n";
+        if ($request->business_type) {
+            $prompt .= "Jenis Bisnis Klien: {$request->business_type}\n";
+        }
+        $prompt .= "Nama Partner yang melayani: {$affiliate->name}\n";
+        $prompt .= "Link Edukasi/Portfolio: {$refUrl}\n\n";
+        $prompt .= "Tugasmu:\n";
+        $prompt .= "Buatkan 1 script balasan WhatsApp (panjang 3-5 kalimat) yang ramah, berempati, tidak menggurui, memvalidasi kekhawatiran mereka, lalu dengan cerdas membalikkan persepsi mereka hingga mereka melihat nilai investasi website di Scalify Intelligence (Website terima beres, harga terjangkau UMKM, automasi & siap bantu scale-up).\n";
+        $prompt .= "Aturan: Langsung berikan teks balasannya saja tanpa pengantar atau tanda kutip, sehingga partner bisa langsung menyalinnya ke WhatsApp.";
+
+        try {
+            $response = Gemini::generativeModel('gemini-3.1-flash-lite')->generateContent($prompt);
+            $text = trim($response->text());
+
+            return response()->json([
+                'success' => true,
+                'response_text' => $text
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal memproses AI: ' . $e->getMessage()
             ], 500);
         }
     }
