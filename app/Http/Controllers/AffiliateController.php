@@ -405,7 +405,8 @@ class AffiliateController extends Controller
 
     public function magicLogin(Request $request, Affiliate $affiliate)
     {
-        if (!$request->hasValidSignature()) {
+        // Cek validitas signature (baik absolute URL maupun relative path)
+        if (!$request->hasValidSignature() && !$request->hasValidSignature(false)) {
             return redirect()->route('affiliate.login')->with('error', 'Link akses Magic Login sudah kedaluwarsa atau tidak valid.');
         }
 

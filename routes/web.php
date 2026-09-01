@@ -217,7 +217,7 @@ Route::resource('documentation', DocumentationController::class);
 Route::get('/partner/register', [App\Http\Controllers\AffiliateController::class, 'registerForm'])->name('affiliate.register');
 Route::post('/partner/register', [App\Http\Controllers\AffiliateController::class, 'registerSubmit'])->name('affiliate.register.submit');
 Route::get('/partner/login', [App\Http\Controllers\AffiliateController::class, 'loginForm'])->name('affiliate.login');
-Route::get('/partner/magic-login/{affiliate}', [App\Http\Controllers\AffiliateController::class, 'magicLogin'])->name('affiliate.magic_login')->middleware('signed');
+Route::get('/partner/magic-login/{affiliate}', [App\Http\Controllers\AffiliateController::class, 'magicLogin'])->name('affiliate.magic_login');
 Route::get('/partner/magic-login-qr', [App\Http\Controllers\AffiliateController::class, 'magicLoginQr'])->name('affiliate.magic_login_qr');
 Route::get('/magic-login/admin/{user}', [App\Http\Controllers\UserController::class, 'magicLogin'])->name('users.magic_login')->middleware('signed');
 Route::post('/partner/login', [App\Http\Controllers\AffiliateController::class, 'loginSubmit'])->name('affiliate.login.submit');

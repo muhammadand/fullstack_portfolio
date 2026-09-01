@@ -27,7 +27,7 @@
                 <!-- PWA Install Badge -->
                 <div class="mt-8 inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-400/20 text-indigo-300 text-xs font-semibold backdrop-blur-md">
                     <span class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]"></span>
-                    Scalify Ready · Sesi Permanen Aktif
+                    PWA Ready · Sesi Permanen Aktif
                 </div>
             </div>
         </div>
@@ -83,7 +83,7 @@
                 </div>
                 @endif
 
-                <!-- METHOD 1: MAGIC LINK LOGIN (PRIMARY) -->
+                <!-- METHOD 1: MAGIC LINK LOGIN (100% DIRECT GET NAVIGATION - BEBAS DARI ERROR 419 PAGE EXPIRED) -->
                 <div class="bg-gradient-to-b from-indigo-950/40 to-slate-900/60 border border-indigo-500/30 rounded-2xl p-5 mb-5 backdrop-blur-md shadow-xl relative overflow-hidden">
                     <div class="flex items-center gap-2 mb-3">
                         <div class="w-6 h-6 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-xs">
@@ -91,15 +91,14 @@
                         </div>
                         <h2 class="text-sm font-bold text-white tracking-wide">Login Cepat dengan Magic Link</h2>
                     </div>
-                    <p class="text-xs text-indigo-200/70 mb-3.5">
-                        Cukup tempel link unik yang Anda dapatkan saat pendaftaran atau dari admin:
+                    <p class="text-xs text-indigo-200/70 mb-3.5 leading-relaxed">
+                        Cukup tempel link akses unik yang Anda dapatkan (dari Admin atau dashboard):
                     </p>
 
-                    <form id="magic-link-form" action="{{ route('affiliate.login.submit') }}" method="POST" class="space-y-3">
-                        @csrf
+                    <form id="magic-link-form" onsubmit="handleMagicSubmit(event)" class="space-y-3">
                         <div class="relative">
-                            <input type="text" name="magic_link" id="magic_link_input" value="{{ old('magic_link') }}" placeholder="Tempel link https://.../partner/magic-login/..." class="w-full glass-input rounded-xl px-3.5 py-3 pr-24 text-xs sm:text-sm placeholder-indigo-300/40 text-white border-indigo-400/30 focus:border-indigo-400" required />
-                            <button type="button" id="paste-btn" onclick="pasteFromClipboard()" class="absolute right-2 top-1/2 -translate-y-1/2 px-2.5 py-1.5 rounded-lg bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 border border-indigo-400/30 text-xs font-semibold transition-all flex items-center gap-1.5" title="Tempel dari Clipboard">
+                            <input type="text" id="magic_link_input" placeholder="Tempel link https://.../partner/magic-login/..." class="w-full glass-input rounded-xl px-3.5 py-3 pr-24 text-xs sm:text-sm placeholder-indigo-300/40 text-white border-indigo-400/30 focus:border-indigo-400" autocomplete="off" required />
+                            <button type="button" id="paste-btn" onclick="pasteFromClipboard()" class="absolute right-2 top-1/2 -translate-y-1/2 px-2.5 py-1.5 rounded-lg bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 border border-indigo-400/30 text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer" title="Tempel dari Clipboard">
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                                 </svg>
@@ -107,9 +106,9 @@
                             </button>
                         </div>
 
-                        <button type="submit" id="magic-submit-btn" class="w-full bg-gradient-to-r from-indigo-600 via-blue-600 to-indigo-600 hover:from-indigo-500 hover:to-blue-500 text-white py-3 rounded-xl font-bold text-sm shadow-[0_0_25px_rgba(99,102,241,0.4)] hover:shadow-[0_0_30px_rgba(99,102,241,0.6)] transition-all duration-300 transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                        <button type="button" id="magic-submit-btn" onclick="executeMagicLogin()" class="w-full bg-gradient-to-r from-indigo-600 via-blue-600 to-indigo-600 hover:from-indigo-500 hover:to-blue-500 text-white py-3 rounded-xl font-bold text-sm shadow-[0_0_25px_rgba(99,102,241,0.4)] hover:shadow-[0_0_30px_rgba(99,102,241,0.6)] transition-all duration-300 transform hover:-translate-y-0.5 flex items-center justify-center gap-2 cursor-pointer">
                             <i class="fa-solid fa-arrow-right-to-bracket text-xs"></i>
-                            <span>Masuk Instan (Tanpa Password)</span>
+                            <span id="magic-btn-text">Masuk Instan (Tanpa Password)</span>
                         </button>
                     </form>
                 </div>
@@ -119,7 +118,7 @@
                     <div class="absolute inset-0 flex items-center">
                         <div class="w-full border-t border-white/10"></div>
                     </div>
-                    <button type="button" onclick="toggleEmailForm()" class="relative px-3 py-1 bg-slate-900/90 text-xs text-indigo-300/80 hover:text-white rounded-full border border-white/10 hover:border-indigo-500/30 transition-all font-medium inline-flex items-center gap-1.5">
+                    <button type="button" onclick="toggleEmailForm()" class="relative px-3 py-1 bg-slate-900/90 text-xs text-indigo-300/80 hover:text-white rounded-full border border-white/10 hover:border-indigo-500/30 transition-all font-medium inline-flex items-center gap-1.5 cursor-pointer">
                         <span id="toggle-text">Atau masuk dengan Email & Password</span>
                         <i id="toggle-icon" class="fa-solid fa-chevron-down text-[10px] transition-transform duration-200"></i>
                     </button>
@@ -151,7 +150,7 @@
                         </div>
 
                         <!-- Submit Button -->
-                        <button type="submit" class="w-full bg-slate-800 hover:bg-slate-700 text-indigo-200 hover:text-white py-2.5 rounded-xl font-bold text-xs border border-white/10 transition-all">
+                        <button type="submit" class="w-full bg-slate-800 hover:bg-slate-700 text-indigo-200 hover:text-white py-2.5 rounded-xl font-bold text-xs border border-white/10 transition-all cursor-pointer">
                             Login via Email
                         </button>
                     </form>
@@ -171,6 +170,74 @@
 </div>
 
 <script>
+    // Fungsi Eksekusi Magic Login Langsung via GET (Bebas dari Masalah CSRF / 419 Page Expired)
+    function executeMagicLogin() {
+        const input = document.getElementById('magic_link_input');
+        let val = input.value.trim();
+
+        if (!val) {
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    toast: true
+                    , position: 'top-end'
+                    , icon: 'warning'
+                    , title: 'Silakan tempel Magic Link Anda terlebih dahulu.'
+                    , background: '#1E293B'
+                    , color: '#fff'
+                    , showConfirmButton: false
+                    , timer: 3000
+                    , timerProgressBar: true
+                });
+            } else {
+                alert('Silakan tempel Magic Link Anda terlebih dahulu.');
+            }
+            input.focus();
+            return;
+        }
+
+        // Tampilkan status loading pada tombol
+        const btnText = document.getElementById('magic-btn-text');
+        if (btnText) btnText.textContent = 'Memverifikasi & Masuk...';
+
+        // 1. Jika link lengkap dengan domain (misal http://127.0.0.1:8000/partner/magic-login/... atau domain live)
+        if (val.includes('/partner/magic-login/')) {
+            try {
+                // Parse URL untuk memastikan diarahkan ke path yang tepat
+                if (val.startsWith('http://') || val.startsWith('https://')) {
+                    const parsed = new URL(val);
+                    // Arahkan ke path & query string lokal / saat ini
+                    window.location.href = parsed.pathname + parsed.search;
+                } else {
+                    window.location.href = val.startsWith('/') ? val : ('/' + val);
+                }
+            } catch (e) {
+                window.location.href = val;
+            }
+            return;
+        }
+
+        // 2. Jika format tidak dikenali
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                icon: 'error'
+                , title: 'Format Link Tidak Sesuai'
+                , text: 'Pastikan link yang Anda tempel mengandung "/partner/magic-login/..."'
+                , background: '#1E293B'
+                , color: '#fff'
+            });
+        } else {
+            alert('Format Magic Link tidak valid. Pastikan link mengandung /partner/magic-login/...');
+        }
+
+        if (btnText) btnText.textContent = 'Masuk Instan (Tanpa Password)';
+    }
+
+    // Intercept Enter key pada form
+    function handleMagicSubmit(e) {
+        e.preventDefault();
+        executeMagicLogin();
+    }
+
     // 1-Click Paste Clipboard
     async function pasteFromClipboard() {
         try {
@@ -180,9 +247,9 @@
                 input.value = text.trim();
                 input.focus();
 
-                // Auto trigger submit jika link mengandung magic-login
+                // Auto trigger login jika link valid
                 if (text.includes('/partner/magic-login/')) {
-                    window.location.href = text.trim();
+                    executeMagicLogin();
                 }
             }
         } catch (err) {
@@ -193,14 +260,14 @@
         }
     }
 
-    // Auto submit jika user paste langsung via keyboard (Ctrl+V / Long Press)
+    // Auto submit jika user paste langsung via keyboard (Ctrl+V / Long Press di HP)
     document.getElementById('magic_link_input').addEventListener('paste', function(e) {
         setTimeout(() => {
             const val = this.value.trim();
             if (val.includes('/partner/magic-login/')) {
-                window.location.href = val;
+                executeMagicLogin();
             }
-        }, 100);
+        }, 150);
     });
 
     // Toggle email form
