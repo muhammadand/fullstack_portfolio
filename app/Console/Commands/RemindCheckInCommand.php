@@ -13,7 +13,7 @@ class RemindCheckInCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'affiliate:remind-checkin';
+    protected $signature = 'affiliate:remind-checkin {--force : Send reminder to all subscribed affiliates regardless of check-in status}';
 
     /**
      * The console command description.
@@ -28,24 +28,35 @@ class RemindCheckInCommand extends Command
     public function handle()
     {
         $today = now()->format('Y-m-d');
-        
-        $affiliates = Affiliate::where('status', 'approved')
-            ->where(function($query) use ($today) {
-                $query->whereNull('last_claim_date')
-                      ->orWhere('last_claim_date', '!=', $today);
-            })
-            ->get();
-            
+        $force = $this->option('force');
+
+        $query = Affiliate::where('status', 'approved');
+
+        if (!$force) {
+            $query->where(function ($q) use ($today) {
+                $q->whereNull('last_claim_date')
+                    ->orWhere('last_claim_date', '!=', $today);
+            });
+        }
+
+        $affiliates = $query->get();
         $count = 0;
-        
+        $failed = 0;
+
         foreach ($affiliates as $affiliate) {
             // Only notify if they have a push subscription
             if ($affiliate->pushSubscriptions()->exists()) {
-                $affiliate->notify(new CheckInReminderNotification());
-                $count++;
+                try {
+                    $affiliate->notify(new CheckInReminderNotification());
+                    $count++;
+                } catch (\Throwable $e) {
+                    $failed++;
+                    \Illuminate\Support\Facades\Log::warning("Gagal kirim push ke Affiliate #{$affiliate->id}: " . $e->getMessage());
+                }
             }
         }
-        
-        $this->info("Sent check-in reminders to {$count} affiliates.");
+
+        $resultMsg = "Sent check-in reminders to {$count} affiliates" . ($failed > 0 ? " ({$failed} failed)" : "") . ".";
+        $this->info($resultMsg);
     }
 }

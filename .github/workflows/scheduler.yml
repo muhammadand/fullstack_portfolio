@@ -5,6 +5,12 @@ on:
     # 03:00 UTC sama dengan 10:00 WIB
     - cron: '0 3 * * *'
   workflow_dispatch: # Memungkinkan kita men-trigger secara manual dari tab Actions GitHub
+    inputs:
+      force:
+        description: 'Paksa kirim ke semua subscriber (abaikan status check-in hari ini)?'
+        required: false
+        type: boolean
+        default: true
 
 jobs:
   run-reminders:
@@ -13,5 +19,17 @@ jobs:
     steps:
     - name: Ping Webhook Scheduler
       run: |
-        echo "Mengirim notifikasi pengingat harian ke semua partner..."
-        curl -s https://scalifyintellegence.my.id/secret-trigger-reminders-999
+        echo "Mengirim notifikasi pengingat harian ke partner..."
+        if [ "${{ github.event.inputs.force }}" = "true" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+          echo "Mode: Manual Trigger (Force = true)"
+          TARGET_URL="https://scalifyintellegence.my.id/secret-trigger-reminders-999?force=1"
+        else
+          echo "Mode: Scheduled Cron"
+          TARGET_URL="https://scalifyintellegence.my.id/secret-trigger-reminders-999"
+        fi
+        
+        echo "Mengakses: $TARGET_URL"
+        RESPONSE=$(curl -f -L --max-time 180 -sS "$TARGET_URL")
+        echo "Response dari server:"
+        echo "$RESPONSE"
+

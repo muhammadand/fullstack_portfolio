@@ -324,12 +324,30 @@ Route::get('/secret-deploy-trigger-12345', function () {
 });
 
 // Endpoint rahasia untuk trigger Pengingat Notifikasi Harian via GitHub Actions
-Route::get('/secret-trigger-reminders-999', function () {
+Route::get('/secret-trigger-reminders-999', function (\Illuminate\Http\Request $request) {
+    @set_time_limit(300);
+    @ini_set('max_execution_time', '300');
+
     try {
-        \Illuminate\Support\Facades\Artisan::call('affiliate:remind-checkin');
-        return "Notifikasi pengingat berhasil dikirim!";
-    } catch (\Exception $e) {
-        return "Error: " . $e->getMessage();
+        $params = [];
+        if ($request->has('force') || $request->query('force') == '1' || $request->query('force') == 'true') {
+            $params['--force'] = true;
+        }
+
+        \Illuminate\Support\Facades\Artisan::call('affiliate:remind-checkin', $params);
+        $output = \Illuminate\Support\Facades\Artisan::output();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Notifikasi pengingat berhasil diproses!',
+            'output' => trim($output)
+        ]);
+    } catch (\Throwable $e) {
+        \Illuminate\Support\Facades\Log::error('Error trigger reminders: ' . $e->getMessage());
+        return response()->json([
+            'status' => 'error',
+            'message' => $e->getMessage()
+        ], 500);
     }
 });
 
