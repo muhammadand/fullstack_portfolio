@@ -18,6 +18,9 @@ use App\Notifications\DailyAffiliateReminder;
 use Illuminate\Support\Facades\Notification;
 
 Route::get('/cron/send-daily-push', function (Request $request) {
+    @set_time_limit(300);
+    @ini_set('max_execution_time', '300');
+
     // Keamanan sederhana menggunakan query parameter
     if ($request->get('secret') !== 'cuan-tiap-hari') {
         return response()->json(['error' => 'Unauthorized. Butuh parameter ?secret=cuan-tiap-hari'], 401);
@@ -27,14 +30,27 @@ Route::get('/cron/send-daily-push', function (Request $request) {
     $affiliates = Affiliate::whereHas('pushSubscriptions')->get();
 
     if ($affiliates->isEmpty()) {
-        return response()->json(['message' => 'Belum ada affiliate yang mengizinkan notifikasi.']);
+        return response()->json([
+            'success' => true,
+            'message' => 'Belum ada affiliate yang mengizinkan notifikasi.'
+        ]);
     }
 
-    // Kirim notifikasi massal
-    Notification::send($affiliates, new DailyAffiliateReminder());
+    $count = 0;
+    $failed = 0;
+
+    foreach ($affiliates as $affiliate) {
+        try {
+            $affiliate->notify(new DailyAffiliateReminder());
+            $count++;
+        } catch (\Throwable $e) {
+            $failed++;
+            \Illuminate\Support\Facades\Log::warning("Gagal kirim broadcast push ke Affiliate #{$affiliate->id}: " . $e->getMessage());
+        }
+    }
 
     return response()->json([
         'success' => true,
-        'message' => 'Notifikasi berhasil dikirim ke ' . $affiliates->count() . ' affiliate!'
+        'message' => "Notifikasi berhasil dikirim ke {$count} affiliate" . ($failed > 0 ? " ({$failed} gagal)" : "") . "!"
     ]);
 });
