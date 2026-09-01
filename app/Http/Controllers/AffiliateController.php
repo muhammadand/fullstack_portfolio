@@ -57,12 +57,25 @@ class AffiliateController extends Controller
 
     public function loginSubmit(Request $request)
     {
+        // 1. Cek jika partner login menggunakan Magic Link (Paste Link)
+        if ($request->filled('magic_link')) {
+            $magicLink = trim($request->input('magic_link'));
+
+            // Validasi format link magic login
+            if (str_contains($magicLink, '/partner/magic-login/')) {
+                return redirect($magicLink);
+            }
+
+            return redirect()->back()->with('error', 'Format Magic Link tidak valid. Pastikan link lengkap disalin dengan benar.')->withInput();
+        }
+
+        // 2. Login konvensional dengan Email & Password
         $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required'
         ]);
 
-        // Attempt to login using the affiliate guard (true for remember me)
+        // Attempt to login using the affiliate guard (true for permanent remember me)
         if (Auth::guard('affiliate')->attempt($credentials, true)) {
             /** @var \App\Models\Affiliate $affiliate */
             $affiliate = Auth::guard('affiliate')->user();
@@ -70,7 +83,7 @@ class AffiliateController extends Controller
             // Check if rejected
             if ($affiliate->status === 'rejected') {
                 Auth::guard('affiliate')->logout();
-                return redirect()->back()->with('error', 'Akun Anda telah ditolak oleh Admin.');
+                return redirect()->route('affiliate.login')->with('error', 'Akun Partner Anda telah ditolak oleh Admin.');
             }
 
             return redirect()->intended(route('affiliate.dashboard'));
@@ -82,7 +95,10 @@ class AffiliateController extends Controller
     public function logout(Request $request)
     {
         Auth::guard('affiliate')->logout();
-        return redirect()->route('affiliate.login');
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('affiliate.login')->with('success', 'Anda telah berhasil logout.');
     }
 
     public function dashboard(Request $request)
@@ -390,13 +406,17 @@ class AffiliateController extends Controller
     public function magicLogin(Request $request, Affiliate $affiliate)
     {
         if (!$request->hasValidSignature()) {
-            abort(401, 'Link login sudah kedaluwarsa atau tidak valid.');
+            return redirect()->route('affiliate.login')->with('error', 'Link akses Magic Login sudah kedaluwarsa atau tidak valid.');
         }
 
-        // Set parameter kedua ke true agar 'Remember Me' aktif (Sesi tidak expired 5 tahun)
+        if ($affiliate->status === 'rejected') {
+            return redirect()->route('affiliate.login')->with('error', 'Akun Partner Anda telah dinonaktifkan/ditolak.');
+        }
+
+        // Set parameter kedua ke true agar 'Remember Me' aktif permanen (5 tahun)
         Auth::guard('affiliate')->login($affiliate, true);
 
-        return redirect()->route('affiliate.dashboard')->with('success', 'Berhasil login via QR Akses.');
+        return redirect()->route('affiliate.dashboard')->with('success', 'Selamat datang kembali, ' . $affiliate->name . '!');
     }
 
     public function magicLoginQr()

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scalify Intelligence - Authentication</title>
     <link rel="icon" type="image/x-icon" href="{{ asset('scalify.png') }}">
+    <x-affiliate.pwa-meta />
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
