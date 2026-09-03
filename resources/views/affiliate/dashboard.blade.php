@@ -2,7 +2,6 @@
 
 @section('hide_navbar_mobile', true)
 @section('hide_footer_mobile', true)
-@section('hide_chatbot', true)
 
 @push('meta')
 <x-affiliate.pwa-meta />
@@ -36,13 +35,6 @@
     .hide-scrollbar {
         -ms-overflow-style: none;
         scrollbar-width: none;
-    }
-
-    /* Sembunyikan chatbot di tampilan mobile khusus untuk dashboard agar tidak menutupi bottom nav */
-    @media (max-width: 768px) {
-        #scalify-chat-wrapper {
-            display: none !important;
-        }
     }
 
 </style>

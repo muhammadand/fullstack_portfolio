@@ -105,6 +105,8 @@
     <x-affiliate.modals :affiliate="$affiliate" />
     @endif
 
+    @include('partials.flowise')
+
     <x-affiliate.scripts />
 </body>
 </html>

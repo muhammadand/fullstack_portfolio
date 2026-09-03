@@ -242,7 +242,7 @@
     </div>
 
 
-    @unless(View::hasSection('hide_chatbot') || request()->is('partner*') || request()->is('affiliate*'))
+    @unless(View::hasSection('hide_chatbot'))
     @include("partials.flowise")
     @endunless
 
