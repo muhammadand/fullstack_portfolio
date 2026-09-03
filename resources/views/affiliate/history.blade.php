@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('hide_chatbot', true)
+
 @section('content')
 <div class="bg-slate-50 min-h-screen pb-20">
     <!-- Premium Header Background -->

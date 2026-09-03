@@ -2,35 +2,45 @@
 <style>
     /* Trigger Button Animations */
     @keyframes scalify-glow-pulse {
-        0%, 100% {
+
+        0%,
+        100% {
             box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.6), 0 10px 30px rgba(0, 0, 0, 0.5);
         }
+
         50% {
             box-shadow: 0 0 0 14px rgba(99, 102, 241, 0), 0 15px 40px rgba(99, 102, 241, 0.4);
         }
     }
 
     @keyframes scalify-gentle-float {
-        0%, 100% {
+
+        0%,
+        100% {
             transform: translateY(0px);
         }
+
         50% {
             transform: translateY(-5px);
         }
     }
 
     @keyframes scalify-dot-bounce {
-        0%, 80%, 100% {
+
+        0%,
+        80%,
+        100% {
             transform: scale(0);
             opacity: 0.3;
         }
+
         40% {
             transform: scale(1);
             opacity: 1;
         }
     }
 
-    /* Floating Launcher Button */
+    /* Floating Draggable Launcher Button (iOS Bubble Style) */
     #scalify-native-launcher {
         position: fixed;
         bottom: 24px;
@@ -40,6 +50,39 @@
         flex-direction: column;
         align-items: flex-end;
         gap: 10px;
+        touch-action: none;
+        user-select: none;
+        -webkit-user-select: none;
+        cursor: grab;
+        transition: transform 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28), top 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28), left 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    }
+
+    #scalify-native-launcher.align-left {
+        align-items: flex-start;
+    }
+
+    #scalify-native-launcher.align-left #scalify-native-tooltip {
+        transform: translateY(6px);
+    }
+
+    #scalify-native-launcher.align-left:hover #scalify-native-tooltip {
+        transform: translateY(0);
+    }
+
+    #scalify-native-launcher.is-dragging {
+        cursor: grabbing !important;
+        transition: none !important;
+    }
+
+    #scalify-native-launcher.is-dragging #scalify-native-btn {
+        transform: scale(1.12);
+        animation: none !important;
+        box-shadow: 0 16px 40px rgba(99, 102, 241, 0.7);
+    }
+
+    #scalify-native-launcher.is-dragging #scalify-native-tooltip {
+        opacity: 0 !important;
+        pointer-events: none;
     }
 
     #scalify-native-btn {
@@ -72,6 +115,7 @@
         object-fit: cover;
         border-radius: 50%;
         display: block;
+        pointer-events: none;
     }
 
     #scalify-native-btn .status-badge {
@@ -184,9 +228,11 @@
         scrollbar-width: thin;
         scrollbar-color: rgba(99, 102, 241, 0.35) transparent;
     }
+
     #scalify-messages-container::-webkit-scrollbar {
         width: 5px;
     }
+
     #scalify-messages-container::-webkit-scrollbar-thumb {
         background: rgba(99, 102, 241, 0.35);
         border-radius: 999px;
@@ -201,8 +247,15 @@
         background-color: #818cf8;
         animation: scalify-dot-bounce 1.4s infinite ease-in-out both;
     }
-    .typing-dot:nth-child(1) { animation-delay: -0.32s; }
-    .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+    .typing-dot:nth-child(1) {
+        animation-delay: -0.32s;
+    }
+
+    .typing-dot:nth-child(2) {
+        animation-delay: -0.16s;
+    }
+
 </style>
 
 <!-- Backdrop Overlay -->
@@ -289,19 +342,8 @@
     {{-- Input & Action Bar --}}
     <div style="background: rgba(15, 23, 42, 0.88); border-top: 1px solid rgba(255, 255, 255, 0.08); padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; backdrop-filter: blur(16px);">
         <form id="scalify-chat-form" style="display: flex; align-items: center; gap: 8px; margin: 0;">
-            <input 
-                id="scalify-chat-input" 
-                type="text" 
-                placeholder="Tulis pesan Anda..." 
-                autocomplete="off"
-                style="flex: 1; background: rgba(22, 32, 56, 0.65); border: 1px solid rgba(99, 102, 241, 0.35); color: #f8fafc; padding: 11px 15px; border-radius: 14px; font-size: 13.5px; outline: none; font-family: inherit; transition: all 0.2s ease;"
-            />
-            <button 
-                type="submit" 
-                id="scalify-send-btn" 
-                title="Kirim Pesan"
-                style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); border: none; color: #ffffff; width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4); transition: all 0.2s ease;"
-            >
+            <input id="scalify-chat-input" type="text" placeholder="Tulis pesan Anda..." autocomplete="off" style="flex: 1; background: rgba(22, 32, 56, 0.65); border: 1px solid rgba(99, 102, 241, 0.35); color: #f8fafc; padding: 11px 15px; border-radius: 14px; font-size: 13.5px; outline: none; font-family: inherit; transition: all 0.2s ease;" />
+            <button type="submit" id="scalify-send-btn" title="Kirim Pesan" style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); border: none; color: #ffffff; width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4); transition: all 0.2s ease;">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="22" y1="2" x2="11" y2="13"></line>
                     <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
@@ -319,20 +361,20 @@
 </div>
 
 <script>
-    (function () {
+    (function() {
         const CHATFLOW_ID = "46f54e64-6f56-414c-9562-78d301f06b05";
-        const API_HOST    = "https://cloud.flowiseai.com";
-        const AVATAR_URL  = "{{ asset('assistenscalify.png') }}";
+        const API_HOST = "https://cloud.flowiseai.com";
+        const AVATAR_URL = "{{ asset('assistenscalify.png') }}";
 
         const launcherBtn = document.getElementById('scalify-native-btn');
-        const chatModal   = document.getElementById('scalify-chat-modal');
-        const overlay     = document.getElementById('scalify-chat-overlay');
-        const closeBtn    = document.getElementById('scalify-close-btn');
-        const resetBtn    = document.getElementById('scalify-reset-btn');
-        const chatForm    = document.getElementById('scalify-chat-form');
-        const chatInput   = document.getElementById('scalify-chat-input');
+        const chatModal = document.getElementById('scalify-chat-modal');
+        const overlay = document.getElementById('scalify-chat-overlay');
+        const closeBtn = document.getElementById('scalify-close-btn');
+        const resetBtn = document.getElementById('scalify-reset-btn');
+        const chatForm = document.getElementById('scalify-chat-form');
+        const chatInput = document.getElementById('scalify-chat-input');
         const messagesBox = document.getElementById('scalify-messages-container');
-        const typingBox   = document.getElementById('scalify-typing-indicator');
+        const typingBox = document.getElementById('scalify-typing-indicator');
 
         let chatHistory = [];
 
@@ -357,20 +399,179 @@
             }
         }
 
-        launcherBtn.addEventListener('click', () => toggleChatModal());
+        // ==================== DRAGGABLE & SNAP PHYSICS (iOS Bubble Style) ====================
+        const launcher = document.getElementById('scalify-native-launcher');
+        let isPointerDown = false;
+        let isDragging = false;
+        let startX = 0
+            , startY = 0;
+        let initialLeft = 0
+            , initialTop = 0;
+        const dragThreshold = 6; // px to differentiate tap vs drag
+        const edgePadding = 16; // px margin from screen edge
+
+        // Load saved position
+        function initLauncherPosition() {
+            try {
+                const saved = JSON.parse(localStorage.getItem('scalify_bot_bubble_pos'));
+                if (saved && typeof saved.topPercent === 'number') {
+                    const winW = window.innerWidth;
+                    const winH = window.innerHeight;
+                    const btnSize = launcher.offsetWidth || 64;
+
+                    const topPx = Math.min(Math.max(edgePadding, saved.topPercent * winH), winH - btnSize - edgePadding);
+                    const leftPx = saved.side === 'left' ? edgePadding : (winW - btnSize - edgePadding);
+
+                    launcher.style.left = `${leftPx}px`;
+                    launcher.style.top = `${topPx}px`;
+                    launcher.style.right = 'auto';
+                    launcher.style.bottom = 'auto';
+
+                    if (saved.side === 'left') {
+                        launcher.classList.add('align-left');
+                    } else {
+                        launcher.classList.remove('align-left');
+                    }
+                }
+            } catch (e) {}
+        }
+
+        function onPointerStart(e) {
+            // Only left mouse button or touch
+            if (e.type === 'mousedown' && e.button !== 0) return;
+
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+            isPointerDown = true;
+            isDragging = false;
+            startX = clientX;
+            startY = clientY;
+
+            const rect = launcher.getBoundingClientRect();
+            initialLeft = rect.left;
+            initialTop = rect.top;
+
+            window.addEventListener('mousemove', onPointerMove, {
+                passive: false
+            });
+            window.addEventListener('mouseup', onPointerEnd);
+            window.addEventListener('touchmove', onPointerMove, {
+                passive: false
+            });
+            window.addEventListener('touchend', onPointerEnd);
+            window.addEventListener('touchcancel', onPointerEnd);
+        }
+
+        function onPointerMove(e) {
+            if (!isPointerDown) return;
+
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+            const deltaX = clientX - startX;
+            const deltaY = clientY - startY;
+            const dist = Math.hypot(deltaX, deltaY);
+
+            if (!isDragging && dist > dragThreshold) {
+                isDragging = true;
+                launcher.classList.add('is-dragging');
+            }
+
+            if (isDragging) {
+                if (e.cancelable) e.preventDefault();
+
+                const winW = window.innerWidth;
+                const winH = window.innerHeight;
+                const btnW = launcher.offsetWidth || 64;
+                const btnH = launcher.offsetHeight || 64;
+
+                // Clamped coordinates
+                let newLeft = initialLeft + deltaX;
+                let newTop = initialTop + deltaY;
+
+                newLeft = Math.max(4, Math.min(winW - btnW - 4, newLeft));
+                newTop = Math.max(edgePadding, Math.min(winH - btnH - edgePadding, newTop));
+
+                launcher.style.left = `${newLeft}px`;
+                launcher.style.top = `${newTop}px`;
+                launcher.style.right = 'auto';
+                launcher.style.bottom = 'auto';
+            }
+        }
+
+        function onPointerEnd(e) {
+            if (!isPointerDown) return;
+            isPointerDown = false;
+
+            window.removeEventListener('mousemove', onPointerMove);
+            window.removeEventListener('mouseup', onPointerEnd);
+            window.removeEventListener('touchmove', onPointerMove);
+            window.removeEventListener('touchend', onPointerEnd);
+            window.removeEventListener('touchcancel', onPointerEnd);
+
+            if (isDragging) {
+                launcher.classList.remove('is-dragging');
+
+                // Snap to nearest edge (Left vs Right)
+                const winW = window.innerWidth;
+                const winH = window.innerHeight;
+                const rect = launcher.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const isLeft = centerX < (winW / 2);
+
+                const finalLeft = isLeft ? edgePadding : (winW - rect.width - edgePadding);
+                const finalTop = Math.min(Math.max(edgePadding, rect.top), winH - rect.height - edgePadding);
+
+                launcher.style.left = `${finalLeft}px`;
+                launcher.style.top = `${finalTop}px`;
+                launcher.style.right = 'auto';
+                launcher.style.bottom = 'auto';
+
+                if (isLeft) {
+                    launcher.classList.add('align-left');
+                } else {
+                    launcher.classList.remove('align-left');
+                }
+
+                // Save state
+                const topPercent = finalTop / winH;
+                try {
+                    localStorage.setItem('scalify_bot_bubble_pos', JSON.stringify({
+                        side: isLeft ? 'left' : 'right'
+                        , topPercent: topPercent
+                    }));
+                } catch (err) {}
+            } else {
+                // Was a tap/click
+                toggleChatModal();
+            }
+        }
+
+        launcher.addEventListener('mousedown', onPointerStart);
+        launcher.addEventListener('touchstart', onPointerStart, {
+            passive: false
+        });
+
+        window.addEventListener('resize', () => {
+            initLauncherPosition();
+        });
+
+        initLauncherPosition();
+
         closeBtn.addEventListener('click', () => toggleChatModal(false));
         overlay.addEventListener('click', () => toggleChatModal(false));
 
         // Quick prompts click
         document.querySelectorAll('.quick-prompt-btn').forEach(btn => {
-            btn.addEventListener('click', function () {
+            btn.addEventListener('click', function() {
                 const text = this.getAttribute('data-text');
                 if (text) sendMessage(text);
             });
         });
 
         // Reset chat
-        resetBtn.addEventListener('click', function () {
+        resetBtn.addEventListener('click', function() {
             if (confirm('Bersihkan percakapan ini?')) {
                 chatHistory = [];
                 const welcomeHtml = `
@@ -386,7 +587,7 @@
         });
 
         // Form submit
-        chatForm.addEventListener('submit', function (e) {
+        chatForm.addEventListener('submit', function(e) {
             e.preventDefault();
             const query = chatInput.value.trim();
             if (!query) return;
@@ -398,7 +599,7 @@
             if (!raw) return '';
             // Convert URLs into clickable links
             const urlRegex = /(https?:\/\/[^\s]+)/g;
-            let formatted = raw.replace(urlRegex, function (url) {
+            let formatted = raw.replace(urlRegex, function(url) {
                 return `<a href="${url}" target="_blank" rel="noopener noreferrer" style="color: #38bdf8; text-decoration: underline; word-break: break-all;">${url}</a>`;
             });
             // Convert linebreaks
@@ -408,7 +609,7 @@
 
         function appendMessage(role, text) {
             const row = document.createElement('div');
-            
+
             if (role === 'user') {
                 row.style.cssText = 'display: flex; justify-content: flex-end; margin-left: 40px;';
                 row.innerHTML = `
@@ -441,20 +642,31 @@
 
             try {
                 const response = await fetch(`${API_HOST}/api/v1/prediction/${CHATFLOW_ID}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ question: text, history: chatHistory })
+                    method: 'POST'
+                    , headers: {
+                        'Content-Type': 'application/json'
+                    }
+                    , body: JSON.stringify({
+                        question: text
+                        , history: chatHistory
+                    })
                 });
 
                 if (!response.ok) throw new Error('Network response not ok');
                 const data = await response.json();
-                
+
                 const botReply = data.text || data.json || 'Terima kasih atas pertanyaan Anda. Tim Scalify siap membantu lebih lanjut via WhatsApp: https://wa.me/6285221694067';
                 typingBox.style.display = 'none';
                 appendMessage('bot', botReply);
 
-                chatHistory.push({ role: 'userMessage', content: text });
-                chatHistory.push({ role: 'apiMessage', content: botReply });
+                chatHistory.push({
+                    role: 'userMessage'
+                    , content: text
+                });
+                chatHistory.push({
+                    role: 'apiMessage'
+                    , content: botReply
+                });
             } catch (err) {
                 console.error('Chat error:', err);
                 typingBox.style.display = 'none';
@@ -462,4 +674,5 @@
             }
         }
     })();
+
 </script>
