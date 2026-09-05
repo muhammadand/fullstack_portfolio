@@ -171,6 +171,7 @@ Route::resource('admin/client-proposals', App\Http\Controllers\Admin\ClientPropo
     'update' => 'admin.client_proposals.update',
     'destroy' => 'admin.client_proposals.destroy',
 ]);
+Route::post('admin/client-proposals/bulk-update-price', [App\Http\Controllers\Admin\ClientProposalController::class, 'bulkUpdatePrice'])->name('admin.client_proposals.bulk_update_price');
 Route::post('admin/client-proposals/{client_proposal}/wa-template', [App\Http\Controllers\Admin\ClientProposalController::class, 'updateWaTemplate'])->name('admin.client_proposals.update_wa');
 
 Route::resource('admin/chat-templates', App\Http\Controllers\Admin\ChatTemplateController::class)->except(['create', 'show', 'edit'])->names([

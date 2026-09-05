@@ -115,8 +115,11 @@
         <div class="mb-12 flex justify-between text-sm">
             <div>
                 <p class="text-slate-400 mb-1">Disiapkan untuk:</p>
-                <p class="font-bold text-brand-dark text-base">{{ $client->client_name ?? $client->brand_name }}</p>
-                <p class="text-slate-600">Luxury Fragrance Brand</p>
+                <p class="font-bold text-brand-dark text-base uppercase font-serif tracking-wider">{{ $client->brand_name }}</p>
+                @if(!empty($client->client_name) && strtolower($client->client_name) !== strtolower($client->brand_name))
+                    <p class="text-xs text-slate-500 font-medium">PIC: {{ $client->client_name }}</p>
+                @endif
+                <p class="text-slate-600 text-xs mt-0.5">Luxury Fragrance Brand</p>
             </div>
             <div class="text-right">
                 <p class="text-slate-400 mb-1">Disiapkan oleh:</p>

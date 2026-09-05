@@ -15,15 +15,67 @@ class ClientProposalController extends Controller
     {
         $query = ClientProposal::with(['category', 'affiliate'])->latest();
 
+        if ($request->filled('search')) {
+            $search = trim($request->search);
+            $query->where(function ($q) use ($search) {
+                $q->where('brand_name', 'like', "%{$search}%")
+                    ->orWhere('client_name', 'like', "%{$search}%")
+                    ->orWhere('wa_number', 'like', "%{$search}%")
+                    ->orWhere('slug', 'like', "%{$search}%");
+            });
+        }
+
         if ($request->filled('category_id')) {
             $query->where('business_category_id', $request->category_id);
         }
 
-        $proposals = $query->paginate(10)->appends($request->all());
+        $proposals = $query->paginate(15)->appends($request->all());
         $chatTemplates = \App\Models\ChatTemplate::whereNull('affiliate_id')->get();
         $categories = BusinessCategory::all();
 
         return view('admin.client-proposals.index', compact('proposals', 'chatTemplates', 'categories'));
+    }
+
+    public function bulkUpdatePrice(Request $request)
+    {
+        $request->validate([
+            'project_price' => 'nullable|numeric|min:0',
+            'domain_price' => 'nullable|numeric|min:0',
+            'scope' => 'required|string|in:all,category,selected',
+            'target_category_id' => 'nullable|exists:business_categories,id',
+            'selected_ids' => 'nullable|array',
+            'selected_ids.*' => 'exists:client_proposals,id',
+        ]);
+
+        if (!$request->filled('project_price') && !$request->filled('domain_price')) {
+            return redirect()->back()->with('error', 'Silakan masukkan minimal salah satu harga (Harga Project atau Harga Domain) yang ingin diubah.');
+        }
+
+        $query = ClientProposal::query();
+
+        if ($request->scope === 'category') {
+            if (!$request->filled('target_category_id')) {
+                return redirect()->back()->with('error', 'Pilih kategori yang ingin diubah harganya.');
+            }
+            $query->where('business_category_id', $request->target_category_id);
+        } elseif ($request->scope === 'selected') {
+            if (empty($request->selected_ids)) {
+                return redirect()->back()->with('error', 'Tidak ada data proposal yang dicentang / dipilih.');
+            }
+            $query->whereIn('id', $request->selected_ids);
+        }
+
+        $updateData = [];
+        if ($request->filled('project_price')) {
+            $updateData['project_price'] = $request->project_price;
+        }
+        if ($request->filled('domain_price')) {
+            $updateData['domain_price'] = $request->domain_price;
+        }
+
+        $count = $query->update($updateData);
+
+        return redirect()->route('admin.client_proposals.index', $request->only(['category_id', 'search']))->with('success', "Berhasil memperbarui harga untuk {$count} proposal klien.");
     }
 
     public function proposalCafe($slug)
@@ -57,7 +109,7 @@ class ClientProposalController extends Controller
         ]);
 
         $validated['slug'] = Str::slug($request->brand_name);
-        
+
         // Ensure slug is unique
         if (ClientProposal::where('slug', $validated['slug'])->exists()) {
             $validated['slug'] = $validated['slug'] . '-' . time();
@@ -87,7 +139,7 @@ class ClientProposalController extends Controller
         ]);
 
         $validated['slug'] = Str::slug($request->brand_name);
-        
+
         // Ensure slug is unique if changed
         if ($client_proposal->slug !== $validated['slug'] && ClientProposal::where('slug', $validated['slug'])->exists()) {
             $validated['slug'] = $validated['slug'] . '-' . time();
@@ -120,7 +172,7 @@ class ClientProposalController extends Controller
 
         $categoryId = $validated['business_category_id'] ?? null;
         $category = $categoryId ? BusinessCategory::find($categoryId) : null;
-        
+
         $projectPrice = $category ? ($category->project_price ?? 4500000) : 4500000;
         $domainPrice = $category ? ($category->domain_price ?? 1200000) : 1200000;
 
@@ -128,7 +180,7 @@ class ClientProposalController extends Controller
 
         foreach ($validated['contacts'] as $contact) {
             $slug = Str::slug($contact['brand_name']);
-            
+
             // Pastikan slug unik
             $originalSlug = $slug;
             $counter = 1;
