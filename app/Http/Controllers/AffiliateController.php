@@ -281,6 +281,7 @@ class AffiliateController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:affiliates,email,' . $affiliate->id,
             'bank_info' => 'nullable|string',
+            'lynk_id_link' => 'nullable|url|max:255',
             'password' => 'nullable|min:8',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:3072' // 3MB Max
         ]);
@@ -289,6 +290,7 @@ class AffiliateController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'bank_info' => $request->bank_info,
+            'lynk_id_link' => $request->lynk_id_link,
         ];
 
         if ($request->hasFile('avatar')) {

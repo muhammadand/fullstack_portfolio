@@ -137,6 +137,7 @@ Route::get('admin/affiliates/{affiliate}', [App\Http\Controllers\Admin\Affiliate
 Route::post('admin/affiliates/{affiliate}/approve', [App\Http\Controllers\Admin\AffiliateController::class, 'approve'])->name('admin.affiliates.approve');
 Route::post('admin/affiliates/{affiliate}/reject', [App\Http\Controllers\Admin\AffiliateController::class, 'reject'])->name('admin.affiliates.reject');
 Route::post('admin/affiliates/{affiliate}/commission', [App\Http\Controllers\Admin\AffiliateController::class, 'addCommission'])->name('admin.affiliates.commission');
+Route::post('admin/affiliates/{affiliate}/lynk-settings', [App\Http\Controllers\Admin\AffiliateController::class, 'updateLynkSettings'])->name('admin.affiliates.lynk_settings');
 
 // Withdrawals Management
 Route::get('admin/withdrawals', [App\Http\Controllers\Admin\WithdrawalController::class, 'index'])->name('admin.withdrawals.index');
@@ -150,6 +151,16 @@ Route::resource('admin/business-categories', App\Http\Controllers\Admin\Business
     'edit' => 'admin.business_categories.edit',
     'update' => 'admin.business_categories.update',
     'destroy' => 'admin.business_categories.destroy',
+]);
+
+// Manajemen Produk Digital (Lynk.id)
+Route::resource('admin/digital-products', App\Http\Controllers\Admin\DigitalProductController::class)->names([
+    'index' => 'admin.digital_products.index',
+    'create' => 'admin.digital_products.create',
+    'store' => 'admin.digital_products.store',
+    'edit' => 'admin.digital_products.edit',
+    'update' => 'admin.digital_products.update',
+    'destroy' => 'admin.digital_products.destroy',
 ]);
 
 Route::resource('admin/client-proposals', App\Http\Controllers\Admin\ClientProposalController::class)->names([
@@ -271,6 +282,9 @@ Route::middleware(['auth:affiliate'])->group(function () {
     Route::post('/partner/blogs/generate-ai', [App\Http\Controllers\Affiliate\BlogController::class, 'generateAi'])->name('affiliate.blogs.generate_ai');
     Route::post('/partner/blogs', [App\Http\Controllers\Affiliate\BlogController::class, 'store'])->name('affiliate.blogs.store');
 
+    // Digital Products (Lynk.id)
+    Route::get('/partner/digital-products', [\App\Http\Controllers\Affiliate\DigitalProductController::class, 'index'])->name('affiliate.digital_products.index');
+
     // Profile
     Route::get('/partner/profile', [App\Http\Controllers\AffiliateController::class, 'profile'])->name('affiliate.profile');
     Route::post('/partner/profile', [App\Http\Controllers\AffiliateController::class, 'updateProfile'])->name('affiliate.profile.update');
@@ -304,20 +318,28 @@ Route::get('/client/parfum/{slug}/admin-demo', [ClientProposalController::class,
 // Endpoint rahasia untuk trigger deploy (migrasi & cache) dari GitHub Actions (Tanpa SSH)
 Route::get('/secret-deploy-trigger-12345', function () {
     try {
-        // Jalankan migrasi spesifik
+        // Jalankan migrasi spesifik secara berurutan
         \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_08_26_065451_make_featured_image_nullable_on_blogs_table.php',
+            '--path' => 'database/migrations/2026_09_05_051625_add_lynk_id_link_to_affiliates_table.php',
             '--force' => true
         ]);
 
         \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_08_28_150730_add_remember_token_to_affiliates_table.php',
+            '--path' => 'database/migrations/2026_09_05_052128_create_digital_products_table.php',
             '--force' => true
         ]);
 
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_09_05_062934_adjust_commission_rate_to_affiliates_and_digital_products.php',
+            '--force' => true
+        ]);
+
+        // Jalankan Seeder yang diperlukan
         \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'ClientProposalSeeder', '--force' => true]);
         \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'BusinessCategorySeeder', '--force' => true]);
         \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'StudentServiceSeeder', '--force' => true]);
+        \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'DigitalProductSeeder', '--force' => true]);
+
         \Illuminate\Support\Facades\Artisan::call('optimize:clear');
         return "Deploy commands executed successfully!";
     } catch (\Exception $e) {

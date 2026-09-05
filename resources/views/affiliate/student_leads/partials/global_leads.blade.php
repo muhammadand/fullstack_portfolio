@@ -38,12 +38,12 @@
             </div>
 
             <div class="relative group shrink-0">
-                <button onclick="generateAiChatAndSend(this, '{{ $lead->id }}', '{{ $lead->wa_number }}', '{{ route('affiliate.student_leads.generate_ai_chat', $lead->id) }}', '{{ route('affiliate.student_leads.claim', $lead->id) }}')" class="w-10 h-10 bg-indigo-500/20 text-indigo-400 hover:bg-indigo-500 hover:text-white border border-indigo-500/30 rounded-xl flex items-center justify-center transition-colors" title="Generate AI Chat">
-                    <i class="fa-solid fa-robot"></i>
+                <button onclick="openAiOfferModal('{{ $lead->id }}', '{{ addslashes($lead->name) }}', '{{ $lead->wa_number }}', '{{ addslashes($lead->needs) }}', '{{ route('affiliate.student_leads.claim', $lead->id) }}')" class="w-10 h-10 bg-indigo-500/20 text-indigo-400 hover:bg-indigo-500 hover:text-white border border-indigo-500/30 rounded-xl flex items-center justify-center transition-colors" title="Rekomendasi AI (Produk & Jasa)">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
                 </button>
                 <!-- Tooltip -->
                 <div class="absolute bottom-full right-0 mb-2 w-48 bg-indigo-600 text-white text-[10px] text-center p-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 shadow-lg shadow-indigo-500/20">
-                    Biar AI yang tulis pesan personal & menarik untuk prospek ini!
+                    Pilih produk digital & biarkan AI buatkan chat soft-selling!
                     <div class="absolute -bottom-1 right-3.5 w-2 h-2 bg-indigo-600 rotate-45"></div>
                 </div>
             </div>

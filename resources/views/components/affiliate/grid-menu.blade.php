@@ -16,7 +16,17 @@
                 <span class="text-[10px] text-slate-300 font-medium text-center leading-tight group-hover:text-white transition-colors">Bagikan<br>Web</span>
             </div>
 
-            <!-- 2. Katalog Proposal -->
+            <!-- 2. Produk Digital (Lynk.id) -->
+            <a href="{{ route('affiliate.digital_products.index') }}" wire:navigate class="flex flex-col items-center gap-2 group">
+                <div class="w-12 h-12 rounded-2xl glass-panel flex items-center justify-center text-amber-400 text-lg shadow-inner relative transition-all duration-200 ease-out active:scale-90 active:opacity-60 group-hover:bg-amber-500/10 group-hover:border-amber-500/30">
+                    <i class="fa-solid fa-cubes-stacked"></i>
+                    <!-- Badge 10% Komisi -->
+                    <span class="absolute -top-1.5 -right-1.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[8px] font-bold px-1 py-0.5 rounded-full shadow-md shadow-amber-500/40">10%</span>
+                </div>
+                <span class="text-[10px] text-slate-300 font-medium text-center leading-tight group-hover:text-white transition-colors">Produk<br>Digital</span>
+            </a>
+
+            <!-- 3. Katalog Proposal -->
             <a href="{{ route('affiliate.proposals') }}" wire:navigate class="flex flex-col items-center gap-2 group">
                 <div class="w-12 h-12 rounded-2xl glass-panel flex items-center justify-center text-rose-400 text-lg shadow-inner relative transition-all duration-200 ease-out active:scale-90 active:opacity-60 group-hover:bg-rose-500/10 group-hover:border-rose-500/30">
                     <i class="fa-solid fa-folder-open"></i>

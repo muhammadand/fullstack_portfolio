@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\StudentLead;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Gemini\Laravel\Facades\Gemini;
 
 class StudentLeadController extends Controller
@@ -48,7 +49,9 @@ class StudentLeadController extends Controller
             ->orWhere('affiliate_id', $affiliate->id)
             ->get();
 
-        return view('affiliate.student_leads.index', compact('affiliate', 'leads', 'tab', 'chatTemplates'));
+        $digitalProducts = \App\Models\DigitalProduct::active()->ordered()->get();
+
+        return view('affiliate.student_leads.index', compact('affiliate', 'leads', 'tab', 'chatTemplates', 'digitalProducts'));
     }
 
     public function claim(Request $request, $id)
@@ -127,33 +130,79 @@ class StudentLeadController extends Controller
         $affiliate = Auth::guard('affiliate')->user();
         $lead = StudentLead::findOrFail($id);
 
-        $profileLink = "https://scalifyintellegence.my.id/sobat-scalify?ref=" . $affiliate->affiliate_code;
-
-        $prompt = "Kamu adalah seorang UX Copywriter dan Content Strategist profesional.\n";
-        $prompt .= "Buatkan 1 pesan WhatsApp yang soft-selling, ramah, menarik, dan pendek (maksimal 3-4 kalimat) untuk prospek mahasiswa yang butuh bantuan Tugas Akhir/Skripsi atau project IT lainnya.\n";
-        $prompt .= "Informasi prospek:\n";
-        $prompt .= "- Nama Mahasiswa: " . ($lead->name ?? 'Kak') . "\n";
-        $prompt .= "- Universitas: " . ($lead->university ?? 'Kampusnya') . "\n";
-        $prompt .= "- Kebutuhan/Project: " . ($lead->needs ?? 'Tugas Akhir / Skripsi') . "\n";
-        $prompt .= "- Nama Saya (Pengirim): " . ($affiliate->name) . "\n\n";
-        $prompt .= "Instruksi Khusus:\n";
-        $prompt .= "1. Pesan harus terkesan personal, menawarkan bantuan untuk mengerjakan project/skripsi mereka dengan aman dan terpercaya, tanpa bertele-tele.\n";
-        $prompt .= "2. Sertakan link profil ini di akhir pesan agar mereka lebih percaya: " . $profileLink . "\n";
-        $prompt .= "3. Jangan berikan opsi, jangan tambahkan karakter markdown seperti bintang (**) atau pembuka/penutup, langsung berikan isi teksnya saja agar bisa langsung dikirim via WhatsApp.";
-
-        try {
-            $response = Gemini::generativeModel('gemini-3.1-flash-lite')->generateContent($prompt);
-            $text = trim($response->text());
-
-            return response()->json([
-                'success' => true,
-                'text' => $text
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Gagal generate AI: ' . $e->getMessage()
-            ], 500);
+        $productId = $request->input('digital_product_id');
+        $product = null;
+        if ($productId) {
+            $product = \App\Models\DigitalProduct::find($productId);
         }
+
+        $profileLink = "https://scalifyintellegence.my.id/sobat-scalify?ref=" . $affiliate->affiliate_code;
+        $studentName = ($lead->name && $lead->name !== 'Anonim') ? $lead->name : 'Kak';
+        $senderName = $affiliate->name;
+
+        if ($product) {
+            $productUrl = $product->getAffiliateUrl($affiliate) ?: $profileLink;
+            $cacheKey = "ai_template_product_" . $product->id;
+
+            // Server-Side Smart Cache (disimpan selama 14 hari)
+            $template = Cache::remember($cacheKey, now()->addDays(14), function () use ($product) {
+                $prompt = "Kamu adalah seorang konsultan mahasiswa dan copywriter WhatsApp yang ramah, santai, dan persuasif (bukan robot).\n";
+                $prompt .= "Buatkan 1 template pesan WhatsApp yang soft-selling dan ringkas (maksimal 3-4 kalimat) untuk merekomendasikan produk source code/template berikut:\n";
+                $prompt .= "- Nama Produk: {$product->name}\n";
+                $prompt .= "- Deskripsi Singkat: {$product->short_description}\n\n";
+                $prompt .= "Instruksi Format Template:\n";
+                $prompt .= "1. Gunakan placeholder [NAMA] untuk nama mahasiswa, [LINK] untuk link produk, dan [PENGIRIM] untuk nama pengirim.\n";
+                $prompt .= "2. Awali sapaan santai menanyakan kabar/skripsi [NAMA].\n";
+                $prompt .= "3. Rekomendasikan *{$product->name}* sebagai solusi/referensi yang sudah jadi dan siap pakai untuk mempermudah pengerjaannya, lalu cantumkan [LINK].\n";
+                $prompt .= "4. WAJIB DI AKHIR: Tambahkan penutup ramah bahwa kalau butuh fitur yang beda atau mau dibikinin custom sesuai judul/kebutuhan sendiri, mereka bisa banget request / konsultasi langsung.\n";
+                $prompt .= "5. Berikan isi template saja tanpa kata pengantar.";
+
+                try {
+                    $response = Gemini::generativeModel('gemini-3.1-flash-lite')->generateContent($prompt);
+                    return trim($response->text());
+                } catch (\Exception $e) {
+                    // Fallback template jika API bermasalah/kuota habis
+                    return "Halo [NAMA], lagi sibuk ngerjain tugas akhir atau skripsi ya?\n\nKebetulan aku ada rekomendasi *{$product->name}* nih, sistemnya sudah lengkap, rapi, dan siap pakai buat referensi kamu. Detail dan demonya bisa langsung kamu cek di sini ya: [LINK]\n\nKalau misalnya butuh fitur yang berbeda atau mau dibikinin custom sesuai judul kamu sendiri, bisa banget request langsung ke aku ya [NAMA]!";
+                }
+            });
+
+            // Gantikan placeholder dengan data spesifik affiliate & mahasiswa saat ini
+            $finalText = str_replace(
+                ['[NAMA]', '[PRODUK]', '[LINK]', '[PENGIRIM]'],
+                [$studentName, '*' . $product->name . '*', $productUrl, $senderName],
+                $template
+            );
+        } else {
+            $cacheKey = "ai_template_custom_service";
+
+            // Server-Side Smart Cache (disimpan selama 14 hari)
+            $template = Cache::remember($cacheKey, now()->addDays(14), function () {
+                $prompt = "Kamu adalah seorang konsultan mahasiswa dan copywriter WhatsApp yang ramah dan santai.\n";
+                $prompt .= "Buatkan 1 template pesan WhatsApp yang soft-selling dan ringkas (maksimal 3-4 kalimat) untuk menawarkan bantuan pengerjaan tugas akhir/skripsi IT.\n";
+                $prompt .= "Gunakan placeholder [NAMA] untuk nama mahasiswa, [LINK] untuk link profil, dan [PENGIRIM] untuk nama pengirim.\n";
+                $prompt .= "WAJIB DI AKHIR: Beritahu bahwa kalau butuh request khusus atau custom sesuai judulnya sendiri, bisa konsultasi langsung.\n";
+                $prompt .= "Berikan isi template saja tanpa pengantar.";
+
+                try {
+                    $response = Gemini::generativeModel('gemini-3.1-flash-lite')->generateContent($prompt);
+                    return trim($response->text());
+                } catch (\Exception $e) {
+                    // Fallback template jika API bermasalah
+                    return "Halo [NAMA], lagi sibuk ngerjain project atau skripsi kuliah ya?\n\nKalau kamu lagi butuh bantuan atau bimbingan pembuatan website dan aplikasi skripsi, aku dan tim siap bantu pengerjaannya sampai tuntas, amanah, dan bergaransi revisi. Info lengkapnya bisa cek di: [LINK]\n\nKalau ada kebutuhan metode atau judul khusus, kamu bisa langsung request/konsultasi bebas ya [NAMA]!";
+                }
+            });
+
+            $finalText = str_replace(
+                ['[NAMA]', '[LINK]', '[PENGIRIM]'],
+                [$studentName, $profileLink, $senderName],
+                $template
+            );
+        }
+
+        return response()->json([
+            'success' => true,
+            'text' => $finalText,
+            'product_name' => $product ? $product->name : null
+        ]);
     }
 }

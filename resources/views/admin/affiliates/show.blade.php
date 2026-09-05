@@ -81,11 +81,47 @@
         </div>
     </div>
 
-    @if(session('success'))
-    <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6" role="alert">
-        <p>{{ session('success') }}</p>
+    <!-- Lynk.id & Komisi Setting Card -->
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 mb-8">
+        <div class="flex items-center justify-between pb-4 mb-4 border-b border-slate-100">
+            <div>
+                <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-cubes-stacked text-amber-500"></i> Pengaturan Integrasi Lynk.id & Komisi
+                </h3>
+                <p class="text-xs text-slate-500 mt-0.5">Atur link affiliate Lynk.id dan persentase komisi khusus partner ini.</p>
+            </div>
+            <span class="px-3 py-1 bg-amber-50 border border-amber-200 text-amber-700 text-xs font-bold rounded-lg font-mono">
+                Komisi: {{ (int)($affiliate->lynk_commission_rate ?? 10) }}%
+            </span>
+        </div>
+
+        <form action="{{ route('admin.affiliates.lynk_settings', $affiliate->id) }}" method="POST" class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+            @csrf
+            <div class="md:col-span-7">
+                <label class="block text-xs font-semibold text-slate-700 mb-1.5">Link Base Lynk.id Affiliate</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 text-xs">
+                        <i class="fa-solid fa-link"></i>
+                    </span>
+                    <input type="url" name="lynk_id_link" value="{{ old('lynk_id_link', $affiliate->lynk_id_link) }}" placeholder="https://lynk.id/a/1035009226" class="w-full pl-9 pr-3 py-2 border border-slate-300 rounded-lg text-xs font-mono focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
+                </div>
+            </div>
+
+            <div class="md:col-span-3">
+                <label class="block text-xs font-semibold text-slate-700 mb-1.5">Persentase Komisi (%)</label>
+                <div class="relative">
+                    <input type="number" step="0.1" name="lynk_commission_rate" value="{{ old('lynk_commission_rate', (float)($affiliate->lynk_commission_rate ?? 10.00)) }}" required min="0" max="100" class="w-full pl-3 pr-8 py-2 border border-slate-300 rounded-lg text-xs font-bold focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
+                    <span class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-slate-500 text-xs font-bold">%</span>
+                </div>
+            </div>
+
+            <div class="md:col-span-2">
+                <button type="submit" class="w-full py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-bold transition-colors flex items-center justify-center gap-1.5 shadow-sm">
+                    <i class="fa-solid fa-floppy-disk"></i> Simpan
+                </button>
+            </div>
+        </form>
     </div>
-    @endif
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <!-- Komisi History -->

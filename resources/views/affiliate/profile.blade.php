@@ -127,6 +127,21 @@
                     </div>
                 </div>
 
+                <!-- Link Lynk.id Affiliate -->
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1.5 ml-1 flex items-center justify-between">
+                        <span>Link Lynk.id Affiliate</span>
+                        <span class="text-[10px] text-amber-400 font-semibold"><i class="fa-solid fa-cubes-stacked mr-1"></i>Produk Digital</span>
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-amber-400">
+                            <i class="fa-solid fa-link"></i>
+                        </div>
+                        <input type="url" name="lynk_id_link" value="{{ old('lynk_id_link', $affiliate->lynk_id_link) }}" class="w-full bg-slate-900/50 border border-slate-700/50 text-white rounded-xl py-3 pl-10 pr-4 focus:outline-none focus:border-amber-500/50 focus:ring-1 focus:ring-amber-500/50 transition-all text-sm placeholder:text-slate-600 font-mono" placeholder="https://lynk.id/a/1035009226">
+                    </div>
+                    <p class="text-[10px] text-slate-400 mt-1 ml-1">Contoh: <code class="text-amber-300">https://lynk.id/a/1035009226</code></p>
+                </div>
+
             </div>
         </div>
 

@@ -111,4 +111,19 @@ class AffiliateController extends Controller
 
         return back()->with('success', 'Komisi dan Bonus Poin berhasil ditambahkan ke partner ' . $affiliate->name);
     }
+
+    public function updateLynkSettings(Request $request, Affiliate $affiliate)
+    {
+        $request->validate([
+            'lynk_id_link' => 'nullable|url|max:255',
+            'lynk_commission_rate' => 'required|numeric|min:0|max:100',
+        ]);
+
+        $affiliate->update([
+            'lynk_id_link' => $request->lynk_id_link,
+            'lynk_commission_rate' => $request->lynk_commission_rate,
+        ]);
+
+        return back()->with('success', 'Pengaturan Lynk.id partner berhasil diperbarui!');
+    }
 }

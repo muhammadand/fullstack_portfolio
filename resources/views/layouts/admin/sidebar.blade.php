@@ -51,6 +51,11 @@ $menus = [
 'icon' => 'fa-solid fa-money-bill-transfer',
 ],
 [
+'label' => 'Produk Digital',
+'route' => 'admin.digital_products.index',
+'icon' => 'fa-solid fa-cubes-stacked',
+],
+[
 'label' => 'Marketing',
 'icon' => 'fa-solid fa-bullhorn',
 'submenu' => [

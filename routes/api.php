@@ -12,6 +12,15 @@ use App\Http\Controllers\Api\StudentLeadApiController;
 
 Route::post('/student-leads/bulk', [StudentLeadApiController::class, 'bulkStore']);
 
+// Endpoint API untuk Digital Products
+use App\Http\Controllers\Api\DigitalProductApiController;
+
+Route::get('/digital-products', [DigitalProductApiController::class, 'index']);
+Route::post('/digital-products', [DigitalProductApiController::class, 'store']);
+Route::post('/digital-products/bulk', [DigitalProductApiController::class, 'bulkStore']);
+Route::get('/digital-products/{id}', [DigitalProductApiController::class, 'show']);
+
+
 // Endpoint Manual & Cron: Kirim Push Notification Harian
 use App\Models\Affiliate;
 use App\Notifications\DailyAffiliateReminder;
