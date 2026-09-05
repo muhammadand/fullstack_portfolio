@@ -101,8 +101,8 @@
         <div class="border-b-4 border-brand-gold pb-8 mb-10 mt-10">
             <div class="flex justify-between items-end">
                 <div>
-                    <p class="text-brand-gold font-bold tracking-widest text-xs mb-2 uppercase">Proposal Kemitraan Digital</p>
-                    <h1 class="font-serif text-4xl font-extrabold text-brand-dark leading-tight">Pengembangan E-Commerce &<br>Sistem Omnichannel POS</h1>
+                    <p class="text-brand-gold font-bold tracking-widest text-xs mb-2 uppercase">Proposal Kemitraan Digital • Luxury Fragrance</p>
+                    <h1 class="font-serif text-4xl font-extrabold text-brand-dark leading-tight">Pengembangan E-Commerce Parfum,<br>VIP Membership & Omnichannel POS</h1>
                 </div>
                 <div class="text-right">
                     <div class="w-14 h-14 rounded-full border-2 border-brand-gold bg-brand-dark flex items-center justify-center text-brand-gold text-2xl ml-auto mb-3 shadow-md"><i class="fas fa-spray-can"></i></div>
@@ -134,7 +134,7 @@
                 Membangun <em>brand</em> parfum lokal saat ini memiliki potensi keuntungan yang luar biasa, namun kompetisinya sangat ketat. Bergantung sepenuhnya pada <em>marketplace</em> (seperti Shopee atau Tokopedia) perlahan akan menggerus margin keuntungan Anda karena <strong>biaya admin yang terus naik</strong> (kini bisa mencapai 6-10%). Selain itu, berjualan berdampingan dengan ribuan kompetitor di <em>marketplace</em> membuat <em>brand</em> Anda sulit membangun citra yang eksklusif dan mewah (Premium).
             </p>
             <p class="text-slate-600 leading-relaxed text-sm text-justify">
-                Kami di Scalify Intelligence hadir untuk membangun <strong>"Rumah Digital" eksklusif</strong> untuk <strong>{{ $client->brand_name }}</strong>. Bukan sekadar website biasa, melainkan sebuah sistem cerdas yang menggabungkan toko online mewah, aplikasi kasir (POS) untuk toko fisik/<em>bazaar</em>, dan manajemen <em>reseller</em>—semua dalam satu pintu yang sangat mudah digunakan, bahkan oleh staf yang tidak mengerti IT sekalipun.
+                Kami di Scalify Intelligence hadir untuk membangun <strong>"Rumah Digital" eksklusif</strong> untuk <strong>{{ $client->brand_name }}</strong>. Bukan sekadar website biasa, melainkan sebuah ekosistem cerdas yang menggabungkan toko online mewah (dengan visualisasi notes aroma & sampler), klub VIP Membership pemicu *repeat order*, aplikasi kasir (POS) toko fisik/<em>bazaar</em>, dan portal reseller—semua terintegrasi dalam satu pintu yang sangat praktis.
             </p>
 
             <div class="mt-6 bg-[#0a0a0a] border border-brand-gold/50 rounded-xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -188,39 +188,50 @@
     <div class="proposal-page page-break">
 
         <!-- 3. Arsitektur Sistem -->
-        <div class="mb-10 mt-6">
-            <h2 class="font-serif text-2xl font-bold text-brand-dark mb-6 flex items-center gap-2">
+        <div class="mb-8 mt-4">
+            <h2 class="font-serif text-2xl font-bold text-brand-dark mb-4 flex items-center gap-2">
                 <span class="text-brand-gold">III.</span> Fitur Unggulan yang Anda Dapatkan
             </h2>
+            <p class="text-sm text-slate-600 mb-6">Seluruh modul dirancang khusus untuk meningkatkan prestise merek parfum, retensi pembeli, dan efisiensi operasional harian Anda.</p>
 
-            <div class="grid grid-cols-1 gap-6">
-                <!-- Frontend -->
-                <div class="border-l-4 border-brand-gold rounded-r-xl p-5 bg-white shadow-sm border-y border-r border-slate-200">
-                    <h3 class="font-bold text-brand-dark mb-3 border-b border-slate-100 pb-2 font-serif text-lg"><i class="fas fa-store text-brand-gold mr-2"></i>1. Website Toko Online Mewah</h3>
-                    <ul class="space-y-2 text-sm text-slate-600">
-                        <li><strong class="text-brand-dark">Desain Kelas Dunia:</strong> Estetika visual elegan yang seketika mengangkat derajat dan prestise merek parfum Anda.</li>
-                        <li><strong class="text-brand-dark">Visualisasi Aroma (Notes):</strong> Penjelasan <em>Top, Heart, dan Base notes</em> yang disajikan secara interaktif agar pelanggan tergiur meski belum mencium wanginya.</li>
-                        <li><strong class="text-brand-dark">Pembayaran Otomatis (Payment Gateway):</strong> Terima pembayaran via QRIS, Virtual Account (BCA, Mandiri, dll), dan e-Wallet. Orderan otomatis terkonfirmasi tanpa perlu minta pembeli kirim bukti transfer.</li>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Frontend & Scent Experience -->
+                <div class="border-l-4 border-brand-gold rounded-r-xl p-4 bg-white shadow-sm border-y border-r border-slate-200">
+                    <h3 class="font-bold text-brand-dark mb-2 border-b border-slate-100 pb-1.5 font-serif text-base"><i class="fas fa-store text-brand-gold mr-2"></i>1. Luxury Web Store & Scent Notes</h3>
+                    <ul class="space-y-1.5 text-xs text-slate-600">
+                        <li><strong class="text-brand-dark">Visualisasi Aroma (Notes):</strong> Penjelasan <em>Top, Heart, & Base notes</em> interaktif agar pembeli yakin memesan.</li>
+                        <li><strong class="text-brand-dark">Discovery Set & Bundling:</strong> Paket sampler aroma & bundling kustom untuk menaikkan nilai transaksi (AOV).</li>
+                        <li><strong class="text-brand-dark">Payment Gateway Otomatis:</strong> QRIS, Virtual Account (BCA, Mandiri, BRI, dll), dan E-Wallet tanpa perlu cek mutasi manual.</li>
                     </ul>
                 </div>
 
-                <!-- Backend -->
-                <div class="border-l-4 border-brand-dark rounded-r-xl p-5 bg-white shadow-sm border-y border-r border-slate-200">
-                    <h3 class="font-bold text-brand-dark mb-3 border-b border-slate-100 pb-2 font-serif text-lg"><i class="fas fa-desktop text-gray-500 mr-2"></i>2. Aplikasi Kasir & Dashboard Operasional</h3>
-                    <ul class="space-y-2 text-sm text-slate-600">
-                        <li><strong class="text-brand-dark">Aplikasi Kasir Toko (POS):</strong> Khusus untuk SPG/Kasir di toko atau pameran. Mendukung <em>scan barcode</em> dan cetak struk.</li>
-                        <li><strong class="text-brand-dark">Manajemen Pesanan 1-Klik:</strong> Cetak label resi pengiriman kurir (J&T, SiCepat, dll) massal dengan sekali klik. Nomor resi otomatis dikirim ke email/WhatsApp pelanggan.</li>
-                        <li><strong class="text-brand-dark">Analitik Penjualan Cerdas:</strong> Grafik laporan untuk mengetahui aroma mana yang paling laris (<em>Best Seller</em>) bulan ini.</li>
+                <!-- Membership & Loyalty Club -->
+                <div class="border-l-4 border-brand-gold rounded-r-xl p-4 bg-white shadow-sm border-y border-r border-slate-200">
+                    <h3 class="font-bold text-brand-dark mb-2 border-b border-slate-100 pb-1.5 font-serif text-base"><i class="fas fa-crown text-brand-gold mr-2"></i>2. VIP Membership & Loyalty Club</h3>
+                    <ul class="space-y-1.5 text-xs text-slate-600">
+                        <li><strong class="text-brand-dark">Tiering Level Member:</strong> Tingkatan member (Silver, Gold, Platinum) dengan privilege diskon eksklusif.</li>
+                        <li><strong class="text-brand-dark">Sistem Poin & Cashback:</strong> Poin reward tiap transaksi yang bisa ditukar voucher, memicu <em>repeat order</em> rutin.</li>
+                        <li><strong class="text-brand-dark">Dedicated Member Area:</strong> Dasbor akun pembeli untuk cek riwayat belanja, status tier, dan klaim hadiah.</li>
                     </ul>
                 </div>
 
-                <!-- Reseller -->
-                <div class="border-l-4 border-gray-400 rounded-r-xl p-5 bg-white shadow-sm border-y border-r border-slate-200">
-                    <h3 class="font-bold text-brand-dark mb-3 border-b border-slate-100 pb-2 font-serif text-lg"><i class="fas fa-headset text-gray-500 mr-2"></i>3. Pendampingan & Garansi Bebas Repot</h3>
-                    <ul class="space-y-2 text-sm text-slate-600">
-                        <li><strong class="text-brand-dark">Sangat Mudah Digunakan:</strong> Sistem kami rancang agar mudah dipahami oleh siapapun. Anda tidak perlu paham bahasa pemograman (<em>coding</em>).</li>
-                        <li><strong class="text-brand-dark">Pelatihan (Training) Eksklusif:</strong> Kami akan mengajari Anda dan staf Anda secara langsung sampai benar-benar mahir menggunakan sistem ini.</li>
-                        <li><strong class="text-brand-dark">Dukungan Teknis (Support):</strong> Biarkan kami yang mengurus segala kerumitan <em>server</em> dan sistem. Anda cukup fokus meracik parfum dan berjualan.</li>
+                <!-- POS & Offline Retail -->
+                <div class="border-l-4 border-brand-dark rounded-r-xl p-4 bg-white shadow-sm border-y border-r border-slate-200">
+                    <h3 class="font-bold text-brand-dark mb-2 border-b border-slate-100 pb-1.5 font-serif text-base"><i class="fas fa-cash-register text-gray-700 mr-2"></i>3. Omnichannel Cloud POS (Kasir)</h3>
+                    <ul class="space-y-1.5 text-xs text-slate-600">
+                        <li><strong class="text-brand-dark">Aplikasi Kasir Toko & Bazaar:</strong> Tampilan kasir cepat untuk SPG/kasir di outlet fisik, pop-up store, atau event pameran.</li>
+                        <li><strong class="text-brand-dark">Sinkronisasi Stok Real-Time:</strong> Penjualan di kasir langsung memotong stok website seketika, mencegah <em>overselling</em>.</li>
+                        <li><strong class="text-brand-dark">Struk & Barcode Scanner:</strong> Cetak struk belanja thermal dan integrasi scan barcode produk.</li>
+                    </ul>
+                </div>
+
+                <!-- B2B Reseller & Support -->
+                <div class="border-l-4 border-gray-400 rounded-r-xl p-4 bg-white shadow-sm border-y border-r border-slate-200">
+                    <h3 class="font-bold text-brand-dark mb-2 border-b border-slate-100 pb-1.5 font-serif text-base"><i class="fas fa-users-cog text-gray-700 mr-2"></i>4. B2B Reseller & Pendampingan</h3>
+                    <ul class="space-y-1.5 text-xs text-slate-600">
+                        <li><strong class="text-brand-dark">Portal Khusus Reseller/Mitra:</strong> Diskon grosir otomatis saat agen login, tanpa admin repot hitung manual.</li>
+                        <li><strong class="text-brand-dark">Training Langsung:</strong> Pelatihan staf kasir & admin hingga lancar mengoperasikan seluruh fitur.</li>
+                        <li><strong class="text-brand-dark">Garansi & Support Teknis:</strong> Tim teknis Scalify siap mendampingi kelancaran operasional sistem Anda.</li>
                     </ul>
                 </div>
             </div>
@@ -229,60 +240,70 @@
 
     <!-- HALAMAN 3 -->
     <div class="proposal-page page-break">
-        <div class="mb-10 mt-6">
-            <h2 class="font-serif text-2xl font-bold text-brand-dark mb-6 flex items-center gap-2">
+        <div class="mb-8 mt-4">
+            <h2 class="font-serif text-2xl font-bold text-brand-dark mb-4 flex items-center gap-2">
                 <span class="text-brand-gold">IV.</span> Rincian Investasi
             </h2>
-            <p class="text-sm text-slate-600 mb-6">Penawaran pengembangan platform E-Commerce dan sistem Omnichannel.</p>
+            <p class="text-sm text-slate-600 mb-6">Investasi terpadu pengembangan ekosistem digital E-Commerce, Membership, dan Omnichannel POS.</p>
 
             <table class="w-full text-left text-sm mb-6 border-collapse">
                 <thead>
                     <tr class="bg-[#0a0a0a] text-brand-gold border-b-2 border-brand-gold">
-                        <th class="py-3 px-4 font-bold w-2/3 uppercase tracking-wider text-xs">Layanan & Fasilitas</th>
+                        <th class="py-3 px-4 font-bold w-2/3 uppercase tracking-wider text-xs">Layanan & Rincian Fasilitas</th>
                         <th class="py-3 px-4 font-bold text-right w-1/3 uppercase tracking-wider text-xs">Biaya (IDR)</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr class="border-b border-slate-200">
                         <td class="py-4 px-4 text-slate-600">
-                            <span class="font-bold text-brand-dark block text-base mb-1">Paket Sistem E-Commerce & Kasir (All-in-One)</span>
-                            <span class="text-[12px] block text-justify leading-relaxed">Pembuatan Toko Online Mewah, Aplikasi Kasir (POS) Toko Fisik, Sistem Diskon Reseller Otomatis, dan Dasbor Admin Lengkap. <br><strong class="text-green-600 font-bold mt-1 inline-block"><i class="fas fa-check-circle"></i> Lisensi seumur hidup (Bukan langganan bulanan). 100% Hak Milik Anda.</strong></span>
+                            <span class="font-bold text-brand-dark block text-base mb-1.5">Paket Ekosistem Digital Parfum (All-in-One)</span>
+                            <ul class="text-[12px] space-y-1 text-slate-600 list-disc list-inside mb-2">
+                                <li><strong>Website Toko Online Mewah:</strong> Visual Scent Notes interaktif, Discovery Set Sampler, dan Cart & Checkout Otomatis.</li>
+                                <li><strong>Aplikasi Kasir (POS) Cloud:</strong> Kasir toko/bazaar terintegrasi stok <em>real-time</em> dengan website.</li>
+                                <li><strong>Sistem VIP Membership & Loyalty:</strong> Poin reward, tier level diskon (Bronze/Silver/Gold), dan area member.</li>
+                                <li><strong>Sistem B2B Reseller & Agen:</strong> Login khusus mitra dengan potongan harga grosir otomatis.</li>
+                                <li><strong>Payment Gateway & Cetak Resi:</strong> Terima QRIS, VA Bank, E-Wallet, dan cetak label resi kurir kilat.</li>
+                                <li><strong>Dasbor Admin & Analisis Stok:</strong> Pengelolaan produk, analitik best-seller aroma, dan 100% kepemilikan database pembeli.</li>
+                            </ul>
+                            <strong class="text-green-600 font-bold text-[12px] inline-flex items-center gap-1.5 bg-green-50 px-2.5 py-1 rounded border border-green-200">
+                                <i class="fas fa-check-circle"></i> Lisensi Seumur Hidup (Lifetime) • 100% Hak Milik Anda • Tanpa Biaya Bulanan
+                            </strong>
                         </td>
-                        <td class="py-4 px-4 text-right font-bold text-brand-dark align-top text-base">Rp {{ number_format($client->project_price, 0, ",", ".") }}</td>
+                        <td class="py-4 px-4 text-right font-bold text-brand-dark align-top text-base whitespace-nowrap">Rp {{ number_format($client->project_price, 0, ",", ".") }}</td>
                     </tr>
                     <tr class="border-b border-slate-200">
                         <td class="py-4 px-4 text-slate-600">
-                            <span class="font-bold text-brand-dark block text-base mb-1">Infrastruktur Server Cloud & Domain (.com)</span>
-                            <span class="text-[12px] block text-justify leading-relaxed">Biaya sewa nama web resmi (www.brandanda.com) dan mesin server Cloud super cepat agar pelanggan nyaman berbelanja (Berlaku untuk 1 Tahun Pertama).</span>
+                            <span class="font-bold text-brand-dark block text-base mb-1">Infrastruktur Server Cloud & Domain Resmi (.com)</span>
+                            <span class="text-[12px] block text-justify leading-relaxed">Penyediaan Domain resmi Brand (www.brandanda.com), sertifikat keamanan SSL, dan Cloud Hosting berkecepatan tinggi berkapasitas besar (Berlaku 1 Tahun Pertama).</span>
                         </td>
-                        <td class="py-4 px-4 text-right font-medium text-brand-dark align-top text-base">Rp {{ number_format($client->domain_price, 0, ",", ".") }}</td>
+                        <td class="py-4 px-4 text-right font-medium text-brand-dark align-top text-base whitespace-nowrap">Rp {{ number_format($client->domain_price, 0, ",", ".") }}</td>
                     </tr>
                     <tr class="bg-brand-gold/10 border-t-2 border-brand-gold">
                         <td class="py-4 px-4 font-bold text-brand-dark text-right uppercase tracking-widest text-xs">Total Nilai Investasi (Hanya Bayar Sekali) :</td>
-                        <td class="py-4 px-4 text-right font-black text-brand-dark text-xl">Rp {{ number_format($client->project_price + $client->domain_price, 0, ",", ".") }}</td>
+                        <td class="py-4 px-4 text-right font-black text-brand-dark text-xl whitespace-nowrap">Rp {{ number_format($client->project_price + $client->domain_price, 0, ",", ".") }}</td>
                     </tr>
                 </tbody>
             </table>
 
-            <div class="bg-blue-50 border border-blue-200 p-4 mt-8 rounded flex gap-4 items-start">
-                <i class="fas fa-lightbulb text-blue-500 mt-1 text-xl"></i>
-                <p class="text-[13px] text-slate-700 leading-relaxed">
-                    <strong>Anggap ini sebagai investasi mesin penghasil uang Anda.</strong> Dengan mengalihkan penjualan dari <em>marketplace</em> (yang memotong untung Anda hingga 10% setiap transaksi) ke *website* sendiri, biaya investasi pembuatan sistem ini akan tertutupi <em>(Balik Modal / ROI)</em> dalam waktu yang sangat singkat!
+            <div class="bg-amber-50/80 border border-amber-200/80 p-4 mt-6 rounded-lg flex gap-3.5 items-start">
+                <i class="fas fa-chart-line text-amber-600 mt-1 text-lg shrink-0"></i>
+                <p class="text-[12px] text-slate-700 leading-relaxed">
+                    <strong>Investasi Mesin Pertumbuhan Bisnis:</strong> Melalui sistem membership dan toko online mandiri, <em>repeat order</em> pelanggan wewangian Anda akan terjaga secara otomatis tanpa tergerus potongan komisi <em>marketplace</em> (6-10%). Biaya investasi ini akan tertutupi <em>(Return on Investment / ROI)</em> dalam waktu yang relatif singkat.
                 </p>
             </div>
         </div>
 
-        <div class="mt-16 border-t border-slate-200 pt-10 text-sm text-slate-600">
-            <p class="mb-12">Demikian proposal ini kami sampaikan sebagai langkah awal digitalisasi bisnis wewangian Anda. Atas waktu dan kepercayaannya, kami ucapkan terima kasih.</p>
+        <div class="mt-12 border-t border-slate-200 pt-8 text-sm text-slate-600">
+            <p class="mb-10">Demikian proposal penawaran ini kami sampaikan sebagai langkah strategis digitalisasi dan akselerasi bisnis {{ $client->brand_name }}. Atas waktu dan kepercayaannya, kami ucapkan terima kasih.</p>
             <div class="flex justify-between items-end">
                 <div class="text-center">
-                    <p class="mb-20">Hormat Kami,</p>
+                    <p class="mb-16">Hormat Kami,</p>
                     <div class="border-b border-slate-400 w-48 mb-1 mx-auto"></div>
                     <p class="font-bold text-brand-dark font-serif">M. Andi</p>
                     <p class="text-xs text-slate-500">Project Manager - Scalify</p>
                 </div>
                 <div class="text-center">
-                    <p class="mb-20">Disetujui Oleh,</p>
+                    <p class="mb-16">Disetujui Oleh,</p>
                     <div class="border-b border-slate-400 w-48 mb-1 mx-auto"></div>
                     <p class="font-bold text-brand-dark font-serif">.........................................</p>
                     <p class="text-xs text-slate-500">{{ $client->brand_name }}</p>
