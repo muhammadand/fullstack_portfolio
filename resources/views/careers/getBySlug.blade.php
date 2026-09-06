@@ -14,7 +14,7 @@
 <meta property="og:url" content="{{ url()->current() }}" />
 <meta property="og:title" content="{{ $career->title }} — Karir di Scalify Intelligence" />
 <meta property="og:description" content="Lowongan {{ $career->title }} di Scalify Intelligence. {{ Str::limit(strip_tags($career->description), 150) }}" />
-<meta property="og:image" content="{{ asset('og-image.png') }}" />
+<meta property="og:image" content="{{ $career->featured_image ? asset('storage/' . $career->featured_image) : asset('og-image.png') }}" />
 <meta property="og:site_name" content="Scalify Intelligence" />
 <meta property="og:locale" content="id_ID" />
 
@@ -23,7 +23,7 @@
 <meta name="twitter:url" content="{{ url()->current() }}" />
 <meta name="twitter:title" content="{{ $career->title }} — Karir di Scalify Intelligence" />
 <meta name="twitter:description" content="Lowongan {{ $career->title }} di Scalify Intelligence. {{ Str::limit(strip_tags($career->description), 150) }}" />
-<meta name="twitter:image" content="{{ asset('og-image.png') }}" />
+<meta name="twitter:image" content="{{ $career->featured_image ? asset('storage/' . $career->featured_image) : asset('og-image.png') }}" />
 
 {{-- Schema.org JSON-LD Structured Data for JobPosting --}}
 @php
@@ -72,27 +72,26 @@ $jobSchema['baseSalary'] = [
 @endsection
 
 @section('content')
-<div class="min-h-screen bg-brand-dark text-white relative overflow-hidden pt-24 pb-16">
+<div class="min-h-screen bg-brand-dark text-white pt-24 md:pt-28 pb-32 relative overflow-hidden">
     {{-- Ambient Background Glows --}}
-    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[400px] bg-gradient-to-b from-brand-blue/15 via-indigo-600/10 to-transparent blur-3xl pointer-events-none"></div>
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[450px] bg-gradient-to-b from-brand-blue/15 via-brand-indigo/10 to-transparent blur-3xl pointer-events-none"></div>
     <div class="absolute top-40 right-10 w-96 h-96 bg-brand-accent/10 rounded-full blur-[120px] pointer-events-none"></div>
-    <div class="absolute bottom-20 left-10 w-80 h-80 bg-emerald-500/10 rounded-full blur-[100px] pointer-events-none"></div>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <!-- Breadcrumb -->
         <div class="mb-8 flex items-center gap-3">
-            <a href="{{ route('landing.careers') }}" class="text-xs font-semibold text-white/60 hover:text-brand-accent transition-colors inline-flex items-center gap-2">
-                <i class="fas fa-arrow-left text-[11px]"></i> Kembali ke Daftar Karir
+            <a href="{{ route('landing.careers') }}" class="text-sm font-semibold text-white/60 hover:text-white transition-colors inline-flex items-center gap-2">
+                <i class="fas fa-arrow-left"></i> Kembali ke Karir
             </a>
-            <span class="text-white/20">/</span>
-            <span class="px-2.5 py-0.5 bg-brand-accent/15 text-brand-accent border border-brand-accent/30 rounded-full text-[9px] font-bold tracking-widest uppercase">
+            <span class="text-white/30">/</span>
+            <span class="px-3 py-1 bg-white/5 border border-white/10 text-brand-accent rounded-full text-[10px] font-bold tracking-widest uppercase">
                 Lowongan Karir
             </span>
         </div>
 
         <!-- Alert Success -->
         @if (session('success'))
-        <div class="mb-6 p-4 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center gap-3 shadow-lg">
+        <div class="mb-8 p-4 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center gap-3 shadow-lg">
             <div class="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
                 <i class="fa-solid fa-check text-sm"></i>
             </div>
@@ -106,74 +105,116 @@ $jobSchema['baseSalary'] = [
         </div>
         @endif
 
-        <div class="grid lg:grid-cols-12 gap-6 lg:gap-8 items-start">
-            <!-- Main Content (Article) -->
-            <div class="lg:col-span-8">
-                <article class="bg-[#0F172A]/70 backdrop-blur-xl border border-white/10 rounded-3xl p-6 sm:p-8 md:p-10 shadow-2xl">
-                    <!-- Title -->
-                    <h1 class="text-2xl sm:text-3xl md:text-4xl font-display font-extrabold text-white mb-4 leading-tight">
-                        {{ $career->title }}
-                    </h1>
+        <div class="grid lg:grid-cols-12 gap-8 lg:gap-12">
+            <!-- Main Content (Matching Blog Read Layout) -->
+            <div class="lg:col-span-8 min-w-0">
+                <article class="bg-brand-dark md:bg-brand-navy border border-transparent md:border-white/10 md:rounded-3xl md:shadow-xl overflow-visible md:overflow-hidden relative">
 
-                    <!-- Meta (Location, Type, Mode, Share) -->
-                    <div class="flex items-center justify-between flex-wrap gap-4 pb-6 border-b border-white/10 mb-6">
-                        <div class="flex flex-wrap gap-2 sm:gap-2.5">
+                    <!-- Featured Image / Banner -->
+                    @if ($career->featured_image)
+                    <div class="aspect-video w-screen relative left-1/2 -translate-x-1/2 md:w-full md:static md:translate-x-0 overflow-hidden md:rounded-t-3xl bg-white/5">
+                        <img src="{{ asset('storage/' . $career->featured_image) }}" alt="{{ $career->title }}" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-brand-dark via-transparent to-transparent md:from-[#0f172a]/30"></div>
+                    </div>
+                    @endif
+
+                    <div class="pt-6 pb-12 md:p-12 min-w-0">
+                        <!-- Title -->
+                        <h1 class="text-[22px] md:text-3xl lg:text-4xl font-display font-bold text-white mb-6 leading-[1.25] break-words">
+                            {{ $career->title }}
+                        </h1>
+
+                        <!-- Author & Meta (Like Blog Read) -->
+                        <div class="flex items-center justify-between flex-wrap gap-4 pb-6 border-b border-white/5 mb-8">
+                            <div class="flex items-center gap-3 min-w-0">
+                                <div class="w-10 h-10 rounded-full bg-brand-accent flex items-center justify-center text-white font-bold text-sm shadow-md flex-shrink-0">
+                                    <i class="fa-solid fa-building text-xs"></i>
+                                </div>
+                                <div class="min-w-0 flex flex-col justify-center">
+                                    <p class="font-semibold text-white/90 text-[13px] leading-tight truncate">
+                                        Scalify Intelligence &bull; HR Team
+                                    </p>
+                                    <p class="text-[11px] text-white/50 font-medium leading-tight truncate mt-0.5">
+                                        Diposting {{ $career->created_at->format('d M Y') }} &bull; {{ $career->employment_type ?? 'Full-Time' }}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Share Buttons -->
+                            <div class="flex items-center gap-2 flex-shrink-0">
+                                <button onclick="sharePost(this)" data-title="{{ $career->title }}" data-text="{{ Str::limit(strip_tags($career->description), 100) }}" data-url="{{ url()->current() }}" class="w-8 h-8 flex-shrink-0 flex items-center justify-center bg-white/5 text-white/70 hover:bg-brand-accent hover:text-white rounded-full transition-all shadow-sm text-xs cursor-pointer" title="Share Link">
+                                    <i class="fas fa-share-nodes"></i>
+                                </button>
+                                <a href="https://wa.me/?text={{ urlencode('Lowongan ' . $career->title . ' di Scalify Intelligence: ' . url()->current()) }}" target="_blank" class="w-8 h-8 flex-shrink-0 flex items-center justify-center bg-white/5 text-emerald-400 hover:bg-emerald-500 hover:text-white rounded-full transition-all shadow-sm text-xs" title="Share ke WhatsApp">
+                                    <i class="fab fa-whatsapp"></i>
+                                </a>
+                                <a href="https://t.me/share/url?url={{ urlencode(url()->current()) }}&text={{ urlencode($career->title) }}" target="_blank" class="w-8 h-8 flex-shrink-0 flex items-center justify-center bg-white/5 text-[#229ED9] hover:bg-[#229ED9] hover:text-white rounded-full transition-all shadow-sm text-xs" title="Share to Telegram">
+                                    <i class="fab fa-telegram-plane"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Highlights Pills -->
+                        <div class="flex flex-wrap gap-2.5 mb-8">
                             @if($career->location)
-                            <span class="px-3 py-1 bg-white/5 text-slate-300 rounded-xl text-xs font-medium border border-white/10 flex items-center gap-1.5">
+                            <span class="px-3.5 py-1.5 bg-white/5 border border-white/10 text-slate-300 rounded-xl text-xs font-medium flex items-center gap-1.5">
                                 <i class="fa-solid fa-location-dot text-brand-accent"></i> {{ $career->location }}
                             </span>
                             @endif
                             @if($career->employment_type)
-                            <span class="px-3 py-1 bg-white/5 text-slate-300 rounded-xl text-xs font-medium border border-white/10 flex items-center gap-1.5">
+                            <span class="px-3.5 py-1.5 bg-white/5 border border-white/10 text-emerald-300 rounded-xl text-xs font-medium flex items-center gap-1.5">
                                 <i class="fa-solid fa-briefcase text-emerald-400"></i> {{ $career->employment_type }}
                             </span>
                             @endif
                             @if($career->work_mode)
-                            <span class="px-3 py-1 bg-white/5 text-slate-300 rounded-xl text-xs font-medium border border-white/10 flex items-center gap-1.5">
+                            <span class="px-3.5 py-1.5 bg-white/5 border border-white/10 text-purple-300 rounded-xl text-xs font-medium flex items-center gap-1.5">
                                 <i class="fa-solid fa-building-user text-purple-400"></i> {{ $career->work_mode }}
                             </span>
                             @endif
                         </div>
 
-                        <!-- Share Button -->
-                        <div class="flex items-center gap-2">
-                            <button onclick="sharePost(this)" data-title="{{ $career->title }}" data-text="{{ Str::limit($career->description, 100) }}" data-url="{{ url()->current() }}" class="w-9 h-9 flex items-center justify-center bg-white/5 text-white/70 hover:bg-brand-accent hover:text-black rounded-xl border border-white/10 transition-all shadow-sm text-xs cursor-pointer" title="Bagikan Lowongan">
-                                <i class="fas fa-share-nodes"></i>
+                        <!-- Job Description Excerpt Box -->
+                        @if ($career->description)
+                        <div class="text-white/80 text-sm md:text-base leading-relaxed mb-8 font-medium italic border-l-4 border-brand-accent pl-6 bg-white/5 py-5 pr-5 rounded-r-xl">
+                            <p class="not-italic font-bold text-xs uppercase tracking-wider text-brand-accent mb-2 flex items-center gap-2">
+                                <i class="fa-solid fa-circle-info"></i> Ringkasan Peran & Tanggung Jawab:
+                            </p>
+                            <p class="whitespace-pre-wrap">{{ $career->description }}</p>
+                        </div>
+                        @endif
+
+                        <!-- Qualifications / Full Quill Content -->
+                        <div class="mt-8">
+                            <h2 class="text-xl md:text-2xl font-display font-bold text-white mb-6 border-b border-white/10 pb-3 flex items-center gap-2.5">
+                                <span class="w-2 h-6 bg-brand-accent rounded-full"></span>
+                                Kualifikasi & Kebutuhan Posisi
+                            </h2>
+
+                            <div class="quill-content max-w-none">
+                                {!! $career->qualifications ?: '<p>Tidak ada kualifikasi khusus yang dicantumkan.</p>' !!}
+                            </div>
+                        </div>
+
+                        <!-- Mobile CTA Button -->
+                        <div class="mt-10 pt-6 border-t border-white/10 lg:hidden">
+                            <button onclick="document.getElementById('applyModal').classList.remove('hidden')" class="flex items-center justify-center gap-2 w-full bg-btn-gradient hover:opacity-95 shadow-glow-sm text-white font-bold px-6 py-3.5 rounded-2xl transition-all text-sm cursor-pointer">
+                                <i class="fa-solid fa-paper-plane"></i> Lamar Posisi Ini Sekarang
                             </button>
                         </div>
-                    </div>
 
-                    <!-- Job Description Box -->
-                    @if ($career->description)
-                    <div class="mb-8 border-l-4 border-brand-accent pl-5 bg-white/5 py-4 pr-5 rounded-r-2xl">
-                        <h3 class="font-display font-bold text-white mb-2 text-sm uppercase tracking-wider flex items-center gap-2">
-                            <i class="fa-solid fa-circle-info text-brand-accent text-xs"></i> Deskripsi Pekerjaan
-                        </h3>
-                        <p class="text-slate-300 text-xs sm:text-sm leading-relaxed whitespace-pre-wrap">{{ $career->description }}</p>
-                    </div>
-                    @endif
-
-                    <!-- Qualifications WYSIWYG -->
-                    <div>
-                        <h3 class="text-lg sm:text-xl font-display font-bold text-white mb-4 flex items-center gap-2">
-                            <span class="w-1.5 h-5 bg-gradient-to-b from-brand-accent to-indigo-500 rounded-full"></span>
-                            Kualifikasi & Persyaratan
-                        </h3>
-                        <div class="quill-dark-content max-w-none">
-                            {!! $career->qualifications ?: '<p class="text-slate-400">Tidak ada kualifikasi khusus yang dicantumkan.</p>' !!}
-                        </div>
                     </div>
                 </article>
             </div>
 
-            <!-- Sidebar (Sticky Summary Widget) -->
-            <aside class="lg:col-span-4">
+            <!-- Sidebar (Sticky Widget Like Blog Read Sidebar) -->
+            <aside class="lg:col-span-4 space-y-6">
                 <div class="lg:sticky lg:top-28 space-y-6">
-                    <!-- Ringkasan Pekerjaan Widget -->
-                    <div class="bg-[#0F172A]/80 backdrop-blur-xl border border-white/10 rounded-3xl p-6 sm:p-7 shadow-2xl">
+
+                    <!-- Widget Ringkasan Lowongan -->
+                    <div class="bg-brand-dark md:bg-brand-navy border border-white/10 rounded-3xl p-6 sm:p-7 shadow-xl">
                         <h3 class="text-base font-display font-bold text-white mb-5 flex items-center gap-2">
                             <span class="w-1.5 h-4 bg-brand-accent rounded-full"></span>
-                            Ringkasan Lowongan
+                            Ringkasan Pekerjaan
                         </h3>
 
                         <div class="space-y-4 mb-6">
@@ -225,37 +266,59 @@ $jobSchema['baseSalary'] = [
                             <span>Lamar Posisi Ini</span>
                         </button>
                     </div>
+
+                    <!-- Widget Agency / Partnership CTA -->
+                    <div class="bg-gradient-to-br from-blue-900/40 to-slate-900/60 border border-white/10 rounded-3xl p-6 shadow-xl relative overflow-hidden">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-8 h-8 rounded-lg bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400">
+                                <i class="fa-solid fa-handshake text-xs"></i>
+                            </div>
+                            <h4 class="font-bold text-white text-sm">Program Sobat Scalify</h4>
+                        </div>
+                        <p class="text-white/60 text-xs leading-relaxed mb-4">
+                            Ingin mendapatkan penghasilan tambahan tanpa terikat jam kerja? Bergabunglah sebagai affiliate partner kami.
+                        </p>
+                        <a href="{{ route('sobat-scalify') }}" class="text-xs font-bold text-amber-400 hover:text-amber-300 inline-flex items-center gap-1.5 transition-colors">
+                            <span>Gabung Partner Cuan</span>
+                            <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </a>
+                    </div>
+
                 </div>
             </aside>
         </div>
 
-        <!-- More Careers Section -->
+        <!-- Related Careers (Matching Related Blogs Cards) -->
         @if ($otherCareers->count() > 0)
-        <div class="mt-16 sm:mt-20">
-            <div class="flex items-center justify-between mb-6">
-                <h2 class="text-xl sm:text-2xl font-display font-bold text-white">
-                    Lowongan Lainnya di <span class="text-brand-accent">Scalify</span>
-                </h2>
+        <div class="mt-20 pt-12 border-t border-white/10">
+            <div class="flex items-center justify-between mb-8">
+                <div>
+                    <span class="text-brand-accent font-bold text-xs tracking-widest uppercase">Eksplorasi Karir</span>
+                    <h2 class="text-xl md:text-2xl font-display font-bold text-white mt-1">
+                        Lowongan Lainnya di <span class="text-brand-accent">Scalify Intelligence</span>
+                    </h2>
+                </div>
                 <a href="{{ route('landing.careers') }}" class="text-xs font-semibold text-brand-accent hover:underline hidden sm:inline-flex items-center gap-1.5">
-                    <span>Lihat Semua</span>
+                    <span>Lihat Semua Lowongan</span>
                     <i class="fas fa-arrow-right text-[10px]"></i>
                 </a>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach ($otherCareers as $item)
-                <div class="bg-[#0F172A]/70 backdrop-blur-xl border border-white/10 hover:border-brand-accent/40 text-white rounded-2xl p-5 shadow-card hover:shadow-glow-blue hover:-translate-y-1 transition-all duration-300 flex flex-col group relative overflow-hidden">
-                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-accent to-indigo-500 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
-
-                    <div class="flex items-center gap-2 mb-3 text-[9px] font-bold tracking-widest uppercase">
+                <div class="bg-brand-navy/60 backdrop-blur-xl border border-white/10 hover:border-brand-accent/40 rounded-2xl sm:rounded-3xl p-5 shadow-card hover:shadow-glow-blue hover:-translate-y-1 transition-all duration-300 flex flex-col group relative overflow-hidden">
+                    <div class="flex items-center gap-2 mb-3">
                         @if($item->employment_type)
-                        <span class="px-2 py-0.5 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded">
+                        <span class="px-2.5 py-0.5 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded-full text-[9px] font-bold tracking-widest uppercase">
                             {{ $item->employment_type }}
                         </span>
                         @endif
+                        <span class="text-[11px] text-white/40 font-medium">
+                            {{ $item->created_at->format('d M Y') }}
+                        </span>
                     </div>
 
-                    <h3 class="font-display text-base font-bold mb-2 text-white group-hover:text-brand-accent transition-colors leading-snug">
+                    <h3 class="font-display text-base font-bold mb-3 text-white group-hover:text-brand-accent transition-colors leading-snug">
                         {{ $item->title }}
                     </h3>
 
@@ -269,7 +332,7 @@ $jobSchema['baseSalary'] = [
                     </div>
 
                     <a href="{{ route('careers.read', $item->slug) }}" class="text-xs font-bold text-white/80 group-hover:text-brand-accent inline-flex items-center gap-1.5 transition-colors mt-auto tracking-wider uppercase">
-                        <span>Lihat Detail</span>
+                        <span>Lihat Detail Lowongan</span>
                         <i class="fas fa-arrow-right text-[10px] group-hover:translate-x-1 transition-transform"></i>
                     </a>
                 </div>
@@ -348,7 +411,7 @@ $jobSchema['baseSalary'] = [
 
                 <!-- Footer / Actions -->
                 <div class="flex justify-end gap-3 pt-3 border-t border-white/10">
-                    <button type="button" onclick="document.getElementById('applyModal').classList.add('hidden')" class="px-5 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 rounded-xl text-xs font-semibold transition">Batal</button>
+                    <button type="button" onclick="document.getElementById('applyModal').classList.add('hidden')" class="px-5 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 rounded-xl text-xs font-semibold transition cursor-pointer">Batal</button>
                     <button type="submit" class="px-6 py-2.5 bg-btn-gradient text-white rounded-xl text-xs font-bold shadow-glow-sm hover:opacity-95 transition flex items-center gap-2 cursor-pointer">
                         <i class="fa-solid fa-paper-plane text-xs"></i>
                         <span>Kirim Lamaran Sekarang</span>
@@ -360,144 +423,157 @@ $jobSchema['baseSalary'] = [
 </div>
 
 <style>
-    /* ═══ Quill Dark Content Renderer ═══════════════════════════════════ */
-    .quill-dark-content {
-        font-size: 15px;
-        line-height: 1.8;
-        color: #cbd5e1;
+    /* ═══ Quill Content Renderer (Matching Blog Read) ═══════════════════════════════════ */
+    .quill-content {
+        font-size: 16px;
+        line-height: 1.85;
+        color: rgba(255, 255, 255, 0.85);
+        font-weight: 400;
+        overflow-wrap: anywhere;
+        word-break: break-word;
     }
 
-    .quill-dark-content h1 {
-        font-size: 1.75rem;
+    /* Headings */
+    .quill-content h1 {
+        font-size: 1.85rem;
         font-weight: 700;
         color: #ffffff;
         margin: 1.5rem 0 0.75rem;
     }
 
-    .quill-dark-content h2 {
-        font-size: 1.35rem;
+    .quill-content h2 {
+        font-size: 1.45rem;
         font-weight: 700;
         color: #ffffff;
         margin: 1.5rem 0 0.75rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        border-bottom: 2px solid rgba(255, 255, 255, 0.1);
         padding-bottom: 0.4rem;
     }
 
-    .quill-dark-content h3 {
-        font-size: 1.15rem;
+    .quill-content h3 {
+        font-size: 1.2rem;
         font-weight: 600;
         color: #38bdf8;
         margin: 1.25rem 0 0.5rem;
     }
 
-    .quill-dark-content h4,
-    .quill-dark-content h5,
-    .quill-dark-content h6 {
-        font-size: 0.95rem;
+    .quill-content h4,
+    .quill-content h5,
+    .quill-content h6 {
+        font-size: 1rem;
         font-weight: 600;
-        color: #e2e8f0;
+        color: rgba(255, 255, 255, 0.75);
         margin: 1rem 0 0.4rem;
     }
 
-    .quill-dark-content p {
+    /* Paragraphs */
+    .quill-content p {
         margin-bottom: 1rem;
     }
 
-    .quill-dark-content p:last-child {
+    .quill-content p:last-child {
         margin-bottom: 0;
     }
 
-    .quill-dark-content strong {
+    /* Bold / Italic / Underline / Strike */
+    .quill-content strong {
         font-weight: 700;
         color: #ffffff;
     }
 
-    .quill-dark-content em {
+    .quill-content em {
         font-style: italic;
     }
 
-    .quill-dark-content u {
+    .quill-content u {
         text-decoration: underline;
     }
 
-    .quill-dark-content a {
+    .quill-content s {
+        text-decoration: line-through;
+    }
+
+    /* Links */
+    .quill-content a {
         color: #38bdf8;
         text-decoration: underline;
         transition: color .2s;
     }
 
-    .quill-dark-content a:hover {
+    .quill-content a:hover {
         color: #7dd3fc;
     }
 
-    .quill-dark-content img {
+    /* Images */
+    .quill-content img {
         max-width: 100%;
         height: auto;
-        border-radius: 16px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        margin: 1.25rem 0;
+        border-radius: 14px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        margin: 1rem 0;
         display: block;
     }
 
-    .quill-dark-content ul {
+    /* Lists */
+    .quill-content ul {
         list-style: disc;
         padding-left: 1.75rem;
         margin-bottom: 1rem;
     }
 
-    .quill-dark-content ol {
+    .quill-content ol {
         list-style: decimal;
         padding-left: 1.75rem;
         margin-bottom: 1rem;
     }
 
-    .quill-dark-content li {
-        margin-bottom: 0.4rem;
-        color: #cbd5e1;
+    .quill-content li {
+        margin-bottom: 0.35rem;
+        color: rgba(255, 255, 255, 0.75);
     }
 
-    .quill-dark-content blockquote {
+    /* Blockquote */
+    .quill-content blockquote {
         border-left: 4px solid #38bdf8;
-        background: rgba(56, 189, 248, 0.08);
-        color: #bae6fd;
+        background: rgba(255, 255, 255, 0.05);
+        color: rgba(255, 255, 255, 0.75);
         padding: 1rem 1.25rem;
-        border-radius: 0 12px 12px 0;
+        border-radius: 0 8px 8px 0;
         margin: 1.25rem 0;
         font-style: italic;
     }
 
-    .quill-dark-content code {
-        background: rgba(255, 255, 255, 0.08);
+    /* Code */
+    .quill-content code {
+        background: rgba(255, 255, 255, 0.1);
         color: #38bdf8;
         padding: 0.15rem 0.45rem;
-        border-radius: 6px;
-        font-size: 0.85em;
+        border-radius: 4px;
+        font-size: 0.875em;
         font-family: monospace;
     }
 
-    .quill-dark-content pre.ql-syntax {
+    .quill-content pre.ql-syntax {
         background: #080d1a;
         color: #e2e8f0;
-        border: 1px solid rgba(255, 255, 255, 0.1);
         padding: 1rem 1.25rem;
-        border-radius: 14px;
+        border-radius: 12px;
         overflow-x: auto;
-        font-size: 0.85em;
+        font-size: 0.875em;
         line-height: 1.7;
         margin: 1.25rem 0;
+        border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    .quill-dark-content table {
+    /* Table */
+    .quill-content table {
         width: 100%;
         border-collapse: collapse;
         margin: 1.25rem 0;
-        border-radius: 12px;
-        overflow: hidden;
     }
 
-    .quill-dark-content table th {
-        background: rgba(255, 255, 255, 0.08);
+    .quill-content table th {
+        background: rgba(255, 255, 255, 0.05);
         color: #ffffff;
         font-weight: 600;
         padding: 0.75rem 1rem;
@@ -505,10 +581,10 @@ $jobSchema['baseSalary'] = [
         text-align: left;
     }
 
-    .quill-dark-content table td {
+    .quill-content table td {
         padding: 0.65rem 1rem;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        color: #cbd5e1;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.75);
     }
 
 </style>
