@@ -322,84 +322,87 @@
     </div>
 </div>
 
-<script>
-    function clientProposalManager() {
-        return {
-            showPriceModal: false
-            , scope: 'all'
-            , selectedIds: []
-            , pageIds: @json($proposals - > pluck('id') - > map(fn($id) => (string) $id)),
+@php
+    $proposalPageIds = $proposals->pluck('id')->map(fn($id) => (string) $id);
+@endphp
 
-            openPriceModal(defaultScope = 'all') {
-                if (defaultScope === 'selected' && this.selectedIds.length === 0) {
-                    alert('Silakan centang minimal satu proposal di tabel terlebih dahulu.');
-                    return;
+    <script>
+        function clientProposalManager() {
+            return {
+                showPriceModal: false
+                , scope: 'all'
+                , selectedIds: []
+                , pageIds: @json($proposalPageIds)
+                , openPriceModal(defaultScope = 'all') {
+                    if (defaultScope === 'selected' && this.selectedIds.length === 0) {
+                        alert('Silakan centang minimal satu proposal di tabel terlebih dahulu.');
+                        return;
+                    }
+                    this.scope = this.selectedIds.length > 0 && defaultScope === 'selected' ? 'selected' : defaultScope;
+                    this.showPriceModal = true;
+                },
+
+                toggleSelectAll(e) {
+                    if (e.target.checked) {
+                        this.pageIds.forEach(id => {
+                            if (!this.selectedIds.includes(id)) {
+                                this.selectedIds.push(id);
+                            }
+                        });
+                    } else {
+                        this.selectedIds = this.selectedIds.filter(id => !this.pageIds.includes(id));
+                    }
+                },
+
+                isAllSelected() {
+                    if (this.pageIds.length === 0) return false;
+                    return this.pageIds.every(id => this.selectedIds.includes(id));
                 }
-                this.scope = this.selectedIds.length > 0 && defaultScope === 'selected' ? 'selected' : defaultScope;
-                this.showPriceModal = true;
-            },
+            };
+        }
 
-            toggleSelectAll(e) {
-                if (e.target.checked) {
-                    this.pageIds.forEach(id => {
-                        if (!this.selectedIds.includes(id)) {
-                            this.selectedIds.push(id);
-                        }
-                    });
-                } else {
-                    this.selectedIds = this.selectedIds.filter(id => !this.pageIds.includes(id));
-                }
-            },
+        function kirimWaLangsung(selectElement, phone, brandName, linkLandingPage, linkProposal) {
+            if (!selectElement.value) return;
 
-            isAllSelected() {
-                if (this.pageIds.length === 0) return false;
-                return this.pageIds.every(id => this.selectedIds.includes(id));
+            if (!phone) {
+                alert('Nomor WhatsApp belum diatur untuk klien ini. Silakan edit data klien terlebih dahulu.');
+                selectElement.value = "";
+                return;
             }
-        };
-    }
 
-    function kirimWaLangsung(selectElement, phone, brandName, linkLandingPage, linkProposal) {
-        if (!selectElement.value) return;
+            // Format number to replace leading 0 or +62 with 62
+            let formattedPhone = phone.replace(/[^0-9]/g, '');
+            if (formattedPhone.startsWith('0')) {
+                formattedPhone = '62' + formattedPhone.substring(1);
+            }
 
-        if (!phone) {
-            alert('Nomor WhatsApp belum diatur untuk klien ini. Silakan edit data klien terlebih dahulu.');
+            // Decode template text
+            let text = decodeURIComponent(escape(window.atob(selectElement.value)));
+
+            // Replace placeholders
+            if (brandName) {
+                text = text.replace(/\{nama_bisnis\}/g, brandName);
+            }
+            if (linkLandingPage) {
+                text = text.replace(/\{link_landing_page\}/g, linkLandingPage);
+            }
+            if (linkProposal) {
+                text = text.replace(/\{link_proposal\}/g, linkProposal);
+            }
+
+            // Open WA Link
+            const waUrl = `https://api.whatsapp.com/send?phone=${formattedPhone}&text=${encodeURIComponent(text)}`;
+
+            // Deteksi jika dibuka via HP (Mobile) agar langsung buka aplikasi tanpa diblokir browser
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                window.location.href = waUrl;
+            } else {
+                window.open(waUrl, '_blank');
+            }
+
+            // Reset dropdown back to default
             selectElement.value = "";
-            return;
         }
 
-        // Format number to replace leading 0 or +62 with 62
-        let formattedPhone = phone.replace(/[^0-9]/g, '');
-        if (formattedPhone.startsWith('0')) {
-            formattedPhone = '62' + formattedPhone.substring(1);
-        }
-
-        // Decode template text
-        let text = decodeURIComponent(escape(window.atob(selectElement.value)));
-
-        // Replace placeholders
-        if (brandName) {
-            text = text.replace(/\{nama_bisnis\}/g, brandName);
-        }
-        if (linkLandingPage) {
-            text = text.replace(/\{link_landing_page\}/g, linkLandingPage);
-        }
-        if (linkProposal) {
-            text = text.replace(/\{link_proposal\}/g, linkProposal);
-        }
-
-        // Open WA Link
-        const waUrl = `https://api.whatsapp.com/send?phone=${formattedPhone}&text=${encodeURIComponent(text)}`;
-
-        // Deteksi jika dibuka via HP (Mobile) agar langsung buka aplikasi tanpa diblokir browser
-        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-            window.location.href = waUrl;
-        } else {
-            window.open(waUrl, '_blank');
-        }
-
-        // Reset dropdown back to default
-        selectElement.value = "";
-    }
-
-</script>
-@endsection
+    </script>
+    @endsection
