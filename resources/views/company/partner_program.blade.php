@@ -42,7 +42,7 @@
                     Jadilah <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">Sobat Scalify Partner</span><br />& Dapatkan Penghasilan Tambahan
                 </h1>
                 <p class="text-lg text-blue-100/80 mb-10 max-w-3xl mx-auto leading-relaxed">
-                    Kami sediakan <strong class="text-white">Proposal & Landing Page Profesional</strong> secara gratis. Anda tinggal pilih target pasarnya (Wedding, Cafe, Retail, dll) lalu bagikan! Nikmati komisi <strong class="text-white text-xl">Rp 500.000 per Klien</strong> dari setiap deal yang berhasil.
+                    Kami sediakan <strong class="text-white">Proposal & Landing Page Profesional</strong> secara gratis. Anda tinggal pilih target pasarnya (Wedding, Cafe, Retail, dll) lalu bagikan! Nikmati komisi <strong class="text-white text-xl">Rp 100.000 - Rp 200.000 per Klien</strong> dari setiap deal yang berhasil.
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4 justify-center">
                     <a href="{{ route('affiliate.register') }}" class="px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold rounded-xl shadow-[0_0_20px_rgba(59,130,246,0.4)] hover:shadow-[0_0_30px_rgba(59,130,246,0.6)] transition-all duration-300 transform hover:-translate-y-1 flex items-center justify-center gap-2 border border-blue-500/50">
@@ -111,8 +111,8 @@
                             4
                         </div>
                         <div>
-                            <h4 class="text-lg font-bold text-slate-800 mb-1">Terima Komisi Rp 500Rb</h4>
-                            <p class="text-sm text-slate-600 leading-relaxed">Setelah project deal dan klien melakukan pembayaran, komisi <b>Rp 500.000</b> (untuk project perusahaan) akan langsung cair ke Dashboard Anda!</p>
+                            <h4 class="text-lg font-bold text-slate-800 mb-1">Terima Komisi Rp 100Rb - 200Rb</h4>
+                            <p class="text-sm text-slate-600 leading-relaxed">Setelah project deal dan klien melakukan pembayaran, komisi <b>Rp 100.000 - Rp 200.000</b> (untuk project perusahaan) akan langsung cair ke Dashboard Anda!</p>
                         </div>
                     </div>
                 </div>
@@ -131,8 +131,8 @@
                     <div class="w-20 h-20 mx-auto rounded-full bg-blue-100 flex items-center justify-center text-3xl text-blue-600 mb-6">
                         <i class="fa-solid fa-money-bill-trend-up"></i>
                     </div>
-                    <h4 class="text-xl font-bold text-slate-800 mb-3">Komisi Besar & Tetap</h4>
-                    <p class="text-slate-500">Dapatkan komisi flat <strong>Rp 500.000</strong> per klien perusahaan, atau <strong>Rp 150.000</strong> untuk klien mahasiswa. Semakin banyak share, semakin untung!</p>
+                    <h4 class="text-xl font-bold text-slate-800 mb-3">Komisi Menarik & Transparan</h4>
+                    <p class="text-slate-500">Dapatkan komisi <strong>Rp 100.000 - Rp 200.000</strong> per klien perusahaan, atau <strong>Rp 50.000 - Rp 100.000</strong> untuk klien mahasiswa. Semakin banyak share, semakin untung!</p>
                 </div>
                 <div class="text-center p-8 bg-slate-50 rounded-3xl border border-slate-100">
                     <div class="w-20 h-20 mx-auto rounded-full bg-emerald-100 flex items-center justify-center text-3xl text-emerald-600 mb-6">

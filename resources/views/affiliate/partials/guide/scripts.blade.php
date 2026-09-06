@@ -40,7 +40,7 @@
             badge: 'Hari 6-7: Weekend'
             , title: 'Finalisasi Project Deal & Klaim Komisi'
             , target: 'Target: Min. 1 Project Deal'
-            , desc: 'Pastikan klien menyetujui paket website. Informasikan tim Scalify untuk mulai produksi. Begitu project deal dan diverifikasi, komisi 10% (Rp 200.000 - Rp 500.000) langsung masuk ke saldo dompet Anda!'
+            , desc: 'Pastikan klien menyetujui paket website. Informasikan tim Scalify untuk mulai produksi. Begitu project deal dan diverifikasi, komisi 10% (Rp 100.000 - Rp 200.000) langsung masuk ke saldo dompet Anda!'
             , actionHtml: `<a href="{{ route('affiliate.history') }}" wire:navigate class="flex-1 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-xl transition-all flex items-center justify-center gap-1.5"><i class="fa-solid fa-wallet text-xs"></i> Cek Riwayat & Saldo Komisi</a>`
         }
     };

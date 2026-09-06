@@ -117,7 +117,7 @@
             </div>
         </div>
         <span class="px-2.5 py-1 rounded-lg text-[10px] font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/25">
-            Rp 200.000 - 500.000/Deal
+            Rp 100.000 - 200.000/Deal
         </span>
     </div>
 

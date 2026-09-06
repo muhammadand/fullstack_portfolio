@@ -36,7 +36,7 @@
         </div>
         <div>
             <h4 class="text-sm font-bold text-white mb-1">Tingkatkan Penghasilan!</h4>
-            <p class="text-[11px] text-slate-300 leading-tight">Dapatkan komisi 10% (atau Rp 200rb - 500rb) dari setiap project deal. Sebarkan link atau buat proposal instan!</p>
+            <p class="text-[11px] text-slate-300 leading-tight">Dapatkan komisi 10% (atau Rp 100rb - 200rb) dari setiap project deal. Sebarkan link atau buat proposal instan!</p>
         </div>
     </div>
 </div>
