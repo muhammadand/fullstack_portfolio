@@ -11,6 +11,7 @@ use App\Models\BusinessCategory;
 use App\Models\Portfolio;
 use App\Http\Controllers\Affiliate\TargetIdeaController;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 use Gemini\Laravel\Facades\Gemini;
@@ -465,34 +466,46 @@ class AffiliateController extends Controller
         $profileLink = "https://scalifyintellegence.my.id/sobat-scalify?ref=" . $affiliate->affiliate_code;
         $landingPageUrl = route('landing.dynamic', $proposal->slug) . '?ref=' . $affiliate->affiliate_code;
         $proposalUrl = route('proposal.dynamic', $proposal->slug) . '?ref=' . $affiliate->affiliate_code;
+        $brandName = ($proposal->brand_name && $proposal->brand_name !== 'Bapak/Ibu') ? $proposal->brand_name : 'Bapak/Ibu';
+        $categoryName = $proposal->category->name ?? 'Bisnis';
+        $senderName = $affiliate->name;
 
-        $prompt = "Kamu adalah seorang UX Copywriter dan Content Strategist B2B profesional.\n";
-        $prompt .= "Buatkan 1 pesan WhatsApp yang soft-selling, profesional namun ramah, menarik, dan pendek (maksimal 3-4 kalimat) untuk menawarkan solusi digital / website ke sebuah bisnis atau perusahaan.\n";
-        $prompt .= "Informasi Prospek Bisnis:\n";
-        $prompt .= "- Nama Bisnis/Brand: " . ($proposal->brand_name ?? 'Bapak/Ibu') . "\n";
-        $prompt .= "- Kategori Bisnis: " . ($proposal->category->name ?? 'Bisnis') . "\n";
-        $prompt .= "- Nama Saya (Pengirim): " . ($affiliate->name) . "\n\n";
-        $prompt .= "Instruksi Khusus:\n";
-        $prompt .= "1. Tawarkan solusi digital/website untuk membantu bisnis mereka berkembang, buat agar terkesan personal dan relevan dengan kategori bisnis mereka.\n";
-        $prompt .= "2. Sertakan link landing page khusus untuk mereka ini di dalam pesan: " . $landingPageUrl . "\n";
-        $prompt .= "3. Opsional, sertakan link proposal PDF jika dirasa pas: " . $proposalUrl . "\n";
-        $prompt .= "4. Sertakan link profil ini di akhir pesan agar mereka lebih percaya: " . $profileLink . "\n";
-        $prompt .= "5. Jangan berikan opsi, jangan tambahkan karakter markdown seperti bintang (**) atau pembuka/penutup, langsung berikan isi teksnya saja agar bisa langsung dikirim via WhatsApp.";
+        $cacheKey = "ai_proposal_chat_template_" . $proposal->id;
 
-        try {
-            $response = Gemini::generativeModel('gemini-3.1-flash-lite')->generateContent($prompt);
-            $text = trim($response->text());
+        // Server-Side Smart Cache (disimpan selama 14 hari untuk menghemat token AI)
+        $template = Cache::remember($cacheKey, now()->addDays(14), function () use ($proposal, $categoryName, $brandName) {
+            $prompt = "Kamu adalah seorang UX Copywriter dan Business Consultant B2B profesional untuk Scalify Intelligence (agency digital penyedia pembuatan website modern & aplikasi).\n";
+            $prompt .= "Buatkan 1 template pesan WhatsApp yang soft-selling, profesional namun ramah, persuasif, dan ringkas (maksimal 3-4 paragraf pendek/kalimat) untuk menawarkan website profesional khusus untuk bisnis calon klien.\n\n";
+            $prompt .= "Informasi Prospek Bisnis:\n";
+            $prompt .= "- Nama Bisnis/Brand: {$brandName}\n";
+            $prompt .= "- Kategori Bisnis: {$categoryName}\n\n";
+            $prompt .= "Instruksi Format Template:\n";
+            $prompt .= "1. Gunakan placeholder [NAMA_BISNIS] untuk nama brand, [LINK_LANDING] untuk link landing page demo, [LINK_PROPOSAL] untuk link proposal, [LINK_PROFIL] untuk link portofolio partner, dan [PENGIRIM] untuk nama pengirim.\n";
+            $prompt .= "2. Awali sapaan santun dan apresiasi untuk [NAMA_BISNIS].\n";
+            $prompt .= "3. Berikan insight singkat relevan dengan kebutuhan industri {$categoryName} di era digital, lalu sebutkan bahwa konsep preview landing page & sistem khusus untuk [NAMA_BISNIS] sudah disiapkan dan bisa langsung dicek di [LINK_LANDING].\n";
+            $prompt .= "4. Tambahkan info penutup ramah bahwa detail proposal bisa dilihat di [LINK_PROPOSAL], atau jika ingin konsultasi/tanya-tanya fitur custom bisa hubungi [PENGIRIM] di [LINK_PROFIL].\n";
+            $prompt .= "5. JANGAN gunakan format markdown seperti bintang ganda (**), langsung berikan isi teks template saja tanpa kata pengantar.";
 
-            return response()->json([
-                'success' => true,
-                'text' => $text
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Gagal generate AI: ' . $e->getMessage()
-            ], 500);
-        }
+            try {
+                $response = Gemini::generativeModel('gemini-3.1-flash-lite')->generateContent($prompt);
+                return trim($response->text());
+            } catch (\Exception $e) {
+                // Fallback template jika API bermasalah / limit habis
+                return "Halo Tim [NAMA_BISNIS], salam kenal saya [PENGIRIM] dari Scalify Intelligence.\n\nKami melihat potensi luar biasa dari [NAMA_BISNIS] dan kebetulan tim kami sudah menyiapkan preview konsep website modern untuk membantu meningkatkan branding & kredibilitas bisnis Anda di era digital.\n\nPreview website khusus [NAMA_BISNIS] bisa langsung dicek di sini ya: [LINK_LANDING]\n\nUntuk detail proposal penawaran juga bisa diakses via: [LINK_PROPOSAL]\n\nJika ada kebutuhan fitur khusus atau ingin konsultasi santai, bisa hubungi saya di: [LINK_PROFIL]\n\nTerima kasih dan sukses selalu untuk [NAMA_BISNIS]!";
+            }
+        });
+
+        // Gantikan placeholder dengan data spesifik affiliate & link
+        $finalText = str_replace(
+            ['[NAMA_BISNIS]', '[LINK_LANDING]', '[LINK_PROPOSAL]', '[LINK_PROFIL]', '[PENGIRIM]', '[NAMA_PENGIRIM]', '[LINK]'],
+            [$brandName, $landingPageUrl, $proposalUrl, $profileLink, $senderName, $senderName, $landingPageUrl],
+            $template
+        );
+
+        return response()->json([
+            'success' => true,
+            'text' => $finalText
+        ]);
     }
 
     public function generateSocialPost(Request $request)
