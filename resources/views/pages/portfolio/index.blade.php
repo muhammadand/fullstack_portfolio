@@ -1,484 +1,486 @@
 @extends('layouts.app')
 
-@section('title', 'Portfolio')
+@section('meta_tags')
+<title>Portofolio & Rekam Jejak Pembuatan Website & Sistem Cerdas — Scalify Intelligence</title>
+<meta name="title" content="Portofolio & Rekam Jejak Pembuatan Website & Sistem Cerdas — Scalify Intelligence" />
+<meta name="description" content="Katalog proyek pembuatan website, landing page berkonversi tinggi, aplikasi web SaaS kustom, dan implementasi metode algoritma & AI (K-Means, C4.5, SPK, RAG) oleh Scalify Intelligence." />
+<meta name="keywords" content="portofolio website, contoh company profile, portofolio web app, implementasi metode k-means, algoritma c4.5 laravel, chatbot ai whatsapp, agency digital indonesia, scalify intelligence" />
+<meta name="author" content="Scalify Intelligence" />
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+<link rel="canonical" href="{{ route('landing.portfolio') }}" />
+
+{{-- Open Graph / Facebook --}}
+<meta property="og:type" content="website" />
+<meta property="og:url" content="{{ route('landing.portfolio') }}" />
+<meta property="og:title" content="Portofolio & Rekam Jejak Pembuatan Website & Sistem Cerdas — Scalify Intelligence" />
+<meta property="og:description" content="Katalog proyek nyata pembuatan website, landing page, web app SaaS, dan implementasi metode kecerdasan buatan oleh Scalify Intelligence." />
+<meta property="og:image" content="{{ asset('og-image.png') }}" />
+<meta property="og:site_name" content="Scalify Intelligence" />
+<meta property="og:locale" content="id_ID" />
+
+{{-- Twitter --}}
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:url" content="{{ route('landing.portfolio') }}" />
+<meta name="twitter:title" content="Portofolio Pembuatan Website & Web App — Scalify Intelligence" />
+<meta name="twitter:description" content="Katalog proyek pembuatan website profesional, web app SaaS, dan sistem cerdas di Indonesia." />
+<meta name="twitter:image" content="{{ asset('og-image.png') }}" />
+
+{{-- Schema.org JSON-LD Structured Data for Portfolio Indexing --}}
+@php
+$schemaItems = [];
+foreach ($portfolios as $index => $p) {
+$schemaItems[] = [
+'@type' => 'CreativeWork',
+'position' => $index + 1,
+'name' => $p->title,
+'url' => route('portfolio.read', $p->slug),
+'description' => $p->short_description,
+'image' => $p->thumbnail_image ? asset('storage/' . $p->thumbnail_image) : asset('og-image.png'),
+];
+}
+$collectionSchema = [
+'@context' => 'https://schema.org',
+'@type' => 'CollectionPage',
+'name' => 'Katalog Portofolio & Proyek Digital — Scalify Intelligence',
+'url' => route('landing.portfolio'),
+'description' => 'Koleksi studi kasus pembuatan website, landing page, web app, dan implementasi sistem berbasis metode komputasi & AI.',
+'publisher' => [
+'@type' => 'Organization',
+'name' => 'Scalify Intelligence',
+'url' => 'https://scalifyintellegence.my.id',
+'logo' => [
+'@type' => 'ImageObject',
+'url' => asset('scalify.png'),
+],
+],
+'mainEntity' => [
+'@type' => 'ItemList',
+'itemListElement' => $schemaItems,
+],
+];
+@endphp
+<script type="application/ld+json">
+    {
+        !!json_encode($collectionSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!
+    }
+
+</script>
+@endsection
 
 @section('content')
-    @if ($featuredPortfolio)
-        <section class="relative z-20 w-full overflow-hidden">
+<div class="min-h-screen bg-brand-dark text-white relative overflow-hidden">
 
-            {{-- HERO LINK --}}
-            <a href="{{ route('portfolio.read', $featuredPortfolio->slug) }}"
-                class="block relative w-full h-[420px] overflow-hidden group">
+    {{-- Ambient Midnight Glow Background Effects --}}
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[480px] bg-gradient-to-b from-brand-blue/15 via-brand-indigo/10 to-transparent blur-3xl pointer-events-none"></div>
+    <div class="absolute top-24 right-10 w-96 h-96 bg-brand-accent/10 rounded-full blur-[110px] pointer-events-none"></div>
+    <div class="absolute top-80 left-5 w-80 h-80 bg-brand-indigo/10 rounded-full blur-[100px] pointer-events-none"></div>
 
-                {{-- BG BASE (Midnight Blue) --}}
-                <div class="absolute inset-0 bg-[#0b1120]"></div>
+    {{-- ══════════════════════════════════════════════════
+         HERO SECTION: PORTFOLIO & REKAM JEJAK
+    ══════════════════════════════════════════════════ --}}
+    <section class="relative pt-12 pb-10 sm:pt-20 sm:pb-14 px-4 sm:px-6 lg:px-8 border-b border-white/5">
+        <div class="max-w-7xl mx-auto relative z-10">
 
-                {{-- RADIAL GLOW ACCENTS --}}
-                <div class="absolute inset-0 pointer-events-none">
-                    <div class="absolute top-[10%] left-[55%] w-80 h-80 rounded-full bg-blue-900/30 blur-[80px]"></div>
-                    <div class="absolute bottom-[15%] left-[20%] w-56 h-56 rounded-full bg-indigo-900/25 blur-[60px]"></div>
-                    <div class="absolute top-[50%] right-[10%] w-40 h-40 rounded-full bg-sky-900/20 blur-[50px]"></div>
-                </div>
+            {{-- Eyebrow --}}
+            <div class="mb-3">
+                <span class="text-[#EF4444] font-extrabold text-[11px] sm:text-xs tracking-[0.2em] uppercase inline-flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-[#EF4444] animate-pulse"></span>
+                    REKAM JEJAK & STUDI KASUS NYATA
+                </span>
+            </div>
 
-                {{-- THUMBNAIL IMAGE --}}
-                @if ($featuredPortfolio->thumbnail_image)
-                    <img src="{{ asset('storage/' . $featuredPortfolio->thumbnail_image) }}"
-                        alt="{{ $featuredPortfolio->title }}"
-                        class="absolute inset-0 w-full h-full object-cover opacity-[0.18] group-hover:opacity-[0.25] group-hover:scale-105 transition-all duration-700 ease-out">
-                @endif
+            {{-- Main Heading --}}
+            <h1 class="font-sans font-black text-3xl sm:text-5xl lg:text-[44px] text-white leading-[1.18] tracking-[-0.03em] max-w-3xl mb-4">
+                Katalog Portofolio & Solusi Digital Kami
+            </h1>
 
-                {{-- SUBTLE DOT/GRID OVERLAY --}}
-                <div class="absolute inset-0 opacity-[0.025]"
-                    style="background-image: linear-gradient(to right, #a0b4d0 1px, transparent 1px), linear-gradient(to bottom, #a0b4d0 1px, transparent 1px); background-size: 48px 48px;">
-                </div>
+            {{-- Subtitle --}}
+            <p class="text-white/65 text-xs sm:text-sm md:text-base max-w-2xl leading-relaxed font-normal mb-8">
+                Jelajahi berbagai proyek nyata yang telah kami selesaikan — mulai dari website company profile kelas dunia, landing page konversi tinggi, aplikasi web SaaS multi-tenant, hingga sistem komputasi berbasis metode data science & automasi AI.
+            </p>
 
-                {{-- BOTTOM GRADIENT FADE --}}
-                <div class="absolute inset-0 bg-gradient-to-t from-[#060a13]/98 via-[#0b1120]/55 to-transparent"></div>
+            {{-- ══════════════════════════════════════════════════
+                 FEATURED PROJECT HIGHLIGHT (Jika ada)
+            ══════════════════════════════════════════════════ --}}
+            @if ($featuredPortfolio)
+            <div class="mt-4 mb-6">
+                <a href="{{ route('portfolio.read', $featuredPortfolio->slug) }}" class="block bg-brand-navy/70 backdrop-blur-xl border border-white/10 hover:border-brand-accent/50 rounded-2xl sm:rounded-3xl p-4 sm:p-7 shadow-card hover:shadow-glow-blue transition-all duration-300 group relative overflow-hidden">
 
-                {{-- TOP-RIGHT META TAGS --}}
-                <div class="absolute top-5 right-5 flex flex-col items-end gap-2 z-10">
-                    <div
-                        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.05] border border-white/[0.08] text-white/40 text-[11px] backdrop-blur-sm">
-                        <i class="fas fa-calendar-alt text-blue-400/60 text-[10px]"></i>
-                        {{ \Carbon\Carbon::parse($featuredPortfolio->created_at)->format('Y') }}
-                    </div>
+                    {{-- Background Accent Glow --}}
+                    <div class="absolute -right-20 -top-20 w-80 h-80 bg-brand-accent/10 rounded-full blur-[80px] pointer-events-none"></div>
 
-                </div>
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
 
-                {{-- MAIN CONTENT (Bottom-left) --}}
-                <div class="absolute inset-0 flex items-end z-10">
-                    <div class="w-full max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-10 pb-9 lg:pb-12">
-                        <div class="max-w-2xl">
+                        {{-- Screenshot Thumbnail --}}
+                        <div class="lg:col-span-6 rounded-xl sm:rounded-2xl overflow-hidden aspect-[16/10] sm:aspect-video relative bg-white/5 border border-white/10">
+                            @if ($featuredPortfolio->thumbnail_image)
+                            <img src="{{ asset('storage/' . $featuredPortfolio->thumbnail_image) }}" alt="{{ $featuredPortfolio->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" fetchpriority="high">
+                            @else
+                            <div class="w-full h-full flex items-center justify-center bg-brand-navy text-white/40">
+                                <i class="fa-solid fa-laptop-code text-4xl text-brand-accent/40"></i>
+                            </div>
+                            @endif
+                            <div class="absolute inset-0 bg-gradient-to-t from-brand-dark/70 via-transparent to-transparent opacity-60 group-hover:opacity-30 transition-opacity"></div>
+                        </div>
 
-                            {{-- BADGE ROW --}}
-                            <div class="flex items-center gap-3 mb-4 flex-wrap">
-
-                                {{-- Featured Badge --}}
-                                <div
-                                    class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-900/30 border border-blue-500/20 text-blue-300/70 text-[10px] font-medium tracking-[0.15em] uppercase backdrop-blur-sm">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse"></span>
-                                    Featured project
-                                </div>
-
-                                @php
-                                    $techs = is_array($featuredPortfolio->technologies)
-                                        ? $featuredPortfolio->technologies
-                                        : explode(',', $featuredPortfolio->technologies ?? '');
-                                    $firstTech = !empty($techs) ? trim($techs[0]) : null;
-                                @endphp
-
-                                @if ($firstTech)
-                                    <span class="text-sky-400/80 text-[11px] font-medium uppercase tracking-widest">
-                                        {{ $firstTech }}
-                                    </span>
+                        {{-- Project Info --}}
+                        <div class="lg:col-span-6 flex flex-col justify-center">
+                            <div class="flex items-center gap-2.5 mb-3 flex-wrap">
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-accent/15 border border-brand-accent/30 text-brand-accent text-[10px] font-bold tracking-wider uppercase shadow-sm">
+                                    <i class="fa-solid fa-star text-[9px] text-amber-400"></i> Featured Project
+                                </span>
+                                @if ($featuredPortfolio->category)
+                                <span class="text-white/60 text-xs font-semibold uppercase tracking-wider">
+                                    {{ $featuredPortfolio->category->name }}
+                                </span>
                                 @endif
-
+                                @if ($featuredPortfolio->view_count)
+                                <span class="text-white/40 text-xs flex items-center gap-1">
+                                    <i class="fa-solid fa-eye text-brand-accent text-[10px]"></i> {{ number_format($featuredPortfolio->view_count) }} views
+                                </span>
+                                @endif
                             </div>
 
-                            {{-- TITLE --}}
-                            <h1
-                                class="font-semibold text-[30px] sm:text-[34px] lg:text-[38px] leading-[1.15] tracking-tight text-white/95 mb-3">
+                            <h2 class="font-sans font-bold text-xl sm:text-2xl lg:text-3xl text-white group-hover:text-brand-accent transition-colors leading-tight mb-3">
                                 {{ $featuredPortfolio->title }}
-                            </h1>
+                            </h2>
 
-                            {{-- SHORT DESCRIPTION --}}
-                            <p class="text-sm text-white/45 leading-relaxed font-light mb-6 max-w-lg">
-                                {{ \Illuminate\Support\Str::limit($featuredPortfolio->short_description, 160) }}
+                            <p class="text-white/70 text-xs sm:text-sm leading-relaxed mb-6 font-normal line-clamp-3">
+                                {{ $featuredPortfolio->short_description }}
                             </p>
 
-                            {{-- ACTION BUTTONS --}}
-                            <div class="flex items-center gap-4 flex-wrap">
-
-                                <div
-                                    class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-blue-500 hover:bg-blue-400 text-white text-sm font-medium transition-colors duration-300 cursor-pointer">
-                                    Explore project
-                                    <i
-                                        class="fas fa-arrow-right text-xs group-hover:translate-x-1 transition-transform duration-300"></i>
-                                </div>
-
-                                <div class="hidden sm:flex items-center gap-1.5 text-white/30 text-xs">
-                                    <i class="fas fa-eye text-blue-400/70 text-xs"></i>
-                                    {{ number_format($featuredPortfolio->view_count ?? 0) }} views
-                                </div>
-
+                            {{-- Tech Tags --}}
+                            @php
+                            $techs = is_array($featuredPortfolio->technologies)
+                            ? $featuredPortfolio->technologies
+                            : (is_string($featuredPortfolio->technologies) ? explode(',', $featuredPortfolio->technologies) : []);
+                            @endphp
+                            @if (!empty($techs))
+                            <div class="flex items-center gap-2 mb-6 flex-wrap">
+                                @foreach(array_slice($techs, 0, 4) as $tech)
+                                <span class="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-white/80 text-[11px] font-medium">
+                                    {{ trim($tech) }}
+                                </span>
+                                @endforeach
                             </div>
+                            @endif
 
+                            <div class="flex items-center gap-3">
+                                <span class="inline-flex items-center gap-2 bg-btn-gradient text-white text-xs sm:text-sm font-bold px-6 py-3 rounded-full shadow-glow-sm group-hover:shadow-glow-blue transition-all">
+                                    <span>Lihat Detail Studi Kasus</span>
+                                    <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
+                                </span>
+                            </div>
                         </div>
+
                     </div>
-                </div>
-
-            </a>
-
-            {{-- MARQUEE STRIP --}}
-            <div class="relative bg-[#080d19] border-t border-white/[0.05] py-3 overflow-hidden">
-
-                {{-- LEFT FADE --}}
-                <div
-                    class="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-[#080d19] to-transparent z-10 pointer-events-none">
-                </div>
-                {{-- RIGHT FADE --}}
-                <div
-                    class="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-[#080d19] to-transparent z-10 pointer-events-none">
-                </div>
-
-                {{-- MARQUEE TRACK --}}
-                <div class="flex w-max gap-3" style="animation: marquee 28s linear infinite;">
-
-                    @php
-                        $chips = [
-                            ['icon' => 'fa-robot', 'label' => 'AI Chatbot Automation'],
-                            ['icon' => 'fa-network-wired', 'label' => 'Marketplace Integration'],
-                            ['icon' => 'fa-credit-card', 'label' => 'Payment Gateway'],
-                            ['icon' => 'fa-chart-line', 'label' => 'Machine Learning'],
-                            ['icon' => 'fa-plug', 'label' => 'REST API'],
-                            ['icon' => 'fa-database', 'label' => 'Database Design'],
-                            ['icon' => 'fa-shield-alt', 'label' => 'Auth & Security'],
-                            ['icon' => 'fa-code-branch', 'label' => 'Version Control'],
-                            ['icon' => 'fa-cloud', 'label' => 'Cloud Deployment'],
-                        ];
-                    @endphp
-
-                    {{-- GROUP 1 --}}
-                    @foreach ($chips as $chip)
-                        <div
-                            class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-blue-800/40 bg-blue-900/10 text-white/40 text-xs font-light whitespace-nowrap">
-                            <i class="fas {{ $chip['icon'] }} text-blue-400/60 text-[11px]"></i>
-                            {{ $chip['label'] }}
-                        </div>
-                    @endforeach
-
-                    {{-- GROUP 2 (seamless duplicate) --}}
-                    @foreach ($chips as $chip)
-                        <div
-                            class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-blue-800/40 bg-blue-900/10 text-white/40 text-xs font-light whitespace-nowrap">
-                            <i class="fas {{ $chip['icon'] }} text-blue-400/60 text-[11px]"></i>
-                            {{ $chip['label'] }}
-                        </div>
-                    @endforeach
-
-                </div>
+                </a>
             </div>
+            @endif
 
-        </section>
-
-        {{-- INLINE STYLE: Marquee animation (define once, ideally in app.css) --}}
-        <style>
-            @keyframes marquee {
-                0% {
-                    transform: translateX(0);
-                }
-
-                100% {
-                    transform: translateX(-50%);
-                }
-            }
-        </style>
-    @endif
-
-
-
-    <section id="portfolio" class="relative bg-white pb-10">
-
-        <!-- Background Decoration -->
-        <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-            <div class="absolute top-40 left-[-120px] w-72 h-72 bg-brand-accent/5 rounded-full blur-3xl"></div>
-            <div class="absolute bottom-0 right-[-120px] w-80 h-80 bg-brand-blue/5 rounded-full blur-3xl"></div>
         </div>
 
-        <div class="relative z-10 max-w-[1450px] mx-auto px-3 sm:px-4 lg:px-5">
+        {{-- ══════════════════════════════════════════════════
+             MARQUEE CHIPS: TECH CAPABILITIES
+        ══════════════════════════════════════════════════ --}}
+        <div class="relative bg-[#080c26] border-t border-white/5 py-3 overflow-hidden mt-8">
+            <div class="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-[#080c26] to-transparent z-10 pointer-events-none"></div>
+            <div class="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-[#080c26] to-transparent z-10 pointer-events-none"></div>
 
-            <!-- Section Heading -->
-            <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10">
+            <div class="flex w-max gap-3 animate-infinite-marquee">
+                @php
+                $chips = [
+                ['icon' => 'fa-laptop-code', 'label' => 'Company Profile Website'],
+                ['icon' => 'fa-bullhorn', 'label' => 'Landing Page Ads & Sales'],
+                ['icon' => 'fa-cubes', 'label' => 'Web App SaaS Multi-Tenant'],
+                ['icon' => 'fa-robot', 'label' => 'WhatsApp AI Bot Automation'],
+                ['icon' => 'fa-diagram-project', 'label' => 'Metode K-Means Clustering'],
+                ['icon' => 'fa-tree', 'label' => 'Algoritma C4.5 Decision Tree'],
+                ['icon' => 'fa-chart-pie', 'label' => 'Sistem Pendukung Keputusan (SPK)'],
+                ['icon' => 'fa-credit-card', 'label' => 'Payment Gateway Otomatis'],
+                ['icon' => 'fa-server', 'label' => 'Laravel & Cloud VPS Deploy'],
+                ];
+                @endphp
 
-                <div>
-                    <span
-                        class="inline-flex items-center gap-2 text-brand-blue text-sm font-semibold mb-3 uppercase tracking-wider">
-
-                        <span class="w-8 h-[2px] bg-brand-blue"></span>
-                        Portfolio
-                    </span>
-
-                    <h2 class="text-3xl sm:text-4xl font-display font-bold text-brand-dark">
-                        Selected Projects
-                    </h2>
+                @foreach ($chips as $chip)
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/10 bg-white/5 text-white/70 text-xs font-normal whitespace-nowrap">
+                    <i class="fa-solid {{ $chip['icon'] }} text-brand-accent text-[11px]"></i>
+                    <span>{{ $chip['label'] }}</span>
                 </div>
+                @endforeach
 
-                <p class="max-w-md text-sm text-slate-500 leading-relaxed">
-                    Koleksi project modern yang dirancang dengan fokus pada performa,
-                    pengalaman pengguna, dan estetika premium.
-                </p>
-            </div>
-
-            <!-- DIUBAH -->
-            <!-- sebelumnya gap-8 -->
-            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-
-                <!-- LEFT -->
-                <div class="lg:col-span-3">
-
-                    <!-- DIUBAH -->
-                    <!-- sebelumnya gap-6 -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-
-                        @forelse($portfolios as $portfolio)
-                            <!-- DIUBAH -->
-                            <!-- rounded diperkecil -->
-                            <div
-                                class="group bg-white border border-slate-200/80 rounded-xl overflow-hidden shadow-sm hover:shadow-card transition-all duration-500 hover:-translate-y-2">
-
-                                <!-- IMAGE -->
-                                <!-- sebelumnya h-60 -->
-                                <div class="relative overflow-hidden h-52">
-
-                                    <a href="{{ route('portfolio.read', $portfolio->slug) }}">
-
-                                        <img src="{{ asset('storage/' . $portfolio->thumbnail_image) }}"
-                                            alt="{{ $portfolio->title }}"
-                                            class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
-
-                                        <!-- Overlay -->
-                                        <div
-                                            class="absolute inset-0 bg-gradient-to-t from-brand-dark/90 via-brand-dark/20 to-transparent">
-                                        </div>
-
-                                        @php
-                                            $techs = is_array($portfolio->technologies)
-                                                ? $portfolio->technologies
-                                                : explode(',', $portfolio->technologies);
-
-                                            $firstTech = !empty($techs) ? trim($techs[0]) : '';
-                                        @endphp
-
-                                        @if ($firstTech)
-                                            <div class="absolute top-4 left-4">
-                                                <span
-                                                    class="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-white text-[10px] uppercase tracking-wider font-semibold">
-                                                    {{ $firstTech }}
-                                                </span>
-                                            </div>
-                                        @endif
-
-                                        <div class="absolute bottom-0 left-0 right-0 p-4">
-                                            <h3
-                                                class="text-lg font-bold text-white font-display mb-2 group-hover:text-brand-accent transition">
-                                                {{ $portfolio->title }}
-                                            </h3>
-
-                                            <p class="text-sm text-white/70 leading-relaxed line-clamp-2">
-                                                {{ \Illuminate\Support\Str::limit($portfolio->short_description, 100) }}
-                                            </p>
-
-                                        </div>
-                                    </a>
-                                </div>
-
-                                <div class="px-4 py-3 flex items-center justify-between">
-
-                                    <span class="text-xs text-slate-400">
-                                        Digital Project
-                                    </span>
-
-                                    <a href="{{ route('portfolio.read', $portfolio->slug) }}"
-                                        class="inline-flex items-center gap-2 text-sm font-semibold text-brand-blue hover:gap-3 transition-all">
-
-                                        View Details
-                                        <i class="fas fa-arrow-right text-xs"></i>
-                                    </a>
-                                </div>
-                            </div>
-
-                        @empty
-
-                            <div class="col-span-2 text-center py-20">
-
-                                <div
-                                    class="w-20 h-20 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-5">
-                                    <i class="fas fa-folder-open text-3xl text-slate-400"></i>
-                                </div>
-
-                                <h3 class="text-2xl font-display font-bold text-slate-700 mb-2">
-                                    No Projects Yet
-                                </h3>
-
-                                <p class="text-slate-500 text-sm">
-                                    Upcoming portfolio projects will appear here.
-                                </p>
-                            </div>
-                        @endforelse
-
-                    </div>
-
-                    <!-- Pagination -->
-                    @if ($portfolios->hasPages())
-                        <div class="mt-12">
-                            {{ $portfolios->links() }}
-                        </div>
-                    @endif
-
+                @foreach ($chips as $chip)
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/10 bg-white/5 text-white/70 text-xs font-normal whitespace-nowrap">
+                    <i class="fa-solid {{ $chip['icon'] }} text-brand-accent text-[11px]"></i>
+                    <span>{{ $chip['label'] }}</span>
                 </div>
-
-                <!-- SIDEBAR -->
-                <div class="lg:col-span-1">
-
-                    <div class="sticky top-24 space-y-5">
-
-                        <!-- Popular -->
-                        <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
-
-                            <div class="flex items-center gap-3 mb-5">
-
-                                <div
-                                    class="w-10 h-10 rounded-2xl bg-brand-dark flex items-center justify-center shadow-glow-sm">
-                                    <i class="fas fa-fire text-white text-sm"></i>
-                                </div>
-
-                                <div>
-                                    <h3 class="text-lg font-display font-bold text-brand-dark">
-                                        Popular Projects
-                                    </h3>
-
-                                    <p class="text-xs text-slate-400">
-                                        Most viewed portfolio
-                                    </p>
-                                </div>
-                            </div>
-
-                            @if ($popularPortfolios->isNotEmpty())
-
-                                <div class="space-y-3">
-
-                                    @foreach ($popularPortfolios as $popular)
-                                        <a href="{{ route('portfolio.read', $popular->slug) }}"
-                                            class="group flex gap-3 p-3 rounded-2xl border border-slate-100 hover:border-brand-accent/20 hover:bg-slate-50 transition-all duration-300">
-
-                                            <div class="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0">
-
-                                                <img src="{{ asset('storage/' . $popular->thumbnail_image) }}"
-                                                    alt="{{ $popular->title }}"
-                                                    class="w-full h-full object-cover transition duration-500 group-hover:scale-110">
-
-                                            </div>
-
-                                            <div class="flex-1 min-w-0">
-
-                                                <h4
-                                                    class="text-sm font-semibold text-slate-800 line-clamp-2 group-hover:text-brand-blue transition">
-                                                    {{ $popular->title }}
-                                                </h4>
-
-                                                <div class="flex items-center gap-1 mt-2 text-xs text-slate-500">
-
-                                                    <i class="fas fa-eye text-brand-blue"></i>
-
-                                                    <span>
-                                                        {{ $popular->view_count }} views
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    @endforeach
-
-                                </div>
-                            @else
-                                <div class="text-center py-8">
-
-                                    <i class="fas fa-chart-line text-4xl text-slate-300 mb-3"></i>
-
-                                    <p class="text-sm text-slate-500">
-                                        No popular projects yet
-                                    </p>
-                                </div>
-
-                            @endif
-                        </div>
-
-                        <!-- Stats -->
-                        <div
-                            class="bg-gradient-to-br from-brand-dark to-brand-navy rounded-xl p-6 text-white shadow-card overflow-hidden relative">
-
-                            <div class="absolute top-0 right-0 w-32 h-32 bg-brand-accent/10 rounded-full blur-3xl">
-                            </div>
-
-                            <div class="relative z-10">
-
-                                <h3 class="text-lg font-display font-bold mb-5">
-                                    Quick Stats
-                                </h3>
-
-                                <div class="space-y-4">
-
-                                    <div class="flex items-center justify-between">
-                                        <span class="text-sm text-white/60">
-                                            Total Projects
-                                        </span>
-
-                                        <span class="text-2xl font-bold">
-                                            {{ $portfolios->total() }}
-                                        </span>
-                                    </div>
-
-                                    <div class="flex items-center justify-between">
-                                        <span class="text-sm text-white/60">
-                                            This Page
-                                        </span>
-
-                                        <span class="text-2xl font-bold text-brand-accent">
-                                            {{ $portfolios->count() }}
-                                        </span>
-                                    </div>
-
-                                    @if ($portfolios->total() > 0)
-                                        <div class="pt-4 border-t border-white/10">
-
-                                            <div class="flex items-center gap-2 text-xs text-white/50">
-
-                                                <i class="fas fa-info-circle text-brand-accent"></i>
-
-                                                <span>
-                                                    Showing
-                                                    {{ $portfolios->firstItem() }}
-                                                    -
-                                                    {{ $portfolios->lastItem() }}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- CTA -->
-                        <div class="relative overflow-hidden rounded-xl bg-white border border-slate-200 p-6 shadow-sm">
-
-                            <div class="absolute -top-10 -right-10 w-32 h-32 bg-brand-blue/10 rounded-full blur-3xl">
-                            </div>
-
-                            <div class="relative z-10">
-
-                                <div class="w-12 h-12 rounded-2xl bg-brand-dark flex items-center justify-center mb-4">
-
-                                    <i class="fas fa-briefcase text-white"></i>
-                                </div>
-
-                                <h3 class="text-xl font-display font-bold text-brand-dark mb-2">
-                                    Have a Project?
-                                </h3>
-
-                                <p class="text-sm text-slate-500 leading-relaxed mb-5">
-                                    Mari bangun sistem digital modern untuk bisnis Anda bersama tim kami.
-                                </p>
-
-                                <a href="#contact"
-                                    class="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-brand-dark text-white text-sm font-semibold hover:bg-brand-blue transition-all duration-300">
-
-                                    Get Started
-                                </a>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
     </section>
+
+    {{-- ══════════════════════════════════════════════════
+         MAIN PORTFOLIO GRID & SIDEBAR SECTION
+    ══════════════════════════════════════════════════ --}}
+    <section class="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative z-10">
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+
+            {{-- ══════════════════════════════════════════════════
+                 LEFT: PORTFOLIO CARDS GRID (Col 8)
+            ══════════════════════════════════════════════════ --}}
+            <div class="lg:col-span-8">
+
+                {{-- Header count --}}
+                <div class="flex items-center justify-between mb-8 pb-3 border-b border-white/10">
+                    <div>
+                        <h2 class="font-sans font-bold text-xl sm:text-2xl text-white tracking-tight">
+                            Semua Proyek & Implementasi
+                        </h2>
+                        <p class="text-white/50 text-xs mt-1">
+                            Menampilkan {{ $portfolios->count() }} dari total {{ $portfolios->total() }} proyek terverifikasi
+                        </p>
+                    </div>
+                    <div class="text-xs text-brand-accent font-semibold tracking-wider uppercase hidden sm:block">
+                        <i class="fa-solid fa-circle-check text-[10px]"></i> Live Production Ready
+                    </div>
+                </div>
+
+                {{-- 2-Column Grid of Project Cards --}}
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
+                    @forelse($portfolios as $portfolio)
+                    <div class="bg-brand-navy/60 backdrop-blur-xl border border-white/10 hover:border-brand-accent/50 rounded-2xl overflow-hidden shadow-card hover:-translate-y-1.5 transition-all duration-300 flex flex-col h-full group">
+
+                        {{-- Card Image --}}
+                        <div class="relative overflow-hidden aspect-[16/10] bg-white/5">
+                            <a href="{{ route('portfolio.read', $portfolio->slug) }}" class="block w-full h-full">
+                                @if ($portfolio->thumbnail_image)
+                                <img src="{{ asset('storage/' . $portfolio->thumbnail_image) }}" alt="{{ $portfolio->title }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy">
+                                @else
+                                <div class="w-full h-full flex items-center justify-center bg-brand-navy text-white/30">
+                                    <i class="fa-solid fa-layer-group text-3xl"></i>
+                                </div>
+                                @endif
+                                <div class="absolute inset-0 bg-gradient-to-t from-brand-dark/80 via-transparent to-transparent opacity-50 group-hover:opacity-20 transition-opacity"></div>
+                            </a>
+
+                            {{-- Category Badge Top Left --}}
+                            @if ($portfolio->category)
+                            <div class="absolute top-3 left-3">
+                                <span class="px-2.5 py-1 rounded-md bg-brand-dark/80 backdrop-blur-md border border-white/15 text-white/90 text-[10px] font-bold tracking-wider uppercase shadow-sm">
+                                    {{ $portfolio->category->name }}
+                                </span>
+                            </div>
+                            @endif
+
+                            {{-- Completion Year Top Right --}}
+                            @if ($portfolio->completion_date)
+                            <div class="absolute top-3 right-3">
+                                <span class="px-2 py-0.5 rounded-md bg-white/10 backdrop-blur-md border border-white/10 text-white/70 text-[10px] font-medium">
+                                    {{ \Carbon\Carbon::parse($portfolio->completion_date)->format('Y') }}
+                                </span>
+                            </div>
+                            @endif
+                        </div>
+
+                        {{-- Card Body --}}
+                        <div class="p-5 flex-1 flex flex-col justify-between">
+                            <div>
+                                {{-- Client or Type --}}
+                                <div class="text-white/40 text-[11px] font-medium mb-1.5 uppercase tracking-wider">
+                                    {{ $portfolio->client_name ?: 'Digital Solution' }}
+                                </div>
+
+                                {{-- Title --}}
+                                <h3 class="font-sans font-bold text-base sm:text-lg text-white group-hover:text-brand-accent transition-colors leading-snug mb-2 line-clamp-2">
+                                    <a href="{{ route('portfolio.read', $portfolio->slug) }}">
+                                        {{ $portfolio->title }}
+                                    </a>
+                                </h3>
+
+                                {{-- Short description --}}
+                                <p class="text-white/60 text-xs sm:text-[13px] leading-relaxed line-clamp-2 mb-4 font-normal">
+                                    {{ $portfolio->short_description }}
+                                </p>
+                            </div>
+
+                            {{-- Tech Badges & View Details Button --}}
+                            <div>
+                                @php
+                                $techList = is_array($portfolio->technologies)
+                                ? $portfolio->technologies
+                                : (is_string($portfolio->technologies) ? explode(',', $portfolio->technologies) : []);
+                                @endphp
+                                @if (!empty($techList))
+                                <div class="flex items-center gap-1.5 mb-4 flex-wrap">
+                                    @foreach(array_slice($techList, 0, 3) as $tech)
+                                    <span class="px-2 py-0.5 rounded bg-white/5 border border-white/10 text-white/70 text-[10px]">
+                                        {{ trim($tech) }}
+                                    </span>
+                                    @endforeach
+                                </div>
+                                @endif
+
+                                <div class="pt-3 border-t border-white/5 flex items-center justify-between">
+                                    <a href="{{ route('portfolio.read', $portfolio->slug) }}" class="inline-flex items-center gap-1.5 text-xs font-bold text-brand-accent group-hover:text-white transition-colors">
+                                        <span>Lihat Detail</span>
+                                        <i class="fa-solid fa-arrow-right text-[10px] group-hover:translate-x-1 transition-transform"></i>
+                                    </a>
+                                    @if ($portfolio->view_count)
+                                    <span class="text-white/40 text-[11px] flex items-center gap-1">
+                                        <i class="fa-solid fa-eye text-[9px]"></i> {{ number_format($portfolio->view_count) }}
+                                    </span>
+                                    @endif
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    @empty
+                    <div class="col-span-2 text-center py-16 bg-white/5 rounded-2xl border border-white/10 p-8">
+                        <div class="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center mx-auto mb-4 text-brand-accent">
+                            <i class="fa-solid fa-folder-open text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-1">Belum Ada Proyek</h3>
+                        <p class="text-white/50 text-xs">Daftar proyek portofolio akan segera ditambahkan di sini.</p>
+                    </div>
+                    @endforelse
+                </div>
+
+                {{-- Pagination --}}
+                @if ($portfolios->hasPages())
+                <div class="mt-12 flex justify-center">
+                    <div class="bg-brand-navy/80 backdrop-blur-xl border border-white/10 p-2 rounded-2xl shadow-card">
+                        {{ $portfolios->links() }}
+                    </div>
+                </div>
+                @endif
+
+            </div>
+
+            {{-- ══════════════════════════════════════════════════
+                 RIGHT: SIDEBAR WIDGETS (Col 4)
+            ══════════════════════════════════════════════════ --}}
+            <div class="lg:col-span-4">
+                <div class="sticky top-24 space-y-6">
+
+                    {{-- Widget 1: Popular Projects --}}
+                    <div class="bg-brand-navy/60 backdrop-blur-xl border border-white/10 rounded-2xl p-5 sm:p-6 shadow-card">
+                        <div class="flex items-center gap-3 mb-5 pb-3 border-b border-white/10">
+                            <div class="w-9 h-9 rounded-xl bg-btn-gradient flex items-center justify-center shadow-glow-sm text-white">
+                                <i class="fa-solid fa-fire text-sm"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-sans font-bold text-base text-white">Proyek Terpopuler</h3>
+                                <p class="text-white/50 text-[11px]">Banyak dilihat & diimplementasikan</p>
+                            </div>
+                        </div>
+
+                        @if ($popularPortfolios->isNotEmpty())
+                        <div class="space-y-3.5">
+                            @foreach ($popularPortfolios as $popular)
+                            <a href="{{ route('portfolio.read', $popular->slug) }}" class="group flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/5 border border-transparent hover:border-white/10 transition-all duration-300">
+                                <div class="w-14 h-14 rounded-lg overflow-hidden bg-white/5 shrink-0 border border-white/10">
+                                    @if ($popular->thumbnail_image)
+                                    <img src="{{ asset('storage/' . $popular->thumbnail_image) }}" alt="{{ $popular->title }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                    @else
+                                    <div class="w-full h-full flex items-center justify-center text-white/30 text-xs">
+                                        <i class="fa-solid fa-globe"></i>
+                                    </div>
+                                    @endif
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <h4 class="text-xs sm:text-[13px] font-bold text-white/90 group-hover:text-brand-accent transition-colors line-clamp-1 mb-1">
+                                        {{ $popular->title }}
+                                    </h4>
+                                    <div class="flex items-center gap-2 text-[11px] text-white/40">
+                                        <span class="flex items-center gap-1 text-brand-accent">
+                                            <i class="fa-solid fa-eye text-[9px]"></i> {{ number_format($popular->view_count) }}
+                                        </span>
+                                        <span>•</span>
+                                        <span class="truncate">{{ $popular->category->name ?? 'Project' }}</span>
+                                    </div>
+                                </div>
+                            </a>
+                            @endforeach
+                        </div>
+                        @else
+                        <p class="text-white/40 text-xs text-center py-4">Belum ada data proyek populer.</p>
+                        @endif
+                    </div>
+
+                    {{-- Widget 2: Quick Metrics / Agency Trust Stats --}}
+                    <div class="bg-gradient-to-br from-blue-900/40 via-indigo-900/30 to-brand-navy border border-brand-accent/30 rounded-2xl p-6 shadow-glow-sm relative overflow-hidden">
+                        <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-brand-accent/15 rounded-full blur-2xl pointer-events-none"></div>
+                        <div class="relative z-10">
+                            <div class="mb-4">
+                                <span class="text-[#EF4444] font-extrabold text-[10px] tracking-[0.2em] uppercase">METRIK & PERFORMA</span>
+                                <h3 class="font-sans font-bold text-lg text-white mt-0.5">Statistik Scalify</h3>
+                            </div>
+
+                            <div class="space-y-3.5 text-xs">
+                                <div class="flex items-center justify-between pb-2.5 border-b border-white/10">
+                                    <span class="text-white/60">Total Proyek Selesai</span>
+                                    <span class="font-bold text-base text-white">500+</span>
+                                </div>
+                                <div class="flex items-center justify-between pb-2.5 border-b border-white/10">
+                                    <span class="text-white/60">Rating Kepuasan Klien</span>
+                                    <span class="font-bold text-base text-amber-400">4.9 / 5.0</span>
+                                </div>
+                                <div class="flex items-center justify-between pb-2.5 border-b border-white/10">
+                                    <span class="text-white/60">Infrastruktur Produksi</span>
+                                    <span class="font-bold text-base text-emerald-400">Cloud VPS 24/7</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-white/60">Implementasi Algoritma & AI</span>
+                                    <span class="font-bold text-base text-brand-accent">100% In-House</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Widget 3: CTA Box --}}
+                    <div class="bg-brand-navy/70 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-card text-center relative overflow-hidden">
+                        <div class="w-12 h-12 rounded-2xl bg-btn-gradient flex items-center justify-center mx-auto mb-4 shadow-glow-blue text-white">
+                            <i class="fa-brands fa-whatsapp text-xl"></i>
+                        </div>
+                        <h3 class="font-sans font-bold text-lg text-white mb-2">Ingin Bangun Website Serupa?</h3>
+                        <p class="text-white/60 text-xs leading-relaxed mb-5 font-normal">
+                            Konsultasikan kebutuhan website company profile, web app SaaS, atau implementasi sistem metode algoritma Anda langsung dengan tim lead engineer kami.
+                        </p>
+                        <a href="https://wa.me/6285221694067?text=Halo%20Scalify,%20saya%20tertarik%20dengan%20proyek%20portofolio%20website%20Anda" target="_blank" class="w-full inline-flex items-center justify-center gap-2 bg-btn-gradient text-white text-xs sm:text-sm font-bold py-3.5 px-5 rounded-full shadow-glow-sm hover:shadow-glow-blue hover:scale-105 transition-all">
+                            <span>Konsultasi Proyek Sekarang</span>
+                            <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+<style>
+    @keyframes infiniteMarquee {
+        0% {
+            transform: translateX(0);
+        }
+
+        100% {
+            transform: translateX(-50%);
+        }
+    }
+
+    .animate-infinite-marquee {
+        animation: infiniteMarquee 26s linear infinite;
+    }
+
+    .animate-infinite-marquee:hover {
+        animation-play-state: paused;
+    }
+
+</style>
 @endsection
