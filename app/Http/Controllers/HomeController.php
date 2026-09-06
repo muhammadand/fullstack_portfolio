@@ -41,28 +41,43 @@ class HomeController extends Controller
     }
 
 
-    public function blogs()
+    public function blogs(Request $request)
     {
-        $featured = Blog::published()
-            ->featured()
-            ->latest('published_at')
-            ->take(3)
-            ->get();
+        $search = $request->query('search');
+        $categorySlug = $request->query('category');
 
-        // 1 blog paling populer
+        $query = Blog::published()->with(['author', 'category']);
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('excerpt', 'like', "%{$search}%")
+                  ->orWhere('content', 'like', "%{$search}%");
+            });
+        }
+
+        if ($categorySlug) {
+            $query->whereHas('category', function ($q) use ($categorySlug) {
+                $q->where('slug', $categorySlug);
+            });
+        }
+
+        // 1 blog paling populer / highlight
         $popular = Blog::published()
+            ->with(['author', 'category'])
             ->orderByDesc('view_count')
             ->first();
 
-        $blogs = Blog::published()
+        $blogs = (clone $query)
             ->latest('published_at')
-            ->paginate(10);
+            ->paginate(9)
+            ->withQueryString();
 
         $categories = BlogCategory::where('is_active', 1)
             ->orderBy('display_order')
             ->get();
 
-        return view('pages.blogs.index', compact('blogs', 'featured', 'popular', 'categories'));
+        return view('pages.blogs.index', compact('blogs', 'popular', 'categories', 'search', 'categorySlug'));
     }
 
 

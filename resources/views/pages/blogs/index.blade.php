@@ -1,221 +1,256 @@
 @extends('layouts.app')
 
-@section('content')
-{{-- Highlight Populer Full Bleed --}}
-@if ($popular)
-<section class="relative z-20 w-full mt-0">
-    {{-- Schema.org JSON-LD for Popular Article to boost SEO --}}
-    <script type="application/ld+json">
-        {
-            "@@context": "https://schema.org"
-            , "@@type": "BlogPosting"
-            , "mainEntityOfPage": {
-                "@@type": "WebPage"
-                , "@@id": "{{ route('blogs.read', $popular->slug) }}"
-            }
-            , "headline": "{{ $popular->meta_title ?? $popular->title }}"
-            , "description": "{{ $popular->meta_description ?? $popular->excerpt }}"
-            , "image": "{{ $popular->featured_image ? asset('storage/' . $popular->featured_image) : asset('scalify-blog-default.webp') }}"
-            , "author": {
-                "@@type": "Organization"
-                , "name": "Scalify Intelligence"
-            }
-            , "datePublished": "{{ $popular->published_at ? $popular->published_at->toIso8601String() : $popular->created_at->toIso8601String() }}"
-        }
+@section('meta_tags')
+<title>Blog & Panduan Pembuatan Website Profesional — Scalify Intelligence</title>
+<meta name="title" content="Blog & Panduan Pembuatan Website Profesional — Scalify Intelligence" />
+<meta name="description" content="Kumpulan artikel, tren desain web, tips UI/UX, dan panduan pembuatan website profesional, landing page konversi tinggi, serta web app kustom untuk bisnis Anda." />
+<meta name="keywords" content="jasa pembuatan website, web development agency, bikin website bisnis, landing page profesional, web application kustom, ui ux design, digital agency indonesia, scalify intelligence" />
+<meta name="author" content="Scalify Intelligence" />
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+<link rel="canonical" href="{{ route('landing.blogs') }}" />
 
-    </script>
+{{-- Open Graph / Facebook --}}
+<meta property="og:type" content="blog" />
+<meta property="og:url" content="{{ route('landing.blogs') }}" />
+<meta property="og:title" content="Blog & Panduan Pembuatan Website Profesional — Scalify Intelligence" />
+<meta property="og:description" content="Kumpulan artikel, tips UI/UX, dan panduan pembuatan website serta web app modern dari agency digital Scalify Intelligence." />
+<meta property="og:image" content="{{ asset('og-image.png') }}" />
+<meta property="og:site_name" content="Scalify Intelligence" />
+<meta property="og:locale" content="id_ID" />
 
-    <a href="{{ route('blogs.read', $popular->slug) }}" class="block relative w-full h-[60vh] min-h-[450px] lg:h-[80vh] overflow-hidden group">
+{{-- Twitter --}}
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:url" content="{{ route('landing.blogs') }}" />
+<meta name="twitter:title" content="Blog & Panduan Pembuatan Website Profesional — Scalify Intelligence" />
+<meta name="twitter:description" content="Kumpulan artikel, tips UI/UX, dan panduan pembuatan website serta web app modern dari agency digital Scalify Intelligence." />
+<meta name="twitter:image" content="{{ asset('og-image.png') }}" />
 
-        {{-- Background Image --}}
-        @if ($popular->featured_image)
-        <img src="{{ asset('storage/' . $popular->featured_image) }}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" alt="{{ $popular->title }}" fetchpriority="high" decoding="sync">
-        @else
-        <img src="{{ asset('scalify-blog-default.webp') }}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" alt="{{ $popular->title }}" fetchpriority="high" decoding="sync">
-        @endif
-
-        {{-- Midnight Blue Gradient Overlay --}}
-        <div class="absolute inset-0 bg-gradient-to-t from-[#0f172a] via-[#0f172a]/70 to-[#0f172a]/20 opacity-90 group-hover:opacity-100 transition-opacity duration-500">
-        </div>
-
-        {{-- Top Dynamic SEO Keywords Indicator --}}
-        <div class="absolute top-6 left-6 right-6 md:top-8 md:left-8 lg:top-10 lg:left-12 z-30 flex items-center gap-3">
-            <div class="bg-black/40 backdrop-blur-md border border-white/10 px-4 py-2 rounded-full flex items-center gap-2.5 shadow-lg overflow-hidden max-w-full">
-                <div class="relative flex items-center justify-center w-3 h-3">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500"></span>
-                </div>
-                <span class="text-white/60 text-[10px] font-bold tracking-widest uppercase flex-shrink-0">
-                    Live Search
-                </span>
-                <div class="h-4 w-px bg-white/20 mx-1"></div>
-
-                @php
-                // SEO Tags processing
-                $seoTags = ['Teknologi', 'Inovasi', 'Digitalisasi'];
-                if ($popular->tags) {
-                if (is_array($popular->tags)) {
-                $seoTags = array_merge($seoTags, $popular->tags);
-                } else {
-                $seoTags = array_merge($seoTags, explode(',', $popular->tags));
-                }
-                }
-                if ($popular->category) {
-                $seoTags[] = $popular->category->name;
-                }
-                $seoTags = array_values(array_unique(array_filter(array_map('trim', $seoTags))));
-                @endphp
-
-                <div class="relative h-[18px] min-w-[120px] sm:min-w-[200px] overflow-hidden flex items-center">
-                    <div id="seo-ticker" class="text-green-400 text-xs sm:text-sm font-semibold whitespace-nowrap transition-all duration-500 transform translate-y-0">
-                        {{ $seoTags[0] ?? 'Scalify Intelligence' }}
-                    </div>
-                </div>
-            </div>
-
-            {{-- Google Index Status --}}
-            <div class="hidden sm:flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/5 px-3 py-1.5 rounded-full shadow-sm">
-                <i class="fab fa-google text-white text-[10px]"></i>
-                <span class="text-white text-[9px] font-bold tracking-wider uppercase">Indexed</span>
-            </div>
-        </div>
-
-        {{-- Content --}}
-        <div class="absolute inset-0 flex flex-col justify-end p-6 sm:p-8 md:p-12 lg:p-16">
-            <div class="max-w-7xl mx-auto flex items-end justify-between w-full gap-6 lg:gap-12 pb-4 md:pb-8 relative z-20">
-                <div class="text-white w-full max-w-4xl">
-                    <div class="flex flex-wrap items-center gap-3 mb-4 sm:mb-6">
-                        <span class="text-[11px] font-bold tracking-widest text-[#0f172a] uppercase bg-white px-3 py-1.5 rounded-full shadow-[0_0_15px_rgba(255,255,255,0.3)]">
-                            <i class="fas fa-star text-[10px] mr-1 text-orange-500"></i> POPULER
-                        </span>
-                        @if ($popular->category)
-                        <span class="text-[11px] font-bold tracking-wider text-white uppercase bg-white/10 backdrop-blur-md border border-white/20 px-3 py-1.5 rounded-full">
-                            {{ $popular->category->name }}
-                        </span>
-                        @endif
-                    </div>
-
-                    <h4 class="font-display font-bold text-2xl md:text-3xl lg:text-4xl mb-4 sm:mb-6 text-white leading-[1.2] group-hover:text-blue-200 transition-colors duration-300 drop-shadow-md">
-                        {{ $popular->title }}
-                    </h4>
-
-                    <p class="text-white/80 text-sm md:text-base lg:text-lg line-clamp-2 md:line-clamp-3 leading-relaxed font-medium drop-shadow max-w-3xl">
-                        {{ $popular->excerpt }}
-                    </p>
-
-                    <div class="mt-6 flex items-center gap-4 text-xs font-semibold text-white/60 uppercase tracking-widest">
-                        <span><i class="far fa-calendar-alt mr-1.5"></i> {{ $popular->published_at ? $popular->published_at->format('d M Y') : $popular->created_at->format('d M Y') }}</span>
-                        <span class="w-1 h-1 rounded-full bg-white/30"></span>
-                        <span><i class="far fa-clock mr-1.5"></i> {{ $popular->reading_time ?? '5' }} MIN READ</span>
-                    </div>
-                </div>
-
-                {{-- Hover Discover Button --}}
-                <div class="hidden md:flex flex-col items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-500">
-                    <div class="w-16 h-16 lg:w-20 lg:h-20 rounded-full border border-white/30 bg-white/5 backdrop-blur-sm text-white flex items-center justify-center group-hover:bg-[#2563eb] group-hover:border-[#2563eb] group-hover:shadow-[0_0_30px_rgba(37,99,235,0.4)] transition-all duration-500 transform relative overflow-hidden">
-                        <i class="fas fa-arrow-right text-xl lg:text-2xl relative z-10 group-hover:translate-x-1 transition-transform duration-300"></i>
-                    </div>
-                    <span class="mt-3 text-[10px] font-bold tracking-[0.2em] text-white/50 uppercase group-hover:text-white transition-colors duration-300">Read Article</span>
-                </div>
-            </div>
-        </div>
-    </a>
-</section>
-
-{{-- Script for SEO Ticker Animation --}}
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const tags = @json($seoTags);
-        const ticker = document.getElementById('seo-ticker');
-        if (!ticker || tags.length <= 1) return;
-
-        let currentIndex = 0;
-
-        setInterval(() => {
-            // Fade out up
-            ticker.style.opacity = '0';
-            ticker.style.transform = 'translateY(-10px)';
-
-            setTimeout(() => {
-                currentIndex = (currentIndex + 1) % tags.length;
-                ticker.textContent = tags[currentIndex];
-
-                // Reset to bottom to slide in up
-                ticker.style.transition = 'none';
-                ticker.style.transform = 'translateY(10px)';
-
-                // Trigger reflow
-                void ticker.offsetWidth;
-
-                // Fade in up
-                ticker.style.transition = 'all 0.5s ease';
-                ticker.style.opacity = '1';
-                ticker.style.transform = 'translateY(0)';
-            }, 500);
-
-        }, 3500);
-    });
+{{-- Schema.org JSON-LD Structured Data for Indexing --}}
+@php
+$schemaItems = [];
+foreach ($blogs as $index => $b) {
+$schemaItems[] = [
+'@type' => 'ListItem',
+'position' => $index + 1,
+'url' => route('blogs.read', $b->slug),
+'name' => $b->title,
+];
+}
+$collectionSchema = [
+'@context' => 'https://schema.org',
+'@type' => 'CollectionPage',
+'name' => 'Blog Pembuatan Website & Digital Agency — Scalify Intelligence',
+'url' => route('landing.blogs'),
+'description' => 'Kumpulan artikel dan wawasan pengembangan website profesional, web aplikasi, UI/UX, dan strategi digital agency.',
+'publisher' => [
+'@type' => 'Organization',
+'name' => 'Scalify Intelligence',
+'url' => 'https://scalifyintellegence.my.id',
+'logo' => [
+'@type' => 'ImageObject',
+'url' => asset('scalify.png'),
+],
+],
+'mainEntity' => [
+'@type' => 'ItemList',
+'itemListElement' => $schemaItems,
+],
+];
+@endphp
+<script type="application/ld+json">
+    {
+        !!json_encode($collectionSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!
+    }
 
 </script>
-@endif
+@endsection
 
-{{-- Daftar Artikel Grid --}}
-<section class="bg-brand-dark text-white py-12 md:py-16 md:px-6 lg:px-8 relative z-20">
-    <div class="max-w-7xl mx-auto">
-        {{-- Semua blog --}}
-        <div class="flex items-center justify-between mb-6 px-5 md:px-0">
-            <h3 class="text-xl sm:text-2xl font-display font-bold text-white">Artikel Terkini</h3>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-y-8 sm:gap-6 mb-12">
-            @forelse ($blogs as $blog)
-            <a href="{{ route('blogs.read', $blog->slug) }}" class="bg-transparent sm:bg-brand-navy border-b sm:border border-white/10 sm:rounded-2xl overflow-hidden sm:shadow-xl hover:shadow-[0_8px_30px_rgba(37,99,235,0.15)] hover:border-brand-accent/30 sm:hover:-translate-y-1 transition-all duration-300 flex flex-col group pb-6 sm:pb-0 cursor-pointer">
-                {{-- IMAGE --}}
-                <div class="aspect-video w-screen relative left-1/2 -translate-x-1/2 sm:w-full sm:static sm:translate-x-0 bg-white/5 overflow-hidden sm:rounded-t-2xl mb-4 sm:mb-0">
-                    @if ($blog->featured_image)
-                    <img src="{{ asset('storage/' . $blog->featured_image) }}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" alt="{{ $blog->title }}" loading="lazy" decoding="async">
-                    @else
-                    <img src="{{ asset('scalify-blog-default.webp') }}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" alt="{{ $blog->title }}" loading="lazy" decoding="async">
-                    @endif
+@section('content')
+<div class="min-h-screen bg-brand-dark text-white relative overflow-hidden">
+    {{-- Ambient Midnight Glow Background Effects --}}
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[450px] bg-gradient-to-b from-brand-blue/15 via-brand-indigo/10 to-transparent blur-3xl pointer-events-none"></div>
+    <div class="absolute top-20 right-10 w-96 h-96 bg-brand-accent/10 rounded-full blur-[100px] pointer-events-none"></div>
+
+    {{-- Hero Section (Digital Agency Website Focus) --}}
+    <section class="relative pt-20 pb-8 sm:pt-28 sm:pb-16 px-4 sm:px-6 lg:px-8 border-b border-white/5">
+        <div class="max-w-7xl mx-auto relative z-10">
+            {{-- Tagline / Eyebrow --}}
+            <div class="mb-2 sm:mb-3">
+                <span class="text-brand-accent font-bold text-[10px] sm:text-xs tracking-[0.25em] uppercase inline-flex items-center gap-1.5 sm:gap-2">
+                    <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-brand-accent animate-pulse"></span>
+                    Digital Agency & Web Development
+                </span>
+            </div>
+
+            {{-- Main Heading --}}
+            <h1 class="text-2xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight font-display mb-2.5 sm:mb-3 leading-tight">
+                Inspirasi Website, Web App & Strategi Digital
+            </h1>
+
+            {{-- Subtitle --}}
+            <p class="text-white/70 text-xs sm:text-base max-w-3xl leading-relaxed mb-6 sm:mb-8">
+                Temukan panduan pembuatan website modern, optimasi kecepatan, desain UI/UX berkonversi tinggi, dan studi kasus pengembangan web app dari tim Scalify Intelligence.
+            </p>
+
+            {{-- Search Bar --}}
+            <form action="{{ route('landing.blogs') }}" method="GET" class="mb-6 sm:mb-8 max-w-xl">
+                @if(request('category'))
+                <input type="hidden" name="category" value="{{ request('category') }}">
+                @endif
+                <div class="flex items-center bg-white/5 backdrop-blur-xl rounded-full border border-white/15 p-1 sm:p-1.5 focus-within:border-brand-accent focus-within:ring-2 focus-within:ring-brand-accent/20 transition-all shadow-lg">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari artikel website, landing page, UI/UX, tech stack..." class="w-full bg-transparent px-3.5 sm:px-4 py-1.5 text-xs sm:text-sm text-white placeholder-white/40 focus:outline-none">
+                    <button type="submit" class="bg-btn-gradient hover:opacity-95 text-white text-xs sm:text-sm font-bold px-5 sm:px-6 py-2 rounded-full transition shadow-glow-sm shrink-0 flex items-center gap-1.5">
+                        Cari
+                    </button>
                 </div>
+            </form>
 
-                {{-- CONTENT --}}
-                <div class="px-5 sm:p-5 flex flex-col flex-1">
-                    {{-- Category + Date & Reading Time --}}
-                    <div class="flex items-center gap-2 mb-3 text-[10px] font-semibold tracking-widest text-slate-400 uppercase">
-                        @if ($blog->category)
-                        <span class="text-brand-accent bg-white/5 border border-brand-accent/20 px-2.5 py-1 rounded-md">
-                            {{ $blog->category->name }}
-                        </span>
+            {{-- Category Filter Pills --}}
+            <div class="flex flex-wrap items-center gap-2 sm:gap-2.5">
+                {{-- Semua Tab --}}
+                <a href="{{ route('landing.blogs', array_filter(['search' => request('search')])) }}" class="px-4 py-1.5 sm:py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-200 {{ !request('category') ? 'bg-btn-gradient text-white shadow-glow-sm' : 'bg-white/5 hover:bg-white/10 border border-white/10 text-white/70 hover:text-white' }}">
+                    Semua
+                </a>
+
+                {{-- Dynamic Categories --}}
+                @foreach ($categories as $cat)
+                <a href="{{ route('landing.blogs', array_filter(['category' => $cat->slug, 'search' => request('search')])) }}" class="px-4 py-1.5 sm:py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-200 {{ request('category') == $cat->slug ? 'bg-btn-gradient text-white shadow-glow-sm' : 'bg-white/5 hover:bg-white/10 border border-white/10 text-white/70 hover:text-white' }}">
+                    {{ $cat->name }}
+                </a>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
+    {{-- Main Content Section --}}
+    <section class="py-8 sm:py-14 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative z-10">
+
+        {{-- Featured Article (Large Card) --}}
+        @if ($popular && !request('search') && !request('category'))
+        <div class="mb-8 sm:mb-12">
+            <a href="{{ route('blogs.read', $popular->slug) }}" class="block bg-brand-navy/70 backdrop-blur-xl border border-white/10 hover:border-brand-accent/40 rounded-2xl sm:rounded-3xl p-3 sm:p-6 shadow-card hover:shadow-glow-blue transition-all duration-300 group">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-center">
+
+                    {{-- Featured Image --}}
+                    <div class="lg:col-span-4 rounded-xl sm:rounded-2xl overflow-hidden aspect-[16/10] sm:aspect-video lg:aspect-[4/3] relative bg-white/5 shrink-0 border border-white/5">
+                        @if ($popular->featured_image)
+                        <img src="{{ asset('storage/' . $popular->featured_image) }}" alt="{{ $popular->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" fetchpriority="high">
+                        @else
+                        <img src="{{ asset('scalify-blog-default.webp') }}" alt="{{ $popular->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" fetchpriority="high">
                         @endif
-                        <div class="flex items-center gap-2 ml-auto text-white/40">
-                            <span><i class="far fa-clock"></i> {{ $blog->reading_time ?? '5' }} min</span>
-                            <span class="w-1 h-1 rounded-full bg-white/20"></span>
-                            <span>{{ $blog->published_at?->format('d M') ?? $blog->created_at->format('d M') }}</span>
+                    </div>
+
+                    {{-- Featured Info --}}
+                    <div class="lg:col-span-8 flex flex-col justify-center px-1 sm:px-0 lg:pr-4">
+                        {{-- Category, Date & Read Time --}}
+                        <div class="flex items-center gap-2.5 text-xs mb-1.5 sm:mb-2.5">
+                            <span class="text-brand-accent font-bold tracking-wider uppercase text-[11px] sm:text-xs">
+                                {{ $popular->category->name ?? 'WEB DEVELOPMENT' }}
+                            </span>
+                            <span class="text-white/40 font-normal text-[11px] sm:text-xs">
+                                {{ $popular->published_at ? $popular->published_at->format('d M Y') : $popular->created_at->format('d M Y') }}
+                            </span>
+                            <span class="text-white/40 font-normal text-[11px] sm:text-xs">
+                                {{ $popular->reading_time ?? '5' }} min read
+                            </span>
+                        </div>
+
+                        {{-- Title --}}
+                        <h2 class="text-base sm:text-2xl lg:text-[26px] font-bold text-white group-hover:text-brand-accent transition-colors leading-snug mb-2 sm:mb-3">
+                            {{ $popular->title }}
+                        </h2>
+
+                        {{-- Excerpt --}}
+                        <p class="text-white/70 text-xs sm:text-sm leading-relaxed line-clamp-2 sm:line-clamp-3 mb-3 sm:mb-5 font-normal">
+                            {{ $popular->excerpt }}
+                        </p>
+
+                        {{-- Author Info --}}
+                        <div class="flex items-center gap-2.5 mt-auto">
+                            @php
+                            $authorName = $popular->author->name ?? ($popular->affiliate->name ?? 'Scalify Team');
+                            $initial = strtoupper(substr($authorName, 0, 1));
+                            @endphp
+                            <div class="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-btn-gradient text-white flex items-center justify-center font-bold text-[10px] sm:text-xs shrink-0 shadow-sm border border-white/20">
+                                {{ $initial }}
+                            </div>
+                            <span class="text-xs sm:text-sm font-semibold text-white/90">
+                                {{ $authorName }}
+                            </span>
                         </div>
                     </div>
 
-                    {{-- Title --}}
-                    <h3 class="font-display text-[15px] font-bold mb-2.5 text-white/95 leading-[1.4] group-hover:text-brand-accent transition-colors line-clamp-2">
-                        {{ $blog->title }}</h3>
-
-                    {{-- Excerpt --}}
-                    <p class="text-white/60 text-[13px] mb-5 flex-1 line-clamp-2 leading-relaxed">
-                        {{ $blog->excerpt }}
-                    </p>
-
-                    {{-- Read More --}}
-                    <div class="text-white/80 text-[12px] font-semibold inline-flex items-center gap-1.5 group-hover:text-brand-accent transition-colors mt-auto">
-                        Baca Selengkapnya <i class="fas fa-arrow-right text-[10px] group-hover:translate-x-1 transition-transform"></i>
-                    </div>
                 </div>
             </a>
-            @empty
-            <div class="col-span-full py-16 text-center bg-white/5 border border-white/10 rounded-3xl">
-                <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-white/5 mb-4 group-hover:scale-110 transition-transform">
-                    <i class="fas fa-newspaper text-3xl text-white/40"></i>
+        </div>
+        @endif
+
+        {{-- Active Filter / Search Info (If filtering) --}}
+        @if(request('search') || request('category'))
+        <div class="flex items-center justify-between mb-6 pb-3 border-b border-white/10">
+            <div class="flex items-center gap-2 flex-wrap">
+                <span class="text-xs sm:text-sm text-white/50">Menampilkan hasil untuk:</span>
+                @if(request('category'))
+                <span class="bg-brand-blue/20 border border-brand-blue/30 text-brand-accent px-2.5 py-0.5 rounded-full text-xs font-semibold">
+                    Kategori: {{ $categories->firstWhere('slug', request('category'))->name ?? request('category') }}
+                </span>
+                @endif
+                @if(request('search'))
+                <span class="bg-white/10 border border-white/10 text-white px-2.5 py-0.5 rounded-full text-xs font-semibold">
+                    "{{ request('search') }}"
+                </span>
+                @endif
+            </div>
+            <a href="{{ route('landing.blogs') }}" class="text-xs font-semibold text-brand-accent hover:underline shrink-0">
+                Reset Filter
+            </a>
+        </div>
+        @endif
+
+        {{-- Articles List / Grid (Mobile: Horizontal List Card, Desktop: 3-Col Vertical Card Grid) --}}
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 lg:gap-8 mb-12">
+            @forelse ($blogs as $blog)
+            <a href="{{ route('blogs.read', $blog->slug) }}" class="bg-brand-navy/70 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden shadow-card hover:shadow-glow-sm hover:border-brand-accent/40 hover:-translate-y-0.5 transition-all duration-300 flex flex-row sm:flex-col group h-full p-2.5 sm:p-0 items-center sm:items-stretch">
+
+                {{-- Card Image (Mobile: Square Thumbnail di Kiri, Desktop: 16:10 Banner di Atas) --}}
+                <div class="w-24 h-24 sm:w-full sm:h-auto sm:aspect-[16/10] rounded-xl sm:rounded-none overflow-hidden relative bg-white/5 shrink-0 sm:border-b border-white/5">
+                    @if ($blog->featured_image)
+                    <img src="{{ asset('storage/' . $blog->featured_image) }}" alt="{{ $blog->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out" loading="lazy" decoding="async">
+                    @else
+                    <img src="{{ asset('scalify-blog-default.webp') }}" alt="{{ $blog->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out" loading="lazy" decoding="async">
+                    @endif
                 </div>
-                <h3 class="text-xl font-bold text-white mb-2">Belum Ada Artikel</h3>
-                <p class="text-white/60">Koleksi artikel baru sedang kami siapkan. Tetap pantau ya!</p>
+
+                {{-- Card Content (Mobile: Sisi Kanan, Desktop: Bawah Gambar) --}}
+                <div class="p-2.5 sm:p-5 lg:p-6 flex flex-col flex-1 min-w-0 justify-center sm:justify-start">
+                    {{-- Category --}}
+                    <div class="text-brand-accent font-bold text-[10px] sm:text-[11px] tracking-wider uppercase mb-1 sm:mb-2">
+                        {{ $blog->category->name ?? 'WEB DEVELOPMENT' }}
+                    </div>
+
+                    {{-- Title --}}
+                    <h3 class="font-bold text-[13px] sm:text-base leading-snug text-white/95 group-hover:text-brand-accent transition-colors line-clamp-2 mb-1.5 sm:mb-3">
+                        {{ $blog->title }}
+                    </h3>
+
+                    {{-- Footer: Date & Reading Time --}}
+                    <div class="mt-auto flex items-center text-[11px] sm:text-xs text-white/40 font-medium gap-2 sm:gap-3 pt-1 sm:pt-3 sm:border-t border-white/5">
+                        <span>{{ $blog->published_at ? $blog->published_at->format('d M Y') : $blog->created_at->format('d M Y') }}</span>
+                        <span>{{ $blog->reading_time ?? '5' }} min read</span>
+                    </div>
+                </div>
+
+            </a>
+            @empty
+            <div class="col-span-full py-16 text-center bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white/5 mb-4 text-white/40">
+                    <i class="fas fa-newspaper text-2xl"></i>
+                </div>
+                <h3 class="text-lg font-bold text-white mb-1">Artikel Tidak Ditemukan</h3>
+                <p class="text-white/60 text-sm mb-4">Coba cari kata kunci lain atau pilih kategori yang berbeda.</p>
+                <a href="{{ route('landing.blogs') }}" class="inline-block bg-btn-gradient text-white px-5 py-2 rounded-full text-xs font-semibold shadow-glow-sm hover:opacity-90 transition">
+                    Lihat Semua Artikel
+                </a>
             </div>
             @endforelse
         </div>
@@ -225,6 +260,6 @@
             {{ $blogs->links() }}
         </div>
 
-    </div>
-</section>
+    </section>
+</div>
 @endsection
