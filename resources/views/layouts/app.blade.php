@@ -183,6 +183,32 @@
                     </p>
                 </div>
 
+                {{-- Program & Karir --}}
+                <div class="flex flex-col items-center md:items-start gap-3">
+                    <h3 class="text-white/80 font-bold mb-1 text-sm tracking-wider uppercase">Program & Karir</h3>
+
+                    <a href="{{ route('sobat-scalify') }}" class="flex items-center gap-3 text-white/60 hover:text-amber-400 transition-colors">
+                        <div class="w-6 h-6 rounded-full bg-amber-500/10 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-handshake text-amber-400 text-[10px]"></i>
+                        </div>
+                        <span>Sobat Scalify (Partner)</span>
+                    </a>
+
+                    <a href="{{ route('landing.careers') }}" class="flex items-center gap-3 text-white/60 hover:text-emerald-400 transition-colors">
+                        <div class="w-6 h-6 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-briefcase text-emerald-400 text-[10px]"></i>
+                        </div>
+                        <span>Karir & Lowongan</span>
+                    </a>
+
+                    <a href="{{ route('landing.portfolio') }}" class="flex items-center gap-3 text-white/60 hover:text-brand-accent transition-colors">
+                        <div class="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-laptop-code text-brand-accent/80 text-[10px]"></i>
+                        </div>
+                        <span>Portofolio Klien</span>
+                    </a>
+                </div>
+
                 {{-- Tautan Khusus (Dinamis dari Database) --}}
                 <div class="flex flex-col items-center md:items-start gap-3">
                     <h3 class="text-white/80 font-bold mb-1 text-sm tracking-wider uppercase">Project Khusus</h3>

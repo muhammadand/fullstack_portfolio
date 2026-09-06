@@ -38,13 +38,59 @@
             </div>
 
             {{-- Desktop Main Links --}}
-            <div class="hidden md:flex items-center gap-6 lg:gap-7 text-xs sm:text-sm text-white/80 font-medium">
+            <div class="hidden md:flex items-center gap-5 lg:gap-6 text-xs sm:text-sm text-white/80 font-medium">
                 <a href="{{ route('index.company.profile') }}" class="hover:text-brand-accent transition-colors py-2">Home</a>
                 <a href="{{ route('landing.portfolio') }}" class="hover:text-brand-accent transition-colors py-2">Portofolio</a>
                 <a href="{{ route('index.company.profile') }}#layanan" class="hover:text-brand-accent transition-colors py-2">Paket Harga</a>
                 <a href="{{ route('index.company.profile') }}#produk-live" class="hover:text-brand-accent transition-colors py-2">Produk Live</a>
                 <a href="{{ route('landing.blogs') }}" class="hover:text-brand-accent transition-colors py-2">Blog</a>
-                <a href="{{ route('index.company.profile') }}#ownerprofile" class="hover:text-brand-accent transition-colors py-2">Tentang Kami</a>
+
+                {{-- Dropdown Program & Karir --}}
+                <div class="relative group py-2">
+                    <button class="flex items-center gap-1.5 hover:text-brand-accent transition-colors focus:outline-none cursor-pointer">
+                        <span>Program & Karir</span>
+                        <i class="fa-solid fa-chevron-down text-[10px] transition-transform duration-200 group-hover:rotate-180 text-white/50 group-hover:text-brand-accent"></i>
+                    </button>
+                    <div class="absolute top-full right-0 w-64 pt-2 hidden group-hover:block transition-all duration-200 z-50">
+                        <div class="bg-[#0B1120]/95 backdrop-blur-xl border border-white/10 rounded-2xl p-2 shadow-2xl shadow-black/80 space-y-1">
+                            <a href="{{ route('sobat-scalify') }}" class="flex items-start gap-3 p-2.5 rounded-xl hover:bg-white/5 transition-all group/item">
+                                <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0 mt-0.5 border border-amber-500/30">
+                                    <i class="fa-solid fa-handshake text-xs"></i>
+                                </div>
+                                <div>
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="text-xs font-bold text-white group-hover/item:text-brand-accent">Sobat Scalify</span>
+                                        <span class="px-1.5 py-0.2 bg-amber-500/20 text-amber-300 text-[9px] font-bold rounded-full border border-amber-500/30">Partner</span>
+                                    </div>
+                                    <p class="text-[11px] text-white/50 leading-tight mt-0.5">Program kemitraan & raih penghasilan tambahan</p>
+                                </div>
+                            </a>
+
+                            <a href="{{ route('landing.careers') }}" class="flex items-start gap-3 p-2.5 rounded-xl hover:bg-white/5 transition-all group/item">
+                                <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 mt-0.5 border border-emerald-500/30">
+                                    <i class="fa-solid fa-briefcase text-xs"></i>
+                                </div>
+                                <div>
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="text-xs font-bold text-white group-hover/item:text-brand-accent">Karir & Lowongan</span>
+                                        <span class="px-1.5 py-0.2 bg-emerald-500/20 text-emerald-300 text-[9px] font-bold rounded-full border border-emerald-500/30">Hiring</span>
+                                    </div>
+                                    <p class="text-[11px] text-white/50 leading-tight mt-0.5">Bergabung dengan tim tech & digital agency</p>
+                                </div>
+                            </a>
+
+                            <a href="{{ route('index.company.profile') }}#ownerprofile" class="flex items-start gap-3 p-2.5 rounded-xl hover:bg-white/5 transition-all group/item">
+                                <div class="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center shrink-0 mt-0.5 border border-blue-500/30">
+                                    <i class="fa-solid fa-user-tie text-xs"></i>
+                                </div>
+                                <div>
+                                    <span class="text-xs font-bold text-white group-hover/item:text-brand-accent">Tentang Kami & Founder</span>
+                                    <p class="text-[11px] text-white/50 leading-tight mt-0.5">Profil agensi dan visi Scalify Intelligence</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             {{-- Right CTA & Mobile Toggle --}}
@@ -80,13 +126,13 @@
                     <i class="fa-solid fa-cart-shopping text-brand-accent/80"></i> Toko Online / E-Commerce
                 </a>
                 <a href="{{ route('index.company.profile') }}#produk-live" class="hover:text-brand-accent transition-colors flex items-center gap-1.5 whitespace-nowrap">
-                    <i class="fa-solid fa-cubes text-brand-accent/80"></i> Web App & SaaS Kustom
+                    <i class="fa-solid fa-cubes text-brand-accent/80"></i> Web App & SaaS
                 </a>
-                <a href="{{ route('index.company.profile') }}#ownerprofile" class="hover:text-brand-accent transition-colors flex items-center gap-1.5 whitespace-nowrap">
-                    <i class="fa-solid fa-robot text-brand-accent/80"></i> WhatsApp AI Bot
+                <a href="{{ route('sobat-scalify') }}" class="hover:text-amber-400 transition-colors flex items-center gap-1.5 whitespace-nowrap text-amber-300/90 font-semibold">
+                    <i class="fa-solid fa-handshake text-amber-400"></i> Sobat Scalify
                 </a>
-                <a href="{{ route('landing.blogs') }}" class="hover:text-brand-accent transition-colors flex items-center gap-1.5 whitespace-nowrap">
-                    <i class="fa-solid fa-magnifying-glass-chart text-brand-accent/80"></i> Optimasi SEO & Speed
+                <a href="{{ route('landing.careers') }}" class="hover:text-emerald-400 transition-colors flex items-center gap-1.5 whitespace-nowrap text-emerald-300/90 font-semibold">
+                    <i class="fa-solid fa-briefcase text-emerald-400"></i> Karir
                 </a>
             </div>
             <div class="text-[11px] text-brand-accent font-semibold tracking-wider uppercase pl-4 flex items-center gap-1 shrink-0">
@@ -114,7 +160,19 @@
             <a href="{{ route('index.company.profile') }}#layanan" class="mobile-nav-link text-sm text-white/80 font-medium px-3 py-2 rounded-lg hover:bg-white/5 hover:text-brand-accent transition-all">Paket Harga Website</a>
             <a href="{{ route('index.company.profile') }}#produk-live" class="mobile-nav-link text-sm text-white/80 font-medium px-3 py-2 rounded-lg hover:bg-white/5 hover:text-brand-accent transition-all">Produk Live & Berjalan</a>
             <a href="{{ route('landing.blogs') }}" class="mobile-nav-link text-sm text-white/80 font-medium px-3 py-2 rounded-lg hover:bg-white/5 hover:text-brand-accent transition-all">Blog & Insight</a>
-            <a href="{{ route('index.company.profile') }}#ownerprofile" class="mobile-nav-link text-sm text-white/80 font-medium px-3 py-2 rounded-lg hover:bg-white/5 hover:text-brand-accent transition-all">Tentang Kami & Founder</a>
+
+            <div class="text-[10px] uppercase text-white/40 font-bold px-3 pt-3 tracking-wider">Program & Komunitas</div>
+            <a href="{{ route('sobat-scalify') }}" class="mobile-nav-link flex items-center justify-between text-sm text-white/80 font-medium px-3 py-2 rounded-lg hover:bg-white/5 hover:text-amber-400 transition-all">
+                <span class="flex items-center gap-2"><i class="fa-solid fa-handshake text-amber-400 text-xs"></i> Sobat Scalify (Partner)</span>
+                <span class="px-2 py-0.5 bg-amber-500/20 text-amber-300 text-[10px] font-bold rounded-full border border-amber-500/30">Cuan</span>
+            </a>
+            <a href="{{ route('landing.careers') }}" class="mobile-nav-link flex items-center justify-between text-sm text-white/80 font-medium px-3 py-2 rounded-lg hover:bg-white/5 hover:text-emerald-400 transition-all">
+                <span class="flex items-center gap-2"><i class="fa-solid fa-briefcase text-emerald-400 text-xs"></i> Karir & Lowongan</span>
+                <span class="px-2 py-0.5 bg-emerald-500/20 text-emerald-300 text-[10px] font-bold rounded-full border border-emerald-500/30">Hiring</span>
+            </a>
+            <a href="{{ route('index.company.profile') }}#ownerprofile" class="mobile-nav-link flex items-center gap-2 text-sm text-white/80 font-medium px-3 py-2 rounded-lg hover:bg-white/5 hover:text-brand-accent transition-all">
+                <i class="fa-solid fa-user-tie text-blue-400 text-xs"></i> Tentang Kami & Founder
+            </a>
 
             <div class="border-t border-white/10 mt-2 pt-3">
                 <a href="https://wa.me/6285221694067" target="_blank" class="block text-center bg-btn-gradient text-white text-sm font-semibold px-5 py-2.5 rounded-full shadow-glow-sm hover:shadow-glow-blue transition-all">
