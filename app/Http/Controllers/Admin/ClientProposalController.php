@@ -29,11 +29,30 @@ class ClientProposalController extends Controller
             $query->where('business_category_id', $request->category_id);
         }
 
+        if ($request->filled('owner_status')) {
+            if ($request->owner_status === 'claimed') {
+                $query->whereNotNull('affiliate_id');
+            } elseif ($request->owner_status === 'unclaimed') {
+                $query->whereNull('affiliate_id');
+            }
+        }
+
         $proposals = $query->paginate(15)->appends($request->all());
         $chatTemplates = \App\Models\ChatTemplate::whereNull('affiliate_id')->get();
         $categories = BusinessCategory::all();
 
-        return view('admin.client-proposals.index', compact('proposals', 'chatTemplates', 'categories'));
+        $totalProposals = ClientProposal::count();
+        $claimedProposals = ClientProposal::whereNotNull('affiliate_id')->count();
+        $unclaimedProposals = ClientProposal::whereNull('affiliate_id')->count();
+
+        return view('admin.client-proposals.index', compact(
+            'proposals',
+            'chatTemplates',
+            'categories',
+            'totalProposals',
+            'claimedProposals',
+            'unclaimedProposals'
+        ));
     }
 
     public function bulkUpdatePrice(Request $request)

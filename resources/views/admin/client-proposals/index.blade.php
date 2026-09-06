@@ -20,6 +20,74 @@
         </div>
     </div>
 
+    <!-- Dashboard Stats Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+        <!-- Total Proposals -->
+        <a href="{{ route('admin.client_proposals.index') }}" class="group bg-white rounded-xl p-5 shadow-sm border {{ !request()->filled('owner_status') ? 'border-blue-300 ring-2 ring-blue-500/20' : 'border-slate-200' }} hover:border-blue-400 hover:shadow transition-all flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl shrink-0 group-hover:scale-110 transition-transform">
+                    <i class="fa-solid fa-file-invoice"></i>
+                </div>
+                <div>
+                    <p class="text-slate-500 text-xs font-semibold uppercase tracking-wider">Total Data Proposal</p>
+                    <div class="flex items-baseline gap-2 mt-0.5">
+                        <p class="text-2xl font-bold text-slate-800">{{ number_format($totalProposals, 0, ',', '.') }}</p>
+                        <span class="text-xs text-slate-400 font-medium">data</span>
+                    </div>
+                </div>
+            </div>
+            <div class="text-slate-300 group-hover:text-blue-500 transition-colors">
+                <i class="fa-solid fa-arrow-right text-sm"></i>
+            </div>
+        </a>
+
+        <!-- Sudah Dihubungi Affiliate -->
+        <a href="{{ route('admin.client_proposals.index', array_merge(request()->except('page'), ['owner_status' => 'claimed'])) }}" class="group bg-white rounded-xl p-5 shadow-sm border {{ request('owner_status') === 'claimed' ? 'border-emerald-400 ring-2 ring-emerald-500/20 bg-emerald-50/10' : 'border-slate-200' }} hover:border-emerald-400 hover:shadow transition-all flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl shrink-0 group-hover:scale-110 transition-transform">
+                    <i class="fa-solid fa-user-check"></i>
+                </div>
+                <div>
+                    <p class="text-slate-500 text-xs font-semibold uppercase tracking-wider">Sudah Dihubungi Affiliate</p>
+                    <div class="flex items-baseline gap-2 mt-0.5">
+                        <p class="text-2xl font-bold text-emerald-600">{{ number_format($claimedProposals, 0, ',', '.') }}</p>
+                        @if($totalProposals > 0)
+                        <span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-700">
+                            {{ round(($claimedProposals / $totalProposals) * 100, 1) }}%
+                        </span>
+                        @endif
+                    </div>
+                </div>
+            </div>
+            <div class="text-slate-300 group-hover:text-emerald-500 transition-colors">
+                <i class="fa-solid fa-arrow-right text-sm"></i>
+            </div>
+        </a>
+
+        <!-- Belum Dihubungi (Global) -->
+        <a href="{{ route('admin.client_proposals.index', array_merge(request()->except('page'), ['owner_status' => 'unclaimed'])) }}" class="group bg-white rounded-xl p-5 shadow-sm border {{ request('owner_status') === 'unclaimed' ? 'border-amber-400 ring-2 ring-amber-500/20 bg-amber-50/10' : 'border-slate-200' }} hover:border-amber-400 hover:shadow transition-all flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl shrink-0 group-hover:scale-110 transition-transform">
+                    <i class="fa-solid fa-globe"></i>
+                </div>
+                <div>
+                    <p class="text-slate-500 text-xs font-semibold uppercase tracking-wider">Belum Dihubungi (Global)</p>
+                    <div class="flex items-baseline gap-2 mt-0.5">
+                        <p class="text-2xl font-bold text-amber-600">{{ number_format($unclaimedProposals, 0, ',', '.') }}</p>
+                        @if($totalProposals > 0)
+                        <span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-700">
+                            {{ round(($unclaimedProposals / $totalProposals) * 100, 1) }}%
+                        </span>
+                        @endif
+                    </div>
+                </div>
+            </div>
+            <div class="text-slate-300 group-hover:text-amber-500 transition-colors">
+                <i class="fa-solid fa-arrow-right text-sm"></i>
+            </div>
+        </a>
+    </div>
+
     <!-- Filter & Pencarian Bar -->
     <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm mb-6">
         <form action="{{ route('admin.client_proposals.index') }}" method="GET" class="flex flex-col md:flex-row items-center gap-3">
@@ -32,7 +100,7 @@
             </div>
 
             <!-- Filter Kategori -->
-            <div class="w-full md:w-64">
+            <div class="w-full md:w-56">
                 <select name="category_id" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all">
                     <option value="">Semua Kategori</option>
                     @foreach($categories as $category)
@@ -43,12 +111,21 @@
                 </select>
             </div>
 
+            <!-- Filter Status Affiliate -->
+            <div class="w-full md:w-56">
+                <select name="owner_status" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all">
+                    <option value="">Semua Status Owner</option>
+                    <option value="claimed" {{ request('owner_status') == 'claimed' ? 'selected' : '' }}>Sudah Dihubungi Affiliate</option>
+                    <option value="unclaimed" {{ request('owner_status') == 'unclaimed' ? 'selected' : '' }}>Belum Dihubungi (Global)</option>
+                </select>
+            </div>
+
             <!-- Tombol Filter & Reset -->
             <div class="flex items-center gap-2 w-full md:w-auto">
                 <button type="submit" class="w-full md:w-auto px-5 py-2.5 bg-slate-800 hover:bg-slate-900 text-white text-sm font-medium rounded-lg transition-colors shadow-sm flex items-center justify-center gap-2">
                     <i class="fa-solid fa-filter"></i> Filter
                 </button>
-                @if(request()->filled('search') || request()->filled('category_id'))
+                @if(request()->filled('search') || request()->filled('category_id') || request()->filled('owner_status'))
                 <a href="{{ route('admin.client_proposals.index') }}" class="w-full md:w-auto px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-1.5" title="Reset Filter">
                     <i class="fa-solid fa-rotate-left"></i> Reset
                 </a>
@@ -323,86 +400,86 @@
 </div>
 
 @php
-    $proposalPageIds = $proposals->pluck('id')->map(fn($id) => (string) $id);
+$proposalPageIds = $proposals->pluck('id')->map(fn($id) => (string) $id);
 @endphp
 
-    <script>
-        function clientProposalManager() {
-            return {
-                showPriceModal: false
-                , scope: 'all'
-                , selectedIds: []
-                , pageIds: @json($proposalPageIds)
-                , openPriceModal(defaultScope = 'all') {
-                    if (defaultScope === 'selected' && this.selectedIds.length === 0) {
-                        alert('Silakan centang minimal satu proposal di tabel terlebih dahulu.');
-                        return;
-                    }
-                    this.scope = this.selectedIds.length > 0 && defaultScope === 'selected' ? 'selected' : defaultScope;
-                    this.showPriceModal = true;
-                },
-
-                toggleSelectAll(e) {
-                    if (e.target.checked) {
-                        this.pageIds.forEach(id => {
-                            if (!this.selectedIds.includes(id)) {
-                                this.selectedIds.push(id);
-                            }
-                        });
-                    } else {
-                        this.selectedIds = this.selectedIds.filter(id => !this.pageIds.includes(id));
-                    }
-                },
-
-                isAllSelected() {
-                    if (this.pageIds.length === 0) return false;
-                    return this.pageIds.every(id => this.selectedIds.includes(id));
+<script>
+    function clientProposalManager() {
+        return {
+            showPriceModal: false
+            , scope: 'all'
+            , selectedIds: []
+            , pageIds: @json($proposalPageIds)
+            , openPriceModal(defaultScope = 'all') {
+                if (defaultScope === 'selected' && this.selectedIds.length === 0) {
+                    alert('Silakan centang minimal satu proposal di tabel terlebih dahulu.');
+                    return;
                 }
-            };
-        }
+                this.scope = this.selectedIds.length > 0 && defaultScope === 'selected' ? 'selected' : defaultScope;
+                this.showPriceModal = true;
+            },
 
-        function kirimWaLangsung(selectElement, phone, brandName, linkLandingPage, linkProposal) {
-            if (!selectElement.value) return;
+            toggleSelectAll(e) {
+                if (e.target.checked) {
+                    this.pageIds.forEach(id => {
+                        if (!this.selectedIds.includes(id)) {
+                            this.selectedIds.push(id);
+                        }
+                    });
+                } else {
+                    this.selectedIds = this.selectedIds.filter(id => !this.pageIds.includes(id));
+                }
+            },
 
-            if (!phone) {
-                alert('Nomor WhatsApp belum diatur untuk klien ini. Silakan edit data klien terlebih dahulu.');
-                selectElement.value = "";
-                return;
+            isAllSelected() {
+                if (this.pageIds.length === 0) return false;
+                return this.pageIds.every(id => this.selectedIds.includes(id));
             }
+        };
+    }
 
-            // Format number to replace leading 0 or +62 with 62
-            let formattedPhone = phone.replace(/[^0-9]/g, '');
-            if (formattedPhone.startsWith('0')) {
-                formattedPhone = '62' + formattedPhone.substring(1);
-            }
+    function kirimWaLangsung(selectElement, phone, brandName, linkLandingPage, linkProposal) {
+        if (!selectElement.value) return;
 
-            // Decode template text
-            let text = decodeURIComponent(escape(window.atob(selectElement.value)));
-
-            // Replace placeholders
-            if (brandName) {
-                text = text.replace(/\{nama_bisnis\}/g, brandName);
-            }
-            if (linkLandingPage) {
-                text = text.replace(/\{link_landing_page\}/g, linkLandingPage);
-            }
-            if (linkProposal) {
-                text = text.replace(/\{link_proposal\}/g, linkProposal);
-            }
-
-            // Open WA Link
-            const waUrl = `https://api.whatsapp.com/send?phone=${formattedPhone}&text=${encodeURIComponent(text)}`;
-
-            // Deteksi jika dibuka via HP (Mobile) agar langsung buka aplikasi tanpa diblokir browser
-            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                window.location.href = waUrl;
-            } else {
-                window.open(waUrl, '_blank');
-            }
-
-            // Reset dropdown back to default
+        if (!phone) {
+            alert('Nomor WhatsApp belum diatur untuk klien ini. Silakan edit data klien terlebih dahulu.');
             selectElement.value = "";
+            return;
         }
 
-    </script>
-    @endsection
+        // Format number to replace leading 0 or +62 with 62
+        let formattedPhone = phone.replace(/[^0-9]/g, '');
+        if (formattedPhone.startsWith('0')) {
+            formattedPhone = '62' + formattedPhone.substring(1);
+        }
+
+        // Decode template text
+        let text = decodeURIComponent(escape(window.atob(selectElement.value)));
+
+        // Replace placeholders
+        if (brandName) {
+            text = text.replace(/\{nama_bisnis\}/g, brandName);
+        }
+        if (linkLandingPage) {
+            text = text.replace(/\{link_landing_page\}/g, linkLandingPage);
+        }
+        if (linkProposal) {
+            text = text.replace(/\{link_proposal\}/g, linkProposal);
+        }
+
+        // Open WA Link
+        const waUrl = `https://api.whatsapp.com/send?phone=${formattedPhone}&text=${encodeURIComponent(text)}`;
+
+        // Deteksi jika dibuka via HP (Mobile) agar langsung buka aplikasi tanpa diblokir browser
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+            window.location.href = waUrl;
+        } else {
+            window.open(waUrl, '_blank');
+        }
+
+        // Reset dropdown back to default
+        selectElement.value = "";
+    }
+
+</script>
+@endsection
