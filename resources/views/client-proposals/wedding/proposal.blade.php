@@ -297,51 +297,210 @@
     <!-- ==============================================
          HALAMAN 3: BIAYA & PENUTUP
          ============================================== -->
+    <!-- ==============================================
+         HALAMAN 3: BIAYA & PENUTUP
+         ============================================== -->
     <div class="proposal-page page-break">
-        <!-- 5. Rincian Biaya -->
-        <div class="mb-10 mt-6">
-            <h2 class="font-serif text-2xl font-bold text-dark mb-6 flex items-center gap-2">
-                <span class="text-gold">05.</span> Rincian Investasi / Biaya
+        <!-- 5. Pilihan Paket & Investasi -->
+        <div class="mb-8 mt-2">
+            <h2 class="font-serif text-2xl font-bold text-dark mb-2 flex items-center gap-2">
+                <span class="text-gold">05.</span> Pilihan Paket & Rincian Investasi
             </h2>
-            <p class="text-sm text-gray-600 mb-6">Investasi di bawah ini merupakan standar pengeluaran untuk pembuatan website Wedding Organizer yang profesional, eksklusif, dan dinamis.</p>
+            <p class="text-sm text-gray-600 mb-6">Kami menyediakan beberapa pilihan paket fleksibel yang dapat disesuaikan dengan skala dan kebutuhan digitalisasi <strong>{{ $client->brand_name }}</strong>:</p>
 
-            <table class="w-full text-left text-sm mb-6 border-collapse">
-                <thead>
-                    <tr class="bg-gray-100 border-b-2 border-gray-300">
-                        <th class="py-3 px-4 font-bold text-gray-800 w-2/3">Deskripsi Layanan</th>
-                        <th class="py-3 px-4 font-bold text-gray-800 text-right w-1/3">Estimasi Biaya (IDR)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="border-b border-gray-100">
-                        <td class="py-4 px-4 text-gray-600">
-                            <span class="font-bold text-gray-800 block">Pengembangan Sistem & Website Custom <span class="text-gold">(Special Offer)</span></span>
-                            <span class="text-[12px]">Termasuk UI/UX mewah, Backend CMS, Portal Klien, Integrasi Maps API (Surveyor), Sistem Manajemen Jadwal, Invoice Otomatis & Fitur Undangan Digital.</span>
-                        </td>
-                        <td class="py-4 px-4 text-right font-medium text-gray-800 align-top">Rp {{ number_format($client->project_price, 0, ",", ".") }}</td>
-                    </tr>
-                    <tr class="border-b border-gray-100">
-                        <td class="py-4 px-4 text-gray-600">
-                            <span class="font-bold text-gray-800 block">Domain & Cloud Hosting Server (1 Tahun)</span>
-                            <span class="text-[12px]">Domain (.com / .id), penyimpanan SSD Cloud berkecepatan tinggi, SSL Certificate (Keamanan HTTPS), dan setup server.</span>
-                        </td>
-                        <td class="py-4 px-4 text-right font-medium text-gray-800 align-top">Rp {{ number_format($client->domain_price, 0, ",", ".") }}</td>
-                    </tr>
-                    <tr class="bg-gray-50 border-t-2 border-gray-300">
-                        <td class="py-4 px-4 font-bold text-gray-800 text-right">TOTAL INVESTASI :</td>
-                        <td class="py-4 px-4 text-right font-bold text-gold text-lg">Rp {{ number_format($client->project_price + $client->domain_price, 0, ",", ".") }}</td>
-                    </tr>
-                </tbody>
-            </table>
+            @php
+            $cleanWa = preg_replace('/[^0-9]/', '', $client->wa_number ?? '6281234567890');
+            if (str_starts_with($cleanWa, '0')) {
+            $cleanWa = '62' . substr($cleanWa, 1);
+            }
+            @endphp
+
+            <!-- Tabel Perbandingan Paket & Fitur Wedding Organizer -->
+            <div class="overflow-x-auto mb-6 rounded-xl border border-gold/40 bg-white shadow-xs">
+                <table class="w-full text-left border-collapse text-[11px]">
+                    <thead>
+                        <tr class="border-b border-gold/30">
+                            <th class="p-3.5 bg-dark text-gold font-serif font-bold w-[32%]">
+                                <span class="text-[10px] uppercase tracking-widest block text-gray-400 font-sans">Komparasi Layanan</span>
+                                Paket Wedding Organizer & Fitur
+                            </th>
+                            <!-- Silver -->
+                            <th class="p-3 text-center bg-[#faf8f5] border-l border-gold/20 w-[17%]">
+                                <span class="font-serif font-bold text-sm text-dark block">Silver</span>
+                                <span class="inline-block my-1 py-0.5 px-2 rounded-full border border-gold/50 bg-white text-[10px] font-bold text-dark">
+                                    {{ \App\Models\ClientProposal::formatPackagePill($client->silver_price) }}
+                                </span>
+                                <span class="block text-[9px] text-gray-500">Perpanjangan {{ $client->silver_renewal }}</span>
+                            </th>
+                            <!-- Gold (Featured) -->
+                            <th class="p-3 text-center bg-[#2a2421] text-white border-x-2 border-gold w-[17%] relative">
+                                <span class="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-gold text-dark text-[8px] font-black uppercase tracking-widest px-2 py-0.2 rounded-full shadow-xs">POPULER</span>
+                                <span class="font-serif font-bold text-sm text-gold block">Gold</span>
+                                <span class="inline-block my-1 py-0.5 px-2 rounded-full border border-gold bg-black/40 text-[10px] font-bold text-gold">
+                                    {{ \App\Models\ClientProposal::formatPackagePill($client->gold_price) }}
+                                </span>
+                                <span class="block text-[9px] text-[#c5b5aa]">Perpanjangan {{ $client->gold_renewal }}</span>
+                            </th>
+                            <!-- Diamond -->
+                            <th class="p-3 text-center bg-[#faf8f5] border-l border-gold/20 w-[17%]">
+                                <span class="font-serif font-bold text-sm text-dark block">Diamond</span>
+                                <span class="inline-block my-1 py-0.5 px-2 rounded-full border border-gold/50 bg-white text-[10px] font-bold text-dark">
+                                    {{ \App\Models\ClientProposal::formatPackagePill($client->diamond_price) }}
+                                </span>
+                                <span class="block text-[9px] text-gray-500">Perpanjangan {{ $client->diamond_renewal }}</span>
+                            </th>
+                            <!-- Platinum -->
+                            <th class="p-3 text-center bg-[#faf8f5] border-l border-gold/20 w-[17%]">
+                                <span class="font-serif font-bold text-sm text-dark block">Platinum</span>
+                                <span class="inline-block my-1 py-0.5 px-2 rounded-full border border-gold/50 bg-white text-[10px] font-bold text-dark">
+                                    {{ \App\Models\ClientProposal::formatPackagePill($client->platinum_price) }}
+                                </span>
+                                <span class="block text-[9px] text-gray-500">Perpanjangan {{ $client->platinum_renewal }}</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gold/15 text-gray-700">
+                        <!-- GROUP 1: PORTOFOLIO & SHOWCASE PERNIKAHAN -->
+                        <tr class="bg-gold/10">
+                            <td colspan="5" class="py-1.5 px-3.5 font-bold uppercase tracking-wider text-[10px] text-dark">
+                                <i class="fas fa-heart text-gold mr-1.5"></i> Desain Visual & Portofolio Wedding
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">Tipe Desain & Presentasi Visual</td>
+                            <td class="p-2.5 text-center bg-[#faf8f5]/40">One-Page Portofolio</td>
+                            <td class="p-2.5 text-center bg-gold/10 font-semibold text-dark">Multi-Page Luxury + CMS</td>
+                            <td class="p-2.5 text-center bg-[#faf8f5]/40 font-semibold">Portal Wedding Management</td>
+                            <td class="p-2.5 text-center bg-[#faf8f5]/40 font-semibold">Enterprise Multi-Vendor WO</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">Galeri Portofolio Dokumentasi & Dekorasi</td>
+                            <td class="p-2.5 text-center bg-[#faf8f5]/40">Galeri Pilihan</td>
+                            <td class="p-2.5 text-center bg-gold/10 font-semibold text-dark"><i class="fas fa-check-circle text-gold text-sm"></i> Per Kategori (Dekor, MUA)</td>
+                            <td class="p-2.5 text-center bg-[#faf8f5]/40 font-semibold"><i class="fas fa-check-circle text-gold text-sm"></i> Album Eksklusif HD</td>
+                            <td class="p-2.5 text-center bg-[#faf8f5]/40 font-semibold"><i class="fas fa-check-circle text-gold text-sm"></i> Unlimited Album HD</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">Katalog Rincian Paket Pernikahan (CMS Update)</td>
+                            <td class="p-2.5 text-center bg-[#faf8f5]/40">Daftar Statis</td>
+                            <td class="p-2.5 text-center bg-gold/10 text-dark font-semibold"><i class="fas fa-check-circle text-gold text-sm"></i> CMS Mandiri</td>
+                            <td class="p-2.5 text-center bg-[#faf8f5]/40 text-dark font-semibold"><i class="fas fa-check-circle text-gold text-sm"></i> CMS Mandiri</td>
+                            <td class="p-2.5 text-center bg-[#faf8f5]/40 text-dark font-semibold"><i class="fas fa-check-circle text-gold text-sm"></i> Kustom Paket Builder</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">Form Konsultasi & Cek Ketersediaan Tanggal</td>
+                            <td class="p-2.5 text-center bg-[#faf8f5]/40">WhatsApp Direct</td>
+                            <td class="p-2.5 text-center bg-gold/10 text-dark font-semibold"><i class="fas fa-check-circle text-gold text-sm"></i> Form Tanggal Acara</td>
+                            <td class="p-2.5 text-center bg-[#faf8f5]/40 text-dark font-semibold"><i class="fas fa-check-circle text-gold text-sm"></i> Form Tanggal Acara</td>
+                            <td class="p-2.5 text-center bg-[#faf8f5]/40 text-dark font-semibold"><i class="fas fa-check-circle text-gold text-sm"></i> Form Tanggal Acara</td>
+                        </tr>
+
+                        <!-- GROUP 2: FITUR KHUSUS PENGANTIN & OPERASIONAL WO -->
+                        <tr class="bg-gold/10">
+                            <td colspan="5" class="py-1.5 px-3.5 font-bold uppercase tracking-wider text-[10px] text-dark">
+                                <i class="fas fa-ring text-gold mr-1.5"></i> Fitur Calon Pengantin & Manajemen WO
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">Bonus Undangan Digital Online untuk Klien WO</td>
+                            <td class="p-2.5 text-center bg-[#faf8f5]/40 text-gray-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-gold/10 text-dark font-semibold"><i class="fas fa-check-circle text-gold text-sm"></i> Bonus Template</td>
+                            <td class="p-2.5 text-center bg-[#faf8f5]/40 text-dark font-semibold"><i class="fas fa-check-circle text-gold text-sm"></i> Unlimited + QR Check-in</td>
+                            <td class="p-2.5 text-center bg-[#faf8f5]/40 text-dark font-semibold"><i class="fas fa-check-circle text-gold text-sm"></i> Unlimited + Buku Tamu QR</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">Portal Khusus Klien (Dashboard Pantau Progres Acara)</td>
+                            <td class="p-2.5 text-center bg-[#faf8f5]/40 text-gray-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-gold/10 text-gray-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-[#faf8f5]/40 font-semibold text-dark"><i class="fas fa-check-circle text-gold text-sm"></i> Client Dashboard</td>
+                            <td class="p-2.5 text-center bg-[#faf8f5]/40 font-semibold text-dark"><i class="fas fa-check-circle text-gold text-sm"></i> Client Dashboard VIP</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">Kalkulator Jarak Venue Google Maps (Hitung Logistik)</td>
+                            <td class="p-2.5 text-center bg-[#faf8f5]/40 text-gray-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-gold/10 text-gray-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-[#faf8f5]/40 font-semibold text-dark"><i class="fas fa-check-circle text-gold text-sm"></i> Surveyor Maps Auto</td>
+                            <td class="p-2.5 text-center bg-[#faf8f5]/40 font-semibold text-dark"><i class="fas fa-check-circle text-gold text-sm"></i> Surveyor Maps Auto</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">Kalender Pintar Anti-Bentrok Tim Crew & Alat Dekor</td>
+                            <td class="p-2.5 text-center bg-[#faf8f5]/40 text-gray-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-gold/10 text-gray-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-[#faf8f5]/40 font-semibold text-dark"><i class="fas fa-check-circle text-gold text-sm"></i> Kalender Jadwal WO</td>
+                            <td class="p-2.5 text-center bg-[#faf8f5]/40 font-semibold text-dark"><i class="fas fa-check-circle text-gold text-sm"></i> Kalender Jadwal WO</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">Sistem Pencatatan Pembayaran Tagihan (DP / Lunas)</td>
+                            <td class="p-2.5 text-center bg-[#faf8f5]/40 text-gray-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-gold/10 text-gray-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-[#faf8f5]/40 font-semibold text-dark"><i class="fas fa-check-circle text-gold text-sm"></i> Catat Invoice Digital</td>
+                            <td class="p-2.5 text-center bg-[#faf8f5]/40 font-semibold text-dark"><i class="fas fa-check-circle text-gold text-sm"></i> Auto-Invoice & Kwitansi PDF</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">Sistem Manajemen Multi-Vendor & Crew Lapangan</td>
+                            <td class="p-2.5 text-center bg-[#faf8f5]/40 text-gray-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-gold/10 text-gray-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-[#faf8f5]/40 text-gray-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-[#faf8f5]/40 font-bold text-dark"><i class="fas fa-check-circle text-gold text-sm"></i> Vendor & Crew Manager</td>
+                        </tr>
+
+                        <!-- GROUP 3: SERVER & GARANSI -->
+                        <tr class="bg-gold/10">
+                            <td colspan="5" class="py-1.5 px-3.5 font-bold uppercase tracking-wider text-[10px] text-dark">
+                                <i class="fas fa-shield-alt text-gold mr-1.5"></i> Infrastruktur Server & Layanan Garansi
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">Domain Kustom (.com / .id) & Cloud Hosting SSD</td>
+                            <td class="p-2.5 text-center bg-[#faf8f5]/40">1 Tahun</td>
+                            <td class="p-2.5 text-center bg-gold/10 font-semibold text-dark">1 Tahun Cloud SSD</td>
+                            <td class="p-2.5 text-center bg-[#faf8f5]/40 font-semibold">1 Tahun High-Speed SSD</td>
+                            <td class="p-2.5 text-center bg-[#faf8f5]/40 font-semibold text-dark">Dedicated Cloud Server</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">Garansi Teknis & Pemeliharaan Sistem</td>
+                            <td class="p-2.5 text-center bg-[#faf8f5]/40">1 Bulan</td>
+                            <td class="p-2.5 text-center bg-gold/10 font-semibold text-dark">3 Bulan</td>
+                            <td class="p-2.5 text-center bg-[#faf8f5]/40 font-semibold">6 Bulan Prioritas</td>
+                            <td class="p-2.5 text-center bg-[#faf8f5]/40 font-bold text-dark">1 Tahun Penuh (VIP)</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr class="border-t-2 border-gold/40 bg-white">
+                            <td class="p-3 font-bold text-dark">Aksi Pemesanan</td>
+                            <td class="p-2.5 text-center bg-[#faf8f5]/50">
+                                <a href="https://wa.me/{{ $cleanWa }}?text={{ urlencode('Halo Scalify, saya tertarik memesan Paket Silver untuk ' . $client->brand_name . '. Mohon info detailnya.') }}" target="_blank" class="inline-flex items-center justify-center gap-1 w-full py-1.5 px-2 rounded-lg bg-dark hover:bg-gray-800 text-gold text-[10px] font-bold shadow-xs transition no-print border border-gold/30">
+                                    <i class="fab fa-whatsapp text-green-400"></i> Pilih Silver
+                                </a>
+                            </td>
+                            <td class="p-2.5 text-center bg-gold/15">
+                                <a href="https://wa.me/{{ $cleanWa }}?text={{ urlencode('Halo Scalify, saya tertarik memesan Paket Gold untuk ' . $client->brand_name . '. Mohon info detailnya.') }}" target="_blank" class="inline-flex items-center justify-center gap-1 w-full py-2 px-2 rounded-lg bg-gold hover:bg-[#b0885e] text-dark text-[11px] font-extrabold shadow-md transition no-print">
+                                    <i class="fab fa-whatsapp text-dark"></i> Pilih Gold
+                                </a>
+                            </td>
+                            <td class="p-2.5 text-center bg-[#faf8f5]/50">
+                                <a href="https://wa.me/{{ $cleanWa }}?text={{ urlencode('Halo Scalify, saya tertarik memesan Paket Diamond untuk ' . $client->brand_name . '. Mohon info detailnya.') }}" target="_blank" class="inline-flex items-center justify-center gap-1 w-full py-1.5 px-2 rounded-lg bg-dark hover:bg-gray-800 text-gold text-[10px] font-bold shadow-xs transition no-print border border-gold/30">
+                                    <i class="fab fa-whatsapp text-green-400"></i> Pilih Diamond
+                                </a>
+                            </td>
+                            <td class="p-2.5 text-center bg-[#faf8f5]/50">
+                                <a href="https://wa.me/{{ $cleanWa }}?text={{ urlencode('Halo Scalify, saya tertarik memesan Paket Platinum untuk ' . $client->brand_name . '. Mohon info detailnya.') }}" target="_blank" class="inline-flex items-center justify-center gap-1 w-full py-1.5 px-2 rounded-lg bg-dark hover:bg-gray-800 text-gold text-[10px] font-bold shadow-xs transition no-print border border-gold/30">
+                                    <i class="fab fa-whatsapp text-green-400"></i> Pilih Platinum
+                                </a>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
 
             <!-- Catatan Fleksibilitas -->
-            <div class="bg-[#C59A6F]/10 border-l-4 border-gold rounded-r-lg p-4 mt-8">
+            <div class="bg-[#C59A6F]/10 border-l-4 border-gold rounded-r-lg p-3.5 mb-6">
                 <div class="flex items-start gap-3">
-                    <i class="fas fa-handshake text-gold mt-1 text-lg"></i>
+                    <i class="fas fa-handshake text-gold mt-1 text-base"></i>
                     <div>
-                        <h4 class="font-bold text-gray-800 text-sm mb-1">Terbuka untuk Diskusi (Negotiable)</h4>
-                        <p class="text-[13px] text-gray-700 leading-relaxed">
-                            Spesifikasi fitur dan estimasi biaya investasi di atas bersifat usulan awal dan <strong>sangat fleksibel</strong>. Kami sangat terbuka untuk berdiskusi lebih lanjut dan melakukan penyesuaian (customization) baik dari segi fitur maupun rincian harga akhir, agar benar-benar selaras dengan kebutuhan prioritas dan alokasi budget dari pihak {{ $client->brand_name }}.
+                        <h4 class="font-bold text-gray-800 text-xs mb-0.5">Penyesuaian Fleksibel (Negotiable)</h4>
+                        <p class="text-[12px] text-gray-700 leading-relaxed">
+                            Spesifikasi fitur dan rincian harga di atas bersifat usulan standar. Kami sangat terbuka untuk berdiskusi lebih lanjut dan melakukan kustomisasi fitur maupun penyesuaian termin pembayaran agar selaras dengan target budget <strong>{{ $client->brand_name }}</strong>.
                         </p>
                     </div>
                 </div>
@@ -349,42 +508,179 @@
         </div>
 
         <!-- 6. Syarat & Ketentuan -->
-        <div class="mb-10">
-            <h2 class="font-serif text-2xl font-bold text-dark mb-4 flex items-center gap-2">
+        <div class="mb-8">
+            <h2 class="font-serif text-2xl font-bold text-dark mb-3 flex items-center gap-2">
                 <span class="text-gold">06.</span> Syarat Ketentuan & Layanan Lanjutan
             </h2>
-            <ul class="space-y-3 text-sm text-gray-600 list-disc pl-5">
-                <li>Pembayaran <strong>Down Payment (DP) 50%</strong> (Rp {{ number_format(($client->project_price + $client->domain_price) / 2, 0, ",", ".") }}) dilakukan sebelum proyek dimulai (Termin 1).</li>
-                <li>Pembayaran <strong>Pelunasan 50%</strong> (Rp {{ number_format(($client->project_price + $client->domain_price) / 2, 0, ",", ".") }}) dilakukan setelah sistem & website selesai, disetujui, dan siap online (Termin 2).</li>
+            <ul class="space-y-2 text-xs text-gray-600 list-disc pl-5">
+                <li>Pembayaran <strong>Down Payment (DP) 50%</strong> dilakukan sebelum tahap pengembangan sistem dimulai (Termin 1).</li>
+                <li>Pembayaran <strong>Pelunasan 50%</strong> dilakukan setelah sistem & website selesai, diverifikasi, dan siap online (Termin 2).</li>
                 <li>Masa garansi dan <i>free maintenance</i> (perbaikan bug/error) berlaku gratis selama <strong>3 Bulan</strong> pertama sejak website live.</li>
-                <li><strong>Biaya Perpanjangan (Tahun Ke-2 dst):</strong> Biaya wajib perpanjangan Server & Domain adalah Rp {{ number_format($client->domain_price, 0, ",", ".") }}/tahun. Jika disertai Jasa Maintenance Rutin (backup berkala & update keamanan), total biayanya menjadi Rp 2.000.000/tahun (Opsional).</li>
-                <li><strong>Penambahan Fitur Baru (Upgrade):</strong> Pembuatan fitur baru atau modifikasi sistem di luar kesepakatan proposal awal akan dikenakan biaya tambahan mulai dari <strong>Rp 300.000 - Rp 700.000</strong> per fitur, menyesuaikan tingkat kerumitan.</li>
+                <li><strong>Biaya Perpanjangan (Tahun Ke-2 dst):</strong> Sudah mencakup perpanjangan Nama Domain resmi, Cloud Hosting Server kecepatan tinggi, dan sertifikat keamanan SSL HTTPS.</li>
             </ul>
         </div>
 
         <!-- 7. Penutup -->
-        <div class="mt-16 border-t border-gray-200 pt-10 text-sm text-gray-600">
-            <p class="mb-6 leading-relaxed">
-                Demikian proposal penawaran pembuatan website ini kami sampaikan. Kami berharap dapat menjadi mitra digital yang solid bagi kesuksesan <strong>{{ $client->brand_name }}</strong> ke depannya. Jika ada pertanyaan lebih lanjut terkait rincian teknis maupun biaya, kami siap untuk berdiskusi.
+        <div class="mt-8 border-t border-gray-200 pt-6 text-xs text-gray-600">
+            <p class="mb-4 leading-relaxed">
+                Demikian proposal penawaran pembuatan website ini kami sampaikan. Kami berharap dapat menjadi mitra digital yang solid bagi kesuksesan <strong>{{ $client->brand_name }}</strong> ke depannya.
             </p>
-            <p class="mb-12">Atas perhatian dan kerja samanya, kami ucapkan terima kasih.</p>
 
-            <div class="flex justify-between items-end">
+            <div class="flex justify-between items-end mt-8">
                 <div class="text-center">
-                    <p class="mb-20">Hormat Kami,</p>
-                    <div class="border-b border-gray-400 w-48 mb-1 mx-auto"></div>
+                    <p class="mb-14">Hormat Kami,</p>
+                    <div class="border-b border-gray-400 w-44 mb-1 mx-auto"></div>
                     <p class="font-bold text-gray-800">M. Andi</p>
-                    <p class="text-xs text-gray-500">Project Manager - Scalify Intelligence</p>
+                    <p class="text-[11px] text-gray-500">Project Manager - Scalify</p>
                 </div>
                 <div class="text-center">
-                    <p class="mb-20">Disetujui Oleh,</p>
-                    <div class="border-b border-gray-400 w-48 mb-1 mx-auto"></div>
+                    <p class="mb-14">Disetujui Oleh,</p>
+                    <div class="border-b border-gray-400 w-44 mb-1 mx-auto"></div>
                     <p class="font-bold text-gray-800">.........................................</p>
-                    <p class="text-xs text-gray-500">{{ $client->brand_name }}</p>
+                    <p class="text-[11px] text-gray-500">{{ $client->brand_name }}</p>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Modal Detail Paket -->
+    <div id="packageModal" class="fixed inset-0 bg-black/60 z-50 hidden items-center justify-center p-4 backdrop-blur-xs no-print">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl relative animate-fade-in border border-gold/30">
+            <button onclick="closePackageModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:text-slate-800 hover:bg-slate-200 flex items-center justify-center transition">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <div class="flex items-center gap-3 mb-4">
+                <div id="modalIcon" class="w-10 h-10 rounded-full bg-gold/20 border border-gold/50 text-gold flex items-center justify-center text-lg">
+                    <i class="fas fa-award"></i>
+                </div>
+                <div>
+                    <h3 id="modalTitle" class="text-lg font-bold text-dark font-serif">Detail Paket</h3>
+                    <p id="modalPrice" class="text-xs font-bold text-gold"></p>
+                </div>
+            </div>
+
+            <p id="modalDesc" class="text-xs text-gray-600 mb-4 bg-[#faf8f5] p-3 rounded-lg border border-gold/20"></p>
+
+            <div class="mb-6">
+                <h4 class="text-xs font-bold uppercase tracking-wider text-dark mb-2.5">Fasilitas & Fitur Termasuk:</h4>
+                <ul id="modalFeatures" class="space-y-2 text-xs text-gray-600">
+                    <!-- Dynamic List -->
+                </ul>
+            </div>
+
+            <div class="flex gap-3 pt-3 border-t border-gray-100">
+                <button type="button" onclick="closePackageModal()" class="flex-1 py-2 px-4 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 text-xs font-semibold transition">
+                    Tutup
+                </button>
+                <a id="modalWaBtn" href="#" target="_blank" class="flex-1 py-2 px-4 rounded-xl bg-dark hover:bg-gray-800 text-gold text-xs font-bold flex items-center justify-center gap-1.5 shadow transition border border-gold/40">
+                    <i class="fab fa-whatsapp text-sm text-green-400"></i> Pilih Paket Ini
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const packageDetails = {
+            silver: {
+                title: 'Paket Silver'
+                , price: '{{ \App\Models\ClientProposal::formatPackagePill($client->silver_price) }} (Perpanjangan {{ $client->silver_renewal }})'
+                , desc: 'Paket starter yang ideal untuk membangun kehadiran digital resmi Wedding Organizer dengan budget hemat dan proses cepat.'
+                , features: [
+                    'Website Portofolio & Brosur Digital Modern (One-Page)'
+                    , 'Galeri Foto Dokumentasi & Dekorasi Pilihan'
+                    , 'Daftar Paket Pernikahan Standar'
+                    , 'Tombol Direct Konsultasi WhatsApp Cepat'
+                    , 'Domain Kustom (.com / .id) & Cloud Server 1 Tahun'
+                    , 'Garansi & Pemeliharaan Awal 1 Bulan'
+                ]
+            }
+            , gold: {
+                title: 'Paket Gold (Paling Diminati)'
+                , price: '{{ \App\Models\ClientProposal::formatPackagePill($client->gold_price) }} (Perpanjangan {{ $client->gold_renewal }})'
+                , desc: 'Paket lengkap dengan CMS interaktif untuk menampilkan portofolio eksklusif dan memberikan nilai tambah langsung ke calon pengantin.'
+                , features: [
+                    'Website Multi-Page Luxury Design & Dynamic CMS'
+                    , 'Panel Admin Mandiri (Ubah Foto, Paket & Harga Kapan Saja)'
+                    , 'Galeri Portofolio Resolusi Tinggi per Kategori (Dekorasi, MUA, Catering, dll)'
+                    , 'Katalog Paket Interaktif & Price Calculator'
+                    , 'Form Konsultasi & Cek Ketersediaan Tanggal Acara'
+                    , 'Bonus Generator Undangan Digital Online untuk Klien WO'
+                    , 'Domain Kustom + High-Speed SSD Cloud Server 1 Tahun + SSL'
+                    , 'Garansi & Support Teknis 3 Bulan'
+                ]
+            }
+            , diamond: {
+                title: 'Paket Diamond'
+                , price: '{{ \App\Models\ClientProposal::formatPackagePill($client->diamond_price) }} (Perpanjangan {{ $client->diamond_renewal }})'
+                , desc: 'Dirancang untuk Wedding Organizer profesional yang membutuhkan otomasi manajemen survei, jadwal acara, dan portal khusus pengantin.'
+                , features: [
+                    'Semua Fasilitas Unggulan Paket Gold'
+                    , 'Portal Khusus Klien (Client Dashboard Pantau Progres Persiapan Acara)'
+                    , 'Kalkulator Jarak Venue Otomatis Terintegrasi Google Maps API (Surveyor)'
+                    , 'Kalender Pintar Jadwal Acara Anti-Bentrok Tim & Alat Dekor'
+                    , 'Generator Undangan Digital Unlimited + Buku Tamu QR Code Check-in'
+                    , 'Sistem Pencatatan Pembayaran Tagihan (DP / Lunas) Otomatis'
+                    , 'SEO Local Optimization agar mudah ditemukan di pencarian Google'
+                    , 'Garansi & Prioritas Support 6 Bulan'
+                ]
+            }
+            , platinum: {
+                title: 'Paket Platinum (Enterprise Custom)'
+                , price: '{{ \App\Models\ClientProposal::formatPackagePill($client->platinum_price) }} (Perpanjangan {{ $client->platinum_renewal }})'
+                , desc: 'Solusi all-in-one terlengkap untuk agensi wedding skala besar dengan kebutuhan multi-vendor, e-invoicing dan automasi penuh.'
+                , features: [
+                    'Semua Fasilitas Lengkap Paket Diamond'
+                    , 'Sistem Manajemen Multi-Vendor & Crew Organizer Lapangan'
+                    , 'Payment Gateway Otomatis (QRIS, VA Bank & E-Wallet)'
+                    , 'Sistem Auto-Invoice & Kwitansi Resmi Otomatis PDF'
+                    , 'Dashboard Keuangan, Grafik Pendapatan & Analitik Penjualan'
+                    , 'Desain 100% Kustom Eksklusif sesuai Identitas Brand Anda'
+                    , 'Server Cloud Dedicated Performa Ekstra Cepat'
+                    , 'VIP Dedicated Support & Garansi Penuh 1 Tahun'
+                ]
+            }
+        };
+
+        function openPackageModal(type) {
+            const data = packageDetails[type];
+            if (!data) return;
+
+            document.getElementById('modalTitle').textContent = data.title;
+            document.getElementById('modalPrice').textContent = data.price;
+            document.getElementById('modalDesc').textContent = data.desc;
+
+            const list = document.getElementById('modalFeatures');
+            list.innerHTML = '';
+            data.features.forEach(feat => {
+                const li = document.createElement('li');
+                li.className = 'flex items-start gap-2';
+                li.innerHTML = '<i class="fas fa-check-circle text-gold mt-0.5 shrink-0"></i> <span>' + feat + '</span>';
+                list.appendChild(li);
+            });
+
+            const waText = encodeURIComponent('Halo Scalify, saya ingin berkonsultasi mengenai ' + data.title + ' untuk {{ $client->brand_name }}. Mohon info selengkapnya.');
+            document.getElementById('modalWaBtn').href = 'https://wa.me/{{ $cleanWa }}?text=' + waText;
+
+            const modal = document.getElementById('packageModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closePackageModal() {
+            const modal = document.getElementById('packageModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('packageModal');
+            if (event.target === modal) {
+                closePackageModal();
+            }
+        };
+
+    </script>
 
 </body>
 </html>

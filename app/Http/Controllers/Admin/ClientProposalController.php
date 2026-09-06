@@ -125,6 +125,14 @@ class ClientProposalController extends Controller
             'wa_template' => 'nullable|string',
             'project_price' => 'required|numeric',
             'domain_price' => 'required|numeric',
+            'price_silver' => 'nullable|numeric|min:0',
+            'price_gold' => 'nullable|numeric|min:0',
+            'price_diamond' => 'nullable|numeric|min:0',
+            'price_platinum' => 'nullable|numeric|min:0',
+            'renewal_silver' => 'nullable|string|max:100',
+            'renewal_gold' => 'nullable|string|max:100',
+            'renewal_diamond' => 'nullable|string|max:100',
+            'renewal_platinum' => 'nullable|string|max:100',
         ]);
 
         $validated['slug'] = Str::slug($request->brand_name);
@@ -155,6 +163,14 @@ class ClientProposalController extends Controller
             'wa_template' => 'nullable|string',
             'project_price' => 'required|numeric',
             'domain_price' => 'required|numeric',
+            'price_silver' => 'nullable|numeric|min:0',
+            'price_gold' => 'nullable|numeric|min:0',
+            'price_diamond' => 'nullable|numeric|min:0',
+            'price_platinum' => 'nullable|numeric|min:0',
+            'renewal_silver' => 'nullable|string|max:100',
+            'renewal_gold' => 'nullable|string|max:100',
+            'renewal_diamond' => 'nullable|string|max:100',
+            'renewal_platinum' => 'nullable|string|max:100',
         ]);
 
         $validated['slug'] = Str::slug($request->brand_name);

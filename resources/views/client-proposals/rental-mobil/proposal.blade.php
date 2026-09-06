@@ -221,70 +221,357 @@
 
     <!-- HALAMAN 3 -->
     <div class="proposal-page page-break">
-        <div class="mb-10 mt-6">
-            <h2 class="font-heading text-2xl font-bold text-brand-dark mb-6 flex items-center gap-2">
-                <span class="text-brand-blue">04.</span> Rincian Investasi
+        <div class="mb-8 mt-4">
+            <h2 class="font-heading text-2xl font-bold text-brand-dark mb-2 flex items-center gap-2">
+                <span class="text-brand-blue">04.</span> Pilihan Paket & Rincian Investasi
             </h2>
-            <p class="text-sm text-slate-600 mb-6">Investasi pembuatan website Company Profile & Katalog Armada Rental Mobil.</p>
+            <p class="text-sm text-slate-600 mb-6">Investasi pembuatan website Company Profile & Sistem Manajemen Rental Mobil untuk <strong>{{ $client->brand_name }}</strong>:</p>
 
-            <table class="w-full text-left text-sm mb-6 border-collapse">
-                <thead>
-                    <tr class="bg-slate-100 border-b-2 border-slate-300">
-                        <th class="py-3 px-4 font-bold text-brand-dark w-2/3">Deskripsi Layanan</th>
-                        <th class="py-3 px-4 font-bold text-brand-dark text-right w-1/3">Estimasi Biaya (IDR)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="border-b border-slate-100">
-                        <td class="py-4 px-4 text-slate-600">
-                            <span class="font-bold text-brand-dark block">Pengembangan Website & Sistem Katalog (CMS)</span>
-                            <span class="text-[12px] mt-1 block">Termasuk desain UI/UX eksklusif, Panel Admin Kelola Armada/Harga, Integrasi WhatsApp, Profil Perusahaan, Syarat & Ketentuan, SEO Basic.</span>
-                        </td>
-                        <td class="py-4 px-4 text-right font-medium text-brand-dark align-top">Rp {{ number_format($client->project_price, 0, ",", ".") }}</td>
-                    </tr>
-                    <tr class="border-b border-slate-100">
-                        <td class="py-4 px-4 text-slate-600">
-                            <span class="font-bold text-brand-dark block">Infrastruktur Domain & Hosting Server (Fleksibel)</span>
-                            <span class="text-[12px] mt-1 block">Terdapat opsi yang dapat dinegosiasikan sesuai dengan skala traffic dan jumlah pengguna sistem:</span>
-                            <ul class="list-disc list-inside text-[11px] mt-1 space-y-0.5 text-slate-500 ml-1">
-                                <li><strong>Opsi Hemat:</strong> Website di-hosting (dititipkan) di server berkecepatan tinggi milik kami. Anda hanya perlu menanggung biaya langganan nama Domain (contoh: <em>.com / .co.id</em>) per tahun.</li>
-                                <li><strong>Opsi Mandiri:</strong> Pengadaan Cloud Hosting/VPS mandiri 100% atas nama Anda (direkomendasikan jika traffic / data transaksi harian sudah sangat tinggi).</li>
-                            </ul>
-                        </td>
-                        <td class="py-4 px-4 text-right font-medium text-brand-dark align-top">Mulai dari<br>Rp {{ number_format($client->domain_price, 0, ",", ".") }}</td>
-                    </tr>
-                    <tr class="bg-blue-50 border-t-2 border-brand-blue">
-                        <td class="py-4 px-4 font-bold text-brand-dark text-right">TOTAL INVESTASI :</td>
-                        <td class="py-4 px-4 text-right font-bold text-brand-blue text-lg">Rp {{ number_format($client->project_price + $client->domain_price, 0, ",", ".") }}</td>
-                    </tr>
-                </tbody>
-            </table>
+            @php
+            $cleanWa = preg_replace('/[^0-9]/', '', $client->wa_number ?? '6281234567890');
+            if (str_starts_with($cleanWa, '0')) {
+            $cleanWa = '62' . substr($cleanWa, 1);
+            }
+            @endphp
 
-            <div class="bg-blue-50 border-l-4 border-brand-blue p-4 mt-8">
-                <p class="text-[13px] text-slate-700 leading-relaxed">
-                    Spesifikasi fitur dan estimasi biaya di atas bersifat fleksibel. Kami sangat terbuka untuk berdiskusi lebih lanjut dan melakukan penyesuaian (customization) baik dari segi fitur maupun rincian harga akhir sesuai dengan budget dan kebutuhan perusahaan.
+            <!-- Tabel Perbandingan Paket & Fitur Rental Mobil -->
+            <div class="overflow-x-auto mb-6 rounded-xl border border-blue-200 bg-white shadow-xs">
+                <table class="w-full text-left border-collapse text-[11px]">
+                    <thead>
+                        <tr class="border-b border-blue-200">
+                            <th class="p-3.5 bg-brand-dark text-white font-heading font-bold w-[32%]">
+                                <span class="text-[10px] uppercase tracking-wider block text-amber-400 font-sans">Komparasi Spesifikasi</span>
+                                Paket Sistem Rental & Fitur
+                            </th>
+                            <!-- Silver -->
+                            <th class="p-3 text-center bg-slate-50 border-l border-slate-200 w-[17%]">
+                                <span class="font-heading font-bold text-sm text-brand-dark block">Silver</span>
+                                <span class="inline-block my-1 py-0.5 px-2 rounded-full border border-blue-200 bg-white text-[10px] font-bold text-brand-blue">
+                                    {{ \App\Models\ClientProposal::formatPackagePill($client->silver_price) }}
+                                </span>
+                                <span class="block text-[9px] text-slate-500">Perpanjangan {{ $client->silver_renewal }}</span>
+                            </th>
+                            <!-- Gold (Featured) -->
+                            <th class="p-3 text-center bg-brand-blue text-white border-x-2 border-blue-400 w-[17%] relative">
+                                <span class="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-amber-400 text-slate-900 text-[8px] font-black uppercase tracking-widest px-2 py-0.2 rounded-full shadow-xs">POPULER</span>
+                                <span class="font-heading font-bold text-sm text-white block">Gold</span>
+                                <span class="inline-block my-1 py-0.5 px-2 rounded-full border border-white/60 bg-blue-900/60 text-[10px] font-bold text-white">
+                                    {{ \App\Models\ClientProposal::formatPackagePill($client->gold_price) }}
+                                </span>
+                                <span class="block text-[9px] text-blue-100">Perpanjangan {{ $client->gold_renewal }}</span>
+                            </th>
+                            <!-- Diamond -->
+                            <th class="p-3 text-center bg-slate-50 border-l border-slate-200 w-[17%]">
+                                <span class="font-heading font-bold text-sm text-brand-dark block">Diamond</span>
+                                <span class="inline-block my-1 py-0.5 px-2 rounded-full border border-blue-200 bg-white text-[10px] font-bold text-brand-blue">
+                                    {{ \App\Models\ClientProposal::formatPackagePill($client->diamond_price) }}
+                                </span>
+                                <span class="block text-[9px] text-slate-500">Perpanjangan {{ $client->diamond_renewal }}</span>
+                            </th>
+                            <!-- Platinum -->
+                            <th class="p-3 text-center bg-slate-50 border-l border-slate-200 w-[17%]">
+                                <span class="font-heading font-bold text-sm text-brand-dark block">Platinum</span>
+                                <span class="inline-block my-1 py-0.5 px-2 rounded-full border border-blue-200 bg-white text-[10px] font-bold text-brand-blue">
+                                    {{ \App\Models\ClientProposal::formatPackagePill($client->platinum_price) }}
+                                </span>
+                                <span class="block text-[9px] text-slate-500">Perpanjangan {{ $client->platinum_renewal }}</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-200 text-slate-700">
+                        <!-- GROUP 1: KATALOG & TAMPILAN ARMADA -->
+                        <tr class="bg-blue-50/70">
+                            <td colspan="5" class="py-1.5 px-3.5 font-bold uppercase tracking-wider text-[10px] text-brand-blue">
+                                <i class="fas fa-car text-brand-blue mr-1.5"></i> Katalog Armada & Tampilan Website
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">Tipe Desain Website & Showcase</td>
+                            <td class="p-2.5 text-center bg-slate-50/40">Landing Page Showcase</td>
+                            <td class="p-2.5 text-center bg-blue-50/20 font-semibold text-brand-dark">Company Profile + CMS</td>
+                            <td class="p-2.5 text-center bg-slate-50/40 font-semibold">Portal Booking Terpadu</td>
+                            <td class="p-2.5 text-center bg-slate-50/40 font-semibold">Fleet Management System</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">Kelola Armada (Lepas Kunci & All-in Supir)</td>
+                            <td class="p-2.5 text-center bg-slate-50/40">Daftar Statis</td>
+                            <td class="p-2.5 text-center bg-blue-50/20 font-semibold text-brand-dark"><i class="fas fa-check-circle text-brand-blue text-sm"></i> CMS Mandiri</td>
+                            <td class="p-2.5 text-center bg-slate-50/40 font-semibold"><i class="fas fa-check-circle text-brand-blue text-sm"></i> CMS Mandiri</td>
+                            <td class="p-2.5 text-center bg-slate-50/40 font-semibold"><i class="fas fa-check-circle text-brand-blue text-sm"></i> Multi-Kategori CMS</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">Filter Kategori (City Car, MPV, SUV, Luxury)</td>
+                            <td class="p-2.5 text-center bg-slate-50/40">Sederhana</td>
+                            <td class="p-2.5 text-center bg-blue-50/20 text-brand-blue font-semibold"><i class="fas fa-check-circle text-sm"></i> Lengkap</td>
+                            <td class="p-2.5 text-center bg-slate-50/40 text-brand-blue font-semibold"><i class="fas fa-check-circle text-sm"></i> Lengkap</td>
+                            <td class="p-2.5 text-center bg-slate-50/40 text-brand-blue font-semibold"><i class="fas fa-check-circle text-sm"></i> Lengkap + Spesifikasi</td>
+                        </tr>
+
+                        <!-- GROUP 2: BOOKING & OPERASIONAL BISNIS RENTAL -->
+                        <tr class="bg-blue-50/70">
+                            <td colspan="5" class="py-1.5 px-3.5 font-bold uppercase tracking-wider text-[10px] text-brand-blue">
+                                <i class="fas fa-tasks text-brand-blue mr-1.5"></i> Sistem Pemesanan & Operasional Rental
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">Formulir Booking Online & Lokasi Jemput</td>
+                            <td class="p-2.5 text-center bg-slate-50/40">WhatsApp Cepat</td>
+                            <td class="p-2.5 text-center bg-blue-50/20 font-semibold text-brand-dark"><i class="fas fa-check-circle text-brand-blue text-sm"></i> Form Terstruktur</td>
+                            <td class="p-2.5 text-center bg-slate-50/40 font-semibold"><i class="fas fa-check-circle text-brand-blue text-sm"></i> Form Otomatis</td>
+                            <td class="p-2.5 text-center bg-slate-50/40 font-semibold"><i class="fas fa-check-circle text-brand-blue text-sm"></i> Form Otomatis</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">Live Calendar Ketersediaan (Anti Double-Booking)</td>
+                            <td class="p-2.5 text-center bg-slate-50/40 text-slate-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-blue-50/20 text-slate-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-slate-50/40 text-brand-blue font-bold"><i class="fas fa-check-circle text-sm"></i> Real-time Calendar</td>
+                            <td class="p-2.5 text-center bg-slate-50/40 text-brand-blue font-bold"><i class="fas fa-check-circle text-sm"></i> Real-time Calendar</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">Form e-KYC Digital Aman (Unggah KTP & SIM)</td>
+                            <td class="p-2.5 text-center bg-slate-50/40 text-slate-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-blue-50/20 text-slate-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-slate-50/40 text-brand-blue font-bold"><i class="fas fa-check-circle text-sm"></i> e-KYC Jaminan</td>
+                            <td class="p-2.5 text-center bg-slate-50/40 text-brand-blue font-bold"><i class="fas fa-check-circle text-sm"></i> e-KYC + Verifikasi</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">Payment Gateway Otomatis (DP via QRIS & VA Bank)</td>
+                            <td class="p-2.5 text-center bg-slate-50/40 text-slate-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-blue-50/20 text-slate-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-slate-50/40 text-brand-blue font-bold"><i class="fas fa-check-circle text-sm"></i> QRIS & VA Otomatis</td>
+                            <td class="p-2.5 text-center bg-slate-50/40 text-brand-blue font-bold"><i class="fas fa-check-circle text-sm"></i> Multi-Payment Otomatis</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">Dashboard Utilisasi Armada (Disewa/Standby/Servis)</td>
+                            <td class="p-2.5 text-center bg-slate-50/40 text-slate-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-blue-50/20 text-slate-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-slate-50/40 text-slate-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-slate-50/40 text-brand-blue font-bold"><i class="fas fa-check-circle text-sm"></i> Live Fleet Monitor</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">Inspeksi Digital (Check-in/out Bensin + e-Sign)</td>
+                            <td class="p-2.5 text-center bg-slate-50/40 text-slate-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-blue-50/20 text-slate-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-slate-50/40 text-slate-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-slate-50/40 text-brand-blue font-bold"><i class="fas fa-check-circle text-sm"></i> Paperless + TTD Digital</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">Jadwal Supir & Reminder Otomatis Servis/Pajak</td>
+                            <td class="p-2.5 text-center bg-slate-50/40 text-slate-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-blue-50/20 text-slate-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-slate-50/40 text-slate-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-slate-50/40 text-brand-blue font-bold"><i class="fas fa-check-circle text-sm"></i> Modul Supir & Servis</td>
+                        </tr>
+
+                        <!-- GROUP 3: SERVER & GARANSI -->
+                        <tr class="bg-blue-50/70">
+                            <td colspan="5" class="py-1.5 px-3.5 font-bold uppercase tracking-wider text-[10px] text-brand-blue">
+                                <i class="fas fa-shield-alt text-brand-blue mr-1.5"></i> Infrastruktur Server & Garansi
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">Domain Kustom (.com / .id) & Cloud SSD Server</td>
+                            <td class="p-2.5 text-center bg-slate-50/40">1 Tahun</td>
+                            <td class="p-2.5 text-center bg-blue-50/20 font-semibold text-brand-dark">1 Tahun Cloud SSD</td>
+                            <td class="p-2.5 text-center bg-slate-50/40 font-semibold">1 Tahun High-Speed SSD</td>
+                            <td class="p-2.5 text-center bg-slate-50/40 font-semibold text-brand-dark">Dedicated Cloud Server</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">Garansi & Pendampingan Teknis</td>
+                            <td class="p-2.5 text-center bg-slate-50/40">1 Bulan</td>
+                            <td class="p-2.5 text-center bg-blue-50/20 font-semibold text-brand-dark">3 Bulan</td>
+                            <td class="p-2.5 text-center bg-slate-50/40 font-semibold">6 Bulan Prioritas</td>
+                            <td class="p-2.5 text-center bg-slate-50/40 font-bold text-brand-dark">1 Tahun Penuh (VIP)</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr class="border-t-2 border-blue-300 bg-white">
+                            <td class="p-3 font-bold text-brand-dark">Aksi Pemesanan</td>
+                            <td class="p-2.5 text-center bg-slate-50/50">
+                                <a href="https://wa.me/{{ $cleanWa }}?text={{ urlencode('Halo Scalify, saya tertarik memesan Paket Silver untuk ' . $client->brand_name . '. Mohon info detailnya.') }}" target="_blank" class="inline-flex items-center justify-center gap-1 w-full py-1.5 px-2 rounded-lg bg-brand-blue hover:bg-blue-800 text-white text-[10px] font-bold shadow-xs transition no-print">
+                                    <i class="fab fa-whatsapp text-green-400"></i> Pilih Silver
+                                </a>
+                            </td>
+                            <td class="p-2.5 text-center bg-blue-50/20">
+                                <a href="https://wa.me/{{ $cleanWa }}?text={{ urlencode('Halo Scalify, saya tertarik memesan Paket Gold untuk ' . $client->brand_name . '. Mohon info detailnya.') }}" target="_blank" class="inline-flex items-center justify-center gap-1 w-full py-2 px-2 rounded-lg bg-amber-400 hover:bg-amber-300 text-slate-950 text-[11px] font-extrabold shadow-md transition no-print">
+                                    <i class="fab fa-whatsapp text-slate-950"></i> Pilih Gold
+                                </a>
+                            </td>
+                            <td class="p-2.5 text-center bg-slate-50/50">
+                                <a href="https://wa.me/{{ $cleanWa }}?text={{ urlencode('Halo Scalify, saya tertarik memesan Paket Diamond untuk ' . $client->brand_name . '. Mohon info detailnya.') }}" target="_blank" class="inline-flex items-center justify-center gap-1 w-full py-1.5 px-2 rounded-lg bg-brand-blue hover:bg-blue-800 text-white text-[10px] font-bold shadow-xs transition no-print">
+                                    <i class="fab fa-whatsapp text-green-400"></i> Pilih Diamond
+                                </a>
+                            </td>
+                            <td class="p-2.5 text-center bg-slate-50/50">
+                                <a href="https://wa.me/{{ $cleanWa }}?text={{ urlencode('Halo Scalify, saya tertarik memesan Paket Platinum untuk ' . $client->brand_name . '. Mohon info detailnya.') }}" target="_blank" class="inline-flex items-center justify-center gap-1 w-full py-1.5 px-2 rounded-lg bg-brand-blue hover:bg-blue-800 text-white text-[10px] font-bold shadow-xs transition no-print">
+                                    <i class="fab fa-whatsapp text-green-400"></i> Pilih Platinum
+                                </a>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <div class="bg-blue-50 border-l-4 border-brand-blue p-3.5 rounded-r-lg mb-6">
+                <p class="text-[12px] text-slate-700 leading-relaxed">
+                    <strong>Fleksibilitas:</strong> Rincian fitur dan harga di atas bersifat usulan awal. Kami sangat terbuka untuk berdiskusi lebih lanjut dan melakukan penyesuaian (customization) baik dari segi fitur maupun skema pembayaran sesuai alokasi budget perusahaan.
                 </p>
             </div>
         </div>
 
-        <div class="mt-16 border-t border-slate-200 pt-10 text-sm text-slate-600">
-            <p class="mb-12">Demikian proposal penawaran pembuatan website ini kami sampaikan. Atas perhatian dan kerja samanya, kami ucapkan terima kasih.</p>
-            <div class="flex justify-between items-end">
+        <div class="mt-8 border-t border-slate-200 pt-6 text-xs text-slate-600">
+            <p class="mb-4">Demikian proposal penawaran pembuatan website ini kami sampaikan. Atas perhatian dan kerja samanya, kami ucapkan terima kasih.</p>
+            <div class="flex justify-between items-end mt-8">
                 <div class="text-center">
-                    <p class="mb-20">Hormat Kami,</p>
-                    <div class="border-b border-slate-400 w-48 mb-1 mx-auto"></div>
+                    <p class="mb-14">Hormat Kami,</p>
+                    <div class="border-b border-slate-400 w-44 mb-1 mx-auto"></div>
                     <p class="font-bold text-brand-dark">M. Andi</p>
-                    <p class="text-xs text-slate-500">Project Manager - Scalify</p>
+                    <p class="text-[11px] text-slate-500">Project Manager - Scalify</p>
                 </div>
                 <div class="text-center">
-                    <p class="mb-20">Disetujui Oleh,</p>
-                    <div class="border-b border-slate-400 w-48 mb-1 mx-auto"></div>
+                    <p class="mb-14">Disetujui Oleh,</p>
+                    <div class="border-b border-slate-400 w-44 mb-1 mx-auto"></div>
                     <p class="font-bold text-brand-dark">.........................................</p>
-                    <p class="text-xs text-slate-500">{{ $client->brand_name }}</p>
+                    <p class="text-[11px] text-slate-500">{{ $client->brand_name }}</p>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Modal Detail Paket Rental Mobil -->
+    <div id="packageModal" class="fixed inset-0 bg-black/60 z-50 hidden items-center justify-center p-4 backdrop-blur-xs no-print">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl relative animate-fade-in border border-slate-100">
+            <button onclick="closePackageModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:text-slate-800 hover:bg-slate-200 flex items-center justify-center transition">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <div class="flex items-center gap-3 mb-4">
+                <div id="modalIcon" class="w-10 h-10 rounded-2xl bg-blue-100 text-brand-blue flex items-center justify-center text-lg">
+                    <i class="fas fa-award"></i>
+                </div>
+                <div>
+                    <h3 id="modalTitle" class="text-lg font-bold text-slate-800 font-heading">Detail Paket</h3>
+                    <p id="modalPrice" class="text-xs font-bold text-brand-blue"></p>
+                </div>
+            </div>
+
+            <p id="modalDesc" class="text-xs text-slate-600 mb-4 bg-slate-50 p-3 rounded-lg border border-slate-100"></p>
+
+            <div class="mb-6">
+                <h4 class="text-xs font-bold uppercase tracking-wider text-slate-700 mb-2.5">Fasilitas & Fitur Termasuk:</h4>
+                <ul id="modalFeatures" class="space-y-2 text-xs text-slate-600">
+                    <!-- Dynamic List -->
+                </ul>
+            </div>
+
+            <div class="flex gap-3 pt-3 border-t border-slate-100">
+                <button type="button" onclick="closePackageModal()" class="flex-1 py-2 px-4 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 text-xs font-semibold transition">
+                    Tutup
+                </button>
+                <a id="modalWaBtn" href="#" target="_blank" class="flex-1 py-2 px-4 rounded-xl bg-brand-blue hover:bg-blue-800 text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow transition">
+                    <i class="fab fa-whatsapp text-sm text-green-400"></i> Pilih Paket Ini
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const packageDetails = {
+            silver: {
+                title: 'Paket Silver'
+                , price: '{{ \App\Models\ClientProposal::formatPackagePill($client->silver_price) }} (Perpanjangan {{ $client->silver_renewal }})'
+                , desc: 'Landing page profil rental mobil responsif untuk menampilkan daftar armada dan memudahkan pelanggan booking via WhatsApp.'
+                , features: [
+                    'Website Landing Page Rental Mobil Modern (One-Page Showcase)'
+                    , 'Katalog Armada Statis (Foto, Transmisi, Kursi & Tarif Sewa)'
+                    , 'Profil Perusahaan, Legalitas, Syarat & Ketentuan Sewa'
+                    , 'Tombol Cepat Booking via WhatsApp'
+                    , 'Domain Kustom (.com / .id) + Cloud Server 1 Tahun'
+                    , 'Garansi Teknis 1 Bulan'
+                ]
+            }
+            , gold: {
+                title: 'Paket Gold (Paling Populer)'
+                , price: '{{ \App\Models\ClientProposal::formatPackagePill($client->gold_price) }} (Perpanjangan {{ $client->gold_renewal }})'
+                , desc: 'Website company profile dengan sistem manajemen armada mandiri (CMS) untuk update ketersediaan dan harga sewa lepas kunci / supir kapan saja.'
+                , features: [
+                    'Website Company Profile + Panel Admin CMS Kelola Armada'
+                    , 'Kelola Mobil: Tambah/Edit Mobil, Foto, Tarif Lepas Kunci & All-In Supir'
+                    , 'Formulir Booking Online Terstruktur (Pilihan Tanggal & Lokasi Antar/Jemput)'
+                    , 'Filter Armada Berdasarkan Tipe (City Car, MPV, SUV, Luxury Car)'
+                    , 'Integrasi WhatsApp Notifikasi Otomatis ke Admin Rental'
+                    , 'Domain Kustom + Cloud Server SSD Cepat 1 Tahun + SSL'
+                    , 'Garansi & Support 3 Bulan'
+                ]
+            }
+            , diamond: {
+                title: 'Paket Diamond'
+                , price: '{{ \App\Models\ClientProposal::formatPackagePill($client->diamond_price) }} (Perpanjangan {{ $client->diamond_renewal }})'
+                , desc: 'Dilengkapi Live Calendar Ketersediaan Mobil (Anti Double-Booking), formulir e-KYC digital unggah KTP/SIM, dan Payment Gateway DP otomatis.'
+                , features: [
+                    'Semua Fasilitas Unggulan Paket Gold'
+                    , 'Live Calendar Ketersediaan Armada Real-Time (Mencegah Double Booking)'
+                    , 'Formulir e-KYC Digital Aman (Unggah KTP, SIM & Dokumen Jaminan)'
+                    , 'Payment Gateway Otomatis (Pembayaran DP / Lunas via QRIS & VA Bank)'
+                    , 'Sistem Cetak Surat Perjanjian Sewa / Invoice Digital Otomatis PDF'
+                    , 'Garansi & Maintenance Prioritas 6 Bulan'
+                ]
+            }
+            , platinum: {
+                title: 'Paket Platinum (Sistem Manajemen Armada Penuh)'
+                , price: '{{ \App\Models\ClientProposal::formatPackagePill($client->platinum_price) }} (Perpanjangan {{ $client->platinum_renewal }})'
+                , desc: 'Sistem operasional rental mobil terlengkap: Dashboard utilisasi armada, form inspeksi digital (Check-in/Check-out + Tanda Tangan Digital), dan jadwal driver.'
+                , features: [
+                    'Semua Fasilitas Lengkap Paket Diamond'
+                    , 'Dashboard Utilisasi Armada (Monitoring Mobil Disewa, Standby & Servis)'
+                    , 'Inspeksi Digital (Check-in/Check-out Bensin & Goresan + e-Sign Pelanggan)'
+                    , 'Modul Manajemen Penugasan Supir (Driver Scheduling)'
+                    , 'Pengingat Otomatis Servis Rutin, Ganti Oli, & Pajak Kendaraan'
+                    , 'Desain 100% Kustom Mewah sesuai Identitas Brand Rental'
+                    , 'Dedicated Cloud Server Performa Tinggi & VIP Support 1 Tahun'
+                ]
+            }
+        };
+
+        function openPackageModal(type) {
+            const data = packageDetails[type];
+            if (!data) return;
+
+            document.getElementById('modalTitle').textContent = data.title;
+            document.getElementById('modalPrice').textContent = data.price;
+            document.getElementById('modalDesc').textContent = data.desc;
+
+            const list = document.getElementById('modalFeatures');
+            list.innerHTML = '';
+            data.features.forEach(feat => {
+                const li = document.createElement('li');
+                li.className = 'flex items-start gap-2';
+                li.innerHTML = '<i class="fas fa-check-circle text-brand-blue mt-0.5 shrink-0"></i> <span>' + feat + '</span>';
+                list.appendChild(li);
+            });
+
+            const waText = encodeURIComponent('Halo Scalify, saya ingin berkonsultasi mengenai ' + data.title + ' untuk {{ $client->brand_name }}. Mohon info selengkapnya.');
+            document.getElementById('modalWaBtn').href = 'https://wa.me/{{ $cleanWa }}?text=' + waText;
+
+            const modal = document.getElementById('packageModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closePackageModal() {
+            const modal = document.getElementById('packageModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('packageModal');
+            if (event.target === modal) {
+                closePackageModal();
+            }
+        };
+
+    </script>
 
 </body>
 </html>

@@ -117,7 +117,7 @@
                 <p class="text-slate-400 mb-1">Disiapkan untuk:</p>
                 <p class="font-bold text-brand-dark text-base uppercase font-serif tracking-wider">{{ $client->brand_name }}</p>
                 @if(!empty($client->client_name) && strtolower($client->client_name) !== strtolower($client->brand_name))
-                    <p class="text-xs text-slate-500 font-medium">PIC: {{ $client->client_name }}</p>
+                <p class="text-xs text-slate-500 font-medium">PIC: {{ $client->client_name }}</p>
                 @endif
                 <p class="text-slate-600 text-xs mt-0.5">Luxury Fragrance Brand</p>
             </div>
@@ -244,76 +244,356 @@
     <!-- HALAMAN 3 -->
     <div class="proposal-page page-break">
         <div class="mb-8 mt-4">
-            <h2 class="font-serif text-2xl font-bold text-brand-dark mb-4 flex items-center gap-2">
-                <span class="text-brand-gold">IV.</span> Rincian Investasi
+            <h2 class="font-serif text-2xl font-bold text-brand-dark mb-2 flex items-center gap-2">
+                <span class="text-brand-gold">IV.</span> Pilihan Paket & Rincian Investasi
             </h2>
-            <p class="text-sm text-slate-600 mb-6">Investasi terpadu pengembangan ekosistem digital E-Commerce, Membership, dan Omnichannel POS.</p>
+            <p class="text-sm text-slate-600 mb-6">Investasi terpadu pengembangan ekosistem digital untuk <strong>{{ $client->brand_name }}</strong> dengan berbagai opsi paket fleksibel:</p>
 
-            <table class="w-full text-left text-sm mb-6 border-collapse">
-                <thead>
-                    <tr class="bg-[#0a0a0a] text-brand-gold border-b-2 border-brand-gold">
-                        <th class="py-3 px-4 font-bold w-2/3 uppercase tracking-wider text-xs">Layanan & Rincian Fasilitas</th>
-                        <th class="py-3 px-4 font-bold text-right w-1/3 uppercase tracking-wider text-xs">Biaya (IDR)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="border-b border-slate-200">
-                        <td class="py-4 px-4 text-slate-600">
-                            <span class="font-bold text-brand-dark block text-base mb-1.5">Paket Ekosistem Digital Parfum (All-in-One)</span>
-                            <ul class="text-[12px] space-y-1 text-slate-600 list-disc list-inside mb-2">
-                                <li><strong>Website Toko Online Mewah:</strong> Visual Scent Notes interaktif, Discovery Set Sampler, dan Cart & Checkout Otomatis.</li>
-                                <li><strong>Aplikasi Kasir (POS) Cloud:</strong> Kasir toko/bazaar terintegrasi stok <em>real-time</em> dengan website.</li>
-                                <li><strong>Sistem VIP Membership & Loyalty:</strong> Poin reward, tier level diskon (Bronze/Silver/Gold), dan area member.</li>
-                                <li><strong>Sistem B2B Reseller & Agen:</strong> Login khusus mitra dengan potongan harga grosir otomatis.</li>
-                                <li><strong>Payment Gateway & Cetak Resi:</strong> Terima QRIS, VA Bank, E-Wallet, dan cetak label resi kurir kilat.</li>
-                                <li><strong>Dasbor Admin & Analisis Stok:</strong> Pengelolaan produk, analitik best-seller aroma, dan 100% kepemilikan database pembeli.</li>
-                            </ul>
-                            <strong class="text-green-600 font-bold text-[12px] inline-flex items-center gap-1.5 bg-green-50 px-2.5 py-1 rounded border border-green-200">
-                                <i class="fas fa-check-circle"></i> Lisensi Seumur Hidup (Lifetime) • 100% Hak Milik Anda • Tanpa Biaya Bulanan
-                            </strong>
-                        </td>
-                        <td class="py-4 px-4 text-right font-bold text-brand-dark align-top text-base whitespace-nowrap">Rp {{ number_format($client->project_price, 0, ",", ".") }}</td>
-                    </tr>
-                    <tr class="border-b border-slate-200">
-                        <td class="py-4 px-4 text-slate-600">
-                            <span class="font-bold text-brand-dark block text-base mb-1">Infrastruktur Server Cloud & Domain Resmi (.com)</span>
-                            <span class="text-[12px] block text-justify leading-relaxed">Penyediaan Domain resmi Brand (www.brandanda.com), sertifikat keamanan SSL, dan Cloud Hosting berkecepatan tinggi berkapasitas besar (Berlaku 1 Tahun Pertama).</span>
-                        </td>
-                        <td class="py-4 px-4 text-right font-medium text-brand-dark align-top text-base whitespace-nowrap">Rp {{ number_format($client->domain_price, 0, ",", ".") }}</td>
-                    </tr>
-                    <tr class="bg-brand-gold/10 border-t-2 border-brand-gold">
-                        <td class="py-4 px-4 font-bold text-brand-dark text-right uppercase tracking-widest text-xs">Total Nilai Investasi (Hanya Bayar Sekali) :</td>
-                        <td class="py-4 px-4 text-right font-black text-brand-dark text-xl whitespace-nowrap">Rp {{ number_format($client->project_price + $client->domain_price, 0, ",", ".") }}</td>
-                    </tr>
-                </tbody>
-            </table>
+            @php
+            $cleanWa = preg_replace('/[^0-9]/', '', $client->wa_number ?? '6281234567890');
+            if (str_starts_with($cleanWa, '0')) {
+            $cleanWa = '62' . substr($cleanWa, 1);
+            }
+            @endphp
 
-            <div class="bg-amber-50/80 border border-amber-200/80 p-4 mt-6 rounded-lg flex gap-3.5 items-start">
-                <i class="fas fa-chart-line text-amber-600 mt-1 text-lg shrink-0"></i>
+            <!-- Tabel Perbandingan Paket & Fitur Parfum -->
+            <div class="overflow-x-auto mb-6 rounded-xl border border-stone-300 bg-white shadow-xs">
+                <table class="w-full text-left border-collapse text-[11px]">
+                    <thead>
+                        <tr class="border-b border-stone-200">
+                            <th class="p-3.5 bg-stone-900 text-brand-gold font-serif font-bold w-[32%]">
+                                <span class="text-[10px] uppercase tracking-widest block text-stone-400 font-sans">Spesifikasi Layanan</span>
+                                Paket E-Commerce & Fitur
+                            </th>
+                            <!-- Silver -->
+                            <th class="p-3 text-center bg-stone-50 border-l border-stone-200 w-[17%]">
+                                <span class="font-serif font-bold text-sm text-stone-900 block uppercase tracking-wider">Silver</span>
+                                <span class="inline-block my-1 py-0.5 px-2 rounded-full border border-stone-300 bg-white text-[10px] font-bold text-stone-900">
+                                    {{ \App\Models\ClientProposal::formatPackagePill($client->silver_price) }}
+                                </span>
+                                <span class="block text-[9px] text-stone-500">Perpanjangan {{ $client->silver_renewal }}</span>
+                            </th>
+                            <!-- Gold (Featured) -->
+                            <th class="p-3 text-center bg-stone-900 text-white border-x-2 border-brand-gold w-[17%] relative">
+                                <span class="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-brand-gold text-black text-[8px] font-black uppercase tracking-widest px-2 py-0.2 rounded-full shadow-xs">POPULER</span>
+                                <span class="font-serif font-bold text-sm text-brand-gold block uppercase tracking-wider">Gold</span>
+                                <span class="inline-block my-1 py-0.5 px-2 rounded-full border border-brand-gold bg-stone-800 text-[10px] font-bold text-brand-gold">
+                                    {{ \App\Models\ClientProposal::formatPackagePill($client->gold_price) }}
+                                </span>
+                                <span class="block text-[9px] text-stone-400">Perpanjangan {{ $client->gold_renewal }}</span>
+                            </th>
+                            <!-- Diamond -->
+                            <th class="p-3 text-center bg-stone-50 border-l border-stone-200 w-[17%]">
+                                <span class="font-serif font-bold text-sm text-stone-900 block uppercase tracking-wider">Diamond</span>
+                                <span class="inline-block my-1 py-0.5 px-2 rounded-full border border-stone-300 bg-white text-[10px] font-bold text-stone-900">
+                                    {{ \App\Models\ClientProposal::formatPackagePill($client->diamond_price) }}
+                                </span>
+                                <span class="block text-[9px] text-stone-500">Perpanjangan {{ $client->diamond_renewal }}</span>
+                            </th>
+                            <!-- Platinum -->
+                            <th class="p-3 text-center bg-stone-50 border-l border-stone-200 w-[17%]">
+                                <span class="font-serif font-bold text-sm text-stone-900 block uppercase tracking-wider">Platinum</span>
+                                <span class="inline-block my-1 py-0.5 px-2 rounded-full border border-stone-300 bg-white text-[10px] font-bold text-stone-900">
+                                    {{ \App\Models\ClientProposal::formatPackagePill($client->platinum_price) }}
+                                </span>
+                                <span class="block text-[9px] text-stone-500">Perpanjangan {{ $client->platinum_renewal }}</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-stone-200 text-stone-700">
+                        <!-- GROUP 1: E-COMMERCE & SCENT EXPERIENCE -->
+                        <tr class="bg-amber-50/60">
+                            <td colspan="5" class="py-1.5 px-3.5 font-bold uppercase tracking-wider text-[10px] text-stone-900">
+                                <i class="fas fa-spray-can text-amber-600 mr-1.5"></i> Pengalaman Toko Online & Visualisasi Aroma
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">Tipe Toko Online & Identitas Brand</td>
+                            <td class="p-2.5 text-center bg-stone-50/40">Luxury Showcase (One-Page)</td>
+                            <td class="p-2.5 text-center bg-amber-50/20 font-semibold text-stone-900">Full E-Commerce Web Store</td>
+                            <td class="p-2.5 text-center bg-stone-50/40 font-semibold">E-Commerce + Member Area</td>
+                            <td class="p-2.5 text-center bg-stone-50/40 font-semibold">Omnichannel Web + Cloud POS</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">Visualisasi Aroma (Top, Heart, Base Notes)</td>
+                            <td class="p-2.5 text-center bg-stone-50/40">Karakter Dasar</td>
+                            <td class="p-2.5 text-center bg-amber-50/20 font-semibold text-stone-900"><i class="fas fa-check-circle text-amber-600 text-sm"></i> Visual Interaktif</td>
+                            <td class="p-2.5 text-center bg-stone-50/40 font-semibold"><i class="fas fa-check-circle text-amber-600 text-sm"></i> Visual Interaktif</td>
+                            <td class="p-2.5 text-center bg-stone-50/40 font-semibold"><i class="fas fa-check-circle text-amber-600 text-sm"></i> Full Scent Experience</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">Discovery Set / Sampler & Bundling Package</td>
+                            <td class="p-2.5 text-center bg-stone-50/40 text-stone-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-amber-50/20 text-amber-700 font-semibold"><i class="fas fa-check-circle text-sm"></i> Bundling Builder</td>
+                            <td class="p-2.5 text-center bg-stone-50/40 text-amber-700 font-semibold"><i class="fas fa-check-circle text-sm"></i> Sampler & Bundling</td>
+                            <td class="p-2.5 text-center bg-stone-50/40 text-amber-700 font-semibold"><i class="fas fa-check-circle text-sm"></i> Kustom Sampler Unlimited</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">100% Bebas Biaya Potongan Admin Marketplace</td>
+                            <td class="p-2.5 text-center bg-stone-50/40 text-amber-700 font-bold"><i class="fas fa-check text-xs"></i></td>
+                            <td class="p-2.5 text-center bg-amber-50/20 text-amber-700 font-bold"><i class="fas fa-check text-xs"></i></td>
+                            <td class="p-2.5 text-center bg-stone-50/40 text-amber-700 font-bold"><i class="fas fa-check text-xs"></i></td>
+                            <td class="p-2.5 text-center bg-stone-50/40 text-amber-700 font-bold"><i class="fas fa-check text-xs"></i></td>
+                        </tr>
+
+                        <!-- GROUP 2: MEMBERSHIP & SISTEM OMNICHANNEL -->
+                        <tr class="bg-amber-50/60">
+                            <td colspan="5" class="py-1.5 px-3.5 font-bold uppercase tracking-wider text-[10px] text-stone-900">
+                                <i class="fas fa-crown text-amber-600 mr-1.5"></i> VIP Membership & Omnichannel Kasir Toko
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">Payment Gateway Otomatis (QRIS, VA Bank & E-Wallet)</td>
+                            <td class="p-2.5 text-center bg-stone-50/40">Transfer Manual WA</td>
+                            <td class="p-2.5 text-center bg-amber-50/20 font-semibold text-stone-900"><i class="fas fa-check-circle text-amber-600 text-sm"></i> Otomatis</td>
+                            <td class="p-2.5 text-center bg-stone-50/40 font-semibold"><i class="fas fa-check-circle text-amber-600 text-sm"></i> Otomatis</td>
+                            <td class="p-2.5 text-center bg-stone-50/40 font-semibold"><i class="fas fa-check-circle text-amber-600 text-sm"></i> Otomatis</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">VIP Membership & Tiering Diskon (Silver/Gold/VIP)</td>
+                            <td class="p-2.5 text-center bg-stone-50/40 text-stone-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-amber-50/20 text-stone-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-stone-50/40 text-amber-700 font-semibold"><i class="fas fa-check-circle text-sm"></i> Tiering Member</td>
+                            <td class="p-2.5 text-center bg-stone-50/40 text-amber-700 font-semibold"><i class="fas fa-check-circle text-sm"></i> Tiering Member</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">Sistem Poin Reward & Cashback Repeat Order</td>
+                            <td class="p-2.5 text-center bg-stone-50/40 text-stone-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-amber-50/20 text-stone-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-stone-50/40 text-amber-700 font-semibold"><i class="fas fa-check-circle text-sm"></i> Poin Otomatis</td>
+                            <td class="p-2.5 text-center bg-stone-50/40 text-amber-700 font-semibold"><i class="fas fa-check-circle text-sm"></i> Poin Otomatis</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">Aplikasi Kasir (Cloud POS) Toko / Event Bazaar</td>
+                            <td class="p-2.5 text-center bg-stone-50/40 text-stone-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-amber-50/20 text-stone-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-stone-50/40 text-stone-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-stone-50/40 text-amber-700 font-bold"><i class="fas fa-check-circle text-sm"></i> POS Kasir Real-time</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">Sinkronisasi Stok Real-Time (Anti-Overselling)</td>
+                            <td class="p-2.5 text-center bg-stone-50/40">Stok Web</td>
+                            <td class="p-2.5 text-center bg-amber-50/20 text-stone-900 font-semibold">Stok Web Mandiri</td>
+                            <td class="p-2.5 text-center bg-stone-50/40 font-semibold">Stok Web Mandiri</td>
+                            <td class="p-2.5 text-center bg-stone-50/40 text-amber-700 font-bold"><i class="fas fa-check-circle text-sm"></i> Sinkron Kasir & Web</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">Portal Khusus Reseller & Agen B2B (Diskon Grosir)</td>
+                            <td class="p-2.5 text-center bg-stone-50/40 text-stone-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-amber-50/20 text-stone-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-stone-50/40 text-stone-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-stone-50/40 text-amber-700 font-bold"><i class="fas fa-check-circle text-sm"></i> Portal Reseller B2B</td>
+                        </tr>
+
+                        <!-- GROUP 3: SERVER & GARANSI -->
+                        <tr class="bg-amber-50/60">
+                            <td colspan="5" class="py-1.5 px-3.5 font-bold uppercase tracking-wider text-[10px] text-stone-900">
+                                <i class="fas fa-shield-alt text-amber-600 mr-1.5"></i> Infrastruktur Server, Domain & Garansi
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">Domain Kustom (.com) & Cloud SSD Hosting</td>
+                            <td class="p-2.5 text-center bg-stone-50/40">1 Tahun</td>
+                            <td class="p-2.5 text-center bg-amber-50/20 font-semibold text-stone-900">1 Tahun Cloud SSD</td>
+                            <td class="p-2.5 text-center bg-stone-50/40 font-semibold">1 Tahun High-Speed SSD</td>
+                            <td class="p-2.5 text-center bg-stone-50/40 font-semibold text-stone-900">Dedicated Cloud Server</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">Garansi & Pendampingan Operasional</td>
+                            <td class="p-2.5 text-center bg-stone-50/40">1 Bulan</td>
+                            <td class="p-2.5 text-center bg-amber-50/20 font-semibold text-stone-900">3 Bulan</td>
+                            <td class="p-2.5 text-center bg-stone-50/40 font-semibold">6 Bulan Prioritas</td>
+                            <td class="p-2.5 text-center bg-stone-50/40 font-bold text-stone-900">1 Tahun Penuh (VIP)</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr class="border-t-2 border-stone-300 bg-white">
+                            <td class="p-3 font-bold text-stone-900">Aksi Pemesanan</td>
+                            <td class="p-2.5 text-center bg-stone-50/50">
+                                <a href="https://wa.me/{{ $cleanWa }}?text={{ urlencode('Halo Scalify, saya tertarik memesan Paket Silver untuk ' . $client->brand_name . '. Mohon info detailnya.') }}" target="_blank" class="inline-flex items-center justify-center gap-1 w-full py-1.5 px-2 rounded-lg bg-stone-900 hover:bg-black text-brand-gold text-[10px] font-bold shadow-xs transition no-print border border-brand-gold/30">
+                                    <i class="fab fa-whatsapp text-green-400"></i> Pilih Silver
+                                </a>
+                            </td>
+                            <td class="p-2.5 text-center bg-amber-50/20">
+                                <a href="https://wa.me/{{ $cleanWa }}?text={{ urlencode('Halo Scalify, saya tertarik memesan Paket Gold untuk ' . $client->brand_name . '. Mohon info detailnya.') }}" target="_blank" class="inline-flex items-center justify-center gap-1 w-full py-2 px-2 rounded-lg bg-brand-gold hover:bg-yellow-500 text-black text-[11px] font-extrabold shadow-md transition no-print">
+                                    <i class="fab fa-whatsapp text-black"></i> Pilih Gold
+                                </a>
+                            </td>
+                            <td class="p-2.5 text-center bg-stone-50/50">
+                                <a href="https://wa.me/{{ $cleanWa }}?text={{ urlencode('Halo Scalify, saya tertarik memesan Paket Diamond untuk ' . $client->brand_name . '. Mohon info detailnya.') }}" target="_blank" class="inline-flex items-center justify-center gap-1 w-full py-1.5 px-2 rounded-lg bg-stone-900 hover:bg-black text-brand-gold text-[10px] font-bold shadow-xs transition no-print border border-brand-gold/30">
+                                    <i class="fab fa-whatsapp text-green-400"></i> Pilih Diamond
+                                </a>
+                            </td>
+                            <td class="p-2.5 text-center bg-stone-50/50">
+                                <a href="https://wa.me/{{ $cleanWa }}?text={{ urlencode('Halo Scalify, saya tertarik memesan Paket Platinum untuk ' . $client->brand_name . '. Mohon info detailnya.') }}" target="_blank" class="inline-flex items-center justify-center gap-1 w-full py-1.5 px-2 rounded-lg bg-stone-900 hover:bg-black text-brand-gold text-[10px] font-bold shadow-xs transition no-print border border-brand-gold/30">
+                                    <i class="fab fa-whatsapp text-green-400"></i> Pilih Platinum
+                                </a>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <div class="bg-amber-50/80 border border-amber-200/80 p-3.5 mt-4 rounded-lg flex gap-3.5 items-start">
+                <i class="fas fa-chart-line text-amber-600 mt-1 text-base shrink-0"></i>
                 <p class="text-[12px] text-slate-700 leading-relaxed">
-                    <strong>Investasi Mesin Pertumbuhan Bisnis:</strong> Melalui sistem membership dan toko online mandiri, <em>repeat order</em> pelanggan wewangian Anda akan terjaga secara otomatis tanpa tergerus potongan komisi <em>marketplace</em> (6-10%). Biaya investasi ini akan tertutupi <em>(Return on Investment / ROI)</em> dalam waktu yang relatif singkat.
+                    <strong>Investasi Mesin Pertumbuhan Bisnis:</strong> Melalui toko online eksklusif dan sistem membership mandiri, <em>repeat order</em> pelanggan Anda terjaga tanpa potongan komisi marketplace (6-10%). Biaya investasi akan tertutupi <em>(Return on Investment / ROI)</em> dalam waktu singkat.
                 </p>
             </div>
         </div>
 
-        <div class="mt-12 border-t border-slate-200 pt-8 text-sm text-slate-600">
-            <p class="mb-10">Demikian proposal penawaran ini kami sampaikan sebagai langkah strategis digitalisasi dan akselerasi bisnis {{ $client->brand_name }}. Atas waktu dan kepercayaannya, kami ucapkan terima kasih.</p>
-            <div class="flex justify-between items-end">
+        <div class="mt-8 border-t border-slate-200 pt-6 text-xs text-slate-600">
+            <p class="mb-4">Demikian proposal penawaran ini kami sampaikan sebagai langkah strategis akselerasi bisnis {{ $client->brand_name }}. Atas waktu dan kepercayaannya, kami ucapkan terima kasih.</p>
+            <div class="flex justify-between items-end mt-8">
                 <div class="text-center">
-                    <p class="mb-16">Hormat Kami,</p>
-                    <div class="border-b border-slate-400 w-48 mb-1 mx-auto"></div>
+                    <p class="mb-14">Hormat Kami,</p>
+                    <div class="border-b border-slate-400 w-44 mb-1 mx-auto"></div>
                     <p class="font-bold text-brand-dark font-serif">M. Andi</p>
-                    <p class="text-xs text-slate-500">Project Manager - Scalify</p>
+                    <p class="text-[11px] text-slate-500">Project Manager - Scalify</p>
                 </div>
                 <div class="text-center">
-                    <p class="mb-16">Disetujui Oleh,</p>
-                    <div class="border-b border-slate-400 w-48 mb-1 mx-auto"></div>
+                    <p class="mb-14">Disetujui Oleh,</p>
+                    <div class="border-b border-slate-400 w-44 mb-1 mx-auto"></div>
                     <p class="font-bold text-brand-dark font-serif">.........................................</p>
-                    <p class="text-xs text-slate-500">{{ $client->brand_name }}</p>
+                    <p class="text-[11px] text-slate-500">{{ $client->brand_name }}</p>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Modal Detail Paket Parfum -->
+    <div id="packageModal" class="fixed inset-0 bg-black/60 z-50 hidden items-center justify-center p-4 backdrop-blur-xs no-print">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl relative animate-fade-in border border-brand-gold/30">
+            <button onclick="closePackageModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:text-slate-800 hover:bg-slate-200 flex items-center justify-center transition">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <div class="flex items-center gap-3 mb-4">
+                <div id="modalIcon" class="w-10 h-10 rounded-full bg-stone-900 border border-brand-gold text-brand-gold flex items-center justify-center text-lg">
+                    <i class="fas fa-award"></i>
+                </div>
+                <div>
+                    <h3 id="modalTitle" class="text-lg font-bold text-slate-800 font-serif">Detail Paket</h3>
+                    <p id="modalPrice" class="text-xs font-bold text-amber-700"></p>
+                </div>
+            </div>
+
+            <p id="modalDesc" class="text-xs text-slate-600 mb-4 bg-amber-50/50 p-3 rounded-lg border border-amber-200/50"></p>
+
+            <div class="mb-6">
+                <h4 class="text-xs font-bold uppercase tracking-wider text-slate-800 mb-2.5">Fasilitas & Fitur Termasuk:</h4>
+                <ul id="modalFeatures" class="space-y-2 text-xs text-slate-600">
+                    <!-- Dynamic List -->
+                </ul>
+            </div>
+
+            <div class="flex gap-3 pt-3 border-t border-slate-100">
+                <button type="button" onclick="closePackageModal()" class="flex-1 py-2 px-4 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 text-xs font-semibold transition">
+                    Tutup
+                </button>
+                <a id="modalWaBtn" href="#" target="_blank" class="flex-1 py-2 px-4 rounded-xl bg-stone-900 hover:bg-black text-brand-gold text-xs font-bold flex items-center justify-center gap-1.5 shadow transition border border-brand-gold/30">
+                    <i class="fab fa-whatsapp text-sm text-green-400"></i> Pilih Paket Ini
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const packageDetails = {
+            silver: {
+                title: 'Paket Silver'
+                , price: '{{ \App\Models\ClientProposal::formatPackagePill($client->silver_price) }} (Perpanjangan {{ $client->silver_renewal }})'
+                , desc: 'Landing page eksklusif untuk memperkenalkan koleksi parfum brand Anda dengan direct order praktis ke WhatsApp.'
+                , features: [
+                    'Website Landing Page Luxury Fragrance (One-Page Showcase)'
+                    , 'Katalog Produk Parfum & Visual Karakter Aroma Sederhana'
+                    , 'Direct Checkout Terhubung ke WhatsApp CS'
+                    , 'Domain Kustom (.com) + High-Speed Hosting 1 Tahun'
+                    , 'Garansi Teknis 1 Bulan'
+                ]
+            }
+            , gold: {
+                title: 'Paket Gold (Paling Direkomendasikan)'
+                , price: '{{ \App\Models\ClientProposal::formatPackagePill($client->gold_price) }} (Perpanjangan {{ $client->gold_renewal }})'
+                , desc: 'Website E-Commerce parfum mandiri dengan visual Scent Notes interaktif, keranjang belanja otomatis, dan payment gateway bebas biaya admin per transaksi.'
+                , features: [
+                    'Luxury E-Commerce Web Store Lengkap (Multi-Page)'
+                    , 'Visualisasi Aroma (Top, Heart, Base Notes) Interaktif'
+                    , 'Discovery Set / Sampler Pack & Bundling Builder (Naikkan AOV)'
+                    , 'Payment Gateway Otomatis (QRIS, VA Bank & E-Wallet)'
+                    , 'Panel Admin Kelola Produk, Stok, & 100% Kepemilikan Database Pelanggan'
+                    , 'Domain .com + Cloud Server SSD Cepat 1 Tahun + SSL'
+                    , 'Garansi & Support 3 Bulan'
+                ]
+            }
+            , diamond: {
+                title: 'Paket Diamond'
+                , price: '{{ \App\Models\ClientProposal::formatPackagePill($client->diamond_price) }} (Perpanjangan {{ $client->diamond_renewal }})'
+                , desc: 'Dilengkapi sistem VIP Membership dan Poin Loyalitas untuk mengunci repeat order pembeli wewangian Anda secara otomatis.'
+                , features: [
+                    'Semua Fasilitas Unggulan Paket Gold'
+                    , 'Sistem VIP Membership & Tiering Diskon (Silver, Gold, Platinum)'
+                    , 'Sistem Poin Reward & Cashback Otomatis Pemicu Repeat Order'
+                    , 'Dedicated Member Area (Dasbor Riwayat Belanja & Voucher Pribadi)'
+                    , 'Cetak Resi Pengiriman Kilat & Integrasi Cek Ongkir Otomatis'
+                    , 'Garansi & Maintenance Prioritas 6 Bulan'
+                ]
+            }
+            , platinum: {
+                title: 'Paket Platinum (Omnichannel POS & Reseller)'
+                , price: '{{ \App\Models\ClientProposal::formatPackagePill($client->platinum_price) }} (Perpanjangan {{ $client->platinum_renewal }})'
+                , desc: 'Ekosistem terlengkap menggabungkan E-Commerce Web, Aplikasi Kasir (POS) Toko/Bazaar (Stok Sinkron), dan Portal Reseller B2B.'
+                , features: [
+                    'Semua Fasilitas Lengkap Paket Diamond'
+                    , 'Aplikasi Kasir (Cloud POS) untuk SPG di Toko Fisik, Pop-up Booth & Bazaar'
+                    , 'Sinkronisasi Stok Real-Time Antara Kasir Toko & Website (Anti-Overselling)'
+                    , 'Portal Khusus Agen & Reseller B2B (Diskon Grosir Otomatis saat Login)'
+                    , 'Desain 100% Custom Ultra-Luxury Menyesuaikan Identitas Brand'
+                    , 'Dedicated Cloud Server Berkapasitas Ekstra'
+                    , 'Dedicated VIP Support Penuh 1 Tahun'
+                ]
+            }
+        };
+
+        function openPackageModal(type) {
+            const data = packageDetails[type];
+            if (!data) return;
+
+            document.getElementById('modalTitle').textContent = data.title;
+            document.getElementById('modalPrice').textContent = data.price;
+            document.getElementById('modalDesc').textContent = data.desc;
+
+            const list = document.getElementById('modalFeatures');
+            list.innerHTML = '';
+            data.features.forEach(feat => {
+                const li = document.createElement('li');
+                li.className = 'flex items-start gap-2';
+                li.innerHTML = '<i class="fas fa-check-circle text-amber-600 mt-0.5 shrink-0"></i> <span>' + feat + '</span>';
+                list.appendChild(li);
+            });
+
+            const waText = encodeURIComponent('Halo Scalify, saya ingin berkonsultasi mengenai ' + data.title + ' untuk {{ $client->brand_name }}. Mohon info selengkapnya.');
+            document.getElementById('modalWaBtn').href = 'https://wa.me/{{ $cleanWa }}?text=' + waText;
+
+            const modal = document.getElementById('packageModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closePackageModal() {
+            const modal = document.getElementById('packageModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('packageModal');
+            if (event.target === modal) {
+                closePackageModal();
+            }
+        };
+
+    </script>
 
 </body>
 </html>

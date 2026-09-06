@@ -335,6 +335,11 @@ Route::get('/secret-deploy-trigger-12345', function () {
             '--force' => true
         ]);
 
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_09_06_142047_add_package_pricing_to_client_proposals_table.php',
+            '--force' => true
+        ]);
+
         // Jalankan Seeder yang diperlukan
         \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'ClientProposalSeeder', '--force' => true]);
         \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'BusinessCategorySeeder', '--force' => true]);

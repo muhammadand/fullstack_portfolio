@@ -147,17 +147,16 @@
 {{-- 5. Solusi Cerdas & Rekayasa Sistem (Services Sticky) --}}
 @include('company.partials.services')
 
-{{-- 6. Katalog Portofolio Video Carousel --}}
-@include('company.partials.portfolio')
-
-{{-- 7. Profil Founder & Lead System Architect (Track Record Nasional) --}}
-@include('company.partials.owner_profile')
-
 {{-- 8. Paket Layanan & Harga --}}
 @include('company.partials.pricing')
 
 {{-- 9. Showcase 4 Produk SaaS Nyata Live & Berjalan --}}
 @include('company.partials.products_live')
+{{-- 6. Katalog Portofolio Video Carousel --}}
+@include('company.partials.portfolio')
+
+{{-- 7. Profil Founder & Lead System Architect (Track Record Nasional) --}}
+@include('company.partials.owner_profile')
 
 {{-- 10. FAQ (Frequently Asked Questions) untuk Bisnis & Mahasiswa/Riset --}}
 @include('company.partials.faq')

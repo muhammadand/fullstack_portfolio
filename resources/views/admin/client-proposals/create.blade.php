@@ -66,6 +66,84 @@
                 </div>
             </div>
 
+            <div class="mb-6 p-4 rounded-xl bg-slate-50 border border-slate-200">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
+                    <h3 class="text-sm font-bold text-slate-800">Kustomisasi Paket Harga Proposal (Opsional)</h3>
+                </div>
+                <p class="text-xs text-slate-500 mb-4">Biarkan nilai default jika ingin menggunakan harga standar 4 tier paket.</p>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <!-- Silver -->
+                    <div class="bg-white p-3.5 rounded-lg border border-slate-200">
+                        <div class="font-bold text-xs text-slate-700 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                            <i class="fas fa-award text-slate-400"></i> Paket Silver
+                        </div>
+                        <div class="space-y-2">
+                            <div>
+                                <label class="text-[11px] font-medium text-slate-500 block mb-1">Harga (Rp)</label>
+                                <input type="number" name="price_silver" value="{{ old('price_silver', 700000) }}" class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded focus:ring-1 focus:ring-blue-500 outline-none">
+                            </div>
+                            <div>
+                                <label class="text-[11px] font-medium text-slate-500 block mb-1">Perpanjangan</label>
+                                <input type="text" name="renewal_silver" value="{{ old('renewal_silver', '500rb/tahun') }}" class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded focus:ring-1 focus:ring-blue-500 outline-none">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gold -->
+                    <div class="bg-blue-50/50 p-3.5 rounded-lg border border-blue-200">
+                        <div class="font-bold text-xs text-blue-700 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                            <i class="fas fa-award text-blue-600"></i> Paket Gold (Populer)
+                        </div>
+                        <div class="space-y-2">
+                            <div>
+                                <label class="text-[11px] font-medium text-slate-500 block mb-1">Harga (Rp)</label>
+                                <input type="number" name="price_gold" value="{{ old('price_gold', 1600000) }}" class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded focus:ring-1 focus:ring-blue-500 outline-none">
+                            </div>
+                            <div>
+                                <label class="text-[11px] font-medium text-slate-500 block mb-1">Perpanjangan</label>
+                                <input type="text" name="renewal_gold" value="{{ old('renewal_gold', '600rb/tahun') }}" class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded focus:ring-1 focus:ring-blue-500 outline-none">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Diamond -->
+                    <div class="bg-white p-3.5 rounded-lg border border-slate-200">
+                        <div class="font-bold text-xs text-slate-700 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                            <i class="fas fa-award text-blue-400"></i> Paket Diamond
+                        </div>
+                        <div class="space-y-2">
+                            <div>
+                                <label class="text-[11px] font-medium text-slate-500 block mb-1">Harga (Rp)</label>
+                                <input type="number" name="price_diamond" value="{{ old('price_diamond', 2000000) }}" class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded focus:ring-1 focus:ring-blue-500 outline-none">
+                            </div>
+                            <div>
+                                <label class="text-[11px] font-medium text-slate-500 block mb-1">Perpanjangan</label>
+                                <input type="text" name="renewal_diamond" value="{{ old('renewal_diamond', '1juta/tahun') }}" class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded focus:ring-1 focus:ring-blue-500 outline-none">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Platinum -->
+                    <div class="bg-white p-3.5 rounded-lg border border-slate-200">
+                        <div class="font-bold text-xs text-slate-700 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                            <i class="fas fa-award text-amber-500"></i> Paket Platinum
+                        </div>
+                        <div class="space-y-2">
+                            <div>
+                                <label class="text-[11px] font-medium text-slate-500 block mb-1">Harga (Rp)</label>
+                                <input type="number" name="price_platinum" value="{{ old('price_platinum', 3000000) }}" class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded focus:ring-1 focus:ring-blue-500 outline-none">
+                            </div>
+                            <div>
+                                <label class="text-[11px] font-medium text-slate-500 block mb-1">Perpanjangan</label>
+                                <input type="text" name="renewal_platinum" value="{{ old('renewal_platinum', '50% per tahun') }}" class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded focus:ring-1 focus:ring-blue-500 outline-none">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="mb-6">
                 <label class="block text-sm font-medium text-slate-700 mb-2">Template Pesan WhatsApp</label>
                 <textarea name="wa_template" rows="3" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all">{{ old('wa_template', 'Halo tim Scalify, saya tertarik untuk diskusi lebih lanjut.') }}</textarea>

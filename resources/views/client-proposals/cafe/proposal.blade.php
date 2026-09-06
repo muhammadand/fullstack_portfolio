@@ -180,66 +180,357 @@
 
     <!-- HALAMAN 2 -->
     <div class="proposal-page page-break">
-        <div class="mb-10 mt-6">
-            <h2 class="font-serif text-2xl font-bold text-brand-coffee mb-6 flex items-center gap-2">
-                <span class="text-brand-caramel">03.</span> Rincian Investasi / Biaya
+        <div class="mb-8 mt-4">
+            <h2 class="font-serif text-2xl font-bold text-brand-coffee mb-2 flex items-center gap-2">
+                <span class="text-brand-caramel">03.</span> Pilihan Paket & Rincian Investasi
             </h2>
-            <p class="text-sm text-gray-600 mb-6">Investasi pembuatan website FnB/Cafe dengan fitur Content Management System (CMS) untuk update menu mandiri.</p>
+            <p class="text-sm text-gray-600 mb-6">Investasi pembuatan ekosistem digital untuk <strong>{{ $client->brand_name }}</strong> dengan berbagai opsi paket fleksibel:</p>
 
-            <table class="w-full text-left text-sm mb-6 border-collapse">
-                <thead>
-                    <tr class="bg-gray-100 border-b-2 border-gray-300">
-                        <th class="py-3 px-4 font-bold text-brand-coffee w-2/3">Deskripsi Layanan</th>
-                        <th class="py-3 px-4 font-bold text-brand-coffee text-right w-1/3">Estimasi Biaya (IDR)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="border-b border-gray-100">
-                        <td class="py-4 px-4 text-gray-600">
-                            <span class="font-bold text-brand-coffee block">Pengembangan Website Cafe & Digital Menu</span>
-                            <span class="text-[12px]">Termasuk desain UI/UX, Backend CMS (Kelola Menu & Harga), Galeri Tempat, Integrasi Google Maps, dan SEO Basic.</span>
-                        </td>
-                        <td class="py-4 px-4 text-right font-medium text-brand-coffee align-top">Rp {{ number_format($client->project_price, 0, ",", ".") }}</td>
-                    </tr>
-                    <tr class="border-b border-gray-100">
-                        <td class="py-4 px-4 text-gray-600">
-                            <span class="font-bold text-brand-coffee block">Domain & Cloud Hosting Server (1 Tahun)</span>
-                            <span class="text-[12px]">Domain kustom, Cloud Hosting stabil, dan setup SSL Certificate (HTTPS).</span>
-                        </td>
-                        <td class="py-4 px-4 text-right font-medium text-brand-coffee align-top">Rp {{ number_format($client->domain_price, 0, ",", ".") }}</td>
-                    </tr>
-                    <tr class="bg-gray-50 border-t-2 border-gray-300">
-                        <td class="py-4 px-4 font-bold text-brand-coffee text-right">TOTAL INVESTASI :</td>
-                        <td class="py-4 px-4 text-right font-bold text-brand-caramel text-lg">Rp {{ number_format($client->project_price + $client->domain_price, 0, ",", ".") }}</td>
-                    </tr>
-                </tbody>
-            </table>
+            @php
+            $cleanWa = preg_replace('/[^0-9]/', '', $client->wa_number ?? '6281234567890');
+            if (str_starts_with($cleanWa, '0')) {
+            $cleanWa = '62' . substr($cleanWa, 1);
+            }
+            @endphp
 
-            <div class="bg-brand-cream/40 border-l-4 border-brand-caramel p-4 mt-8">
-                <p class="text-[13px] text-gray-700 leading-relaxed">
-                    Spesifikasi fitur dan estimasi biaya di atas bersifat fleksibel. Kami sangat terbuka untuk berdiskusi lebih lanjut dan melakukan penyesuaian (customization) baik dari segi fitur maupun rincian harga akhir.
+            <!-- Tabel Perbandingan Paket & Fitur Cafe -->
+            <div class="overflow-x-auto mb-6 rounded-xl border border-brand-caramel/30 bg-white shadow-xs">
+                <table class="w-full text-left border-collapse text-[11px]">
+                    <thead>
+                        <tr class="border-b border-brand-caramel/30">
+                            <th class="p-3.5 bg-brand-cream/40 font-serif text-brand-coffee font-bold w-[32%]">
+                                <span class="text-[10px] uppercase tracking-wider block text-brand-caramel font-sans">Komparasi Layanan</span>
+                                Paket & Spesifikasi Fitur
+                            </th>
+                            <!-- Silver -->
+                            <th class="p-3 text-center bg-slate-50/70 border-l border-brand-caramel/20 w-[17%]">
+                                <span class="font-serif font-bold text-sm text-brand-coffee block">Silver</span>
+                                <span class="inline-block my-1 py-0.5 px-2 rounded-full border border-brand-caramel/50 bg-white text-[10px] font-bold text-brand-coffee">
+                                    {{ \App\Models\ClientProposal::formatPackagePill($client->silver_price) }}
+                                </span>
+                                <span class="block text-[9px] text-stone-500">Perpanjangan {{ $client->silver_renewal }}</span>
+                            </th>
+                            <!-- Gold (Featured) -->
+                            <th class="p-3 text-center bg-brand-coffee text-white border-x-2 border-brand-caramel w-[17%] relative">
+                                <span class="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-brand-caramel text-white text-[8px] font-black uppercase tracking-widest px-2 py-0.2 rounded-full shadow-xs">POPULER</span>
+                                <span class="font-serif font-bold text-sm text-brand-cream block">Gold</span>
+                                <span class="inline-block my-1 py-0.5 px-2 rounded-full border border-brand-caramel bg-brand-caramel/30 text-[10px] font-bold text-brand-cream">
+                                    {{ \App\Models\ClientProposal::formatPackagePill($client->gold_price) }}
+                                </span>
+                                <span class="block text-[9px] text-brand-latte/80">Perpanjangan {{ $client->gold_renewal }}</span>
+                            </th>
+                            <!-- Diamond -->
+                            <th class="p-3 text-center bg-slate-50/70 border-l border-brand-caramel/20 w-[17%]">
+                                <span class="font-serif font-bold text-sm text-brand-coffee block">Diamond</span>
+                                <span class="inline-block my-1 py-0.5 px-2 rounded-full border border-brand-caramel/50 bg-white text-[10px] font-bold text-brand-coffee">
+                                    {{ \App\Models\ClientProposal::formatPackagePill($client->diamond_price) }}
+                                </span>
+                                <span class="block text-[9px] text-stone-500">Perpanjangan {{ $client->diamond_renewal }}</span>
+                            </th>
+                            <!-- Platinum -->
+                            <th class="p-3 text-center bg-slate-50/70 border-l border-brand-caramel/20 w-[17%]">
+                                <span class="font-serif font-bold text-sm text-brand-coffee block">Platinum</span>
+                                <span class="inline-block my-1 py-0.5 px-2 rounded-full border border-brand-caramel/50 bg-white text-[10px] font-bold text-brand-coffee">
+                                    {{ \App\Models\ClientProposal::formatPackagePill($client->platinum_price) }}
+                                </span>
+                                <span class="block text-[9px] text-stone-500">Perpanjangan {{ $client->platinum_renewal }}</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-brand-caramel/15 text-stone-700">
+                        <!-- GROUP 1: TAMPILAN & DIGITAL MENU -->
+                        <tr class="bg-brand-cream/30">
+                            <td colspan="5" class="py-1.5 px-3.5 font-bold uppercase tracking-wider text-[10px] text-brand-coffee">
+                                <i class="fas fa-utensils text-brand-caramel mr-1.5"></i> Desain Visual & Digital Menu
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">Tipe Desain & Halaman Website</td>
+                            <td class="p-2.5 text-center bg-slate-50/30">One-Page Showcase</td>
+                            <td class="p-2.5 text-center bg-brand-cream/15 font-semibold text-brand-coffee">Multi-Page Ambiance</td>
+                            <td class="p-2.5 text-center bg-slate-50/30 font-semibold">Multi-Page + Catalog</td>
+                            <td class="p-2.5 text-center bg-slate-50/30 font-semibold">Custom Luxury Multi-Outlet</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">Sistem Tampilan Menu FnB</td>
+                            <td class="p-2.5 text-center bg-slate-50/30">Menu Statis Gambar</td>
+                            <td class="p-2.5 text-center bg-brand-cream/15 font-semibold text-brand-coffee">Digital Menu Interaktif (CMS)</td>
+                            <td class="p-2.5 text-center bg-slate-50/30 font-semibold">Menu Interaktif + Badge Favorit</td>
+                            <td class="p-2.5 text-center bg-slate-50/30 font-semibold">Menu Multi-Kategori Dinamis</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">QR Code Stand Meja (Scan Menu)</td>
+                            <td class="p-2.5 text-center bg-slate-50/30 text-stone-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-brand-cream/15 text-brand-caramel font-bold"><i class="fas fa-check-circle text-sm"></i></td>
+                            <td class="p-2.5 text-center bg-slate-50/30 text-brand-caramel font-bold"><i class="fas fa-check-circle text-sm"></i></td>
+                            <td class="p-2.5 text-center bg-slate-50/30 text-brand-caramel font-bold"><i class="fas fa-check-circle text-sm"></i> Unlimited Meja</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">Galeri Suasana Tempat (Interior & Ambiance)</td>
+                            <td class="p-2.5 text-center bg-slate-50/30">Foto Pilihan</td>
+                            <td class="p-2.5 text-center bg-brand-cream/15 text-brand-coffee font-semibold">Galeri Interaktif HD</td>
+                            <td class="p-2.5 text-center bg-slate-50/30 font-semibold">Galeri Interaktif HD</td>
+                            <td class="p-2.5 text-center bg-slate-50/30 font-semibold">Virtual Tour / Full HD</td>
+                        </tr>
+
+                        <!-- GROUP 2: ORDER & OPERASIONAL BISNIS -->
+                        <tr class="bg-brand-cream/30">
+                            <td colspan="5" class="py-1.5 px-3.5 font-bold uppercase tracking-wider text-[10px] text-brand-coffee">
+                                <i class="fas fa-cash-register text-brand-caramel mr-1.5"></i> Pemesanan & Manajemen Operasional
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">Panel Admin CMS (Ganti Harga & Foto Mandiri)</td>
+                            <td class="p-2.5 text-center bg-slate-50/30 text-stone-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-brand-cream/15 text-brand-caramel font-bold"><i class="fas fa-check-circle text-sm"></i> CMS Praktis</td>
+                            <td class="p-2.5 text-center bg-slate-50/30 text-brand-caramel font-bold"><i class="fas fa-check-circle text-sm"></i> CMS Lengkap</td>
+                            <td class="p-2.5 text-center bg-slate-50/30 text-brand-caramel font-bold"><i class="fas fa-check-circle text-sm"></i> CMS Enterprise</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">Reservasi Meja & Booking Event</td>
+                            <td class="p-2.5 text-center bg-slate-50/30">WhatsApp Direct</td>
+                            <td class="p-2.5 text-center bg-brand-cream/15 text-brand-coffee font-semibold">Formulir Reservasi Web</td>
+                            <td class="p-2.5 text-center bg-slate-50/30 font-semibold">Formulir Reservasi Web</td>
+                            <td class="p-2.5 text-center bg-slate-50/30 font-semibold">Kalender Reservasi Meja</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">Sistem Pesan Mandiri (Self-Ordering / Takeaway)</td>
+                            <td class="p-2.5 text-center bg-slate-50/30 text-stone-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-brand-cream/15 text-stone-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-slate-50/30 text-brand-caramel font-bold"><i class="fas fa-check-circle text-sm"></i> Dine-in & Takeaway</td>
+                            <td class="p-2.5 text-center bg-slate-50/30 text-brand-caramel font-bold"><i class="fas fa-check-circle text-sm"></i> Dine-in, Takeaway & Delivery</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">Payment Gateway Otomatis (QRIS & E-Wallet)</td>
+                            <td class="p-2.5 text-center bg-slate-50/30 text-stone-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-brand-cream/15 text-stone-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-slate-50/30 text-brand-caramel font-bold"><i class="fas fa-check-circle text-sm"></i> QRIS Otomatis</td>
+                            <td class="p-2.5 text-center bg-slate-50/30 text-brand-caramel font-bold"><i class="fas fa-check-circle text-sm"></i> Multi-Channel Payment</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">Dukungan Multi-Outlet / Multi-Cabang</td>
+                            <td class="p-2.5 text-center bg-slate-50/30">1 Outlet</td>
+                            <td class="p-2.5 text-center bg-brand-cream/15 text-brand-coffee">1 Outlet</td>
+                            <td class="p-2.5 text-center bg-slate-50/30">1 Outlet</td>
+                            <td class="p-2.5 text-center bg-slate-50/30 text-brand-caramel font-bold"><i class="fas fa-check-circle text-sm"></i> Multi-Cabang Terpusat</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">Program Loyalitas / Poin Reward Pelanggan</td>
+                            <td class="p-2.5 text-center bg-slate-50/30 text-stone-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-brand-cream/15 text-stone-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-slate-50/30 text-stone-300 font-bold">—</td>
+                            <td class="p-2.5 text-center bg-slate-50/30 text-brand-caramel font-bold"><i class="fas fa-check-circle text-sm"></i> Member Poin Reward</td>
+                        </tr>
+
+                        <!-- GROUP 3: SERVER & GARANSI -->
+                        <tr class="bg-brand-cream/30">
+                            <td colspan="5" class="py-1.5 px-3.5 font-bold uppercase tracking-wider text-[10px] text-brand-coffee">
+                                <i class="fas fa-server text-brand-caramel mr-1.5"></i> Infrastruktur, Domain & Support
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">Domain Kustom (.com / .id) & Cloud Hosting</td>
+                            <td class="p-2.5 text-center bg-slate-50/30">1 Tahun</td>
+                            <td class="p-2.5 text-center bg-brand-cream/15 font-semibold text-brand-coffee">1 Tahun Cloud SSD</td>
+                            <td class="p-2.5 text-center bg-slate-50/30 font-semibold">1 Tahun High-Speed SSD</td>
+                            <td class="p-2.5 text-center bg-slate-50/30 font-semibold text-brand-coffee">Dedicated Cloud Server</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2.5 font-medium">Garansi & Layanan Maintenance Teknis</td>
+                            <td class="p-2.5 text-center bg-slate-50/30">1 Bulan</td>
+                            <td class="p-2.5 text-center bg-brand-cream/15 font-semibold text-brand-coffee">3 Bulan</td>
+                            <td class="p-2.5 text-center bg-slate-50/30 font-semibold">6 Bulan Prioritas</td>
+                            <td class="p-2.5 text-center bg-slate-50/30 font-bold text-brand-coffee">1 Tahun Penuh (VIP)</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr class="border-t-2 border-brand-caramel/40 bg-white">
+                            <td class="p-3 font-bold text-stone-800">Aksi Pemesanan</td>
+                            <td class="p-2.5 text-center bg-slate-50/50">
+                                <a href="https://wa.me/{{ $cleanWa }}?text={{ urlencode('Halo Scalify, saya tertarik memesan Paket Silver untuk ' . $client->brand_name . '. Mohon info detailnya.') }}" target="_blank" class="inline-flex items-center justify-center gap-1 w-full py-1.5 px-2 rounded-lg bg-brand-coffee hover:bg-brand-dark text-brand-cream text-[10px] font-bold shadow-xs transition no-print">
+                                    <i class="fab fa-whatsapp text-green-400"></i> Pilih Silver
+                                </a>
+                            </td>
+                            <td class="p-2.5 text-center bg-brand-cream/20">
+                                <a href="https://wa.me/{{ $cleanWa }}?text={{ urlencode('Halo Scalify, saya tertarik memesan Paket Gold untuk ' . $client->brand_name . '. Mohon info detailnya.') }}" target="_blank" class="inline-flex items-center justify-center gap-1 w-full py-2 px-2 rounded-lg bg-brand-caramel hover:bg-[#b08358] text-white text-[11px] font-extrabold shadow-md transition no-print">
+                                    <i class="fab fa-whatsapp text-white"></i> Pilih Gold
+                                </a>
+                            </td>
+                            <td class="p-2.5 text-center bg-slate-50/50">
+                                <a href="https://wa.me/{{ $cleanWa }}?text={{ urlencode('Halo Scalify, saya tertarik memesan Paket Diamond untuk ' . $client->brand_name . '. Mohon info detailnya.') }}" target="_blank" class="inline-flex items-center justify-center gap-1 w-full py-1.5 px-2 rounded-lg bg-brand-coffee hover:bg-brand-dark text-brand-cream text-[10px] font-bold shadow-xs transition no-print">
+                                    <i class="fab fa-whatsapp text-green-400"></i> Pilih Diamond
+                                </a>
+                            </td>
+                            <td class="p-2.5 text-center bg-slate-50/50">
+                                <a href="https://wa.me/{{ $cleanWa }}?text={{ urlencode('Halo Scalify, saya tertarik memesan Paket Platinum untuk ' . $client->brand_name . '. Mohon info detailnya.') }}" target="_blank" class="inline-flex items-center justify-center gap-1 w-full py-1.5 px-2 rounded-lg bg-brand-coffee hover:bg-brand-dark text-brand-cream text-[10px] font-bold shadow-xs transition no-print">
+                                    <i class="fab fa-whatsapp text-green-400"></i> Pilih Platinum
+                                </a>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <div class="bg-brand-cream/40 border-l-4 border-brand-caramel p-3.5 rounded-r-lg mb-6">
+                <p class="text-[12px] text-gray-700 leading-relaxed">
+                    <strong>Catatan:</strong> Seluruh paket di atas bersifat fleksibel. Kami sangat terbuka untuk berdiskusi lebih lanjut dan melakukan penyesuaian (customization) baik dari segi alur fitur maupun opsi termin pembayaran.
                 </p>
             </div>
         </div>
 
-        <div class="mt-16 border-t border-gray-200 pt-10 text-sm text-gray-600">
-            <p class="mb-12">Demikian proposal penawaran pembuatan website ini kami sampaikan. Atas perhatian dan kerja samanya, kami ucapkan terima kasih.</p>
-            <div class="flex justify-between items-end">
+        <div class="mt-8 border-t border-gray-200 pt-6 text-xs text-gray-600">
+            <p class="mb-4">Demikian proposal penawaran pembuatan website ini kami sampaikan. Atas perhatian dan kerja samanya, kami ucapkan terima kasih.</p>
+            <div class="flex justify-between items-end mt-8">
                 <div class="text-center">
-                    <p class="mb-20">Hormat Kami,</p>
-                    <div class="border-b border-gray-400 w-48 mb-1 mx-auto"></div>
+                    <p class="mb-14">Hormat Kami,</p>
+                    <div class="border-b border-gray-400 w-44 mb-1 mx-auto"></div>
                     <p class="font-bold text-brand-coffee">M. Andi</p>
-                    <p class="text-xs text-gray-500">Project Manager - Scalify</p>
+                    <p class="text-[11px] text-gray-500">Project Manager - Scalify</p>
                 </div>
                 <div class="text-center">
-                    <p class="mb-20">Disetujui Oleh,</p>
-                    <div class="border-b border-gray-400 w-48 mb-1 mx-auto"></div>
+                    <p class="mb-14">Disetujui Oleh,</p>
+                    <div class="border-b border-gray-400 w-44 mb-1 mx-auto"></div>
                     <p class="font-bold text-brand-coffee">.........................................</p>
-                    <p class="text-xs text-gray-500">{{ $client->brand_name }}</p>
+                    <p class="text-[11px] text-gray-500">{{ $client->brand_name }}</p>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Modal Detail Paket Cafe -->
+    <div id="packageModal" class="fixed inset-0 bg-black/60 z-50 hidden items-center justify-center p-4 backdrop-blur-xs no-print">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl relative animate-fade-in border border-brand-caramel/20">
+            <button onclick="closePackageModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-stone-100 text-stone-500 hover:text-stone-800 hover:bg-stone-200 flex items-center justify-center transition">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <div class="flex items-center gap-3 mb-4">
+                <div id="modalIcon" class="w-10 h-10 rounded-full bg-brand-cream text-brand-coffee flex items-center justify-center text-lg">
+                    <i class="fas fa-award"></i>
+                </div>
+                <div>
+                    <h3 id="modalTitle" class="text-lg font-bold text-brand-coffee font-serif">Detail Paket</h3>
+                    <p id="modalPrice" class="text-xs font-bold text-brand-caramel"></p>
+                </div>
+            </div>
+
+            <p id="modalDesc" class="text-xs text-stone-600 mb-4 bg-brand-cream/30 p-3 rounded-lg border border-brand-caramel/20"></p>
+
+            <div class="mb-6">
+                <h4 class="text-xs font-bold uppercase tracking-wider text-brand-coffee mb-2.5">Fasilitas & Fitur Termasuk:</h4>
+                <ul id="modalFeatures" class="space-y-2 text-xs text-stone-600">
+                    <!-- Dynamic List -->
+                </ul>
+            </div>
+
+            <div class="flex gap-3 pt-3 border-t border-brand-cream">
+                <button type="button" onclick="closePackageModal()" class="flex-1 py-2 px-4 rounded-xl border border-stone-200 text-stone-600 hover:bg-stone-50 text-xs font-semibold transition">
+                    Tutup
+                </button>
+                <a id="modalWaBtn" href="#" target="_blank" class="flex-1 py-2 px-4 rounded-xl bg-brand-coffee hover:bg-brand-dark text-brand-cream text-xs font-bold flex items-center justify-center gap-1.5 shadow transition">
+                    <i class="fab fa-whatsapp text-sm text-green-400"></i> Pilih Paket Ini
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const packageDetails = {
+            silver: {
+                title: 'Paket Silver'
+                , price: '{{ \App\Models\ClientProposal::formatPackagePill($client->silver_price) }} (Perpanjangan {{ $client->silver_renewal }})'
+                , desc: 'Paket starter untuk memperkenalkan brand cafe secara online dengan tampilan simpel, estetik, dan navigasi praktis.'
+                , features: [
+                    'Website Landing Page Cafe Modern & Responsif (One-Page)'
+                    , 'Daftar Menu Makanan & Minuman Pilihan (Statis)'
+                    , 'Informasi Jam Operasional, Lokasi & Integrasi Google Maps Direct'
+                    , 'Tombol Direct Reservasi & Order via WhatsApp'
+                    , 'Domain Kustom (.com / .id) + Cloud Server 1 Tahun'
+                    , 'Garansi Teknis 1 Bulan'
+                ]
+            }
+            , gold: {
+                title: 'Paket Gold (Paling Populer)'
+                , price: '{{ \App\Models\ClientProposal::formatPackagePill($client->gold_price) }} (Perpanjangan {{ $client->gold_renewal }})'
+                , desc: 'Website company profile dengan sistem Menu Digital QR Dinamis (CMS) yang dapat diubah dan diperbarui kapan saja secara mandiri.'
+                , features: [
+                    'Website Company Profile & Digital Menu Interaktif'
+                    , 'QR Code Stand Meja (Pengunjung scan langsung di meja untuk melihat menu)'
+                    , 'Panel Admin Mandiri (Tambah/Edit Menu, Kategori, Foto & Harga Tanpa Koding)'
+                    , 'Galeri Suasana Tempat (Ambiance & Interior Cafe)'
+                    , 'Formulir Reservasi Meja Otomatis Terhubung ke WhatsApp Kasir'
+                    , 'Domain Kustom + Cloud Server SSD Cepat 1 Tahun + SSL'
+                    , 'Garansi & Support Teknis 3 Bulan'
+                ]
+            }
+            , diamond: {
+                title: 'Paket Diamond'
+                , price: '{{ \App\Models\ClientProposal::formatPackagePill($client->diamond_price) }} (Perpanjangan {{ $client->diamond_renewal }})'
+                , desc: 'Solusi pemesanan mandiri (Self-Ordering / Takeaway) online langsung dari smartphone pelanggan dilengkapi fitur voucher promo.'
+                , features: [
+                    'Semua Fasilitas Unggulan Paket Gold'
+                    , 'Sistem Order Online Mandiri (Takeaway / Dine-In via Website)'
+                    , 'Integrasi Payment Gateway Otomatis (QRIS & E-Wallet)'
+                    , 'Fitur Kupon Diskon, Promo Khusus & Badging Best Seller'
+                    , 'Optimasi SEO Google Maps & Local Food Search'
+                    , 'Garansi & Maintenance Prioritas 6 Bulan'
+                ]
+            }
+            , platinum: {
+                title: 'Paket Platinum (Multi-Outlet & Loyalty)'
+                , price: '{{ \App\Models\ClientProposal::formatPackagePill($client->platinum_price) }} (Perpanjangan {{ $client->platinum_renewal }})'
+                , desc: 'Ekosistem terlengkap untuk bisnis cafe skala menengah-besar dengan manajemen multi-cabang dan program loyalitas pelanggan.'
+                , features: [
+                    'Semua Fasilitas Lengkap Paket Diamond'
+                    , 'Dukungan Multi-Outlet / Multi-Cabang dalam 1 Sistem Terpusat'
+                    , 'Laporan Penjualan Digital & Analisis Menu Paling Laku'
+                    , 'Program Loyalitas Member / Poin Reward Pelanggan Cafe'
+                    , 'Desain 100% Kustom Mewah sesuai Konsep Interior & Brand Cafe'
+                    , 'Dedicated Cloud Server Performa Tinggi'
+                    , 'Dedicated VIP Support Penuh 1 Tahun'
+                ]
+            }
+        };
+
+        function openPackageModal(type) {
+            const data = packageDetails[type];
+            if (!data) return;
+
+            document.getElementById('modalTitle').textContent = data.title;
+            document.getElementById('modalPrice').textContent = data.price;
+            document.getElementById('modalDesc').textContent = data.desc;
+
+            const list = document.getElementById('modalFeatures');
+            list.innerHTML = '';
+            data.features.forEach(feat => {
+                const li = document.createElement('li');
+                li.className = 'flex items-start gap-2';
+                li.innerHTML = '<i class="fas fa-check-circle text-brand-caramel mt-0.5 shrink-0"></i> <span>' + feat + '</span>';
+                list.appendChild(li);
+            });
+
+            const waText = encodeURIComponent('Halo Scalify, saya ingin berkonsultasi mengenai ' + data.title + ' untuk {{ $client->brand_name }}. Mohon info selengkapnya.');
+            document.getElementById('modalWaBtn').href = 'https://wa.me/{{ $cleanWa }}?text=' + waText;
+
+            const modal = document.getElementById('packageModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closePackageModal() {
+            const modal = document.getElementById('packageModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('packageModal');
+            if (event.target === modal) {
+                closePackageModal();
+            }
+        };
+
+    </script>
 
 </body>
 </html>
