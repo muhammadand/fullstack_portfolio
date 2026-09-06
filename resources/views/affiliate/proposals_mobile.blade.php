@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Katalog Proposal - Mobile</title>
+    <title>Penawaran Bisnis - Mobile</title>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
     <x-affiliate.pwa-meta />
@@ -68,7 +68,7 @@
                 </a>
                 <div>
                     <p class="text-xs text-rose-400 font-medium tracking-wider uppercase">Marketing</p>
-                    <h1 class="text-xl font-bold text-white">Katalog Proposal</h1>
+                    <h1 class="text-xl font-bold text-white">Penawaran Bisnis</h1>
                 </div>
             </div>
 

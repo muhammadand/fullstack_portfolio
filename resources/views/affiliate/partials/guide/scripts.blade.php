@@ -2,46 +2,46 @@
     // 7-Day Sprint Calendar Data
     const sprintDays = {
         1: {
-            badge: 'Hari 1: Senin',
-            title: 'Riset 10 Bisnis Lokal di Google Maps',
-            target: 'Target: 10 Kontak WA',
-            desc: 'Buka Google Maps atau Instagram di area kota Anda. Cari 10 bisnis lokal (contoh: Cafe, Salon, Rental Mobil, Klinik, Bakery) yang belum memiliki link website di profil mereka. Simpan nama bisnis dan nomor WhatsApp pemilik usaha.',
-            actionHtml: `<button onclick="switchTab('categories')" class="flex-1 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-xl transition-all flex items-center justify-center gap-1.5"><i class="fa-solid fa-layer-group text-xs"></i> Lihat Referensi Kategori</button>`
-        },
-        2: {
-            badge: 'Hari 2: Selasa',
-            title: 'Generate Live Proposal Klien & Kirim WA',
-            target: 'Target: 10 Proposal Terkirim',
-            desc: 'Buka menu Katalog Proposal di Dashboard. Masukkan 10 nama bisnis yang telah diriset kemarin untuk membuat link landing page mockup live atas nama bisnis mereka. Kirimkan pesan pengenalan via WhatsApp.',
-            actionHtml: `<a href="{{ route('affiliate.proposals') }}" wire:navigate class="flex-1 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-xl transition-all flex items-center justify-center gap-1.5"><i class="fa-solid fa-folder-plus text-xs"></i> Buka Katalog Proposal</a>`
-        },
-        3: {
-            badge: 'Hari 3: Rabu',
-            title: 'Publikasi Story WA & Status Media Sosial',
-            target: 'Target: 3 Postingan / Story',
-            desc: 'Gunakan AI Social Studio untuk meracik copy status WhatsApp Story, Facebook, atau Telegram. Pasang juga poster dari Marketing Kit agar prospek melihat Anda aktif sebagai konsultan agensi digital.',
-            actionHtml: `<button onclick="switchTab('ai-studio')" class="flex-1 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-xl transition-all flex items-center justify-center gap-1.5"><i class="fa-solid fa-wand-magic-sparkles text-xs"></i> Buka AI Social Studio</button>`
-        },
-        4: {
-            badge: 'Hari 4: Kamis',
-            title: 'Follow-Up Prospek & Tunjukkan Case Study',
-            target: 'Target: 5 Respon / Obrolan Aktif',
-            desc: 'Follow-up prospek yang sudah melihat proposal Anda. Tanyakan kesan mereka terhadap desain mockup yang dibuat, lalu kirimkan Case Study & Portofolio Scalify sebagai bukti hasil nyata peningkatan omset klien kami.',
-            actionHtml: `<button onclick="switchTab('case-study')" class="flex-1 py-2 bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold rounded-xl transition-all flex items-center justify-center gap-1.5"><i class="fa-solid fa-briefcase text-xs"></i> Salin Case Study Klien</button>`
-        },
-        5: {
-            badge: 'Hari 5: Jumat',
-            title: 'Tangani Keberatan & Negosiasi Closing',
-            target: 'Target: 1-2 Calon Deal',
-            desc: 'Jika klien merasa ragu terkait biaya atau fungsi website, gunakan fitur Penakluk Penolakan AI untuk merumuskan balasan negosiasi yang cerdas, ramah, dan meyakinkan hingga klien siap mengambil keputusan.',
-            actionHtml: `<button onclick="switchTab('objection')" class="flex-1 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-xl transition-all flex items-center justify-center gap-1.5"><i class="fa-solid fa-shield-halved text-xs"></i> Buka Penakluk Penolakan</button>`
-        },
-        6: {
-            badge: 'Hari 6-7: Weekend',
-            title: 'Finalisasi Project Deal & Klaim Komisi',
-            target: 'Target: Min. 1 Project Deal',
-            desc: 'Pastikan klien menyetujui paket website. Informasikan tim Scalify untuk mulai produksi. Begitu project deal dan diverifikasi, komisi 10% (Rp 200.000 - Rp 500.000) langsung masuk ke saldo dompet Anda!',
-            actionHtml: `<a href="{{ route('affiliate.history') }}" wire:navigate class="flex-1 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-xl transition-all flex items-center justify-center gap-1.5"><i class="fa-solid fa-wallet text-xs"></i> Cek Riwayat & Saldo Komisi</a>`
+            badge: 'Hari 1: Senin'
+            , title: 'Riset 10 Bisnis Lokal di Google Maps'
+            , target: 'Target: 10 Kontak WA'
+            , desc: 'Buka Google Maps atau Instagram di area kota Anda. Cari 10 bisnis lokal (contoh: Cafe, Salon, Rental Mobil, Klinik, Bakery) yang belum memiliki link website di profil mereka. Simpan nama bisnis dan nomor WhatsApp pemilik usaha.'
+            , actionHtml: `<button onclick="switchTab('categories')" class="flex-1 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-xl transition-all flex items-center justify-center gap-1.5"><i class="fa-solid fa-layer-group text-xs"></i> Lihat Referensi Kategori</button>`
+        }
+        , 2: {
+            badge: 'Hari 2: Selasa'
+            , title: 'Generate Live Proposal Klien & Kirim WA'
+            , target: 'Target: 10 Proposal Terkirim'
+            , desc: 'Buka menu Penawaran Bisnis di Dashboard. Masukkan 10 nama bisnis yang telah diriset kemarin untuk membuat link landing page mockup live atas nama bisnis mereka. Kirimkan pesan pengenalan via WhatsApp.'
+            , actionHtml: `<a href="{{ route('affiliate.proposals') }}" wire:navigate class="flex-1 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-xl transition-all flex items-center justify-center gap-1.5"><i class="fa-solid fa-briefcase text-xs"></i> Buka Penawaran Bisnis</a>`
+        }
+        , 3: {
+            badge: 'Hari 3: Rabu'
+            , title: 'Publikasi Story WA & Status Media Sosial'
+            , target: 'Target: 3 Postingan / Story'
+            , desc: 'Gunakan AI Social Studio untuk meracik copy status WhatsApp Story, Facebook, atau Telegram. Pasang juga poster dari Marketing Kit agar prospek melihat Anda aktif sebagai konsultan agensi digital.'
+            , actionHtml: `<button onclick="switchTab('ai-studio')" class="flex-1 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-xl transition-all flex items-center justify-center gap-1.5"><i class="fa-solid fa-wand-magic-sparkles text-xs"></i> Buka AI Social Studio</button>`
+        }
+        , 4: {
+            badge: 'Hari 4: Kamis'
+            , title: 'Follow-Up Prospek & Tunjukkan Case Study'
+            , target: 'Target: 5 Respon / Obrolan Aktif'
+            , desc: 'Follow-up prospek yang sudah melihat proposal Anda. Tanyakan kesan mereka terhadap desain mockup yang dibuat, lalu kirimkan Case Study & Portofolio Scalify sebagai bukti hasil nyata peningkatan omset klien kami.'
+            , actionHtml: `<button onclick="switchTab('case-study')" class="flex-1 py-2 bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold rounded-xl transition-all flex items-center justify-center gap-1.5"><i class="fa-solid fa-briefcase text-xs"></i> Salin Case Study Klien</button>`
+        }
+        , 5: {
+            badge: 'Hari 5: Jumat'
+            , title: 'Tangani Keberatan & Negosiasi Closing'
+            , target: 'Target: 1-2 Calon Deal'
+            , desc: 'Jika klien merasa ragu terkait biaya atau fungsi website, gunakan fitur Penakluk Penolakan AI untuk merumuskan balasan negosiasi yang cerdas, ramah, dan meyakinkan hingga klien siap mengambil keputusan.'
+            , actionHtml: `<button onclick="switchTab('objection')" class="flex-1 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-xl transition-all flex items-center justify-center gap-1.5"><i class="fa-solid fa-shield-halved text-xs"></i> Buka Penakluk Penolakan</button>`
+        }
+        , 6: {
+            badge: 'Hari 6-7: Weekend'
+            , title: 'Finalisasi Project Deal & Klaim Komisi'
+            , target: 'Target: Min. 1 Project Deal'
+            , desc: 'Pastikan klien menyetujui paket website. Informasikan tim Scalify untuk mulai produksi. Begitu project deal dan diverifikasi, komisi 10% (Rp 200.000 - Rp 500.000) langsung masuk ke saldo dompet Anda!'
+            , actionHtml: `<a href="{{ route('affiliate.history') }}" wire:navigate class="flex-1 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-xl transition-all flex items-center justify-center gap-1.5"><i class="fa-solid fa-wallet text-xs"></i> Cek Riwayat & Saldo Komisi</a>`
         }
     };
 
@@ -135,9 +135,9 @@
         // Scroll tab button into view smoothly
         if (targetBtn) {
             targetBtn.scrollIntoView({
-                behavior: 'smooth',
-                inline: 'center',
-                block: 'nearest'
+                behavior: 'smooth'
+                , inline: 'center'
+                , block: 'nearest'
             });
         }
     }
@@ -179,17 +179,17 @@
 
         try {
             const response = await fetch("{{ route('affiliate.ai_social_post') }}", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
-                    "Accept": "application/json"
-                },
-                body: JSON.stringify({
-                    platform,
-                    persona,
-                    category,
-                    custom_topic
+                method: "POST"
+                , headers: {
+                    "Content-Type": "application/json"
+                    , "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                    , "Accept": "application/json"
+                }
+                , body: JSON.stringify({
+                    platform
+                    , persona
+                    , category
+                    , custom_topic
                 })
             });
 
@@ -256,16 +256,16 @@
 
         try {
             const response = await fetch("{{ route('affiliate.ai_handle_objection') }}", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
-                    "Accept": "application/json"
-                },
-                body: JSON.stringify({
-                    objection_type,
-                    custom_objection,
-                    business_type
+                method: "POST"
+                , headers: {
+                    "Content-Type": "application/json"
+                    , "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                    , "Accept": "application/json"
+                }
+                , body: JSON.stringify({
+                    objection_type
+                    , custom_objection
+                    , business_type
                 })
             });
 
@@ -399,4 +399,5 @@
         }
         ctx.fillText(line, x, y);
     }
+
 </script>

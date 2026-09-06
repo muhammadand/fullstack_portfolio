@@ -42,10 +42,10 @@
                     <div class="flex-1">
                         <h3 class="text-xs font-bold text-white mb-1">Generate Live Proposal Klien</h3>
                         <p class="text-[11px] text-slate-300 leading-relaxed mb-2">
-                            Buka menu <b>Katalog Proposal</b> di dashboard, masukkan nama bisnis prospek. Sistem akan secara otomatis membuat mockup landing page interaktif dengan nama bisnis mereka.
+                            Buka menu <b>Penawaran Bisnis</b> di dashboard, masukkan nama bisnis prospek. Sistem akan secara otomatis membuat mockup landing page interaktif dengan nama bisnis mereka.
                         </p>
                         <a href="{{ route('affiliate.proposals') }}" wire:navigate class="inline-flex items-center gap-1.5 text-[11px] font-semibold text-emerald-400 hover:text-emerald-300">
-                            Buka Katalog Proposal <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                            Buka Penawaran Bisnis <i class="fa-solid fa-arrow-right text-[10px]"></i>
                         </a>
                     </div>
                 </div>

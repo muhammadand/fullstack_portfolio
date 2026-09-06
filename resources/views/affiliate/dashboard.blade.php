@@ -172,15 +172,15 @@
 
         <!-- Quick Actions (New Features) -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            <!-- Katalog Proposal -->
+            <!-- Penawaran Bisnis -->
             <div class="bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 border border-slate-100 p-5 flex items-center justify-between group">
                 <div class="flex items-center gap-4">
                     <div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-500 flex items-center justify-center text-lg group-hover:bg-rose-500 group-hover:text-white transition-colors">
-                        <i class="fa-solid fa-folder-open"></i>
+                        <i class="fa-solid fa-briefcase"></i>
                     </div>
                     <div>
-                        <h3 class="text-base font-bold text-slate-800">Katalog Proposal</h3>
-                        <p class="text-xs text-slate-500">Pilih dan bagikan link spesifik klien</p>
+                        <h3 class="text-base font-bold text-slate-800">Penawaran Bisnis</h3>
+                        <p class="text-xs text-slate-500">Pilih & bagikan landing page / proposal ke klien bisnis</p>
                     </div>
                 </div>
                 <a href="{{ route('affiliate.proposals') }}" wire:navigate class="w-8 h-8 rounded-full bg-slate-50 text-slate-400 hover:bg-rose-50 hover:text-rose-600 flex items-center justify-center transition-colors shrink-0 text-sm">
