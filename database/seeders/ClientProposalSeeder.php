@@ -19,8 +19,10 @@ class ClientProposalSeeder extends Seeder
                 'client_name' => 'Manajemen Permata Qiana Wedding',
                 'wa_number' => '6281234567890',
                 'wa_template' => 'Halo tim Scalify, saya tertarik untuk diskusi lebih lanjut mengenai proposal website dari Permata Qiana.',
-                'project_price' => 4500000,
-                'domain_price' => 1200000,
+                'price_silver' => 700000,
+                'price_gold' => 1600000,
+                'price_diamond' => 2000000,
+                'price_platinum' => 3000000,
             ]
         );
     }

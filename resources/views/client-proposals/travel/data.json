@@ -1,0 +1,356 @@
+{
+  "routes": [
+    {
+      "id": "all",
+      "name": "Semua Rute",
+      "icon": "fa-route"
+    },
+    {
+      "id": "ciamis-jakarta",
+      "name": "Ciamis ➔ Jakarta",
+      "icon": "fa-van-shuttle"
+    },
+    {
+      "id": "kuningan-bandung",
+      "name": "Kuningan ➔ Bandung",
+      "icon": "fa-van-shuttle"
+    },
+    {
+      "id": "bandung-ciamis",
+      "name": "Bandung ➔ Ciamis",
+      "icon": "fa-van-shuttle"
+    },
+    {
+      "id": "jakarta-kuningan",
+      "name": "Jakarta ➔ Kuningan",
+      "icon": "fa-van-shuttle"
+    },
+    {
+      "id": "tasik-jakarta",
+      "name": "Tasik ➔ Bandara Soetta",
+      "icon": "fa-plane-departure"
+    }
+  ],
+  "schedules": [
+    {
+      "id": 101,
+      "route_id": "ciamis-jakarta",
+      "origin": "Ciamis",
+      "destination": "Jakarta (Pool & Door to Door)",
+      "departure_time": "07:00 WIB",
+      "arrival_est": "13:30 WIB",
+      "shift": "pagi",
+      "shift_label": "Shift Pagi (Via Tol Cisumdawu)",
+      "shift_badge": "bg-amber-100 text-amber-900",
+      "fleet_name": "Isuzu Elf Giga Long Executive",
+      "fleet_code": "ELF-01",
+      "car_type": "elf_long",
+      "total_seats": 16,
+      "booked_seats": [
+        1,
+        2,
+        4,
+        5,
+        7,
+        8,
+        9,
+        11,
+        12,
+        14,
+        15,
+        16
+      ],
+      "price": 220000,
+      "price_formatted": "Rp 220.000",
+      "inclusions": [
+        "Free Snack Box & Air Mineral",
+        "Paket Makan 1x Prasmanan di Rest Area Tol",
+        "AC Ducting Dingin Per Bangku",
+        "USB Port Charger per Kursi",
+        "Bagasi 20kg + Jaring Atas",
+        "Asuransi Jasa Raharja"
+      ]
+    },
+    {
+      "id": 102,
+      "route_id": "kuningan-bandung",
+      "origin": "Kuningan",
+      "destination": "Bandung (Dipatiukur / Pasteur)",
+      "departure_time": "06:30 WIB",
+      "arrival_est": "09:00 WIB",
+      "shift": "pagi",
+      "shift_label": "Shift Pagi Express (2.5 Jam Tol)",
+      "shift_badge": "bg-emerald-100 text-emerald-900",
+      "fleet_name": "Toyota HiAce Premio Luxury Shuttle",
+      "fleet_code": "HIC-02",
+      "car_type": "hiace_premio",
+      "total_seats": 10,
+      "booked_seats": [
+        1,
+        3,
+        4,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "price": 150000,
+      "price_formatted": "Rp 150.000",
+      "inclusions": [
+        "Snack Box & Air Mineral Dingin",
+        "Captain Seat Reclining Super Empuk",
+        "USB Charger Fast Charging",
+        "Full AC Dingin & Free Wi-Fi",
+        "Door to Door Cepat"
+      ]
+    },
+    {
+      "id": 103,
+      "route_id": "bandung-ciamis",
+      "origin": "Bandung",
+      "destination": "Ciamis / Tasikmalaya",
+      "departure_time": "14:00 WIB",
+      "arrival_est": "17:45 WIB",
+      "shift": "siang",
+      "shift_label": "Shift Siang Reguler",
+      "shift_badge": "bg-blue-100 text-blue-900",
+      "fleet_name": "Isuzu Elf Short Shuttle",
+      "fleet_code": "ELF-03",
+      "car_type": "elf_short",
+      "total_seats": 12,
+      "booked_seats": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        8,
+        9
+      ],
+      "price": 120000,
+      "price_formatted": "Rp 120.000",
+      "inclusions": [
+        "Snack Box & Air Mineral Botol",
+        "AC Dingin Merata & Audio Musik",
+        "Reclining Seats Nyaman",
+        "Bagasi Penumpang Muat Banyak"
+      ]
+    },
+    {
+      "id": 104,
+      "route_id": "jakarta-kuningan",
+      "origin": "Jakarta (Jabodetabek)",
+      "destination": "Kuningan / Cirebon",
+      "departure_time": "20:30 WIB",
+      "arrival_est": "02:30 WIB",
+      "shift": "malam",
+      "shift_label": "Shift Malam (Overnight Express Tol)",
+      "shift_badge": "bg-indigo-100 text-indigo-900",
+      "fleet_name": "Isuzu Elf Long Super Executive",
+      "fleet_code": "ELF-04",
+      "car_type": "elf_long",
+      "total_seats": 16,
+      "booked_seats": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "price": 240000,
+      "price_formatted": "Rp 240.000",
+      "inclusions": [
+        "Paket Makan 1x Prasmanan di Rest Area Tol",
+        "Snack Box Malam & Kopi Hangat/Air Dingin",
+        "Bantal Leher & Selimut Bersih",
+        "Port USB Charger & Full AC Dingin",
+        "Door to Door Sampai Depan Pintu"
+      ]
+    },
+    {
+      "id": 105,
+      "route_id": "tasik-jakarta",
+      "origin": "Tasikmalaya / Ciamis",
+      "destination": "Bandara Soekarno-Hatta (T1, T2, T3)",
+      "departure_time": "21:00 WIB",
+      "arrival_est": "03:30 WIB",
+      "shift": "malam",
+      "shift_label": "Shuttle Khusus Bandara Soetta",
+      "shift_badge": "bg-purple-100 text-purple-900",
+      "fleet_name": "Mini Bus Toyota Coaster VIP",
+      "fleet_code": "CST-05",
+      "car_type": "minibus_coaster",
+      "total_seats": 18,
+      "booked_seats": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "price": 270000,
+      "price_formatted": "Rp 270.000",
+      "inclusions": [
+        "Drop Langsung Terminal 1, 2, atau 3 Soetta",
+        "Paket Makan 1x di Rest Area Cipali",
+        "Snack Box & Air Mineral Botol",
+        "Kapasitas Bagasi Koper Ekstra Besar (Hingga 30kg)",
+        "Reclining Seat 140° & USB Port"
+      ]
+    }
+  ],
+  "fleets": [
+    {
+      "id": 1,
+      "name": "Isuzu Elf Giga Long Executive",
+      "category": "Microbus Elf Long",
+      "capacity": "16-19 Kursi",
+      "layout_type": "elf_long",
+      "photo": "/images/travel/isuzu_elf.jpg",
+      "badge": "Armada Paling Favorit",
+      "main_routes": "Ciamis - Jakarta & Kuningan - Jakarta",
+      "specs": "Mesin 4JJ1-TC Common Rail 150 PS, Full AC Ducting, Karoseri Adiputro / New Armada",
+      "benefits": [
+        "Free Snack & Paket Makan 1x",
+        "Colokan USB di Setiap Baris",
+        "Reclining Seat & Bagasi Luas",
+        "Audio TV Android & Karaoke"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Toyota HiAce Premio Luxury",
+      "category": "Executive Commuter",
+      "capacity": "10-12 Kursi",
+      "layout_type": "hiace_premio",
+      "photo": "/images/travel/minibus_hero.jpg",
+      "badge": "Captain Seat VIP",
+      "main_routes": "Kuningan - Bandung & Ciamis - Jakarta",
+      "specs": "Mesin 1GD-FTV 2.800cc, Suspensi Double Wishbone Empuk, Kabin Senyap",
+      "benefits": [
+        "Free Snack Box & Minuman Dingin",
+        "Captain Seat Ergonomis + Sandaran Tangan",
+        "Fast USB Type-C Charging",
+        "Free Wi-Fi Onboard"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Isuzu Elf Short Shuttle",
+      "category": "Microbus Elf Short",
+      "capacity": "11-14 Kursi",
+      "layout_type": "elf_short",
+      "photo": "/images/travel/isuzu_elf.jpg",
+      "badge": "Lincah & Cepat",
+      "main_routes": "Bandung - Ciamis & Tasik - Cirebon",
+      "specs": "Isuzu 2.8L Turbo Intercooler, Kabin Steril, Reclining Seat 3 Baris",
+      "benefits": [
+        "Free Snack Box & Air Mineral",
+        "Antar Jemput Door to Door Fleksibel",
+        "Kabin AC Sejuk Merata",
+        "Tarif Paling Ekonomis"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Kabin Eksekutif & Minibus VIP",
+      "category": "Medium Minibus VIP",
+      "capacity": "16-18 Kursi",
+      "layout_type": "minibus_coaster",
+      "photo": "/images/travel/minibus_interior.jpg",
+      "badge": "Interior Nyaman & Luas",
+      "main_routes": "Tasik / Ciamis - Bandara Soekarno Hatta",
+      "specs": "Kabin Lega Reclining Captain Seat, Ambient Warm LED, AC Ducting, Bagasi Luas",
+      "benefits": [
+        "Paket Makan 1x Rest Area",
+        "Kabin Super Nyaman & Dingin",
+        "Layar LED TV Smart Multimedia",
+        "Reclining Seat 140 Derajat"
+      ]
+    }
+  ],
+  "membership_tiers": [
+    {
+      "tier": "Bronze Member",
+      "icon": "fa-award",
+      "badge_color": "bg-amber-50 text-amber-900 border-amber-200",
+      "card_theme": "border-amber-100/90 bg-gradient-to-b from-amber-50/40 via-white to-white",
+      "btn_theme": "bg-amber-50 hover:bg-amber-100 text-amber-900",
+      "points_needed": "0 - 499 Poin",
+      "criteria": "Daftar Otomatis saat Booking Pertama",
+      "benefits": [
+        "Dapatkan 100 Poin setiap pembelian 1 tiket",
+        "Gratis Snack Box & Air Mineral Botol",
+        "Notifikasi ketersediaan kursi via WhatsApp",
+        "Kemudahan reschedule tiket hingga H-6 jam"
+      ]
+    },
+    {
+      "tier": "Silver Frequent",
+      "icon": "fa-star",
+      "badge_color": "bg-slate-100 text-slate-800 border-slate-300",
+      "card_theme": "border-slate-200/90 bg-gradient-to-b from-slate-50/70 via-white to-white",
+      "btn_theme": "bg-slate-100 hover:bg-slate-200 text-slate-800",
+      "points_needed": "500 - 999 Poin",
+      "criteria": "Telah 5x Naik Travel",
+      "benefits": [
+        "Semua keuntungan Bronze Member",
+        "Diskon langsung 5% setiap pemesanan tiket",
+        "Prioritas penjemputan awal door-to-door",
+        "Bebas pilih nomor kursi tanpa deposit",
+        "Voucher makan gratis di rest area mitra"
+      ]
+    },
+    {
+      "tier": "Gold VIP Member",
+      "icon": "fa-crown",
+      "is_popular": true,
+      "badge_color": "bg-amber-400 text-slate-950 border-amber-500 font-black",
+      "card_theme": "border-2 border-amber-400 bg-gradient-to-b from-amber-100/70 via-amber-50/40 to-white shadow-xl shadow-amber-500/10",
+      "btn_theme": "bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white shadow-md shadow-amber-500/20 font-black",
+      "points_needed": "1.000+ Poin",
+      "criteria": "10x Perjalanan (Otomatis Dapat 1 Tiket Gratis)",
+      "benefits": [
+        "GRATIS 1 TIKET PERJALANAN (Setelah 10x Naik)",
+        "Diskon 10% seumur hidup seluruh rute",
+        "Bebas pilih Kursi Depan / Captain Seat",
+        "Bagasi ekstra bebas biaya hingga 35kg",
+        "Akses Jalur Khusus Customer Service VIP 24 Jam"
+      ]
+    },
+    {
+      "tier": "Platinum Corporate",
+      "icon": "fa-gem",
+      "badge_color": "bg-sky-100 text-sky-900 border-sky-300",
+      "card_theme": "border-sky-200/90 bg-gradient-to-b from-sky-50/60 via-white to-white",
+      "btn_theme": "bg-sky-50 hover:bg-sky-100 text-sky-900",
+      "points_needed": "Charter & Group",
+      "criteria": "Sewa 1 Unit Mobil Minibus / Elf",
+      "benefits": [
+        "Diskon hingga 20% untuk Private Charter",
+        "Bebas atur jam berangkat & rute titik jemput",
+        "Layanan invoice & tempo instansi/perusahaan",
+        "Snack Box & Paket Makan Spesial Rombongan",
+        "Driver Senior Prioritas Berpengalaman"
+      ]
+    }
+  ]
+}

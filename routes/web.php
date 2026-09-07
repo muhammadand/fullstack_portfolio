@@ -313,6 +313,8 @@ Route::get('/landing/{slug}', [ClientProposalController::class, 'landing'])->nam
 Route::get('/proposal/{slug}', [ClientProposalController::class, 'proposal'])->name('proposal.dynamic');
 Route::get('/client/cafe/{slug}/landing', [ClientProposalController::class, 'landingCafe'])->name('landing.cafe');
 Route::get('/client/cafe/{slug}/proposal', [ClientProposalController::class, 'proposalCafe'])->name('proposal.cafe');
+Route::get('/client/travel/{slug}/landing', [ClientProposalController::class, 'landingTravel'])->name('landing.travel');
+Route::get('/client/travel/{slug}/proposal', [ClientProposalController::class, 'proposalTravel'])->name('proposal.travel');
 Route::get('/client/rental-mobil/{slug}/admin-demo', [ClientProposalController::class, 'adminDemoRental'])->name('demo.admin.rental');
 Route::get('/client/parfum/{slug}/admin-demo', [ClientProposalController::class, 'adminDemoParfum'])->name('demo.admin.parfum');
 
@@ -337,6 +339,11 @@ Route::get('/secret-deploy-trigger-12345', function () {
 
         \Illuminate\Support\Facades\Artisan::call('migrate', [
             '--path' => 'database/migrations/2026_09_06_142047_add_package_pricing_to_client_proposals_table.php',
+            '--force' => true
+        ]);
+
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_09_07_091321_drop_project_price_and_domain_price_from_client_proposals_table.php',
             '--force' => true
         ]);
 

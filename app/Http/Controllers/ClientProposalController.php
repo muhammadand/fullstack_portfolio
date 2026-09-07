@@ -11,26 +11,26 @@ class ClientProposalController extends Controller
     public function landing($slug)
     {
         $client = ClientProposal::with('category')->where('slug', $slug)->firstOrFail();
-        
+
         $categorySlug = $client->category ? $client->category->slug : 'wedding';
-        
+
         if (!view()->exists("client-proposals.{$categorySlug}.landing")) {
             abort(404, "Tema landing page untuk kategori {$categorySlug} belum tersedia.");
         }
-        
+
         return view("client-proposals.{$categorySlug}.landing", compact('client'));
     }
 
     public function proposal($slug)
     {
         $client = ClientProposal::with('category')->where('slug', $slug)->firstOrFail();
-        
+
         $categorySlug = $client->category ? $client->category->slug : 'wedding';
-        
+
         if (!view()->exists("client-proposals.{$categorySlug}.proposal")) {
             abort(404, "Tema proposal untuk kategori {$categorySlug} belum tersedia.");
         }
-        
+
         return view("client-proposals.{$categorySlug}.proposal", compact('client'));
     }
 
@@ -56,5 +56,17 @@ class ClientProposalController extends Controller
     {
         $client = ClientProposal::where('slug', $slug)->firstOrFail();
         return view('client-proposals.parfum.admin-demo', compact('client'));
+    }
+
+    public function landingTravel($slug)
+    {
+        $client = ClientProposal::where('slug', $slug)->firstOrFail();
+        return view('client-proposals.travel.landing', compact('client'));
+    }
+
+    public function proposalTravel($slug)
+    {
+        $client = ClientProposal::where('slug', $slug)->firstOrFail();
+        return view('client-proposals.travel.proposal', compact('client'));
     }
 }

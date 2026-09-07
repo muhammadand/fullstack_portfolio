@@ -6,8 +6,8 @@
                             <span class="px-2 py-0.5 rounded {{ $p->category_name ? 'bg-blue-500/20 text-blue-400' : 'bg-slate-700/50 text-slate-300' }}">
                                 {{ $p->category_name ?? 'Tanpa Kategori' }}
                             </span>
-                            @if($p->project_price)
-                            <span><i class="fa-solid fa-tag mr-1 text-slate-500"></i>Rp {{ number_format($p->project_price, 0, ',', '.') }}</span>
+                            @if($p->price_silver)
+                            <span><i class="fa-solid fa-tag mr-1 text-slate-500"></i>Mulai Rp {{ number_format($p->price_silver, 0, ',', '.') }}</span>
                             @endif
                         </div>
                     </div>

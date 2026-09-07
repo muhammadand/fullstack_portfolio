@@ -209,8 +209,8 @@
                             <div class="text-sm text-slate-800 font-medium">{{ $p->wa_number }}</div>
                         </td>
                         <td class="hidden lg:table-cell px-6 py-4">
-                            <div class="text-sm font-bold text-emerald-600">Rp {{ number_format($p->project_price, 0, ',', '.') }}</div>
-                            <div class="text-xs text-slate-500 mt-0.5">+ Domain: Rp {{ number_format($p->domain_price, 0, ',', '.') }}</div>
+                            <div class="text-sm font-bold text-emerald-600">Silver: Rp {{ number_format($p->silver_price, 0, ',', '.') }}</div>
+                            <div class="text-xs text-slate-500 mt-0.5">Gold: Rp {{ number_format($p->gold_price, 0, ',', '.') }}</div>
                         </td>
                         <td class="px-6 py-4">
                             @if($p->affiliate_id)
@@ -365,24 +365,24 @@
                     </template>
                 </div>
 
-                <!-- Input Harga Project -->
+                <!-- Input Harga Paket Silver -->
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Harga Project Baru (IDR):</label>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Harga Paket Silver Baru (IDR):</label>
                     <div class="relative">
                         <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center font-bold text-slate-400 text-sm">Rp</span>
-                        <input type="number" name="project_price" placeholder="Contoh: 4500000" class="w-full pl-11 pr-4 py-2.5 bg-slate-50 border border-slate-300 text-slate-800 text-sm font-semibold rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:bg-white transition">
+                        <input type="number" name="price_silver" placeholder="Contoh: 700000" class="w-full pl-11 pr-4 py-2.5 bg-slate-50 border border-slate-300 text-slate-800 text-sm font-semibold rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:bg-white transition">
                     </div>
-                    <p class="text-[11px] text-slate-400 mt-1">Biarkan kosong jika tidak ingin mengubah Harga Project.</p>
+                    <p class="text-[11px] text-slate-400 mt-1">Biarkan kosong jika tidak ingin mengubah Harga Silver.</p>
                 </div>
 
-                <!-- Input Harga Domain -->
+                <!-- Input Harga Paket Gold -->
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Harga Domain & Hosting Baru (IDR):</label>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Harga Paket Gold Baru (IDR):</label>
                     <div class="relative">
                         <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center font-bold text-slate-400 text-sm">Rp</span>
-                        <input type="number" name="domain_price" placeholder="Contoh: 1200000" class="w-full pl-11 pr-4 py-2.5 bg-slate-50 border border-slate-300 text-slate-800 text-sm font-semibold rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:bg-white transition">
+                        <input type="number" name="price_gold" placeholder="Contoh: 1600000" class="w-full pl-11 pr-4 py-2.5 bg-slate-50 border border-slate-300 text-slate-800 text-sm font-semibold rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:bg-white transition">
                     </div>
-                    <p class="text-[11px] text-slate-400 mt-1">Biarkan kosong jika tidak ingin mengubah Harga Domain.</p>
+                    <p class="text-[11px] text-slate-400 mt-1">Biarkan kosong jika tidak ingin mengubah Harga Gold.</p>
                 </div>
 
                 <!-- Modal Actions -->

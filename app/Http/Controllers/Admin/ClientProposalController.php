@@ -58,16 +58,18 @@ class ClientProposalController extends Controller
     public function bulkUpdatePrice(Request $request)
     {
         $request->validate([
-            'project_price' => 'nullable|numeric|min:0',
-            'domain_price' => 'nullable|numeric|min:0',
+            'price_silver' => 'nullable|numeric|min:0',
+            'price_gold' => 'nullable|numeric|min:0',
+            'price_diamond' => 'nullable|numeric|min:0',
+            'price_platinum' => 'nullable|numeric|min:0',
             'scope' => 'required|string|in:all,category,selected',
             'target_category_id' => 'nullable|exists:business_categories,id',
             'selected_ids' => 'nullable|array',
             'selected_ids.*' => 'exists:client_proposals,id',
         ]);
 
-        if (!$request->filled('project_price') && !$request->filled('domain_price')) {
-            return redirect()->back()->with('error', 'Silakan masukkan minimal salah satu harga (Harga Project atau Harga Domain) yang ingin diubah.');
+        if (!$request->filled('price_silver') && !$request->filled('price_gold') && !$request->filled('price_diamond') && !$request->filled('price_platinum')) {
+            return redirect()->back()->with('error', 'Silakan masukkan minimal salah satu harga paket yang ingin diubah.');
         }
 
         $query = ClientProposal::query();
@@ -85,11 +87,17 @@ class ClientProposalController extends Controller
         }
 
         $updateData = [];
-        if ($request->filled('project_price')) {
-            $updateData['project_price'] = $request->project_price;
+        if ($request->filled('price_silver')) {
+            $updateData['price_silver'] = $request->price_silver;
         }
-        if ($request->filled('domain_price')) {
-            $updateData['domain_price'] = $request->domain_price;
+        if ($request->filled('price_gold')) {
+            $updateData['price_gold'] = $request->price_gold;
+        }
+        if ($request->filled('price_diamond')) {
+            $updateData['price_diamond'] = $request->price_diamond;
+        }
+        if ($request->filled('price_platinum')) {
+            $updateData['price_platinum'] = $request->price_platinum;
         }
 
         $count = $query->update($updateData);
@@ -123,8 +131,6 @@ class ClientProposalController extends Controller
             'client_name' => 'nullable|string|max:255',
             'wa_number' => 'required|string|max:20',
             'wa_template' => 'nullable|string',
-            'project_price' => 'required|numeric',
-            'domain_price' => 'required|numeric',
             'price_silver' => 'nullable|numeric|min:0',
             'price_gold' => 'nullable|numeric|min:0',
             'price_diamond' => 'nullable|numeric|min:0',
@@ -161,8 +167,6 @@ class ClientProposalController extends Controller
             'client_name' => 'nullable|string|max:255',
             'wa_number' => 'required|string|max:20',
             'wa_template' => 'nullable|string',
-            'project_price' => 'required|numeric',
-            'domain_price' => 'required|numeric',
             'price_silver' => 'nullable|numeric|min:0',
             'price_gold' => 'nullable|numeric|min:0',
             'price_diamond' => 'nullable|numeric|min:0',
@@ -208,9 +212,6 @@ class ClientProposalController extends Controller
         $categoryId = $validated['business_category_id'] ?? null;
         $category = $categoryId ? BusinessCategory::find($categoryId) : null;
 
-        $projectPrice = $category ? ($category->project_price ?? 4500000) : 4500000;
-        $domainPrice = $category ? ($category->domain_price ?? 1200000) : 1200000;
-
         $proposals = [];
 
         foreach ($validated['contacts'] as $contact) {
@@ -232,8 +233,10 @@ class ClientProposalController extends Controller
                 'client_name' => $contact['brand_name'],
                 'wa_number' => $contact['wa_number'],
                 'wa_template' => null,
-                'project_price' => $projectPrice,
-                'domain_price' => $domainPrice,
+                'price_silver' => 700000,
+                'price_gold' => 1600000,
+                'price_diamond' => 2000000,
+                'price_platinum' => 3000000,
             ]);
 
             $proposals[] = $proposal;

@@ -31,5 +31,15 @@ class BusinessCategorySeeder extends Seeder
                 'domain_price' => 1200000,
             ]
         );
+
+        \App\Models\BusinessCategory::updateOrCreate(
+            ['slug' => 'travel'],
+            [
+                'name' => 'Travel & Shuttle',
+                'wa_template' => 'Halo tim Scalify, saya pengusaha Travel / Shuttle dan tertarik untuk membuat sistem website booking jadwal dan armada.',
+                'project_price' => 4500000,
+                'domain_price' => 1200000,
+            ]
+        );
     }
 }
