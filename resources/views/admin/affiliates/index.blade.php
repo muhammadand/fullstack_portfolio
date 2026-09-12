@@ -1,65 +1,81 @@
 @extends('layouts.admin.app')
 
 @section('content')
-<div class="px-4 sm:px-6 py-4 sm:py-8">
-    <div class="flex flex-col sm:flex-row mb-6 justify-between items-start sm:items-end gap-4 sm:gap-0">
+<div class="px-4 lg:px-6 py-6 lg:py-8">
+    <div class="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-slate-800 tracking-tight">Affiliate Dashboard</h1>
-            <p class="text-slate-500 text-xs mt-1">Pantau performa partner dan kelola komisi di satu tempat.</p>
+            <h1 class="text-2xl font-bold text-slate-800">Affiliate Dashboard</h1>
+            <p class="text-slate-500 text-sm mt-1">Pantau performa partner dan kelola komisi di satu tempat.</p>
         </div>
-        <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-            <button onclick="sendPushNotification()" class="flex items-center justify-center w-full sm:w-auto gap-1.5 px-4 py-2 text-sm bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors shadow-sm">
+        <div class="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
+            <button onclick="sendPushNotification()" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm flex items-center justify-center gap-2">
                 <i class="fa-solid fa-bell"></i> Broadcast Notif
             </button>
-            <button onclick="openAddPartnerModal()" class="flex items-center justify-center w-full sm:w-auto gap-1.5 px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors shadow-sm">
+            <button onclick="openAddPartnerModal()" class="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm flex items-center justify-center gap-2">
                 <i class="fa-solid fa-plus"></i> Tambah Partner
             </button>
         </div>
     </div>
 
     <!-- Dashboard Stats Grid -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <!-- Total Partners -->
-        <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200 flex flex-col sm:flex-row items-center text-center sm:text-left gap-2 sm:gap-3">
-            <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-lg shrink-0">
-                <i class="fa-solid fa-users"></i>
-            </div>
-            <div>
-                <p class="text-slate-500 text-[10px] sm:text-xs font-medium leading-tight mb-1 sm:mb-0">Total Partner</p>
-                <p class="text-base sm:text-xl font-bold text-slate-800 leading-none">{{ $totalPartners }}</p>
+        <div class="group bg-white rounded-xl p-5 shadow-sm border border-slate-200 hover:border-blue-400 hover:shadow transition-all flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl shrink-0 group-hover:scale-110 transition-transform">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+                <div>
+                    <p class="text-slate-500 text-xs font-semibold uppercase tracking-wider">Total Partner</p>
+                    <div class="flex items-baseline gap-2 mt-0.5">
+                        <p class="text-2xl font-bold text-slate-800">{{ $totalPartners }}</p>
+                    </div>
+                </div>
             </div>
         </div>
 
         <!-- Total Clicks -->
-        <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200 flex flex-col sm:flex-row items-center text-center sm:text-left gap-2 sm:gap-3">
-            <div class="w-10 h-10 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center text-lg shrink-0">
-                <i class="fa-solid fa-hand-pointer"></i>
-            </div>
-            <div>
-                <p class="text-slate-500 text-[10px] sm:text-xs font-medium leading-tight mb-1 sm:mb-0">Total Klik</p>
-                <p class="text-base sm:text-xl font-bold text-slate-800 leading-none">{{ $totalClicks }}</p>
+        <div class="group bg-white rounded-xl p-5 shadow-sm border border-slate-200 hover:border-purple-400 hover:shadow transition-all flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-xl shrink-0 group-hover:scale-110 transition-transform">
+                    <i class="fa-solid fa-hand-pointer"></i>
+                </div>
+                <div>
+                    <p class="text-slate-500 text-xs font-semibold uppercase tracking-wider">Total Klik</p>
+                    <div class="flex items-baseline gap-2 mt-0.5">
+                        <p class="text-2xl font-bold text-slate-800">{{ $totalClicks }}</p>
+                    </div>
+                </div>
             </div>
         </div>
 
         <!-- Total Commissions -->
-        <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200 flex flex-col sm:flex-row items-center text-center sm:text-left gap-2 sm:gap-3">
-            <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-lg shrink-0">
-                <i class="fa-solid fa-wallet"></i>
-            </div>
-            <div>
-                <p class="text-slate-500 text-[10px] sm:text-xs font-medium leading-tight mb-1 sm:mb-0">Diberikan</p>
-                <p class="text-base sm:text-lg font-bold text-slate-800 leading-none truncate max-w-[80px] sm:max-w-none">Rp {{ number_format($totalCommissions, 0, ',', '.') }}</p>
+        <div class="group bg-white rounded-xl p-5 shadow-sm border border-slate-200 hover:border-emerald-400 hover:shadow transition-all flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl shrink-0 group-hover:scale-110 transition-transform">
+                    <i class="fa-solid fa-wallet"></i>
+                </div>
+                <div>
+                    <p class="text-slate-500 text-xs font-semibold uppercase tracking-wider">Diberikan</p>
+                    <div class="flex items-baseline gap-2 mt-0.5">
+                        <p class="text-2xl font-bold text-emerald-600">Rp {{ number_format($totalCommissions, 0, ',', '.') }}</p>
+                    </div>
+                </div>
             </div>
         </div>
 
         <!-- Pending Approval -->
-        <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200 flex flex-col sm:flex-row items-center text-center sm:text-left gap-2 sm:gap-3">
-            <div class="w-10 h-10 rounded-full bg-yellow-100 text-yellow-600 flex items-center justify-center text-lg shrink-0">
-                <i class="fa-solid fa-user-clock"></i>
-            </div>
-            <div>
-                <p class="text-slate-500 text-[10px] sm:text-xs font-medium leading-tight mb-1 sm:mb-0">Persetujuan</p>
-                <p class="text-base sm:text-xl font-bold text-slate-800 leading-none">{{ $totalPending }}</p>
+        <div class="group bg-white rounded-xl p-5 shadow-sm border border-slate-200 hover:border-yellow-400 hover:shadow transition-all flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-yellow-50 text-yellow-600 flex items-center justify-center text-xl shrink-0 group-hover:scale-110 transition-transform">
+                    <i class="fa-solid fa-user-clock"></i>
+                </div>
+                <div>
+                    <p class="text-slate-500 text-xs font-semibold uppercase tracking-wider">Persetujuan</p>
+                    <div class="flex items-baseline gap-2 mt-0.5">
+                        <p class="text-2xl font-bold text-yellow-600">{{ $totalPending }}</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

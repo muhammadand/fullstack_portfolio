@@ -304,99 +304,101 @@
     </div>
 
     <!-- MODAL UBAH HARGA SERENTAK (BULK UPDATE PRICE) -->
-    <div x-show="showPriceModal" x-transition.opacity.duration.300ms style="display: none;" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-        <div @click.away="showPriceModal = false" class="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-slate-200 transform transition-all">
+    <div x-show="showPriceModal" style="display: none;" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
+        <div @click.away="showPriceModal = false" class="bg-slate-900/70 backdrop-blur-xl rounded-2xl shadow-2xl shadow-amber-900/20 max-w-lg w-full overflow-hidden border border-slate-700/50 transform transition-all flex flex-col">
 
             <!-- Modal Header -->
-            <div class="px-6 py-5 bg-gradient-to-r from-amber-500 to-amber-600 text-white flex items-center justify-between">
-                <div class="flex items-center gap-2.5">
-                    <div class="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center text-lg">
+            <div class="px-6 py-5 bg-slate-800/50 border-b border-slate-700/50 flex items-center justify-between shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-lg text-amber-400 shadow-inner">
                         <i class="fa-solid fa-tags"></i>
                     </div>
                     <div>
-                        <h3 class="font-bold text-lg leading-tight">Ubah Harga Serentak</h3>
-                        <p class="text-amber-100 text-xs">Perbarui harga paket proyek & domain secara massal</p>
+                        <h3 class="font-bold text-lg text-white leading-tight">Ubah Harga Serentak</h3>
+                        <p class="text-slate-400 text-xs mt-0.5">Perbarui harga paket proyek secara massal</p>
                     </div>
                 </div>
-                <button @click="showPriceModal = false" class="text-white/80 hover:text-white transition">
-                    <i class="fa-solid fa-xmark text-xl"></i>
+                <button @click="showPriceModal = false" type="button" class="text-slate-400 hover:text-white transition bg-slate-800/50 hover:bg-slate-700 w-8 h-8 rounded-full flex items-center justify-center">
+                    <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
 
             <!-- Form Ubah Harga -->
-            <form action="{{ route('admin.client_proposals.bulk_update_price') }}" method="POST" class="p-6 space-y-5">
+            <form action="{{ route('admin.client_proposals.bulk_update_price') }}" method="POST" class="p-6">
                 @csrf
 
-                <!-- Pilihan Target Update -->
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2.5">Pilih Target Proposal:</label>
-                    <div class="grid grid-cols-1 gap-2.5">
-                        <label class="flex items-center gap-3 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer transition" :class="scope === 'all' ? 'border-amber-500 bg-amber-50/50' : ''">
-                            <input type="radio" name="scope" value="all" x-model="scope" class="text-amber-600 focus:ring-amber-500">
-                            <div>
-                                <div class="text-sm font-semibold text-slate-800">Semua Data Proposal</div>
-                                <div class="text-xs text-slate-500">Ubah seluruh klien proposal di database</div>
-                            </div>
-                        </label>
-
-                        <label class="flex items-start gap-3 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer transition" :class="scope === 'category' ? 'border-amber-500 bg-amber-50/50' : ''">
-                            <input type="radio" name="scope" value="category" x-model="scope" class="text-amber-600 focus:ring-amber-500 mt-1">
-                            <div class="flex-1">
-                                <div class="text-sm font-semibold text-slate-800">Berdasarkan Kategori Bisnis</div>
-                                <div class="text-xs text-slate-500 mb-2">Hanya ubah data pada kategori terpilih</div>
-                                <select x-show="scope === 'category'" name="target_category_id" class="w-full px-3 py-2 text-xs bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:outline-none">
-                                    <option value="" disabled selected>-- Pilih Kategori --</option>
-                                    @foreach($categories as $cat)
-                                    <option value="{{ $cat->id }}">{{ $cat->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </label>
-
-                        <label class="flex items-center gap-3 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer transition" :class="scope === 'selected' ? 'border-amber-500 bg-amber-50/50' : ''">
-                            <input type="radio" name="scope" value="selected" x-model="scope" class="text-amber-600 focus:ring-amber-500">
-                            <div>
-                                <div class="text-sm font-semibold text-slate-800">Hanya Data yang Dicentang</div>
-                                <div class="text-xs text-slate-500">
-                                    <span x-text="selectedIds.length"></span> proposal saat ini dipilih di tabel
+                <div class="space-y-5">
+                    <!-- Pilihan Target Update -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2.5">Pilih Target Proposal:</label>
+                        <div class="grid grid-cols-1 gap-2.5">
+                            <label class="flex items-center gap-3 p-3 rounded-xl border border-slate-700/50 hover:bg-slate-800/50 cursor-pointer transition" :class="scope === 'all' ? 'border-amber-500/50 bg-amber-500/10' : 'bg-slate-800/30'">
+                                <input type="radio" name="scope" value="all" x-model="scope" class="text-amber-500 focus:ring-amber-500 bg-slate-900 border-slate-600">
+                                <div>
+                                    <div class="text-sm font-semibold text-slate-200">Semua Data Proposal</div>
+                                    <div class="text-xs text-slate-400">Ubah seluruh klien proposal di database</div>
                                 </div>
-                            </div>
-                        </label>
+                            </label>
+
+                            <label class="flex items-start gap-3 p-3 rounded-xl border border-slate-700/50 hover:bg-slate-800/50 cursor-pointer transition" :class="scope === 'category' ? 'border-amber-500/50 bg-amber-500/10' : 'bg-slate-800/30'">
+                                <input type="radio" name="scope" value="category" x-model="scope" class="text-amber-500 focus:ring-amber-500 bg-slate-900 border-slate-600 mt-1">
+                                <div class="flex-1">
+                                    <div class="text-sm font-semibold text-slate-200">Berdasarkan Kategori Bisnis</div>
+                                    <div class="text-xs text-slate-400 mb-2">Hanya ubah data pada kategori terpilih</div>
+                                    <select x-show="scope === 'category'" name="target_category_id" class="w-full px-3 py-2 text-xs bg-slate-900/80 text-slate-200 border border-slate-600/50 rounded-lg focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 focus:outline-none">
+                                        <option value="" disabled selected>-- Pilih Kategori --</option>
+                                        @foreach($categories as $cat)
+                                        <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </label>
+
+                            <label class="flex items-center gap-3 p-3 rounded-xl border border-slate-700/50 hover:bg-slate-800/50 cursor-pointer transition" :class="scope === 'selected' ? 'border-amber-500/50 bg-amber-500/10' : 'bg-slate-800/30'">
+                                <input type="radio" name="scope" value="selected" x-model="scope" class="text-amber-500 focus:ring-amber-500 bg-slate-900 border-slate-600">
+                                <div>
+                                    <div class="text-sm font-semibold text-slate-200">Hanya Data yang Dicentang</div>
+                                    <div class="text-xs text-slate-400">
+                                        <span x-text="selectedIds.length" class="text-amber-400 font-bold"></span> proposal saat ini dipilih di tabel
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+
+                        <!-- Hidden Selected IDs -->
+                        <template x-for="id in selectedIds" :key="id">
+                            <input type="hidden" name="selected_ids[]" :value="id">
+                        </template>
                     </div>
 
-                    <!-- Hidden Selected IDs -->
-                    <template x-for="id in selectedIds" :key="id">
-                        <input type="hidden" name="selected_ids[]" :value="id">
-                    </template>
-                </div>
-
-                <!-- Input Harga Paket Silver -->
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Harga Paket Silver Baru (IDR):</label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center font-bold text-slate-400 text-sm">Rp</span>
-                        <input type="number" name="price_silver" placeholder="Contoh: 700000" class="w-full pl-11 pr-4 py-2.5 bg-slate-50 border border-slate-300 text-slate-800 text-sm font-semibold rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:bg-white transition">
+                    <!-- Input Harga Paket Silver -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">Harga Paket Silver Baru (IDR):</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center font-bold text-slate-500 text-sm">Rp</span>
+                            <input type="number" name="price_silver" placeholder="Contoh: 700000" class="w-full pl-11 pr-4 py-2.5 bg-slate-900/80 border border-slate-600/50 text-slate-200 text-sm font-semibold rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 transition">
+                        </div>
+                        <p class="text-[11px] text-slate-500 mt-1.5">Biarkan kosong jika tidak ingin mengubah Harga Silver.</p>
                     </div>
-                    <p class="text-[11px] text-slate-400 mt-1">Biarkan kosong jika tidak ingin mengubah Harga Silver.</p>
-                </div>
 
-                <!-- Input Harga Paket Gold -->
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Harga Paket Gold Baru (IDR):</label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center font-bold text-slate-400 text-sm">Rp</span>
-                        <input type="number" name="price_gold" placeholder="Contoh: 1600000" class="w-full pl-11 pr-4 py-2.5 bg-slate-50 border border-slate-300 text-slate-800 text-sm font-semibold rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:bg-white transition">
+                    <!-- Input Harga Paket Gold -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">Harga Paket Gold Baru (IDR):</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center font-bold text-slate-500 text-sm">Rp</span>
+                            <input type="number" name="price_gold" placeholder="Contoh: 1600000" class="w-full pl-11 pr-4 py-2.5 bg-slate-900/80 border border-slate-600/50 text-slate-200 text-sm font-semibold rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 transition">
+                        </div>
+                        <p class="text-[11px] text-slate-500 mt-1.5">Biarkan kosong jika tidak ingin mengubah Harga Gold.</p>
                     </div>
-                    <p class="text-[11px] text-slate-400 mt-1">Biarkan kosong jika tidak ingin mengubah Harga Gold.</p>
                 </div>
 
                 <!-- Modal Actions -->
-                <div class="pt-3 border-t border-slate-200 flex items-center justify-end gap-2.5">
-                    <button @click="showPriceModal = false" type="button" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-medium rounded-lg transition">
+                <div class="pt-5 border-t border-slate-700/50 flex items-center justify-end gap-3 mt-6 -mx-6 -mb-6 px-6 pb-6 bg-slate-800/40 rounded-b-2xl">
+                    <button @click="showPriceModal = false" type="button" class="px-5 py-2.5 bg-transparent hover:bg-slate-800 border border-slate-600 text-slate-300 text-sm font-medium rounded-xl transition-colors">
                         Batal
                     </button>
-                    <button type="submit" onclick="return confirm('Apakah Anda yakin ingin memperbarui harga pada data yang dipilih?')" class="px-5 py-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-bold rounded-lg transition shadow-md flex items-center gap-2">
-                        <i class="fa-solid fa-check"></i> Simpan Perubahan Harga
+                    <button type="submit" onclick="return confirm('Apakah Anda yakin ingin memperbarui harga pada data yang dipilih?')" class="px-5 py-2.5 bg-amber-600 hover:bg-amber-500 text-white text-sm font-bold rounded-xl transition shadow-[0_0_15px_rgba(217,119,6,0.3)] flex items-center gap-2">
+                        <i class="fa-solid fa-check"></i> Simpan Harga
                     </button>
                 </div>
             </form>
@@ -413,11 +415,11 @@ $proposalPageIds = $proposals->pluck('id')->map(fn($id) => (string) $id);
 <script>
     function clientProposalManager() {
         return {
-            showPriceModal: false,
-            showDuplicateModal: false,
-            isLoadingDuplicates: false,
-            duplicateData: [],
-            scope: 'all'
+            showPriceModal: false
+            , showDuplicateModal: false
+            , isLoadingDuplicates: false
+            , duplicateData: []
+            , scope: 'all'
             , selectedIds: []
             , pageIds: @json($proposalPageIds)
             , openPriceModal(defaultScope = 'all') {
@@ -434,23 +436,23 @@ $proposalPageIds = $proposals->pluck('id')->map(fn($id) => (string) $id);
                 this.isLoadingDuplicates = true;
                 this.duplicateData = [];
 
-                fetch('{{ route('admin.client_proposals.detect_duplicates') }}', {
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'Accept': 'application/json'
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    this.duplicateData = data.duplicates || [];
-                })
-                .catch(error => {
-                    console.error('Error fetching duplicates:', error);
-                    alert('Gagal mendeteksi duplikat.');
-                })
-                .finally(() => {
-                    this.isLoadingDuplicates = false;
-                });
+                fetch("{{ route('admin.client_proposals.detect_duplicates') }}", {
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                            , 'Accept': 'application/json'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        this.duplicateData = data.duplicates || [];
+                    })
+                    .catch(error => {
+                        console.error('Error fetching duplicates:', error);
+                        alert('Gagal mendeteksi duplikat.');
+                    })
+                    .finally(() => {
+                        this.isLoadingDuplicates = false;
+                    });
             },
 
             toggleSelectAll(e) {

@@ -1,20 +1,23 @@
 @extends('layouts.admin.app')
 
 @section('content')
-<div class="max-w-6xl mx-auto px-4 py-8">
-    {{-- ✅ Header --}}
-    <div class="flex flex-col sm:flex-row justify-between items-center mb-5 gap-4">
-        <h2 class="text-2xl font-semibold text-slate-800">Data Pelamar (Career Applications)</h2>
-
-        <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+<div class="px-4 lg:px-6 py-6 lg:py-8">
+    <div class="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+            <h1 class="text-2xl font-bold text-slate-800">Data Pelamar</h1>
+            <p class="text-slate-500 text-sm mt-1">Kelola data pelamar (Career Applications).</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
             <!-- Search Form -->
-            <form action="{{ route('career-applications.index') }}" method="GET" class="relative">
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari pelamar..." class="w-full sm:w-64 pl-9 pr-4 py-1.5 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors">
-                <i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+            <form action="{{ route('career-applications.index') }}" method="GET" class="relative w-full md:w-64">
+                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                    <i class="fa-solid fa-magnifying-glass text-sm"></i>
+                </div>
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari pelamar..." class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all">
             </form>
 
-            <a href="{{ route('career-applications.create') }}" class="bg-blue-900 text-white w-full sm:w-auto px-4 py-1.5 rounded-md text-sm font-medium shadow-sm hover:bg-blue-950 transition whitespace-nowrap text-center">
-                Create Application
+            <a href="{{ route('career-applications.create') }}" class="px-4 py-2.5 bg-blue-900 hover:bg-blue-950 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm flex items-center justify-center gap-2 w-full md:w-auto">
+                <i class="fa-solid fa-plus"></i> Create
             </a>
         </div>
     </div>
