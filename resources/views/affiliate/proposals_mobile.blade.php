@@ -111,6 +111,29 @@
             </a>
         </div>
 
+        @if($tab === 'follow_up')
+        <!-- Search Box -->
+        <div class="relative mb-5 z-30">
+            <div class="relative">
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">
+                    <i class="fa-solid fa-search"></i>
+                </div>
+                <input type="text" id="searchInput" value="{{ $search ?? '' }}" placeholder="Cari nama bisnis atau no WA..." class="w-full bg-black/30 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white focus:outline-none focus:border-rose-500 transition-colors" autocomplete="off">
+                @if(!empty($search))
+                <a href="{{ route('affiliate.proposals', ['tab' => 'follow_up']) }}" wire:navigate class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-white">
+                    <i class="fa-solid fa-xmark"></i>
+                </a>
+                @endif
+            </div>
+
+            <!-- Autocomplete Dropdown -->
+            <div id="searchDropdown" class="absolute left-0 right-0 mt-2 bg-slate-800 border border-white/10 rounded-xl shadow-2xl overflow-hidden hidden z-50 max-h-60 overflow-y-auto">
+                <ul id="searchResults" class="divide-y divide-white/5">
+                </ul>
+            </div>
+        </div>
+        @endif
+
         <!-- Category Filter (Horizontal Scroll) -->
         <div class="flex overflow-x-auto hide-scrollbar gap-2 mb-6 pb-2">
             <a href="{{ route('affiliate.proposals', ['tab' => $tab]) }}" wire:navigate class="px-4 py-2 rounded-full whitespace-nowrap text-xs font-semibold transition-colors {{ !request('category_id') ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/30' : 'glass-panel text-slate-400 hover:text-white' }}">
@@ -437,6 +460,67 @@
         window.openModal = openModal;
         window.closeModal = closeModal;
         window.dismissCoachMark = dismissCoachMark;
+
+        // Search Autocomplete Logic
+        const searchInput = document.getElementById('searchInput');
+        const searchDropdown = document.getElementById('searchDropdown');
+        const searchResults = document.getElementById('searchResults');
+        let searchTimeout;
+
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                const query = this.value.trim();
+
+                clearTimeout(searchTimeout);
+
+                if (query.length >= 3) {
+                    searchTimeout = setTimeout(() => {
+                        fetch(`{{ route('affiliate.proposals.search') }}?q=${encodeURIComponent(query)}`)
+                            .then(res => res.json())
+                            .then(data => {
+                                searchResults.innerHTML = '';
+                                if (data.length > 0) {
+                                    data.forEach(item => {
+                                        const li = document.createElement('li');
+                                        li.innerHTML = `
+                                            <a href="{{ route('affiliate.proposals', ['tab' => 'follow_up']) }}&search=${encodeURIComponent(item.brand_name)}" wire:navigate class="block px-4 py-3 hover:bg-white/5 transition-colors">
+                                                <div class="text-sm font-bold text-white">${item.brand_name}</div>
+                                                <div class="text-xs text-slate-400 flex items-center gap-2 mt-1">
+                                                    <i class="fa-solid fa-phone"></i> ${item.wa_number}
+                                                    <span class="px-1.5 py-0.5 rounded bg-slate-700/50 text-[9px] text-slate-300 ml-auto">${item.category_name || 'Tanpa Kategori'}</span>
+                                                </div>
+                                            </a>
+                                        `;
+                                        searchResults.appendChild(li);
+                                    });
+                                    searchDropdown.classList.remove('hidden');
+                                } else {
+                                    searchResults.innerHTML = '<li class="px-4 py-3 text-xs text-slate-400 text-center">Tidak ada hasil ditemukan</li>';
+                                    searchDropdown.classList.remove('hidden');
+                                }
+                            })
+                            .catch(err => console.error(err));
+                    }, 300);
+                } else {
+                    searchDropdown.classList.add('hidden');
+                }
+            });
+
+            // Handle enter key to search
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    window.location.href = `{{ route('affiliate.proposals', ['tab' => 'follow_up']) }}&search=${encodeURIComponent(this.value.trim())}`;
+                }
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!searchInput.contains(e.target) && !searchDropdown.contains(e.target)) {
+                    searchDropdown.classList.add('hidden');
+                }
+            });
+        }
 
         // Initialization Logic (Runs on initial load and Livewire navigation)
         setTimeout(() => {

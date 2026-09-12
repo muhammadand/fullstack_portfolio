@@ -333,6 +333,31 @@ class AffiliateController extends Controller
         return redirect()->back();
     }
 
+    public function searchProposals(Request $request)
+    {
+        /** @var \App\Models\Affiliate $affiliate */
+        $affiliate = Auth::guard('affiliate')->user();
+
+        $search = $request->get('q');
+        if (!$search || strlen($search) < 3) {
+            return response()->json([]);
+        }
+
+        $query = \Illuminate\Support\Facades\DB::table('client_proposals')
+            ->leftJoin('business_categories', 'client_proposals.business_category_id', '=', 'business_categories.id')
+            ->select('client_proposals.id', 'client_proposals.brand_name', 'client_proposals.wa_number', 'business_categories.name as category_name')
+            ->where('client_proposals.affiliate_id', $affiliate->id)
+            ->where(function ($q) use ($search) {
+                $q->where('client_proposals.brand_name', 'like', "%{$search}%")
+                    ->orWhere('client_proposals.wa_number', 'like', "%{$search}%");
+            })
+            ->orderByDesc('client_proposals.created_at')
+            ->limit(10)
+            ->get();
+
+        return response()->json($query);
+    }
+
     public function proposals(Request $request)
     {
         /** @var \App\Models\Affiliate $affiliate */
@@ -349,6 +374,7 @@ class AffiliateController extends Controller
         }
 
         $tab = $request->get('tab', 'global'); // 'global' or 'follow_up'
+        $search = $request->get('search');
 
         $query = \Illuminate\Support\Facades\DB::table('client_proposals')
             ->leftJoin('business_categories', 'client_proposals.business_category_id', '=', 'business_categories.id')
@@ -361,6 +387,12 @@ class AffiliateController extends Controller
 
         if ($tab === 'follow_up') {
             $query->where('client_proposals.affiliate_id', $affiliate->id);
+            if ($search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('client_proposals.brand_name', 'like', "%{$search}%")
+                        ->orWhere('client_proposals.wa_number', 'like', "%{$search}%");
+                });
+            }
         } else {
             $query->whereNull('client_proposals.affiliate_id');
         }
@@ -373,7 +405,7 @@ class AffiliateController extends Controller
             ->orWhere('affiliate_id', $affiliate->id)
             ->get();
 
-        return view('affiliate.proposals_mobile', compact('affiliate', 'proposals', 'categories', 'chatTemplates', 'tab'));
+        return view('affiliate.proposals_mobile', compact('affiliate', 'proposals', 'categories', 'chatTemplates', 'tab', 'search'));
     }
 
     public function generateProposal(Request $request)

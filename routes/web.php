@@ -241,6 +241,7 @@ Route::middleware(['auth:affiliate'])->group(function () {
     Route::get('/partner/dashboard', [App\Http\Controllers\AffiliateController::class, 'dashboard'])->name('affiliate.dashboard');
     Route::get('/partner/history', [App\Http\Controllers\AffiliateController::class, 'history'])->name('affiliate.history');
     Route::get('/partner/ideas/{slug}', [\App\Http\Controllers\Affiliate\TargetIdeaController::class, 'show'])->name('affiliate.ideas.show');
+    Route::get('/partner/proposals/search', [App\Http\Controllers\AffiliateController::class, 'searchProposals'])->name('affiliate.proposals.search');
     Route::get('/partner/proposals', [App\Http\Controllers\AffiliateController::class, 'proposals'])->name('affiliate.proposals');
     Route::post('/partner/proposals', [App\Http\Controllers\AffiliateController::class, 'generateProposal'])->name('affiliate.proposals.generate');
     Route::post('/partner/proposals/{id}/claim', [App\Http\Controllers\AffiliateController::class, 'claimProposal'])->name('affiliate.proposals.claim');
