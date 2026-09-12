@@ -173,6 +173,8 @@ Route::resource('admin/client-proposals', App\Http\Controllers\Admin\ClientPropo
 ]);
 Route::post('admin/client-proposals/bulk-update-price', [App\Http\Controllers\Admin\ClientProposalController::class, 'bulkUpdatePrice'])->name('admin.client_proposals.bulk_update_price');
 Route::post('admin/client-proposals/{client_proposal}/wa-template', [App\Http\Controllers\Admin\ClientProposalController::class, 'updateWaTemplate'])->name('admin.client_proposals.update_wa');
+Route::get('admin/client-proposals-duplicates/detect', [App\Http\Controllers\Admin\ClientProposalController::class, 'detectDuplicates'])->name('admin.client_proposals.detect_duplicates');
+Route::post('admin/client-proposals-duplicates/clean', [App\Http\Controllers\Admin\ClientProposalController::class, 'cleanDuplicates'])->name('admin.client_proposals.clean_duplicates');
 
 Route::resource('admin/chat-templates', App\Http\Controllers\Admin\ChatTemplateController::class)->except(['create', 'show', 'edit'])->names([
     'index' => 'admin.chat_templates.index',

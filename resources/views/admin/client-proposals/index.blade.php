@@ -8,6 +8,11 @@
             <p class="text-slate-500 text-sm mt-1">Kelola data klien untuk landing page dan proposal penawaran.</p>
         </div>
         <div class="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
+            <!-- Tombol Deteksi Duplikat -->
+            <button @click="openDuplicateModal()" type="button" class="px-4 py-2.5 bg-rose-500 hover:bg-rose-600 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm flex items-center justify-center gap-2">
+                <i class="fa-solid fa-broom"></i> Bersihkan Duplikat
+            </button>
+
             <!-- Tombol Ubah Harga Serentak -->
             <button @click="openPriceModal()" type="button" class="px-4 py-2.5 bg-amber-500 hover:bg-amber-600 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm flex items-center justify-center gap-2">
                 <i class="fa-solid fa-tags"></i> Ubah Harga Serentak
@@ -397,6 +402,8 @@
             </form>
         </div>
     </div>
+
+    @include('admin.client-proposals.partials.duplicate_modal')
 </div>
 
 @php
@@ -406,8 +413,11 @@ $proposalPageIds = $proposals->pluck('id')->map(fn($id) => (string) $id);
 <script>
     function clientProposalManager() {
         return {
-            showPriceModal: false
-            , scope: 'all'
+            showPriceModal: false,
+            showDuplicateModal: false,
+            isLoadingDuplicates: false,
+            duplicateData: [],
+            scope: 'all'
             , selectedIds: []
             , pageIds: @json($proposalPageIds)
             , openPriceModal(defaultScope = 'all') {
@@ -417,6 +427,30 @@ $proposalPageIds = $proposals->pluck('id')->map(fn($id) => (string) $id);
                 }
                 this.scope = this.selectedIds.length > 0 && defaultScope === 'selected' ? 'selected' : defaultScope;
                 this.showPriceModal = true;
+            },
+
+            openDuplicateModal() {
+                this.showDuplicateModal = true;
+                this.isLoadingDuplicates = true;
+                this.duplicateData = [];
+
+                fetch('{{ route('admin.client_proposals.detect_duplicates') }}', {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    this.duplicateData = data.duplicates || [];
+                })
+                .catch(error => {
+                    console.error('Error fetching duplicates:', error);
+                    alert('Gagal mendeteksi duplikat.');
+                })
+                .finally(() => {
+                    this.isLoadingDuplicates = false;
+                });
             },
 
             toggleSelectAll(e) {

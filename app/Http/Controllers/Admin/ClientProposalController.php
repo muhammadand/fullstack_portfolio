@@ -261,4 +261,35 @@ class ClientProposalController extends Controller
 
         return redirect()->back()->with('success', 'Template pesan WhatsApp berhasil disimpan.');
     }
+
+    public function detectDuplicates(Request $request)
+    {
+        $duplicates = \Illuminate\Support\Facades\DB::table('client_proposals')
+            ->select('wa_number', \Illuminate\Support\Facades\DB::raw('count(*) as count'))
+            ->groupBy('wa_number')
+            ->having('count', '>', 1)
+            ->get();
+        
+        return response()->json(['duplicates' => $duplicates]);
+    }
+
+    public function cleanDuplicates(Request $request)
+    {
+        $duplicates = \Illuminate\Support\Facades\DB::table('client_proposals')
+            ->select('wa_number', \Illuminate\Support\Facades\DB::raw('MIN(id) as keep_id'))
+            ->groupBy('wa_number')
+            ->havingRaw('COUNT(*) > 1')
+            ->get();
+
+        $deletedCount = 0;
+        foreach ($duplicates as $duplicate) {
+            $deleted = \Illuminate\Support\Facades\DB::table('client_proposals')
+                ->where('wa_number', $duplicate->wa_number)
+                ->where('id', '!=', $duplicate->keep_id)
+                ->delete();
+            $deletedCount += $deleted;
+        }
+
+        return redirect()->back()->with('success', "Berhasil membersihkan {$deletedCount} data duplikat.");
+    }
 }
