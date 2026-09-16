@@ -90,10 +90,9 @@
                     </td>
                     <td class="py-2 px-3 text-center flex gap-1.5 justify-center">
                         @if (!$blog->is_published)
-                        <form action="{{ route('blogs.publish', $blog->id) }}" method="POST" onsubmit="return confirm('Publish artikel ini sekarang?')">
+                        <form action="{{ route('blogs.publish', $blog->id) }}" method="POST">
                             @csrf
-                            @method('PATCH')
-                            <button type="submit" class="px-2.5 py-1 bg-green-50 text-green-600 hover:bg-green-100 border border-green-200 rounded-md text-[11px] font-medium transition" title="Langsung Publish">
+                            <button type="submit" class="px-2.5 py-1 bg-green-50 text-green-600 hover:bg-green-100 border border-green-200 rounded-md text-[11px] font-medium transition cursor-pointer" title="Langsung Publish">
                                 Publish
                             </button>
                         </form>
@@ -104,10 +103,10 @@
                         <a href="{{ route('blogs.edit', $blog->id) }}" class="px-2.5 py-1 bg-yellow-50 text-yellow-600 hover:bg-yellow-100 border border-yellow-200 rounded-md text-[11px] font-medium transition">
                             Edit
                         </a>
-                        <form action="{{ route('blogs.destroy', $blog->id) }}" method="POST" onsubmit="return confirm('Yakin hapus blog ini?')">
+                        <form action="{{ route('blogs.destroy', $blog->id) }}" method="POST">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="px-2.5 py-1 bg-red-50 text-red-600 hover:bg-red-100 border border-red-200 rounded-md text-[11px] font-medium transition">
+                            <button type="submit" class="px-2.5 py-1 bg-red-50 text-red-600 hover:bg-red-100 border border-red-200 rounded-md text-[11px] font-medium transition cursor-pointer">
                                 Hapus
                             </button>
                         </form>

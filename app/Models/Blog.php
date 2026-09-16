@@ -80,7 +80,7 @@ class Blog extends Model
     public function scopePublished($query)
     {
         return $query->where('is_published', true)
-                     ->whereNotNull('published_at');
+            ->whereNotNull('published_at');
     }
 
     // Ambil blog yang ditampilkan di highlight/featured
@@ -109,25 +109,34 @@ class Blog extends Model
         static::updated(function ($blog) {
             // Jika status berubah jadi published, ditulis oleh affiliate, dan belum di-reward
             if ($blog->isDirty('is_published') && $blog->is_published && $blog->affiliate_id && !$blog->is_rewarded) {
-                
+
                 $affiliate = $blog->affiliate;
-                
-                // Beri 10 Poin
-                $affiliate->increment('points', 10);
-                
-                // Catat di Point History
-                \App\Models\AffiliatePointHistory::create([
-                    'affiliate_id' => $affiliate->id,
-                    'points_earned' => 10,
-                    'description' => 'Bonus Submit Artikel (Approved): ' . $blog->title
-                ]);
-                
-                // Kirim notifikasi
-                $affiliate->notify(new \App\Notifications\AffiliateNotification(
-                    'Artikel Diterima!', 
-                    'Artikel kamu "' . Str::limit($blog->title, 20) . '" telah diterbitkan. Kamu mendapat Bonus +10 Poin!', 
-                    'success'
-                ));
+                if ($affiliate) {
+                    // Beri 10 Poin
+                    $affiliate->increment('points', 10);
+
+                    // Catat di Point History
+                    try {
+                        \App\Models\AffiliatePointHistory::create([
+                            'affiliate_id' => $affiliate->id,
+                            'points_earned' => 10,
+                            'description' => 'Bonus Submit Artikel (Approved): ' . $blog->title
+                        ]);
+                    } catch (\Throwable $th) {
+                        // ignore error
+                    }
+
+                    // Kirim notifikasi
+                    try {
+                        $affiliate->notify(new \App\Notifications\AffiliateNotification(
+                            'Artikel Diterima!',
+                            'Artikel kamu "' . Str::limit($blog->title, 20) . '" telah diterbitkan. Kamu mendapat Bonus +10 Poin!',
+                            'success'
+                        ));
+                    } catch (\Throwable $th) {
+                        // ignore error
+                    }
+                }
 
                 // Tandai bahwa blog ini sudah diberi reward poin
                 $blog->is_rewarded = true;
