@@ -4,7 +4,8 @@
 <section class="py-16 sm:py-20 px-4 sm:px-6 lg:px-8 bg-brand-dark relative z-20 border-t border-white/5">
     <div class="max-w-6xl mx-auto">
         <div class="mb-10 text-left">
-            <div class="text-[#EF4444] font-extrabold text-[11px] sm:text-xs tracking-[0.2em] uppercase mb-1.5">
+            <div class="text-cyan-400 font-extrabold text-[11px] sm:text-xs tracking-[0.2em] uppercase mb-1.5 flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
                 LAYANAN UTAMA
             </div>
             <h2 class="font-sans font-black text-2xl sm:text-3xl lg:text-4xl text-white tracking-tight">

@@ -7,7 +7,8 @@
         <!-- Bagian Kiri (Teks Sticky) -->
         <div class="lg:w-[40%] flex flex-col items-center lg:items-start text-center lg:text-left lg:sticky lg:top-32 mb-8 lg:mb-0">
             <div class="mb-2">
-                <span class="text-[#EF4444] font-extrabold text-[11px] sm:text-xs tracking-[0.2em] uppercase">
+                <span class="text-cyan-400 font-extrabold text-[11px] sm:text-xs tracking-[0.2em] uppercase flex items-center gap-1.5 justify-center lg:justify-start">
+                    <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
                     SERVICES & EXPERTISE
                 </span>
             </div>

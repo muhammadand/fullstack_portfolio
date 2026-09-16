@@ -6,8 +6,9 @@
 
         {{-- Section Title --}}
         <div class="mb-10 text-left">
-            <div class="text-[#EF4444] font-extrabold text-[11px] sm:text-xs tracking-[0.2em] uppercase mb-1.5">
-                KENAPA SCALIFY
+            <div class="text-cyan-400 font-extrabold text-[11px] sm:text-xs tracking-[0.2em] uppercase mb-1.5 flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+                <span>KENAPA SCALIFY</span>
             </div>
             <h2 class="font-sans font-black text-2xl sm:text-3xl lg:text-4xl text-white tracking-tight mb-3">
                 Kenapa pilih Scalify?

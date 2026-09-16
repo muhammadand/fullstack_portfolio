@@ -6,7 +6,8 @@
         <!-- Header -->
         <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
             <div class="max-w-xl text-left">
-                <div class="text-[#EF4444] font-extrabold text-[11px] sm:text-xs tracking-[0.2em] uppercase mb-1.5">
+                <div class="text-cyan-400 font-extrabold text-[11px] sm:text-xs tracking-[0.2em] uppercase mb-1.5 flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
                     REKAM JEJAK & DEMO
                 </div>
                 <h2 class="font-sans font-black text-3xl sm:text-4xl lg:text-[2.4rem] text-white leading-[1.18] tracking-tight">

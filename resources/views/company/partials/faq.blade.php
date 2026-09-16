@@ -7,7 +7,8 @@
         {{-- Section Header --}}
         <div class="text-center mb-14">
             <div class="mb-2">
-                <span class="text-[#EF4444] font-extrabold text-[11px] sm:text-xs tracking-[0.2em] uppercase">
+                <span class="text-cyan-400 font-extrabold text-[11px] sm:text-xs tracking-[0.2em] uppercase inline-flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
                     FREQUENTLY ASKED QUESTIONS (FAQ)
                 </span>
             </div>

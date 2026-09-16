@@ -5,7 +5,8 @@
     <div class="absolute inset-0 bg-blue-glow opacity-30 pointer-events-none"></div>
     <div class="relative z-10 max-w-2xl mx-auto">
         <div class="mb-3">
-            <span class="text-[#EF4444] font-extrabold text-[11px] sm:text-xs tracking-[0.2em] uppercase">
+            <span class="text-cyan-400 font-extrabold text-[11px] sm:text-xs tracking-[0.2em] uppercase inline-flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
                 MULAI SEKARANG
             </span>
         </div>
