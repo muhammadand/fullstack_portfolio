@@ -73,7 +73,7 @@
             </button>
             <form action="{{ route('admin.client_proposals.clean_duplicates') }}" method="POST">
                 @csrf
-                <button type="submit" onclick="return confirm('Yakin ingin membersihkan semua nomor duplikat? Data selain entri pertama akan dihapus permanen.')" class="px-5 py-2.5 bg-rose-600 hover:bg-rose-500 text-white text-sm font-bold rounded-xl transition shadow-[0_0_15px_rgba(225,29,72,0.3)] flex items-center gap-2">
+                <button type="submit" class="px-5 py-2.5 bg-rose-600 hover:bg-rose-500 text-white text-sm font-bold rounded-xl transition shadow-[0_0_15px_rgba(225,29,72,0.3)] flex items-center gap-2 cursor-pointer">
                     <i class="fa-solid fa-trash-can"></i> Bersihkan Sekarang
                 </button>
             </form>

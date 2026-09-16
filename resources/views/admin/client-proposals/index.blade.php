@@ -247,10 +247,10 @@
                                         <a href="{{ route('admin.client_proposals.edit', $p->id) }}" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 transition-colors">
                                             <i class="fa-solid fa-pen w-5 text-yellow-500"></i> Edit Data
                                         </a>
-                                        <form action="{{ route('admin.client_proposals.destroy', $p->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data klien ini?');">
+                                        <form action="{{ route('admin.client_proposals.destroy', $p->id) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors">
+                                            <button type="submit" class="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors cursor-pointer">
                                                 <i class="fa-solid fa-trash w-5"></i> Hapus Data
                                             </button>
                                         </form>
@@ -397,7 +397,7 @@
                     <button @click="showPriceModal = false" type="button" class="px-5 py-2.5 bg-transparent hover:bg-slate-800 border border-slate-600 text-slate-300 text-sm font-medium rounded-xl transition-colors">
                         Batal
                     </button>
-                    <button type="submit" onclick="return confirm('Apakah Anda yakin ingin memperbarui harga pada data yang dipilih?')" class="px-5 py-2.5 bg-amber-600 hover:bg-amber-500 text-white text-sm font-bold rounded-xl transition shadow-[0_0_15px_rgba(217,119,6,0.3)] flex items-center gap-2">
+                    <button type="submit" class="px-5 py-2.5 bg-amber-600 hover:bg-amber-500 text-white text-sm font-bold rounded-xl transition shadow-[0_0_15px_rgba(217,119,6,0.3)] flex items-center gap-2 cursor-pointer">
                         <i class="fa-solid fa-check"></i> Simpan Harga
                     </button>
                 </div>
@@ -424,7 +424,6 @@ $proposalPageIds = $proposals->pluck('id')->map(fn($id) => (string) $id);
             , pageIds: @json($proposalPageIds)
             , openPriceModal(defaultScope = 'all') {
                 if (defaultScope === 'selected' && this.selectedIds.length === 0) {
-                    alert('Silakan centang minimal satu proposal di tabel terlebih dahulu.');
                     return;
                 }
                 this.scope = this.selectedIds.length > 0 && defaultScope === 'selected' ? 'selected' : defaultScope;
@@ -448,7 +447,6 @@ $proposalPageIds = $proposals->pluck('id')->map(fn($id) => (string) $id);
                     })
                     .catch(error => {
                         console.error('Error fetching duplicates:', error);
-                        alert('Gagal mendeteksi duplikat.');
                     })
                     .finally(() => {
                         this.isLoadingDuplicates = false;
@@ -478,7 +476,6 @@ $proposalPageIds = $proposals->pluck('id')->map(fn($id) => (string) $id);
         if (!selectElement.value) return;
 
         if (!phone) {
-            alert('Nomor WhatsApp belum diatur untuk klien ini. Silakan edit data klien terlebih dahulu.');
             selectElement.value = "";
             return;
         }
