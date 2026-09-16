@@ -289,7 +289,7 @@ $tagsString = is_array($blog->tags) ? implode(', ', $blog->tags) : $blog->tags;
 
                     <div class="pt-6 pb-12 md:p-12 min-w-0">
                         <!-- Title -->
-                        <h1 class="text-[22px] md:text-2xl font-display font-bold text-white mb-6 leading-[1.3] break-words">
+                        <h1 class="text-2xl md:text-3xl lg:text-4xl font-sans font-black text-white mb-6 leading-[1.25] tracking-tight break-words">
                             {{ $blog->title }}
                         </h1>
 
@@ -614,7 +614,7 @@ $tagsString = is_array($blog->tags) ? implode(', ', $blog->tags) : $blog->tags;
                 <div class="sticky top-28 space-y-8">
                     <!-- Recent Articles -->
                     <div class="bg-brand-navy border border-white/10 rounded-3xl shadow-xl p-6 sm:p-8">
-                        <h3 class="text-lg font-display font-bold text-white mb-6 flex items-center gap-3">
+                        <h3 class="text-lg font-sans font-bold text-white mb-6 flex items-center gap-3">
                             <span class="w-1.5 h-6 bg-brand-accent rounded-full"></span>
                             Artikel Terkini
                         </h3>
@@ -632,7 +632,7 @@ $tagsString = is_array($blog->tags) ? implode(', ', $blog->tags) : $blog->tags;
                                 </div>
 
                                 <div class="flex-1 min-w-0 py-1">
-                                    <h4 class="font-display font-semibold text-[13px] text-white mb-1.5 line-clamp-2 group-hover:text-brand-accent transition-colors leading-snug">
+                                    <h4 class="font-sans font-semibold text-[13px] text-white mb-1.5 line-clamp-2 group-hover:text-brand-accent transition-colors leading-snug">
                                         {{ $item->title }}
                                     </h4>
                                     <p class="text-[11px] font-semibold tracking-widest uppercase text-white/50">
@@ -660,7 +660,7 @@ $tagsString = is_array($blog->tags) ? implode(', ', $blog->tags) : $blog->tags;
         @if ($related->count() > 5)
         <div class="mt-20">
             <div class="flex items-center justify-between mb-8">
-                <h2 class="text-xl md:text-2xl font-display font-bold text-white">
+                <h2 class="text-xl md:text-2xl font-sans font-bold text-white">
                     Baca Juga dari <span class="text-brand-accent">{{ $blog->category->name ?? 'Kategori Ini' }}</span>
                 </h2>
             </div>
@@ -683,7 +683,7 @@ $tagsString = is_array($blog->tags) ? implode(', ', $blog->tags) : $blog->tags;
                             </span>
                         </div>
 
-                        <h3 class="font-display text-[13px] font-semibold mb-1.5 text-white leading-snug group-hover:text-brand-accent transition-colors line-clamp-2">
+                        <h3 class="font-sans text-[13px] font-semibold mb-1.5 text-white leading-snug group-hover:text-brand-accent transition-colors line-clamp-2">
                             {{ $item->title }}
                         </h3>
 

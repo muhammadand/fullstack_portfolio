@@ -75,20 +75,20 @@ $collectionSchema = [
     <section class="relative pt-20 pb-8 sm:pt-28 sm:pb-16 px-4 sm:px-6 lg:px-8 border-b border-white/5">
         <div class="max-w-7xl mx-auto relative z-10">
             {{-- Tagline / Eyebrow --}}
-            <div class="mb-2 sm:mb-3">
-                <span class="text-brand-accent font-bold text-[10px] sm:text-xs tracking-[0.25em] uppercase inline-flex items-center gap-1.5 sm:gap-2">
-                    <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-brand-accent animate-pulse"></span>
-                    Digital Agency & Web Development
-                </span>
+            <div class="mb-4">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 font-bold text-[11px] sm:text-xs tracking-[0.15em] uppercase shadow-sm shadow-cyan-500/10">
+                    <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+                    <span>Digital Agency & Web Development</span>
+                </div>
             </div>
 
             {{-- Main Heading --}}
-            <h1 class="text-2xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight font-display mb-2.5 sm:mb-3 leading-tight">
-                Inspirasi Website, Web App & Strategi Digital
+            <h1 class="font-sans font-black text-3xl sm:text-5xl lg:text-[46px] text-white leading-[1.18] tracking-[-0.03em] max-w-4xl mb-3">
+                Inspirasi Website, <span class="bg-gradient-to-r from-blue-400 via-cyan-300 to-indigo-400 bg-clip-text text-transparent">Web App & Strategi Digital</span>
             </h1>
 
             {{-- Subtitle --}}
-            <p class="text-white/70 text-xs sm:text-base max-w-3xl leading-relaxed mb-6 sm:mb-8">
+            <p class="text-white/65 text-xs sm:text-sm md:text-[15px] max-w-3xl leading-relaxed mb-6 sm:mb-8 font-normal">
                 Temukan panduan pembuatan website modern, optimasi kecepatan, desain UI/UX berkonversi tinggi, dan studi kasus pengembangan web app dari tim Scalify Intelligence.
             </p>
 
