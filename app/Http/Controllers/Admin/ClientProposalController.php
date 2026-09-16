@@ -213,15 +213,8 @@ class ClientProposalController extends Controller
         $category = $categoryId ? BusinessCategory::find($categoryId) : null;
 
         $proposals = [];
-        $skippedCount = 0;
 
         foreach ($validated['contacts'] as $contact) {
-            // Skip jika nomor WA sudah ada di database
-            if (ClientProposal::where('wa_number', $contact['wa_number'])->exists()) {
-                $skippedCount++;
-                continue;
-            }
-
             $slug = Str::slug($contact['brand_name']);
 
             // Pastikan slug unik
@@ -251,9 +244,8 @@ class ClientProposalController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Data dari scraper berhasil diproses! ' . count($proposals) . ' draft disimpan, ' . $skippedCount . ' dilewati karena nomor WA sudah ada.',
-            'data' => $proposals,
-            'skipped_count' => $skippedCount
+            'message' => 'Data dari scraper berhasil diproses! ' . count($proposals) . ' draft proposal disimpan.',
+            'data' => $proposals
         ], 201);
     }
 
