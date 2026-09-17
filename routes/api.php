@@ -20,6 +20,10 @@ Route::post('/digital-products', [DigitalProductApiController::class, 'store']);
 Route::post('/digital-products/bulk', [DigitalProductApiController::class, 'bulkStore']);
 Route::get('/digital-products/{id}', [DigitalProductApiController::class, 'show']);
 
+// Endpoint API Koperasi (Scraper ODS NIK Kemenkop)
+Route::match(['get', 'post'], '/koperasi/nik/{nik?}', [DigitalProductApiController::class, 'getByNIK']);
+Route::match(['get', 'post'], '/koperasi/check-nik', [DigitalProductApiController::class, 'getByNIK']);
+
 
 // Endpoint Manual & Cron: Kirim Push Notification Harian
 use App\Models\Affiliate;

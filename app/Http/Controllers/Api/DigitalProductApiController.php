@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
+use Symfony\Component\DomCrawler\Crawler;
 
 class DigitalProductApiController extends Controller
 {
@@ -169,5 +171,134 @@ class DigitalProductApiController extends Controller
             'status' => 'success',
             'data' => $product
         ]);
+    }
+
+    /**
+     * Get Koperasi data by NIK from Kemenkop ODS
+     * GET/POST /api/koperasi/nik/{nik?}
+     */
+    public function getByNIK(Request $request, $nik = null)
+    {
+        $nik = $nik ?? $request->input('nik') ?? $request->query('nik');
+
+        if (empty($nik)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'NIK wajib diisi.',
+            ], 422);
+        }
+
+        $targetUrl = 'https://nik.kop.go.id/odsnik/detail';
+
+        try {
+            $response = Http::timeout(15)
+                ->withHeaders([
+                    'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                ])
+                ->asForm()
+                ->post($targetUrl, [
+                    'nik' => trim($nik),
+                ]);
+
+            if (!$response->successful()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Gagal mengambil data dari server Kemenkop (Status: ' . $response->status() . ').',
+                ], 502);
+            }
+
+            $html = $response->body();
+            $crawler = new Crawler($html);
+
+            $rows = $crawler->filter('table.styled-table tr');
+
+            if ($rows->count() === 0) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Tabel data tidak ditemukan atau format respon dari Kemenkop berubah.',
+                ], 404);
+            }
+
+            $data = [];
+            $rows->each(function (Crawler $row) use (&$data) {
+                $columns = $row->filter('td');
+                if ($columns->count() >= 2) {
+                    $key = trim(html_entity_decode($columns->eq(0)->text(), ENT_QUOTES, 'UTF-8'));
+                    $value = trim(html_entity_decode($columns->eq(1)->text(), ENT_QUOTES, 'UTF-8'));
+                    $data[$key] = $value;
+                }
+            });
+
+            // Mapping semua kemungkinan field dari portal ODS NIK Kemenkop
+            $fieldsMap = [
+                'Koperasi'                                   => 'name',
+                'Nomor Badan Hukum Pendirian'                => 'sk_number',
+                'Tanggal Badan Hukum Pendirian'              => 'nbhp_date',
+                'Nomor Perubahan Anggaran Dasar (Terbaru)'   => 'pad_latest_number',
+                'Tanggal Perubahan Anggaran Dasar (Terbaru)' => 'pad_latest_date',
+                'Nomor Pelaporan (Terbaru)'                  => 'reporting_latest_number',
+                'Tanggal Pelaporan (Terbaru)'                => 'reporting_latest_date',
+                'Tanggal RAT Terakhir'                       => 'latest_rat_date',
+                'Alamat'                                     => 'address',
+                'Desa / Kelurahan'                           => 'village',
+                'Kecamatan'                                  => 'subdistrict',
+                'Kabupaten'                                  => 'district',
+                'Provinsi'                                   => 'province',
+                'Bentuk Koperasi'                            => 'form',
+                'Jenis Koperasi'                             => 'jenis_koperasi',
+                'Sektor Usaha'                               => 'working_area',
+                'Kelompok Koperasi'                          => 'kelompok_koperasi',
+                'Pola Pengelolaan'                           => 'pola_pengelolaan',
+                'Status NIK'                                 => 'nik_status',
+                'Tanggal Berlaku Sertifikat'                 => 'certificate_valid_date',
+                'Grade'                                      => 'grade',
+                'KUK'                                        => 'kuk',
+                'Jumlah Anggota Pria'                        => 'male_members',
+                'Jumlah Anggota Wanita'                      => 'female_members',
+                'Total Anggota'                              => 'members_total',
+                'Total Karyawan'                             => 'employee_total',
+                'Total Manajer'                              => 'manager_total',
+            ];
+
+            $result = [
+                'nik' => $nik,
+            ];
+
+            foreach ($fieldsMap as $sourceKey => $targetKey) {
+                $result[$targetKey] = $data[$sourceKey] ?? null;
+            }
+
+            // Validasi apakah setidaknya ada data koperasi yang berhasil terisi
+            $hasData = false;
+            foreach ($fieldsMap as $sourceKey => $targetKey) {
+                if (!empty($result[$targetKey])) {
+                    $hasData = true;
+                    break;
+                }
+            }
+
+            if (!$hasData) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Data koperasi dengan NIK tersebut tidak ditemukan di database ODS Kemenkop.',
+                ], 404);
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data koperasi berhasil ditemukan.',
+                'data' => $result,
+            ], 200);
+        } catch (\Throwable $e) {
+            Log::error('Error fetching Koperasi NIK: ' . $e->getMessage(), [
+                'nik' => $nik,
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Terjadi kesalahan saat memproses data NIK: ' . $e->getMessage(),
+            ], 500);
+        }
     }
 }
