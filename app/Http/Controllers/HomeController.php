@@ -37,7 +37,9 @@ class HomeController extends Controller
             ->orderBy('completion_date', 'desc')
             ->take(3)
             ->get();
-        return view('company.landing', compact('latestBlogs', 'latestPortfolios'));
+        return response()
+            ->view('company.landing', compact('latestBlogs', 'latestPortfolios'))
+            ->setStatusCode(200);
     }
 
 
@@ -51,8 +53,8 @@ class HomeController extends Controller
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
-                  ->orWhere('excerpt', 'like', "%{$search}%")
-                  ->orWhere('content', 'like', "%{$search}%");
+                    ->orWhere('excerpt', 'like', "%{$search}%")
+                    ->orWhere('content', 'like', "%{$search}%");
             });
         }
 
