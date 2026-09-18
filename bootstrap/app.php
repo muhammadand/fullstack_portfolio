@@ -16,6 +16,9 @@ return Application::configure(basePath: dirname(__DIR__))
             \App\Http\Middleware\AffiliateTracker::class,
         ]);
 
+        // Fix: Intercept 403 responses caused by hosting WAF and force 200
+        $middleware->append(\App\Http\Middleware\ForceOkForBots::class);
+
         $middleware->redirectTo(
             guests: function (\Illuminate\Http\Request $request) {
                 if ($request->is('partner*') || $request->routeIs('affiliate.*')) {
