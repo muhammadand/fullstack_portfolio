@@ -142,6 +142,9 @@
     <link rel="dns-prefetch" href="//cdnjs.cloudflare.com" />
     <link rel="dns-prefetch" href="//www.youtube.com" />
 
+    {{-- Alpine Plugins --}}
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
+    {{-- Alpine Core --}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.3/cdn.min.js" defer></script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="icon" type="image/x-icon" href="{{ asset('scalify.png') }}">

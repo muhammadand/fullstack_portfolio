@@ -30,6 +30,7 @@
     <meta name="twitter:image" content="{{ asset('og-image.png') }}" />
     @endif
     <link rel="canonical" href="{{ url()->current() }}" />
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.3/cdn.min.js" defer></script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="preconnect" href="https://fonts.googleapis.com" />
