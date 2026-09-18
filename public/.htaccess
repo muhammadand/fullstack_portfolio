@@ -3,6 +3,8 @@
         Options -MultiViews
     </IfModule>
 
+    DirectoryIndex index.php
+
     RewriteEngine On
 
     # Fix: Explicitly route root URL to Laravel (bypass directory 403)
