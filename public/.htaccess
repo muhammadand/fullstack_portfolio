@@ -1,18 +1,12 @@
-# Disable ModSecurity (fixes 403 for Google AdsBot & crawlers)
-<IfModule mod_security2.c>
-    SecRuleEngine Off
-</IfModule>
-<IfModule mod_security.c>
-    SecFilterEngine Off
-    SecFilterScanPOST Off
-</IfModule>
-
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
         Options -MultiViews -Indexes
     </IfModule>
 
     RewriteEngine On
+
+    # Fix: Explicitly route root URL to Laravel (bypass directory 403)
+    RewriteRule ^/?$ index.php [L]
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
