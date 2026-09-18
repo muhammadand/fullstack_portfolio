@@ -29,18 +29,11 @@ class HomeController extends Controller
 
     public function indexCompanyProfile()
     {
-        $latestBlogs = Blog::published()
-            ->latest('published_at')
-            ->take(3)
-            ->get();
-        $latestPortfolios = Portfolio::active()
-            ->orderBy('completion_date', 'desc')
-            ->take(3)
-            ->get();
         return response()
-            ->view('company.landing', compact('latestBlogs', 'latestPortfolios'))
+            ->view('company.landing')
             ->setStatusCode(200);
     }
+
 
 
     public function blogs(Request $request)
