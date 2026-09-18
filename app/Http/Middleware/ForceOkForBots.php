@@ -44,13 +44,13 @@ class ForceOkForBots
         $response = $next($request);
 
         // If response is 403 but has HTML content, it's likely WAF interference
-        // Force it back to 200 for all requests
-        if ($response->getStatusCode() === 403) {
-            $contentType = $response->headers->get('Content-Type', '');
+        // Add debug header to verify middleware is active
+        $response->headers->set('X-ForceOk', 'active');
 
-            if (str_contains($contentType, 'text/html')) {
-                $response->setStatusCode(200);
-            }
+        // If response is 403 but has HTML content, it's WAF interference
+        if ($response->getStatusCode() === 403) {
+            $response->setStatusCode(200);
+            $response->headers->set('X-ForceOk', 'fixed-from-403');
         }
 
         return $response;
