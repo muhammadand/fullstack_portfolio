@@ -70,41 +70,43 @@ $collectionSchema = [
 @section('content')
 <div class="min-h-screen bg-brand-dark text-white relative overflow-hidden">
 
-    {{-- Ambient Midnight Glow Background Effects --}}
-    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[480px] bg-gradient-to-b from-brand-blue/15 via-brand-indigo/10 to-transparent blur-3xl pointer-events-none"></div>
-    <div class="absolute top-24 right-10 w-96 h-96 bg-brand-accent/10 rounded-full blur-[110px] pointer-events-none"></div>
-    <div class="absolute top-80 left-5 w-80 h-80 bg-brand-indigo/10 rounded-full blur-[100px] pointer-events-none"></div>
+    {{-- Ambient Midnight Glow & Lattice Pattern Background --}}
+    <div class="absolute inset-0 bg-hero-gradient pointer-events-none"></div>
+    <div class="absolute top-0 right-0 w-[550px] h-[550px] bg-brand-blue/15 rounded-full blur-[140px] pointer-events-none"></div>
+    <div class="absolute top-80 left-0 w-[450px] h-[450px] bg-brand-indigo/15 rounded-full blur-[130px] pointer-events-none"></div>
+    <div class="absolute inset-0 opacity-[0.035] pointer-events-none" style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 28px 28px;"></div>
 
     {{-- ══════════════════════════════════════════════════
          HERO SECTION: PORTFOLIO & REKAM JEJAK
     ══════════════════════════════════════════════════ --}}
-    <section class="relative pt-12 pb-10 sm:pt-20 sm:pb-14 px-4 sm:px-6 lg:px-8 border-b border-white/5">
+    <section class="relative pt-12 pb-8 sm:pt-16 sm:pb-12 px-4 sm:px-6 lg:px-8 border-b border-white/5">
         <div class="max-w-7xl mx-auto relative z-10">
 
-            {{-- Eyebrow --}}
-            <div class="mb-3">
-                <span class="text-[#EF4444] font-extrabold text-[11px] sm:text-xs tracking-[0.2em] uppercase inline-flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-[#EF4444] animate-pulse"></span>
-                    REKAM JEJAK & STUDI KASUS NYATA
-                </span>
+            {{-- Eyebrow Pill --}}
+            <div class="mb-4">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 font-bold text-[11px] sm:text-xs tracking-[0.15em] uppercase shadow-sm shadow-cyan-500/10">
+                    <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+                    <span>Discover Scalify · Rekam Jejak & Proyek Nyata</span>
+                </div>
             </div>
 
-            {{-- Main Heading --}}
-            <h1 class="font-sans font-black text-3xl sm:text-5xl lg:text-[44px] text-white leading-[1.18] tracking-[-0.03em] max-w-3xl mb-4">
-                Katalog Portofolio & Solusi Digital Kami
+            {{-- Main Headline --}}
+            <h1 class="font-sans font-black text-3xl sm:text-5xl lg:text-[46px] text-white leading-[1.18] tracking-[-0.03em] max-w-3xl mb-4">
+                Katalog Portofolio &<br class="hidden sm:inline" />
+                <span class="bg-gradient-to-r from-blue-400 via-cyan-300 to-indigo-400 bg-clip-text text-transparent">Implementasi Sistem Cerdas</span>
             </h1>
 
             {{-- Subtitle --}}
-            <p class="text-white/65 text-xs sm:text-sm md:text-base max-w-2xl leading-relaxed font-normal mb-8">
-                Jelajahi berbagai proyek nyata yang telah kami selesaikan — mulai dari website company profile kelas dunia, landing page konversi tinggi, aplikasi web SaaS multi-tenant, hingga sistem komputasi berbasis metode data science & automasi AI.
+            <p class="text-white/65 text-xs sm:text-sm md:text-[15px] max-w-2xl leading-relaxed font-normal mb-8">
+                Jelajahi berbagai studi kasus nyata yang telah kami rancang dan bangun — mulai dari website company profile kelas internasional, landing page konversi tinggi, web app SaaS kustom, hingga sistem komputasi berbasis metode data science & AI.
             </p>
 
             {{-- ══════════════════════════════════════════════════
                  FEATURED PROJECT HIGHLIGHT (Jika ada)
             ══════════════════════════════════════════════════ --}}
-            @if ($featuredPortfolio)
+            @if ($featuredPortfolio && empty($search) && empty($categorySlug))
             <div class="mt-4 mb-6">
-                <a href="{{ route('portfolio.read', $featuredPortfolio->slug) }}" class="block bg-brand-navy/70 backdrop-blur-xl border border-white/10 hover:border-brand-accent/50 rounded-2xl sm:rounded-3xl p-4 sm:p-7 shadow-card hover:shadow-glow-blue transition-all duration-300 group relative overflow-hidden">
+                <a href="{{ route('portfolio.read', $featuredPortfolio->slug) }}" class="block bg-brand-navy/70 backdrop-blur-xl border border-white/10 hover:border-cyan-400/40 rounded-2xl sm:rounded-3xl p-4 sm:p-7 shadow-card hover:shadow-glow-blue transition-all duration-300 group relative overflow-hidden">
 
                     {{-- Background Accent Glow --}}
                     <div class="absolute -right-20 -top-20 w-80 h-80 bg-brand-accent/10 rounded-full blur-[80px] pointer-events-none"></div>
@@ -114,10 +116,10 @@ $collectionSchema = [
                         {{-- Screenshot Thumbnail --}}
                         <div class="lg:col-span-6 rounded-xl sm:rounded-2xl overflow-hidden aspect-[16/10] sm:aspect-video relative bg-white/5 border border-white/10">
                             @if ($featuredPortfolio->thumbnail_image)
-                            <img src="{{ asset('storage/' . $featuredPortfolio->thumbnail_image) }}" alt="{{ $featuredPortfolio->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" fetchpriority="high">
+                            <img src="{{ asset('storage/' . $featuredPortfolio->thumbnail_image) }}" alt="{{ $featuredPortfolio->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" fetchpriority="high" decoding="async">
                             @else
                             <div class="w-full h-full flex items-center justify-center bg-brand-navy text-white/40">
-                                <i class="fa-solid fa-laptop-code text-4xl text-brand-accent/40"></i>
+                                <i class="fa-solid fa-laptop-code text-4xl text-cyan-400/40"></i>
                             </div>
                             @endif
                             <div class="absolute inset-0 bg-gradient-to-t from-brand-dark/70 via-transparent to-transparent opacity-60 group-hover:opacity-30 transition-opacity"></div>
@@ -126,7 +128,7 @@ $collectionSchema = [
                         {{-- Project Info --}}
                         <div class="lg:col-span-6 flex flex-col justify-center">
                             <div class="flex items-center gap-2.5 mb-3 flex-wrap">
-                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-accent/15 border border-brand-accent/30 text-brand-accent text-[10px] font-bold tracking-wider uppercase shadow-sm">
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 text-[10px] font-bold tracking-wider uppercase shadow-sm">
                                     <i class="fa-solid fa-star text-[9px] text-amber-400"></i> Featured Project
                                 </span>
                                 @if ($featuredPortfolio->category)
@@ -136,12 +138,12 @@ $collectionSchema = [
                                 @endif
                                 @if ($featuredPortfolio->view_count)
                                 <span class="text-white/40 text-xs flex items-center gap-1">
-                                    <i class="fa-solid fa-eye text-brand-accent text-[10px]"></i> {{ number_format($featuredPortfolio->view_count) }} views
+                                    <i class="fa-solid fa-eye text-cyan-400 text-[10px]"></i> {{ number_format($featuredPortfolio->view_count) }} views
                                 </span>
                                 @endif
                             </div>
 
-                            <h2 class="font-sans font-bold text-xl sm:text-2xl lg:text-3xl text-white group-hover:text-brand-accent transition-colors leading-tight mb-3">
+                            <h2 class="font-sans font-bold text-xl sm:text-2xl lg:text-3xl text-white group-hover:text-cyan-300 transition-colors leading-tight mb-3">
                                 {{ $featuredPortfolio->title }}
                             </h2>
 
@@ -166,9 +168,9 @@ $collectionSchema = [
                             @endif
 
                             <div class="flex items-center gap-3">
-                                <span class="inline-flex items-center gap-2 bg-btn-gradient text-white text-xs sm:text-sm font-bold px-6 py-3 rounded-full shadow-glow-sm group-hover:shadow-glow-blue transition-all">
+                                <span class="inline-flex items-center gap-2 bg-btn-gradient text-white text-xs sm:text-sm font-bold px-6 py-3 rounded-full shadow-glow-blue group-hover:scale-105 transition-all">
                                     <span>Lihat Detail Studi Kasus</span>
-                                    <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
+                                    <span class="w-5 h-5 bg-white/20 rounded-full flex items-center justify-center text-[10px] group-hover:translate-x-0.5 transition-transform">→</span>
                                 </span>
                             </div>
                         </div>
@@ -183,7 +185,7 @@ $collectionSchema = [
         {{-- ══════════════════════════════════════════════════
              MARQUEE CHIPS: TECH CAPABILITIES
         ══════════════════════════════════════════════════ --}}
-        <div class="relative bg-[#080c26] border-t border-white/5 py-3 overflow-hidden mt-8">
+        <div class="relative bg-[#080c26] border-t border-white/5 py-3 overflow-hidden mt-6">
             <div class="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-[#080c26] to-transparent z-10 pointer-events-none"></div>
             <div class="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-[#080c26] to-transparent z-10 pointer-events-none"></div>
 
@@ -203,15 +205,15 @@ $collectionSchema = [
                 @endphp
 
                 @foreach ($chips as $chip)
-                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/10 bg-white/5 text-white/70 text-xs font-normal whitespace-nowrap">
-                    <i class="fa-solid {{ $chip['icon'] }} text-brand-accent text-[11px]"></i>
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/10 bg-white/5 text-white/75 text-xs font-normal whitespace-nowrap">
+                    <i class="fa-solid {{ $chip['icon'] }} text-cyan-400 text-[11px]"></i>
                     <span>{{ $chip['label'] }}</span>
                 </div>
                 @endforeach
 
                 @foreach ($chips as $chip)
-                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/10 bg-white/5 text-white/70 text-xs font-normal whitespace-nowrap">
-                    <i class="fa-solid {{ $chip['icon'] }} text-brand-accent text-[11px]"></i>
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/10 bg-white/5 text-white/75 text-xs font-normal whitespace-nowrap">
+                    <i class="fa-solid {{ $chip['icon'] }} text-cyan-400 text-[11px]"></i>
                     <span>{{ $chip['label'] }}</span>
                 </div>
                 @endforeach
@@ -222,7 +224,66 @@ $collectionSchema = [
     {{-- ══════════════════════════════════════════════════
          MAIN PORTFOLIO GRID & SIDEBAR SECTION
     ══════════════════════════════════════════════════ --}}
-    <section class="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative z-10">
+    <section class="py-10 sm:py-14 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative z-10">
+
+        {{-- ══════════════════════════════════════════════════
+             FILTER TABS & SEARCH BAR
+        ══════════════════════════════════════════════════ --}}
+        <div class="mb-8 space-y-4">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+
+                {{-- Category Filter Pills --}}
+                <div class="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-none">
+                    <a href="{{ route('landing.portfolio', request()->except('category', 'page')) }}" class="px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-200 {{ empty($categorySlug) ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-sm' : 'bg-white/5 text-white/70 hover:bg-white/10 border border-white/10 hover:text-white' }}">
+                        Semua Proyek
+                    </a>
+                    @if(isset($categories))
+                    @foreach($categories as $cat)
+                    <a href="{{ route('landing.portfolio', array_merge(request()->except('page'), ['category' => $cat->slug])) }}" class="px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-200 {{ $categorySlug === $cat->slug ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-sm' : 'bg-white/5 text-white/70 hover:bg-white/10 border border-white/10 hover:text-white' }}">
+                        {{ $cat->name }}
+                    </a>
+                    @endforeach
+                    @endif
+                </div>
+
+                {{-- Search Input Form --}}
+                <form action="{{ route('landing.portfolio') }}" method="GET" class="relative w-full md:w-72 shrink-0">
+                    @if($categorySlug)
+                    <input type="hidden" name="category" value="{{ $categorySlug }}">
+                    @endif
+                    <div class="relative">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-white/40 text-xs"></i>
+                        <input type="text" name="search" value="{{ $search ?? '' }}" placeholder="Cari nama atau teknologi..." class="w-full pl-9 pr-8 py-2 bg-brand-navy/70 backdrop-blur-md border border-white/10 rounded-full text-xs text-white placeholder-white/40 focus:outline-none focus:border-cyan-400/50 transition-colors">
+                        @if(!empty($search))
+                        <a href="{{ route('landing.portfolio', request()->except('search', 'page')) }}" class="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white text-xs">
+                            <i class="fa-solid fa-xmark"></i>
+                        </a>
+                        @endif
+                    </div>
+                </form>
+
+            </div>
+
+            {{-- Active Filter Notification Pill --}}
+            @if(!empty($search) || !empty($categorySlug))
+            <div class="flex items-center gap-2 text-xs text-white/60 pt-1">
+                <span>Filter aktif:</span>
+                @if($categorySlug)
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 font-medium text-[11px]">
+                    Kategori: {{ optional($categories->firstWhere('slug', $categorySlug))->name ?? $categorySlug }}
+                    <a href="{{ route('landing.portfolio', request()->except('category', 'page')) }}" class="hover:text-white"><i class="fa-solid fa-xmark text-[10px]"></i></a>
+                </span>
+                @endif
+                @if($search)
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 font-medium text-[11px]">
+                    Pencarian: "{{ $search }}"
+                    <a href="{{ route('landing.portfolio', request()->except('search', 'page')) }}" class="hover:text-white"><i class="fa-solid fa-xmark text-[10px]"></i></a>
+                </span>
+                @endif
+                <a href="{{ route('landing.portfolio') }}" class="text-cyan-400 hover:underline text-[11px] ml-1">Reset Semua</a>
+            </div>
+            @endif
+        </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
 
@@ -232,30 +293,30 @@ $collectionSchema = [
             <div class="lg:col-span-8">
 
                 {{-- Header count --}}
-                <div class="flex items-center justify-between mb-8 pb-3 border-b border-white/10">
+                <div class="flex items-center justify-between mb-6 pb-3 border-b border-white/10">
                     <div>
                         <h2 class="font-sans font-bold text-xl sm:text-2xl text-white tracking-tight">
-                            Semua Proyek & Implementasi
+                            Semua Proyek & Studi Kasus
                         </h2>
                         <p class="text-white/50 text-xs mt-1">
                             Menampilkan {{ $portfolios->count() }} dari total {{ $portfolios->total() }} proyek terverifikasi
                         </p>
                     </div>
-                    <div class="text-xs text-brand-accent font-semibold tracking-wider uppercase hidden sm:block">
-                        <i class="fa-solid fa-circle-check text-[10px]"></i> Live Production Ready
+                    <div class="text-xs text-cyan-400 font-semibold tracking-wider uppercase hidden sm:flex items-center gap-1.5">
+                        <i class="fa-solid fa-circle-check text-[11px]"></i> Live Production Ready
                     </div>
                 </div>
 
                 {{-- 2-Column Grid of Project Cards --}}
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
                     @forelse($portfolios as $portfolio)
-                    <div class="bg-brand-navy/60 backdrop-blur-xl border border-white/10 hover:border-brand-accent/50 rounded-2xl overflow-hidden shadow-card hover:-translate-y-1.5 transition-all duration-300 flex flex-col h-full group">
+                    <div class="bg-brand-navy/60 backdrop-blur-xl border border-white/10 hover:border-cyan-400/40 rounded-2xl overflow-hidden shadow-card hover:-translate-y-1.5 transition-all duration-300 flex flex-col h-full group">
 
                         {{-- Card Image --}}
                         <div class="relative overflow-hidden aspect-[16/10] bg-white/5">
                             <a href="{{ route('portfolio.read', $portfolio->slug) }}" class="block w-full h-full">
                                 @if ($portfolio->thumbnail_image)
-                                <img src="{{ asset('storage/' . $portfolio->thumbnail_image) }}" alt="{{ $portfolio->title }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy">
+                                <img src="{{ asset('storage/' . $portfolio->thumbnail_image) }}" alt="{{ $portfolio->title }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" decoding="async">
                                 @else
                                 <div class="w-full h-full flex items-center justify-center bg-brand-navy text-white/30">
                                     <i class="fa-solid fa-layer-group text-3xl"></i>
@@ -267,7 +328,7 @@ $collectionSchema = [
                             {{-- Category Badge Top Left --}}
                             @if ($portfolio->category)
                             <div class="absolute top-3 left-3">
-                                <span class="px-2.5 py-1 rounded-md bg-brand-dark/80 backdrop-blur-md border border-white/15 text-white/90 text-[10px] font-bold tracking-wider uppercase shadow-sm">
+                                <span class="px-2.5 py-1 rounded-md bg-brand-dark/85 backdrop-blur-md border border-white/15 text-white/90 text-[10px] font-bold tracking-wider uppercase shadow-sm">
                                     {{ $portfolio->category->name }}
                                 </span>
                             </div>
@@ -276,7 +337,7 @@ $collectionSchema = [
                             {{-- Completion Year Top Right --}}
                             @if ($portfolio->completion_date)
                             <div class="absolute top-3 right-3">
-                                <span class="px-2 py-0.5 rounded-md bg-white/10 backdrop-blur-md border border-white/10 text-white/70 text-[10px] font-medium">
+                                <span class="px-2 py-0.5 rounded-md bg-white/10 backdrop-blur-md border border-white/10 text-white/75 text-[10px] font-medium">
                                     {{ \Carbon\Carbon::parse($portfolio->completion_date)->format('Y') }}
                                 </span>
                             </div>
@@ -292,7 +353,7 @@ $collectionSchema = [
                                 </div>
 
                                 {{-- Title --}}
-                                <h3 class="font-sans font-bold text-base sm:text-lg text-white group-hover:text-brand-accent transition-colors leading-snug mb-2 line-clamp-2">
+                                <h3 class="font-sans font-bold text-base sm:text-lg text-white group-hover:text-cyan-300 transition-colors leading-snug mb-2 line-clamp-2">
                                     <a href="{{ route('portfolio.read', $portfolio->slug) }}">
                                         {{ $portfolio->title }}
                                     </a>
@@ -322,13 +383,13 @@ $collectionSchema = [
                                 @endif
 
                                 <div class="pt-3 border-t border-white/5 flex items-center justify-between">
-                                    <a href="{{ route('portfolio.read', $portfolio->slug) }}" class="inline-flex items-center gap-1.5 text-xs font-bold text-brand-accent group-hover:text-white transition-colors">
+                                    <a href="{{ route('portfolio.read', $portfolio->slug) }}" class="inline-flex items-center gap-1.5 text-xs font-bold text-cyan-400 group-hover:text-white transition-colors">
                                         <span>Lihat Detail</span>
                                         <i class="fa-solid fa-arrow-right text-[10px] group-hover:translate-x-1 transition-transform"></i>
                                     </a>
                                     @if ($portfolio->view_count)
                                     <span class="text-white/40 text-[11px] flex items-center gap-1">
-                                        <i class="fa-solid fa-eye text-[9px]"></i> {{ number_format($portfolio->view_count) }}
+                                        <i class="fa-solid fa-eye text-[9px] text-cyan-400/80"></i> {{ number_format($portfolio->view_count) }}
                                     </span>
                                     @endif
                                 </div>
@@ -338,11 +399,15 @@ $collectionSchema = [
                     </div>
                     @empty
                     <div class="col-span-2 text-center py-16 bg-white/5 rounded-2xl border border-white/10 p-8">
-                        <div class="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center mx-auto mb-4 text-brand-accent">
+                        <div class="w-16 h-16 rounded-full bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center mx-auto mb-4 text-cyan-400">
                             <i class="fa-solid fa-folder-open text-2xl"></i>
                         </div>
-                        <h3 class="text-lg font-bold text-white mb-1">Belum Ada Proyek</h3>
-                        <p class="text-white/50 text-xs">Daftar proyek portofolio akan segera ditambahkan di sini.</p>
+                        <h3 class="text-lg font-bold text-white mb-1">Tidak Ada Proyek Ditemukan</h3>
+                        <p class="text-white/50 text-xs mb-4">Coba sesuaikan kata kunci pencarian atau pilih kategori lain.</p>
+                        <a href="{{ route('landing.portfolio') }}" class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-medium transition-colors">
+                            <i class="fa-solid fa-rotate-left text-[11px]"></i>
+                            <span>Tampilkan Semua Proyek</span>
+                        </a>
                     </div>
                     @endforelse
                 </div>
@@ -368,7 +433,7 @@ $collectionSchema = [
                     <div class="bg-brand-navy/60 backdrop-blur-xl border border-white/10 rounded-2xl p-5 sm:p-6 shadow-card">
                         <div class="flex items-center gap-3 mb-5 pb-3 border-b border-white/10">
                             <div class="w-9 h-9 rounded-xl bg-btn-gradient flex items-center justify-center shadow-glow-sm text-white">
-                                <i class="fa-solid fa-fire text-sm"></i>
+                                <i class="fa-solid fa-fire text-sm text-amber-300"></i>
                             </div>
                             <div>
                                 <h3 class="font-sans font-bold text-base text-white">Proyek Terpopuler</h3>
@@ -382,7 +447,7 @@ $collectionSchema = [
                             <a href="{{ route('portfolio.read', $popular->slug) }}" class="group flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/5 border border-transparent hover:border-white/10 transition-all duration-300">
                                 <div class="w-14 h-14 rounded-lg overflow-hidden bg-white/5 shrink-0 border border-white/10">
                                     @if ($popular->thumbnail_image)
-                                    <img src="{{ asset('storage/' . $popular->thumbnail_image) }}" alt="{{ $popular->title }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                    <img src="{{ asset('storage/' . $popular->thumbnail_image) }}" alt="{{ $popular->title }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy" decoding="async">
                                     @else
                                     <div class="w-full h-full flex items-center justify-center text-white/30 text-xs">
                                         <i class="fa-solid fa-globe"></i>
@@ -390,11 +455,11 @@ $collectionSchema = [
                                     @endif
                                 </div>
                                 <div class="flex-1 min-w-0">
-                                    <h4 class="text-xs sm:text-[13px] font-bold text-white/90 group-hover:text-brand-accent transition-colors line-clamp-1 mb-1">
+                                    <h4 class="text-xs sm:text-[13px] font-bold text-white/90 group-hover:text-cyan-300 transition-colors line-clamp-1 mb-1">
                                         {{ $popular->title }}
                                     </h4>
                                     <div class="flex items-center gap-2 text-[11px] text-white/40">
-                                        <span class="flex items-center gap-1 text-brand-accent">
+                                        <span class="flex items-center gap-1 text-cyan-400">
                                             <i class="fa-solid fa-eye text-[9px]"></i> {{ number_format($popular->view_count) }}
                                         </span>
                                         <span>•</span>
@@ -410,12 +475,15 @@ $collectionSchema = [
                     </div>
 
                     {{-- Widget 2: Quick Metrics / Agency Trust Stats --}}
-                    <div class="bg-gradient-to-br from-blue-900/40 via-indigo-900/30 to-brand-navy border border-brand-accent/30 rounded-2xl p-6 shadow-glow-sm relative overflow-hidden">
-                        <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-brand-accent/15 rounded-full blur-2xl pointer-events-none"></div>
+                    <div class="bg-gradient-to-br from-blue-900/40 via-indigo-900/30 to-brand-navy border border-cyan-500/30 rounded-2xl p-6 shadow-glow-sm relative overflow-hidden">
+                        <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-cyan-400/10 rounded-full blur-2xl pointer-events-none"></div>
                         <div class="relative z-10">
                             <div class="mb-4">
-                                <span class="text-[#EF4444] font-extrabold text-[10px] tracking-[0.2em] uppercase">METRIK & PERFORMA</span>
-                                <h3 class="font-sans font-bold text-lg text-white mt-0.5">Statistik Scalify</h3>
+                                <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-cyan-500/15 border border-cyan-500/25 text-cyan-300 text-[10px] font-bold tracking-[0.15em] uppercase mb-1">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+                                    METRIK & PERFORMA
+                                </div>
+                                <h3 class="font-sans font-bold text-lg text-white mt-1">Statistik Scalify</h3>
                             </div>
 
                             <div class="space-y-3.5 text-xs">
@@ -433,7 +501,7 @@ $collectionSchema = [
                                 </div>
                                 <div class="flex items-center justify-between">
                                     <span class="text-white/60">Implementasi Algoritma & AI</span>
-                                    <span class="font-bold text-base text-brand-accent">100% In-House</span>
+                                    <span class="font-bold text-base text-cyan-300">100% In-House</span>
                                 </div>
                             </div>
                         </div>
@@ -442,15 +510,15 @@ $collectionSchema = [
                     {{-- Widget 3: CTA Box --}}
                     <div class="bg-brand-navy/70 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-card text-center relative overflow-hidden">
                         <div class="w-12 h-12 rounded-2xl bg-btn-gradient flex items-center justify-center mx-auto mb-4 shadow-glow-blue text-white">
-                            <i class="fa-brands fa-whatsapp text-xl"></i>
+                            <i class="fa-brands fa-whatsapp text-xl text-emerald-300"></i>
                         </div>
                         <h3 class="font-sans font-bold text-lg text-white mb-2">Ingin Bangun Website Serupa?</h3>
                         <p class="text-white/60 text-xs leading-relaxed mb-5 font-normal">
                             Konsultasikan kebutuhan website company profile, web app SaaS, atau implementasi sistem metode algoritma Anda langsung dengan tim lead engineer kami.
                         </p>
-                        <a href="https://wa.me/6285221694067?text=Halo%20Scalify,%20saya%20tertarik%20dengan%20proyek%20portofolio%20website%20Anda" target="_blank" class="w-full inline-flex items-center justify-center gap-2 bg-btn-gradient text-white text-xs sm:text-sm font-bold py-3.5 px-5 rounded-full shadow-glow-sm hover:shadow-glow-blue hover:scale-105 transition-all">
+                        <a href="https://wa.me/6285221694067?text=Halo%20Scalify,%20saya%20tertarik%20dengan%20proyek%20portofolio%20website%20Anda" target="_blank" class="w-full inline-flex items-center justify-center gap-2 bg-btn-gradient text-white text-xs sm:text-sm font-bold py-3.5 px-5 rounded-full shadow-glow-blue hover:scale-105 transition-all">
                             <span>Konsultasi Proyek Sekarang</span>
-                            <i class="fa-solid fa-arrow-right text-xs"></i>
+                            <span class="w-5 h-5 bg-white/20 rounded-full flex items-center justify-center text-[10px]">→</span>
                         </a>
                     </div>
 
@@ -466,16 +534,17 @@ $collectionSchema = [
 <style>
     @keyframes infiniteMarquee {
         0% {
-            transform: translateX(0);
+            transform: translate3d(0, 0, 0);
         }
 
         100% {
-            transform: translateX(-50%);
+            transform: translate3d(-50%, 0, 0);
         }
     }
 
     .animate-infinite-marquee {
         animation: infiniteMarquee 26s linear infinite;
+        will-change: transform;
     }
 
     .animate-infinite-marquee:hover {

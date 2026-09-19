@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Blog;
 use App\Models\BlogCategory;
 use App\Models\Portfolio;
+use App\Models\PortfolioCategory;
 use App\Models\Documentation;
 use App\Models\DailyView;
 use Illuminate\Http\Request;
@@ -109,29 +110,56 @@ class HomeController extends Controller
         return view('pages.blogs.read', compact('blog', 'related'));
     }
 
-    public function portfolio()
+    public function portfolio(Request $request)
     {
-        // Gunakan paginate agar ada ->total()
-        $portfolios = Portfolio::active()
-            ->orderBy('display_order', 'asc')
-            ->paginate(12); // bebas mau 6, 9, 12, dll
+        $search = $request->query('search');
+        $categorySlug = $request->query('category');
 
-        // Ambil portfolio populer
+        $query = Portfolio::active()->with('category');
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                    ->orWhere('short_description', 'like', "%{$search}%")
+                    ->orWhere('client_name', 'like', "%{$search}%")
+                    ->orWhere('technologies', 'like', "%{$search}%");
+            });
+        }
+
+        if ($categorySlug) {
+            $query->whereHas('category', function ($q) use ($categorySlug) {
+                $q->where('slug', $categorySlug);
+            });
+        }
+
+        $portfolios = (clone $query)
+            ->orderBy('display_order', 'asc')
+            ->orderBy('id', 'desc')
+            ->paginate(12)
+            ->withQueryString();
+
         $popularPortfolios = Portfolio::active()
+            ->with('category')
             ->orderBy('view_count', 'desc')
             ->take(5)
             ->get();
-        $featuredPortfolio = Portfolio::active()
-            ->orderByDesc('view_count')
-            ->first();
 
-        return view('pages.portfolio.index', compact('portfolios', 'popularPortfolios', 'featuredPortfolio'));
+        $featuredPortfolio = Portfolio::active()
+            ->with('category')
+            ->where('is_featured', true)
+            ->first() ?? Portfolio::active()->with('category')->orderByDesc('view_count')->first();
+
+        $categories = PortfolioCategory::where('is_active', 1)
+            ->orderBy('display_order')
+            ->get();
+
+        return view('pages.portfolio.index', compact('portfolios', 'popularPortfolios', 'featuredPortfolio', 'categories', 'categorySlug', 'search'));
     }
 
 
     public function readPortfolio($slug)
     {
-        $portfolio = Portfolio::where('slug', $slug)->active()->firstOrFail();
+        $portfolio = Portfolio::where('slug', $slug)->active()->with('category')->firstOrFail();
 
         // Increment view count
         $portfolio->increment('view_count');
