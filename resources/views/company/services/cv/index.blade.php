@@ -26,26 +26,27 @@
 {{-- JSON-LD Schema --}}
 @verbatim
 <script type="application/ld+json">
-{
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "Scalify AI CV Builder & Professional Template",
-    "url": "https://scalifyintellegence.my.id/layanan/template-cv",
-    "applicationCategory": "BusinessApplication",
-    "operatingSystem": "All",
-    "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "IDR"
-    },
-    "description": "Platform pembuatan CV profesional interaktif berbasis AI Gemini dengan template 2-kolom standar HRD dan export PDF A4."
-}
+    {
+        "@context": "https://schema.org"
+        , "@type": "WebApplication"
+        , "name": "Scalify AI CV Builder & Professional Template"
+        , "url": "https://scalifyintellegence.my.id/layanan/template-cv"
+        , "applicationCategory": "BusinessApplication"
+        , "operatingSystem": "All"
+        , "offers": {
+            "@type": "Offer"
+            , "price": "0"
+            , "priceCurrency": "IDR"
+        }
+        , "description": "Platform pembuatan CV profesional interaktif berbasis AI Gemini dengan template 2-kolom standar HRD dan export PDF A4."
+    }
+
 </script>
 @endverbatim
 @endsection
 
 @section('content')
-<div class="bg-[#0A0E2A] text-slate-100 min-h-screen font-sans selection:bg-cyan-500 selection:text-white">
+<div class="bg-[#090d29] text-slate-100 min-h-screen font-sans selection:bg-cyan-500 selection:text-white pb-20 lg:pb-0">
 
     {{-- 1. Hero Section --}}
     @include('company.services.cv.partials.hero')

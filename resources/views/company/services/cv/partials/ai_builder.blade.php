@@ -16,13 +16,19 @@
             </p>
         </div>
 
-        {{-- Mode Switcher Tabs --}}
-        <div class="flex items-center gap-2 mb-8">
-            <button @click="activeView = 'chat'" :class="activeView === 'chat' ? 'bg-btn-gradient text-white shadow-glow-blue' : 'bg-white/5 text-white/70 hover:bg-white/10 border border-white/10'" class="px-5 py-2.5 rounded-full font-semibold text-xs transition-all flex items-center gap-2">
-                <span>1. Formulasi & Asisten Chat</span>
+        {{-- Mode Switcher Tabs (Mobile & Desktop) --}}
+        <div class="flex items-center gap-2 mb-6 overflow-x-auto pb-2 scrollbar-none">
+            <button @click="activeView = 'chat'" :class="activeView === 'chat' ? 'bg-btn-gradient text-white shadow-glow-blue' : 'bg-white/5 text-white/70 hover:bg-white/10 border border-white/10'" class="px-4 py-2.5 rounded-full font-semibold text-xs transition-all flex items-center gap-2 shrink-0">
+                <i class="fa-solid fa-comments text-cyan-400"></i>
+                <span>1. Formulasi Chat AI</span>
             </button>
-            <button @click="activeView = 'preview'" :class="activeView === 'preview' ? 'bg-btn-gradient text-white shadow-glow-blue' : 'bg-white/5 text-white/70 hover:bg-white/10 border border-white/10'" class="px-5 py-2.5 rounded-full font-semibold text-xs transition-all flex items-center gap-2">
-                <span>2. Live Preview CV & Ekspor PDF</span>
+            <button @click="activeView = 'form'" :class="activeView === 'form' ? 'bg-btn-gradient text-white shadow-glow-blue' : 'bg-white/5 text-white/70 hover:bg-white/10 border border-white/10'" class="px-4 py-2.5 rounded-full font-semibold text-xs transition-all flex items-center gap-2 shrink-0">
+                <i class="fa-solid fa-pen-to-square text-amber-400"></i>
+                <span>2. Form Edit Data</span>
+            </button>
+            <button @click="activeView = 'preview'; $nextTick(() => fitZoom())" :class="activeView === 'preview' ? 'bg-btn-gradient text-white shadow-glow-blue' : 'bg-white/5 text-white/70 hover:bg-white/10 border border-white/10'" class="px-4 py-2.5 rounded-full font-semibold text-xs transition-all flex items-center gap-2 shrink-0">
+                <i class="fa-solid fa-file-pdf text-rose-400"></i>
+                <span>3. Live Preview & PDF</span>
                 <span x-show="generatedOnce" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
             </button>
         </div>
@@ -30,11 +36,11 @@
         {{-- MAIN BUILDER CONTAINER --}}
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
-            {{-- LEFT COLUMN: CHAT ASSISTANT & DRAG-AND-DROP MODULAR TOOLBOX --}}
-            <div class="lg:col-span-5 space-y-6" x-show="activeView === 'chat' || window.innerWidth >= 1024">
+            {{-- LEFT COLUMN: CHAT ASSISTANT & FORM EDITOR & DRAG-AND-DROP TOOLBOX --}}
+            <div class="lg:col-span-5 space-y-6" x-show="activeView === 'chat' || activeView === 'form' || window.innerWidth >= 1024">
 
-                {{-- Conversational AI Chat Interface --}}
-                <div @dragover.prevent="isChatDropTarget = true" @dragleave.prevent="isChatDropTarget = false" @drop.prevent="handleChatDrop($event)" class="bg-slate-900/90 rounded-3xl border border-slate-800 shadow-2xl p-5 sm:p-6 backdrop-blur-xl relative overflow-hidden flex flex-col h-[560px] transition-all" :class="isChatDropTarget ? 'ring-4 ring-cyan-400 border-cyan-400 scale-[1.01]' : ''">
+                {{-- 1. Conversational AI Chat Interface --}}
+                <div x-show="activeView === 'chat'" @dragover.prevent="isChatDropTarget = true" @dragleave.prevent="isChatDropTarget = false" @drop.prevent="handleChatDrop($event)" class="bg-slate-900/90 rounded-3xl border border-slate-800 shadow-2xl p-5 sm:p-6 backdrop-blur-xl relative overflow-hidden flex flex-col h-[560px] transition-all" :class="isChatDropTarget ? 'ring-4 ring-cyan-400 border-cyan-400 scale-[1.01]' : ''">
 
                     {{-- Drag Drop Overlay Feedback --}}
                     <div x-show="isChatDropTarget" x-transition class="absolute inset-0 bg-slate-950/95 border-2 border-dashed border-cyan-400 rounded-3xl z-40 flex flex-col items-center justify-center p-6 text-center backdrop-blur-md pointer-events-none">
@@ -121,11 +127,13 @@
                         {{-- AI Typing Indicator --}}
                         <div x-show="isGenerating" class="flex gap-2.5 items-start">
                             <div class="w-8 h-8 rounded-full bg-cyan-500/20 border border-cyan-400/40 text-cyan-400 flex items-center justify-center shrink-0 text-xs mt-0.5">
-                                <i class="fa-solid fa-robot"></i>
+                                <i class="fa-solid fa-robot animate-spin"></i>
                             </div>
-                            <div class="bg-slate-800/90 text-slate-300 text-xs py-2 px-3 rounded-2xl rounded-tl-none border border-slate-700/60 flex items-center gap-2">
-                                <span class="animate-spin text-cyan-400"><i class="fa-solid fa-circle-notch"></i></span>
-                                <span>Gemini sedang memformulasikan resume standar STAR & HRD...</span>
+                            <div class="bg-slate-800/90 py-2 px-4 rounded-2xl rounded-tl-none border border-slate-700/60 flex items-center gap-1.5 shadow-sm">
+                                <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-bounce"></span>
+                                <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-bounce animation-delay-200"></span>
+                                <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-bounce animation-delay-400"></span>
+                                <span class="text-xs text-slate-300 ml-1.5">Memformulasikan CV standar HRD...</span>
                             </div>
                         </div>
                     </div>
@@ -134,32 +142,31 @@
                     <div class="pt-2 border-t border-slate-800 shrink-0 space-y-2">
 
                         {{-- Active Context Tag Chip (Antigravity Context Tagging) --}}
-                        <div x-show="activeContext" x-transition class="flex items-center justify-between bg-gradient-to-r from-cyan-950/90 to-blue-950/90 border border-cyan-500/50 rounded-xl px-3 py-1.5 text-xs text-cyan-200 shadow-md">
-                            <div class="flex items-center gap-2 overflow-hidden">
-                                <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping shrink-0"></span>
-                                <i class="fa-solid fa-crosshairs text-cyan-400 shrink-0"></i>
-                                <span class="font-bold text-white shrink-0 text-[11px]">Fokus Diskusi:</span>
-                                <span class="truncate text-cyan-300 font-mono text-[11px]" x-text="activeContext ? activeContext.title : ''"></span>
+                        <div x-show="activeContext" x-transition class="flex items-center justify-between bg-cyan-950/80 border border-cyan-500/40 rounded-xl px-3 py-1.5 text-xs">
+                            <div class="flex items-center gap-1.5 text-cyan-300 font-medium">
+                                <i class="fa-solid fa-crosshairs text-cyan-400"></i>
+                                <span>Fokus Diskusi:</span>
+                                <span class="font-bold text-white bg-cyan-500/20 px-2 py-0.5 rounded-md" x-text="activeContext ? activeContext.title : ''"></span>
                             </div>
-                            <button type="button" @click="clearDiscussContext()" class="text-slate-400 hover:text-rose-400 ml-2 text-xs transition shrink-0" title="Lepas Fokus Diskusi">
+                            <button type="button" @click="clearDiscussContext()" class="text-slate-400 hover:text-white text-xs px-1" title="Hapus Fokus Context">
                                 <i class="fa-solid fa-xmark"></i>
                             </button>
                         </div>
 
                         {{-- Quick Revision Chips (Visible after first interaction) --}}
                         <div class="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none text-[11px]" x-show="chatHistory.length > 0">
-                            <span class="text-slate-400 shrink-0 text-[10px] font-medium"><i class="fa-solid fa-wand-magic-sparkles text-cyan-400"></i> Minta AI Ubah:</span>
+                            <span class="text-slate-400 shrink-0 text-[10px] font-medium"><i class="fa-solid fa-wand-magic-sparkles text-cyan-400"></i> Minta AI:</span>
                             <button type="button" @click="sendQuickPrompt('Tolong poles bagian Ringkasan Profil agar lebih menonjolkan leadership dan inovasi')" class="px-2 py-0.5 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-cyan-300 border border-slate-700 shrink-0 transition flex items-center gap-1.5">
-                                <i class="fa-solid fa-wand-magic-sparkles text-cyan-400 text-[10px]"></i> Poles Profil
+                                Poles Profil
                             </button>
                             <button type="button" @click="sendQuickPrompt('Tolong tambahkan pengalaman kerja baru di bidang teknologi dengan formula STAR')" class="px-2 py-0.5 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-cyan-300 border border-slate-700 shrink-0 transition flex items-center gap-1.5">
-                                <i class="fa-solid fa-briefcase text-blue-400 text-[10px]"></i> Tambah Pengalaman
+                                Tambah Pengalaman
                             </button>
                             <button type="button" @click="sendQuickPrompt('Tolong ubah riwayat pendidikan saya jadi S1 dengan predikat Cum Laude')" class="px-2 py-0.5 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-cyan-300 border border-slate-700 shrink-0 transition flex items-center gap-1.5">
-                                <i class="fa-solid fa-graduation-cap text-indigo-400 text-[10px]"></i> Ganti Pendidikan
+                                Ganti Pendidikan
                             </button>
                             <button type="button" @click="sendQuickPrompt('Tolong optimalkan daftar skills saya dengan keyword ATS yang paling dicari HRD')" class="px-2 py-0.5 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-cyan-300 border border-slate-700 shrink-0 transition flex items-center gap-1.5">
-                                <i class="fa-solid fa-bolt text-amber-400 text-[10px]"></i> Optimasi Skill
+                                Optimasi Skill
                             </button>
                         </div>
 
@@ -170,10 +177,171 @@
                             </button>
                         </form>
                         <div class="flex items-center justify-between text-[11px] text-slate-400 px-1">
-                            <span class="text-[10px] text-slate-400">💡 Drag kartu/bagian CV ke sini atau tekan <kbd class="px-1 py-0.5 rounded bg-slate-800 text-cyan-300 text-[9px] border border-slate-700 font-mono">Ctrl+L</kbd> untuk diskusi</span>
+                            <span class="text-[10px] text-slate-400">💡 Drag kartu ke chat / tekan <kbd class="px-1 py-0.5 rounded bg-slate-800 text-cyan-300 text-[9px] border border-slate-700 font-mono">Ctrl+L</kbd></span>
                             <button type="button" @click="triggerDirectGenerate()" class="text-cyan-400 hover:underline flex items-center gap-1 font-medium text-[11px]">
-                                <i class="fa-solid fa-wand-magic-sparkles"></i> Generate Penuh
+                                Generate Penuh
                             </button>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- 2. DEDICATED MOBILE & DESKTOP FORM EDITOR (EASY FIELD-BY-FIELD INPUT) --}}
+                <div x-show="activeView === 'form'" class="bg-slate-900/90 rounded-3xl border border-slate-800 shadow-2xl p-5 sm:p-6 backdrop-blur-xl space-y-6">
+                    <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+                        <div>
+                            <h3 class="font-bold text-white text-base flex items-center gap-2">
+                                <i class="fa-solid fa-pen-to-square text-amber-400"></i>
+                                <span>Form Pengisian Data CV</span>
+                            </h3>
+                            <p class="text-xs text-white/50">Edit langsung setiap bagian dengan input yang nyaman di HP.</p>
+                        </div>
+                        <button type="button" @click="activeView = 'preview'; $nextTick(() => fitZoom())" class="px-3 py-1.5 rounded-full bg-btn-gradient text-white text-xs font-bold shadow-glow-blue">
+                            Lihat Hasil →
+                        </button>
+                    </div>
+
+                    {{-- Form Accordion: Data Pribadi & Kontak --}}
+                    <div class="space-y-4">
+                        <div class="bg-white/5 rounded-2xl p-4 border border-white/10 space-y-3">
+                            <h4 class="text-xs font-extrabold uppercase tracking-wider text-cyan-400 flex items-center gap-2">
+                                <i class="fa-solid fa-user"></i> Data Pribadi & Kontak
+                            </h4>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-[11px] text-white/70 mb-1">Nama Lengkap</label>
+                                    <input type="text" x-model="cvData.full_name" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-400" />
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] text-white/70 mb-1">Gelar (Opsional)</label>
+                                    <input type="text" x-model="cvData.degree" placeholder="cth: S.Kom / S.E" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-400" />
+                                </div>
+                                <div class="sm:col-span-2">
+                                    <label class="block text-[11px] text-white/70 mb-1">Target Posisi / Profesi</label>
+                                    <input type="text" x-model="cvData.target_role" placeholder="cth: Digital Marketing Specialist" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-400" />
+                                </div>
+                                <div class="sm:col-span-2">
+                                    <label class="block text-[11px] text-white/70 mb-1">Ringkasan Profil (Summary)</label>
+                                    <textarea x-model="cvData.profile_summary" rows="3" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-cyan-400 leading-relaxed"></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] text-white/70 mb-1">Nomor WhatsApp / Telp</label>
+                                    <input type="text" x-model="cvData.phone" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-400" />
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] text-white/70 mb-1">Email</label>
+                                    <input type="email" x-model="cvData.email" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-400" />
+                                </div>
+                                <div class="sm:col-span-2">
+                                    <label class="block text-[11px] text-white/70 mb-1">Alamat Domisili</label>
+                                    <input type="text" x-model="cvData.address" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-400" />
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Form: Pengalaman Kerja --}}
+                        <div class="bg-white/5 rounded-2xl p-4 border border-white/10 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <h4 class="text-xs font-extrabold uppercase tracking-wider text-cyan-400 flex items-center gap-2">
+                                    <i class="fa-solid fa-briefcase"></i> Pengalaman Kerja
+                                </h4>
+                                <button type="button" @click="addWorkItem()" class="text-xs px-2.5 py-1 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 hover:bg-cyan-500/30 transition">
+                                    + Tambah Kerja
+                                </button>
+                            </div>
+                            <template x-for="(work, wIdx) in cvData.work_experience" :key="wIdx">
+                                <div class="p-3 bg-black/30 rounded-xl border border-white/5 space-y-2 relative">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-[10px] font-bold text-white/80" x-text="'Pekerjaan #' + (wIdx + 1)"></span>
+                                        <button type="button" @click="removeWorkItem(wIdx)" class="text-rose-400 hover:text-rose-300 text-xs" title="Hapus">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <div>
+                                            <input type="text" x-model="work.company" placeholder="Nama Perusahaan" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white" />
+                                        </div>
+                                        <div>
+                                            <input type="text" x-model="work.position" placeholder="Jabatan / Posisi" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white" />
+                                        </div>
+                                        <div>
+                                            <input type="text" x-model="work.period" placeholder="Periode (2022 - 2024)" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white" />
+                                        </div>
+                                        <div>
+                                            <input type="text" x-model="work.city" placeholder="Kota" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white" />
+                                        </div>
+                                    </div>
+                                    <div class="space-y-1 pt-1">
+                                        <label class="block text-[10px] text-white/50">Poin Pencapaian (STAR):</label>
+                                        <template x-for="(bullet, bIdx) in work.bullets" :key="bIdx">
+                                            <div class="flex items-center gap-1.5">
+                                                <input type="text" x-model="work.bullets[bIdx]" class="flex-1 bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-white" />
+                                                <button type="button" @click="removeWorkBullet(work, bIdx)" class="text-rose-400 text-xs px-1">×</button>
+                                            </div>
+                                        </template>
+                                        <button type="button" @click="addWorkBullet(work)" class="text-[11px] text-cyan-400 hover:underline pt-0.5">
+                                            + Tambah Poin
+                                        </button>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+
+                        {{-- Form: Pendidikan --}}
+                        <div class="bg-white/5 rounded-2xl p-4 border border-white/10 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <h4 class="text-xs font-extrabold uppercase tracking-wider text-cyan-400 flex items-center gap-2">
+                                    <i class="fa-solid fa-graduation-cap"></i> Pendidikan
+                                </h4>
+                                <button type="button" @click="addEduItem()" class="text-xs px-2.5 py-1 rounded-lg bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 hover:bg-indigo-500/30 transition">
+                                    + Tambah Pendidikan
+                                </button>
+                            </div>
+                            <template x-for="(edu, eIdx) in cvData.education_list" :key="eIdx">
+                                <div class="p-3 bg-black/30 rounded-xl border border-white/5 space-y-2 relative">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-[10px] font-bold text-white/80" x-text="'Pendidikan #' + (eIdx + 1)"></span>
+                                        <button type="button" @click="removeEduItem(eIdx)" class="text-rose-400 hover:text-rose-300 text-xs">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <div>
+                                            <input type="text" x-model="edu.institution" placeholder="Nama Universitas / Sekolah" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white" />
+                                        </div>
+                                        <div>
+                                            <input type="text" x-model="edu.degree_name" placeholder="Jurusan / Jenjang" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white" />
+                                        </div>
+                                        <div>
+                                            <input type="text" x-model="edu.period" placeholder="Tahun (2018 - 2022)" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white" />
+                                        </div>
+                                        <div>
+                                            <input type="text" x-model="edu.gpa" placeholder="IPK (cth: IPK 3.85)" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+
+                        {{-- Form: Skills & Keahlian --}}
+                        <div class="bg-white/5 rounded-2xl p-4 border border-white/10 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <h4 class="text-xs font-extrabold uppercase tracking-wider text-cyan-400 flex items-center gap-2">
+                                    <i class="fa-solid fa-bolt"></i> Keahlian & Persentase Bar
+                                </h4>
+                                <button type="button" @click="addSkillItem()" class="text-xs px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/30 transition">
+                                    + Tambah Skill
+                                </button>
+                            </div>
+                            <div class="space-y-2">
+                                <template x-for="(skill, skIdx) in cvData.skills" :key="skIdx">
+                                    <div class="p-2.5 bg-black/30 rounded-xl border border-white/5 flex items-center gap-2">
+                                        <input type="text" x-model="skill.name" placeholder="Nama Keahlian" class="flex-1 bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-white" />
+                                        <input type="range" min="10" max="100" step="5" x-model="skill.level" class="w-24 accent-cyan-400 cursor-pointer" />
+                                        <span class="text-[11px] font-mono text-cyan-300 w-8 text-right" x-text="skill.level + '%'"></span>
+                                        <button type="button" @click="removeSkillItem(skIdx)" class="text-rose-400 text-xs px-1">×</button>
+                                    </div>
+                                </template>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -373,13 +541,13 @@
                 </div>
 
                 {{-- CV PREVIEW CONTAINER (SCROLLABLE BOTH VERTICALLY & HORIZONTALLY FOR MULTI-PAGE) --}}
-                <div class="bg-slate-950 p-2 sm:p-4 rounded-3xl border border-slate-800 shadow-2xl max-h-[850px] overflow-y-auto overflow-x-auto scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-slate-900 transition-all">
+                <div class="bg-slate-950 p-2 sm:p-4 rounded-3xl border border-slate-800 shadow-2xl max-h-[850px] overflow-y-auto overflow-x-auto scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-slate-900 transition-all flex justify-center">
 
                     {{-- Inner Centered Wrapper that supports arbitrary zoom and scroll --}}
-                    <div class="min-w-fit w-max mx-auto py-2 px-1 transition-transform duration-150 origin-top-left sm:origin-top" :style="'transform: scale(' + (zoomScale / 100) + '); margin-bottom: ' + ((zoomScale < 100) ? (-(1123 * (1 - zoomScale / 100)) + 'px') : '0')">
+                    <div class="w-full flex justify-center py-2 px-0.5 transition-transform duration-150" :style="'transform: scale(' + (zoomScale / 100) + '); transform-origin: top center; margin-bottom: ' + ((zoomScale < 100) ? (-(1123 * (1 - zoomScale / 100)) + 'px') : '0')">
 
                         {{-- THE PRINTABLE A4 CV SHEET (DYNAMIC MULTI-PAGE HEIGHT WITH CONTINUOUS TWO-TONE SIDEBAR) --}}
-                        <div id="cv-printable-sheet" class="w-[794px] min-h-[1123px] h-auto bg-white text-slate-800 shadow-2xl relative flex font-sans select-text" :class="'theme-' + cvTheme">
+                        <div id="cv-printable-sheet" class="w-[794px] min-h-[1123px] h-auto bg-white text-slate-800 shadow-2xl relative flex font-sans select-text shrink-0" :class="'theme-' + cvTheme">
 
                             {{-- Visual Page Break Marker for Page 1 / Page 2 (Guides user when scrolling) --}}
                             <div class="absolute left-0 right-0 top-[1123px] border-b-2 border-dashed border-cyan-500/70 z-20 pointer-events-none flex items-center justify-center print:hidden">
