@@ -44,9 +44,21 @@
                 }
                 , "founder": {
                     "@type": "Person"
-                    , "name": "Muhammad Andi"
-                    , "jobTitle": "Founder & System Architect"
-                    , "sameAs": "https://www.linkedin.com/in/muhammad-andi-mubarok"
+                    , "@id": "https://scalifyintellegence.my.id/#founder"
+                    , "name": "Muhammad Andi Mubarok"
+                    , "alternateName": ["Muhammad Andi", "Andi Mubarok"]
+                    , "jobTitle": "Founder & Lead System Architect"
+                    , "sameAs": [
+                        "https://www.linkedin.com/in/muhammad-andi-mubarok"
+                    ]
+                    , "knowsAbout": [
+                        "Laravel & PHP Architecture"
+                        , "AI Agent Automation & Flowise RAG"
+                        , "K-Means Clustering"
+                        , "Decision Tree C4.5"
+                        , "Sistem Pendukung Keputusan (SPK)"
+                        , "Cloud VPS Deployment"
+                    ]
                 }
                 , "hasOfferCatalog": {
                     "@type": "OfferCatalog"
