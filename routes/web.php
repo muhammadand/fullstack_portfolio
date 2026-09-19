@@ -19,6 +19,7 @@ use Spatie\Sitemap\Tags\Url;
 use App\Models\Blog;
 use App\Models\Portfolio;
 use App\Models\Career;
+use App\Http\Controllers\CvServiceController;
 
 Route::get('/generate-sitemap', function () {
     $sitemap = Sitemap::create();
@@ -45,10 +46,15 @@ Route::get('/generate-sitemap', function () {
         ->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY)
         ->setPriority(0.7));
 
-    $sitemap->add(Url::create('/sobat-scalify')
+    $sitemap->add(Url::create('/layanan/scm')
+        ->setLastModificationDate(now())
+        ->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY)
+        ->setPriority(0.8));
+
+    $sitemap->add(Url::create('/layanan/template-cv')
         ->setLastModificationDate(now())
         ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
-        ->setPriority(0.8));
+        ->setPriority(0.9));
 
     // 3. Halaman Indeks Dinamis
     $sitemap->add(Url::create('/s/blogs')
@@ -223,6 +229,9 @@ Route::post('/register', [AuthController::class, 'register'])->name('register.po
 // Sobat Scalify
 Route::get('/sobat-scalify', [HomeController::class, 'SobatScalify'])->name('sobat-scalify');
 Route::get('/layanan/scm', [HomeController::class, 'scmService'])->name('layanan.scm');
+Route::get('/layanan/template-cv', [CvServiceController::class, 'index'])->name('layanan.cv');
+Route::post('/layanan/template-cv/chat', [CvServiceController::class, 'chat'])->name('layanan.cv.chat');
+Route::post('/layanan/template-cv/generate-ai', [CvServiceController::class, 'generateAi'])->name('layanan.cv.generate_ai');
 Route::get('/partner-program', [HomeController::class, 'partnerProgram'])->name('partner.program');
 //Documentation
 Route::resource('documentation', DocumentationController::class);

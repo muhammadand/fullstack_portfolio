@@ -154,6 +154,20 @@
                                 </div>
                             </a>
 
+                            {{-- Template CV & AI Builder --}}
+                            <a href="{{ route('layanan.cv') }}" class="flex items-start gap-3 p-2.5 rounded-xl hover:bg-white/5 transition-all group/item">
+                                <div class="w-8 h-8 rounded-lg bg-cyan-500/15 text-cyan-400 flex items-center justify-center shrink-0 mt-0.5 border border-cyan-500/20 group-hover/item:scale-105 transition-transform">
+                                    <i class="fa-solid fa-file-invoice text-xs"></i>
+                                </div>
+                                <div>
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="text-xs font-semibold text-white group-hover/item:text-brand-accent">Template CV & AI</span>
+                                        <span class="px-1.5 py-0.2 bg-cyan-500/20 text-cyan-300 text-[9px] font-bold rounded-full border border-cyan-500/30">AI Tools</span>
+                                    </div>
+                                    <p class="text-[11px] text-white/50 leading-tight mt-0.5">Buat CV profesional standar HRD & ATS</p>
+                                </div>
+                            </a>
+
                             {{-- Tentang Kami --}}
                             <a href="{{ route('index.company.profile') }}#ownerprofile" class="flex items-start gap-3 p-2.5 rounded-xl hover:bg-white/5 transition-all group/item">
                                 <div class="w-8 h-8 rounded-lg bg-blue-500/15 text-blue-400 flex items-center justify-center shrink-0 mt-0.5 border border-blue-500/20 group-hover/item:scale-105 transition-transform">
@@ -272,6 +286,10 @@
                     <a href="{{ route('landing.careers') }}" class="mobile-nav-link flex items-center justify-between text-xs text-white/80 font-medium px-2.5 py-2 rounded-lg hover:bg-white/5">
                         <span class="flex items-center gap-2.5"><i class="fa-solid fa-briefcase text-emerald-400 w-4 text-center"></i> Karir & Lowongan</span>
                         <span class="px-2 py-0.2 bg-emerald-500/20 text-emerald-300 text-[9px] font-bold rounded-full">Hiring</span>
+                    </a>
+                    <a href="{{ route('layanan.cv') }}" class="mobile-nav-link flex items-center justify-between text-xs text-white/80 font-medium px-2.5 py-2 rounded-lg hover:bg-white/5">
+                        <span class="flex items-center gap-2.5"><i class="fa-solid fa-file-invoice text-cyan-400 w-4 text-center"></i> Template CV & AI Builder</span>
+                        <span class="px-2 py-0.2 bg-cyan-500/20 text-cyan-300 text-[9px] font-bold rounded-full">Baru</span>
                     </a>
                     <a href="{{ route('index.company.profile') }}#ownerprofile" class="mobile-nav-link flex items-center gap-2.5 text-xs text-white/80 font-medium px-2.5 py-2 rounded-lg hover:bg-white/5">
                         <i class="fa-solid fa-user-tie text-blue-400 w-4 text-center"></i> Tentang Kami & Founder

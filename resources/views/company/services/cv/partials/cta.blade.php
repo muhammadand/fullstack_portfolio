@@ -1,0 +1,30 @@
+{{-- ══════════════════════════════════════════════════
+     BOTTOM CALL TO ACTION (CTA) CV SERVICE
+══════════════════════════════════════════════════ --}}
+<section class="bg-[#0c1033] py-16 sm:py-20 px-4 sm:px-6 lg:px-8 text-center relative overflow-hidden border-t border-white/5">
+    <div class="absolute inset-0 bg-blue-glow opacity-30 pointer-events-none"></div>
+    <div class="relative z-10 max-w-2xl mx-auto">
+        <div class="mb-3">
+            <span class="text-cyan-400 font-extrabold text-[11px] sm:text-xs tracking-[0.2em] uppercase inline-flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+                KONSULTASI KARIR
+            </span>
+        </div>
+        <h2 class="font-sans font-black text-3xl sm:text-4xl md:text-5xl text-white mb-4 sm:mb-6 leading-tight tracking-tight">
+            Siap Melamar Posisi Impian dengan CV yang Lebih Memikat?
+        </h2>
+        <p class="text-white/65 mb-8 text-xs sm:text-sm md:text-base leading-relaxed px-2 font-normal">
+            Gunakan editor CV kami sekarang secara mandiri atau konsultasikan pemolesan kata kunci dan surat lamaran langsung dengan praktisi HRD Scalify Intelligence.
+        </p>
+        <div class="flex flex-wrap items-center justify-center gap-3.5">
+            <a href="https://wa.me/6285221694067?text=Halo%20Admin%20Scalify,%20saya%20ingin%20konsultasi%20pembuatan%20dan%20review%20CV%20profesional." target="_blank" class="inline-flex items-center gap-2.5 bg-btn-gradient text-white font-bold px-7 sm:px-8 py-3.5 sm:py-4 rounded-full shadow-glow-blue hover:scale-105 transition-all text-xs sm:text-sm">
+                <i class="fa-brands fa-whatsapp text-base"></i>
+                <span>Konsultasi via WhatsApp</span>
+                <span class="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center text-[10px]">→</span>
+            </a>
+            <a href="#ai-builder-section" class="inline-flex items-center gap-2 bg-white/5 border border-white/15 hover:bg-white/10 text-white/90 hover:text-white text-xs sm:text-sm font-semibold px-6 py-3.5 sm:py-4 rounded-full transition-all">
+                <span>Coba Editor Mandiri</span>
+            </a>
+        </div>
+    </div>
+</section>
