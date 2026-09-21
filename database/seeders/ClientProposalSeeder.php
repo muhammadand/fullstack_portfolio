@@ -25,5 +25,26 @@ class ClientProposalSeeder extends Seeder
                 'price_platinum' => 3000000,
             ]
         );
+
+        $lpkCategory = \App\Models\BusinessCategory::where('slug', 'lpk')->first();
+
+        \App\Models\ClientProposal::updateOrCreate(
+            ['slug' => 'lpk-kizuna-indonesia'],
+            [
+                'business_category_id' => $lpkCategory ? $lpkCategory->id : null,
+                'brand_name' => 'LPK Kizuna Global Indonesia',
+                'client_name' => 'Direktur & Manajemen LPK Kizuna Global',
+                'wa_number' => '6281234567890',
+                'wa_template' => 'Halo tim Scalify, kami dari LPK Kizuna Global Indonesia ingin konsultasi implementasi Sistem Informasi LMS & Website LPK.',
+                'price_silver' => 850000,
+                'price_gold' => 1850000,
+                'price_diamond' => 2750000,
+                'price_platinum' => 4500000,
+                'renewal_silver' => '500rb/tahun',
+                'renewal_gold' => '750rb/tahun',
+                'renewal_diamond' => '1.2jt/tahun',
+                'renewal_platinum' => '50% per tahun',
+            ]
+        );
     }
 }

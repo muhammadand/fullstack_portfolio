@@ -1,0 +1,646 @@
+{
+  "lpk_profile": {
+    "name": "LPK Kizuna Global Indonesia",
+    "tagline": "Lembaga Pelatihan Kerja & Pusat Sertifikasi Profesi Siap Kerja Global",
+    "legal_info": "Izin Operasional Disnaker No: 563/108/LPK-V/2023 | Akreditasi Lembaga: A (BAN-PNF / BNSP)",
+    "address": "Jl. Pelatihan Utama No. 88, Kawasan Pendidikan & Bisnis Terpadu",
+    "phone": "+62 812-3456-7890",
+    "email": "info@lpk-kizunaglobal.com",
+    "stats": {
+      "total_graduates": 1850,
+      "placement_rate": "98.4%",
+      "industry_partners": 54,
+      "certified_instructors": 18
+    }
+  },
+  "programs": [
+    {
+      "id": "jepang-ssw",
+      "code": "JP-SSW01",
+      "category": "Luar Negeri",
+      "country": "Jepang",
+      "flag": "🇯🇵",
+      "title": "Program Kerja Jepang: Tokutei Ginou (SSW) & Magang",
+      "subtitle": "Keahlian Spesifik Sektor Manufaktur, Pengolahan Makanan & Perawat Lansia (Kaigo)",
+      "badge": "Paling Diminati",
+      "badge_color": "rose",
+      "duration": "4 Bulan Intensif (360 JP)",
+      "schedule": "Senin - Jumat (08:00 - 16:00)",
+      "price_formatted": "Rp 4.500.000",
+      "down_payment": "Rp 1.000.000 (Bisa Cicil / Dana Talangan)",
+      "salary_estimate": "¥ 180.000 - ¥ 250.000 / bln (Rp 19 - 26 Juta/bln)",
+      "quota_left": 8,
+      "image": "https://images.unsplash.com/photo-1503899036084-c55cdd92da26?w=800&auto=format&fit=crop&q=80",
+      "description": "Pelatihan intensif bahasa Jepang setara N4 / JFT-Basic A2, pemahaman budaya kerja Hourenso, 5S (Seiri, Seiton, Seiso, Seiketsu, Shitsuke), persiapan ujian skill SSW, dan pendampingan wawancara langsung dengan user perusahan penerima di Jepang.",
+      "modules": [
+        {
+          "no": 1,
+          "title": "Dasar Huruf Hiragana, Katakana & 100 Kanji Dasar",
+          "type": "Teori & Lab",
+          "duration": "40 JP",
+          "status": "Wajib"
+        },
+        {
+          "no": 2,
+          "title": "Tata Bahasa Minna no Nihongo I & Percakapan Harian",
+          "type": "Teori & Audio",
+          "duration": "80 JP",
+          "status": "Wajib"
+        },
+        {
+          "no": 3,
+          "title": "Persiapan Ujian JFT-Basic A2 & JLPT N4",
+          "type": "CBT & Tryout",
+          "duration": "60 JP",
+          "status": "Wajib"
+        },
+        {
+          "no": 4,
+          "title": "Kosa Kata Spesifik Bidang (Kaigo / Pengolahan Makanan / Manufaktur)",
+          "type": "Praktik & Istilah",
+          "duration": "60 JP",
+          "status": "Wajib"
+        },
+        {
+          "no": 5,
+          "title": "Budaya Kerja Jepang (Aisatsu, Hourenso, 5S & Disiplin)",
+          "type": "Workshop Mental",
+          "duration": "40 JP",
+          "status": "Wajib"
+        },
+        {
+          "no": 6,
+          "title": "Simulasi Wawancara User (Mensaitsu) & Pembuatan CV Rirekisho",
+          "type": "Praktik Mockup",
+          "duration": "40 JP",
+          "status": "Wajib"
+        },
+        {
+          "no": 7,
+          "title": "Fisik, Mental, dan Disiplin (FMD) Calon Pekerja Migran",
+          "type": "Outdoor Training",
+          "duration": "40 JP",
+          "status": "Wajib"
+        }
+      ],
+      "requirements": [
+        "Pria / Wanita usia 18 - 30 tahun",
+        "Pendidikan min. SMA / SMK / Sederajat",
+        "Sehat jasmani & rohani (tidak buta warna, tato, tindik)",
+        "Tinggi badan min. 160 cm (Pria) / 150 cm (Wanita)",
+        "Komitmen belajar disiplin tinggi"
+      ]
+    },
+    {
+      "id": "korea-epstopik",
+      "code": "KR-EPS02",
+      "category": "Luar Negeri",
+      "country": "Korea Selatan",
+      "flag": "🇰🇷",
+      "title": "Program Bahasa & Kerja Korea: EPS-TOPIK (G to G)",
+      "subtitle": "Sektor Manufaktur Pabrik & Perikanan Resmi Pemerintah BP2MI",
+      "badge": "Gaji Tinggi",
+      "badge_color": "blue",
+      "duration": "3.5 Bulan (320 JP)",
+      "schedule": "Senin - Jumat (08:30 - 15:30)",
+      "price_formatted": "Rp 4.000.000",
+      "down_payment": "Rp 800.000",
+      "salary_estimate": "₩ 2.100.000 - ₩ 2.800.000 / bln (Rp 24 - 32 Juta/bln)",
+      "quota_left": 6,
+      "image": "https://images.unsplash.com/photo-1538485399081-7191377e8241?w=800&auto=format&fit=crop&q=80",
+      "description": "Fokus penguasaan aksara Hangeul, tata bahasa standar HRD Korea, latihan bank soal ujian CBT EPS-TOPIK, serta tes keterampilan fisik (Skill Test) untuk memastikan kelulusan kuota resmi BP2MI.",
+      "modules": [
+        {
+          "no": 1,
+          "title": "Pengenalan Huruf Hangeul (Vokal, Konsonan, Batchim)",
+          "type": "Teori",
+          "duration": "30 JP",
+          "status": "Wajib"
+        },
+        {
+          "no": 2,
+          "title": "Buku Standar EPS-TOPIK 1 & 2 (Bab 1 - 60)",
+          "type": "Teori & Audio",
+          "duration": "120 JP",
+          "status": "Wajib"
+        },
+        {
+          "no": 3,
+          "title": "Drill Soal CBT Mendengar (Deutgi) & Membaca (Ilgi)",
+          "type": "Simulasi CBT",
+          "duration": "80 JP",
+          "status": "Wajib"
+        },
+        {
+          "no": 4,
+          "title": "Persiapan Tes Keterampilan & Wawancara Fisik (Skill Test)",
+          "type": "Praktik Fisik",
+          "duration": "50 JP",
+          "status": "Wajib"
+        },
+        {
+          "no": 5,
+          "title": "Sosialisasi Administrasi Sending Sending BP2MI & Paspor",
+          "type": "Bimbingan Legal",
+          "duration": "40 JP",
+          "status": "Wajib"
+        }
+      ],
+      "requirements": [
+        "Pria / Wanita usia 18 - 38 tahun",
+        "Minimal lulusan SMP / SMA / SMK",
+        "Tidak pernah dideportasi dari Korea",
+        "Bebas catatan kriminal (SKCK)",
+        "Lulus medical check-up tahap awal"
+      ]
+    },
+    {
+      "id": "jerman-ausbildung",
+      "code": "DE-AUSB03",
+      "category": "Luar Negeri",
+      "country": "Jerman",
+      "flag": "🇩🇪",
+      "title": "Program Vokasi Jerman: Ausbildung & Kuliah Kerja",
+      "subtitle": "Jurusan Perhotelan (Hotelfachmann), Restoran & Keperawatan (Pflege)",
+      "badge": "Gaji + Ijazah EU",
+      "badge_color": "amber",
+      "duration": "6 Bulan Intensif (450 JP)",
+      "schedule": "Senin - Sabtu (08:00 - 15:00)",
+      "price_formatted": "Rp 6.500.000",
+      "down_payment": "Rp 1.500.000",
+      "salary_estimate": "€ 1.000 - € 1.300 / bln (Rp 17 - 22 Juta/bln Uang Saku)",
+      "quota_left": 5,
+      "image": "https://images.unsplash.com/photo-1560969184-10fe8719e047?w=800&auto=format&fit=crop&q=80",
+      "description": "Pendidikan bahasa Jerman intensif hingga sertifikat B1 Goethe-Institut / ECL, bimbingan pembuatan Motivation Letter & Lebenslauf standar Eropa, serta matchmaking kontrak Ausbildung 3 tahun di Jerman dengan biaya kuliah 100% gratis.",
+      "modules": [
+        {
+          "no": 1,
+          "title": "Level Bahasa Jerman A1 (Grammatik, Sprechen, Hören)",
+          "type": "Teori & Percakapan",
+          "duration": "120 JP",
+          "status": "Wajib"
+        },
+        {
+          "no": 2,
+          "title": "Level Bahasa Jerman A2 (Lesen, Schreiben & Diskusi)",
+          "type": "Teori & Latihan",
+          "duration": "120 JP",
+          "status": "Wajib"
+        },
+        {
+          "no": 3,
+          "title": "Level Bahasa Jerman B1 & Persiapan Ujian Sertifikasi Goethe",
+          "type": "Simulasi Ujian B1",
+          "duration": "110 JP",
+          "status": "Wajib"
+        },
+        {
+          "no": 4,
+          "title": "Penyusunan CV Europass, Anschreiben & Motivationsschreiben",
+          "type": "Workshop Dokumen",
+          "duration": "40 JP",
+          "status": "Wajib"
+        },
+        {
+          "no": 5,
+          "title": "Simulasi Interview Online dengan Employer Jerman (Arbeitgeber)",
+          "type": "Mock Interview",
+          "duration": "60 JP",
+          "status": "Wajib"
+        }
+      ],
+      "requirements": [
+        "Pria / Wanita usia 18 - 28 tahun",
+        "Pendidikan min. SMA / SMK / D3 / S1",
+        "Memiliki tekad kuat belajar bahasa Jerman",
+        "Mental mandiri & siap adaptasi iklim Eropa"
+      ]
+    },
+    {
+      "id": "cruise-hospitality",
+      "code": "CR-HOSP04",
+      "category": "Perhotelan & Maritim",
+      "country": "Internasional",
+      "flag": "🚢",
+      "title": "Program Perhotelan, Barista & Kapal Pesiar Internasional",
+      "subtitle": "F&B Service, Bartending, Housekeeping & Cruise Line Crew",
+      "badge": "Karir Keliling Dunia",
+      "badge_color": "emerald",
+      "duration": "3 Bulan + 3 Bulan OJT (350 JP)",
+      "schedule": "Senin - Jumat (09:00 - 16:30)",
+      "price_formatted": "Rp 3.800.000",
+      "down_payment": "Rp 750.000",
+      "salary_estimate": "$ 1.200 - $ 2.500 / bln (Rp 19 - 40 Juta/bln)",
+      "quota_left": 10,
+      "image": "https://images.unsplash.com/photo-1548574505-5e239809ee19?w=800&auto=format&fit=crop&q=80",
+      "description": "Pelatihan standar Hospitality Internasional mencakup English for Tourism, Food & Beverage Service, Mixology Barista, Housekeeping SOP bintang 5, serta pengurusan dokumen BST (Basic Safety Training) & Seaman Book.",
+      "modules": [
+        {
+          "no": 1,
+          "title": "English for International Hospitality & Cruise Ship",
+          "type": "Teori & Speaking",
+          "duration": "60 JP",
+          "status": "Wajib"
+        },
+        {
+          "no": 2,
+          "title": "Food & Beverage Service Technique & Fine Dining SOP",
+          "type": "Praktik Restoran",
+          "duration": "80 JP",
+          "status": "Wajib"
+        },
+        {
+          "no": 3,
+          "title": "Barista, Latte Art & Basic Bartending Mixology",
+          "type": "Praktik Bar",
+          "duration": "60 JP",
+          "status": "Wajib"
+        },
+        {
+          "no": 4,
+          "title": "Housekeeping Management & Public Area Cleaning",
+          "type": "Praktik Hotel",
+          "duration": "60 JP",
+          "status": "Wajib"
+        },
+        {
+          "no": 5,
+          "title": "Maritime Safety Standard (BST Preparation) & Crew Life",
+          "type": "Teori Maritim",
+          "duration": "40 JP",
+          "status": "Wajib"
+        },
+        {
+          "no": 6,
+          "title": "On the Job Training (OJT) di Hotel Bintang 4/5 Rekanan",
+          "type": "Magang Industri",
+          "duration": "3 Bulan",
+          "status": "Wajib"
+        }
+      ],
+      "requirements": [
+        "Pria / Wanita usia 19 - 33 tahun",
+        "Tinggi min. 165 cm (Pria) / 155 cm (Wanita)",
+        "Percakapan Bahasa Inggris dasar aktif",
+        "Berpenampilan rapi dan ramah (Hospitality grooming)"
+      ]
+    },
+    {
+      "id": "welder-bnsp",
+      "code": "TK-WELD05",
+      "category": "Teknik & Manufaktur",
+      "country": "Nasional & Global",
+      "flag": "⚡",
+      "title": "Sertifikasi Pengelasan: Welder 3G / 6G SMAW, GTAW & FCAW",
+      "subtitle": "Standar BNSP & AWS untuk Proyek Migas, Galangan Kapal & Konstruksi",
+      "badge": "Sertifikasi BNSP",
+      "badge_color": "indigo",
+      "duration": "2.5 Bulan (280 JP)",
+      "schedule": "Senin - Jumat (08:00 - 16:00)",
+      "price_formatted": "Rp 4.200.000",
+      "down_payment": "Rp 900.000",
+      "salary_estimate": "Rp 7.000.000 - Rp 18.000.000 / bln (Nasional & Luar Negeri)",
+      "quota_left": 7,
+      "image": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&auto=format&fit=crop&q=80",
+      "description": "Praktik pengelasan intensif di bengkel lab modern berstandar industri. Mempelajari SMAW (Las Listrik), GTAW (Las Argon TIG), FCAW, pengujian hasil las NDT (Visual, Bending, Radiography), serta sertifikasi resmi BNSP.",
+      "modules": [
+        {
+          "no": 1,
+          "title": "Keselamatan & Kesehatan Kerja (K3) Industri Pengelasan",
+          "type": "Teori K3",
+          "duration": "20 JP",
+          "status": "Wajib"
+        },
+        {
+          "no": 2,
+          "title": "Membaca Gambar Teknik & Simbol Las (Welding Blueprint)",
+          "type": "Teori & Desain",
+          "duration": "30 JP",
+          "status": "Wajib"
+        },
+        {
+          "no": 3,
+          "title": "Praktik Las SMAW Posisi 1G, 2G, 3G Plat & Pipa",
+          "type": "Praktik Bengkel",
+          "duration": "80 JP",
+          "status": "Wajib"
+        },
+        {
+          "no": 4,
+          "title": "Praktik Las GTAW (Argon) & FCAW Posisi 6G",
+          "type": "Praktik Bengkel",
+          "duration": "80 JP",
+          "status": "Wajib"
+        },
+        {
+          "no": 5,
+          "title": "Inspeksi Visual & Pengujian Cacat Las (NDT Test)",
+          "type": "Lab Pengujian",
+          "duration": "30 JP",
+          "status": "Wajib"
+        },
+        {
+          "no": 6,
+          "title": "Uji Kompetensi Sertifikasi Welder BNSP",
+          "type": "Ujian Asesmen",
+          "duration": "40 JP",
+          "status": "Wajib"
+        }
+      ],
+      "requirements": [
+        "Pria / Wanita min. 18 tahun",
+        "Fisik prima & tidak buta warna",
+        "Disiplin terhadap aturan keselamatan kerja K3"
+      ]
+    },
+    {
+      "id": "digital-marketing",
+      "code": "DG-MKT06",
+      "category": "Teknologi Digital",
+      "country": "Nasional & Remote",
+      "flag": "💻",
+      "title": "Digital Marketing, Social Media Specialist & Admin Perkantoran",
+      "subtitle": "Kuasai Meta Ads, TikTok Shop, SEO, Copywriting & Excel Bisnis",
+      "badge": "Cepat Kerja",
+      "badge_color": "purple",
+      "duration": "2 Bulan (200 JP)",
+      "schedule": "Senin - Kamis (13:00 - 17:00)",
+      "price_formatted": "Rp 2.800.000",
+      "down_payment": "Rp 500.000",
+      "salary_estimate": "Rp 4.500.000 - Rp 9.000.000 / bln",
+      "quota_left": 12,
+      "image": "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=800&auto=format&fit=crop&q=80",
+      "description": "Kurikulum praktis berbasis studi kasus riil: optimasi iklan digital berbayar (Meta & TikTok Ads), pembuatan konten viral, administrasi data dengan Microsoft Excel & Google Sheets tingkat mahir, serta portofolio siap kerja.",
+      "modules": [
+        {
+          "no": 1,
+          "title": "Fundamental Bisnis Digital & Riset Pasar Target",
+          "type": "Teori & Riset",
+          "duration": "20 JP",
+          "status": "Wajib"
+        },
+        {
+          "no": 2,
+          "title": "Copywriting Menjual & Strategi Konten TikTok/Reels",
+          "type": "Praktik Konten",
+          "duration": "40 JP",
+          "status": "Wajib"
+        },
+        {
+          "no": 3,
+          "title": "Praktik Beriklan Meta Ads (FB/IG) & TikTok Ads Manager",
+          "type": "Praktik Iklan",
+          "duration": "50 JP",
+          "status": "Wajib"
+        },
+        {
+          "no": 4,
+          "title": "Otomasi Admin & Olah Data Mahir (Excel, Vlookup, Pivot)",
+          "type": "Lab Komputer",
+          "duration": "40 JP",
+          "status": "Wajib"
+        },
+        {
+          "no": 5,
+          "title": "Pembuatan Portofolio Kampanye Digital & Uji BNSP",
+          "type": "Project & Ujian",
+          "duration": "50 JP",
+          "status": "Wajib"
+        }
+      ],
+      "requirements": [
+        "Pria / Wanita usia 18 - 35 tahun",
+        "Dapat mengoperasikan komputer dasar",
+        "Membawa laptop pribadi saat sesi praktik lab"
+      ]
+    }
+  ],
+  "quiz_data": [
+    {
+      "id": 1,
+      "category": "Bahasa Jepang (N4/SSW)",
+      "type": "Pretest",
+      "question": "Pilihlah partikel yang tepat untuk kalimat berikut: 「毎朝 7時 ____ 起きます」(Setiap pagi saya bangun pada jam 7).",
+      "options": [
+        {
+          "key": "A",
+          "text": "を (o)"
+        },
+        {
+          "key": "B",
+          "text": "に (ni)",
+          "correct": true
+        },
+        {
+          "key": "C",
+          "text": "で (de)"
+        },
+        {
+          "key": "D",
+          "text": "へ (e)"
+        }
+      ],
+      "explanation": "Partikel に (ni) digunakan untuk menunjukkan waktu spesifik terjadinya suatu aksi atau kegiatan (jam 7 = 7時に)."
+    },
+    {
+      "id": 2,
+      "category": "Budaya Kerja Industri (5S)",
+      "type": "Ujian Etika Kerja",
+      "question": "Dalam konsep 5S Jepang, prinsip membuang barang yang tidak diperlukan dan hanya menyisakan barang yang esensial disebut dengan...",
+      "options": [
+        {
+          "key": "A",
+          "text": "Seiton (Rapi)"
+        },
+        {
+          "key": "B",
+          "text": "Seiri (Ringkas / Pemilahan)",
+          "correct": true
+        },
+        {
+          "key": "C",
+          "text": "Seiso (Resik / Bersih)"
+        },
+        {
+          "key": "D",
+          "text": "Shitsuke (Rajin / Disiplin)"
+        }
+      ],
+      "explanation": "Seiri (整理) berarti membedakan antara barang yang diperlukan dan tidak diperlukan, lalu menyingkirkan barang yang tidak terpakai dari area kerja."
+    },
+    {
+      "id": 3,
+      "category": "Bahasa Korea (EPS-TOPIK)",
+      "type": "Posttest",
+      "question": "Apa arti dari salam kerja Korea berikut: 「수고하셨습니다」(Sugo-hasyeossseumnida)?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Selamat makan, nikmatilah"
+        },
+        {
+          "key": "B",
+          "text": "Terima kasih atas kerja keras Anda hari ini",
+          "correct": true
+        },
+        {
+          "key": "C",
+          "text": "Sampai jumpa besok pagi"
+        },
+        {
+          "key": "D",
+          "text": "Mohon maaf atas keterlambatan saya"
+        }
+      ],
+      "explanation": "수고하셨습니다 adalah ungkapan resmi apresiasi kerja yang diucapkan kepada rekan atau atasan setelah menyelesaikan pekerjaan/tugas."
+    }
+  ],
+  "certificates_sample": [
+    {
+      "cert_id": "CERT-LPK-2026-JP091",
+      "student_name": "Bayu Pratama Wijaya",
+      "program": "Tokutei Ginou SSW - Manufaktur & Bahasa Jepang",
+      "grade": "Sangat Baik (A / 94.5)",
+      "issue_date": "15 Agustus 2026",
+      "bnsp_reg": "BNSP-REG-882910-IDN",
+      "status": "VALID & RESMI TERDAFTAR",
+      "placement_status": "Ditempatkan di Toyota Tsusho Co., Nagoya, Jepang"
+    },
+    {
+      "cert_id": "CERT-LPK-2026-KR044",
+      "student_name": "Siti Nurhaliza",
+      "program": "EPS-TOPIK Bahasa Korea & Skill Test",
+      "grade": "Sangat Baik (A / 96.0)",
+      "issue_date": "02 September 2026",
+      "bnsp_reg": "BNSP-REG-883104-KOR",
+      "status": "VALID & RESMI TERDAFTAR",
+      "placement_status": "Lolos Sending BP2MI - Industri Manufaktur Ansan, Korea Selatan"
+    },
+    {
+      "cert_id": "CERT-LPK-2026-WL019",
+      "student_name": "Rian Ardiansyah",
+      "program": "Sertifikasi Welder 6G SMAW/GTAW BNSP",
+      "grade": "Kompeten (A / 92.0)",
+      "issue_date": "28 Juli 2026",
+      "bnsp_reg": "BNSP-REG-774921-WLD",
+      "status": "VALID & RESMI TERDAFTAR",
+      "placement_status": "Diterima di PT PAL Indonesia (Persero) - Galangan Kapal"
+    }
+  ],
+  "instructors": [
+    {
+      "name": "Kenji Takahashi, B.Eng / Sensei",
+      "role": "Master Trainer Bahasa Jepang & Tokutei Ginou",
+      "experience": "12 Tahun Pengalaman Kerja di Tokyo & Nagoya",
+      "certification": "JLPT N1 Certified & Lisensi Asesor BNSP No. 94821",
+      "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&auto=format&fit=crop&q=80",
+      "speciality": "Kaidan Kaiwa, Budaya Industri 5S, Wawancara User Jepang"
+    },
+    {
+      "name": "Park Min-Woo / S.Pd., M.Ed.",
+      "role": "Lead Instructor EPS-TOPIK Korea",
+      "experience": "8 Tahun Pengajar Bahasa di Seoul & Peneliti Kurikulum HRD Korea",
+      "certification": "TOPIK Level 6 & Instruktur Resmi Kemnaker",
+      "image": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&auto=format&fit=crop&q=80",
+      "speciality": "Trik Ujian CBT EPS-TOPIK, Skill Test Fisik, Wawancara Pabrik"
+    },
+    {
+      "name": "Ir. Hendra Gunawan, MT, IWE",
+      "role": "Kepala Laboratorium Pengelasan & Logam",
+      "experience": "15 Tahun Senior Welding Inspector Proyek Migas & Maritim",
+      "certification": "International Welding Engineer (IIW/EWF) & Master Assessor BNSP",
+      "image": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&auto=format&fit=crop&q=80",
+      "speciality": "Las 3G-6G SMAW/GTAW, NDT Inspection, Radiography Film"
+    },
+    {
+      "name": "Clara Stephanie, B.HM",
+      "role": "Senior Hospitality & Cruise Ship Trainer",
+      "experience": "7 Tahun Senior Head Waitress di Royal Caribbean International Cruises",
+      "certification": "BST (STCW 2010), CTH UK Certified & BNSP Hospitality",
+      "image": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&auto=format&fit=crop&q=80",
+      "speciality": "Fine Dining Table Manner, Wine & Barista Knowledge, English Tourism"
+    }
+  ],
+  "attendance_demo": [
+    {
+      "date": "Hari Ini (21 Sep 2026)",
+      "session": "Sesi Pagi - Modul 3",
+      "student": "Bayu P. (JP-01)",
+      "time": "07:54 WIB",
+      "status": "Hadir Tepat Waktu",
+      "badge": "bg-emerald-100 text-emerald-800"
+    },
+    {
+      "date": "Hari Ini (21 Sep 2026)",
+      "session": "Sesi Pagi - Modul 3",
+      "student": "Siti Nurhaliza (KR-02)",
+      "time": "07:58 WIB",
+      "status": "Hadir Tepat Waktu",
+      "badge": "bg-emerald-100 text-emerald-800"
+    },
+    {
+      "date": "Hari Ini (21 Sep 2026)",
+      "session": "Sesi Pagi - Modul 3",
+      "student": "Rian Ardiansyah (WL-05)",
+      "time": "08:12 WIB",
+      "status": "Terlambat 12 Mnt",
+      "badge": "bg-amber-100 text-amber-800"
+    },
+    {
+      "date": "Hari Ini (21 Sep 2026)",
+      "session": "Sesi Pagi - Modul 3",
+      "student": "Fajar Ramadhan (CR-04)",
+      "time": "-",
+      "status": "Izin Sakit (Surat Dokter)",
+      "badge": "bg-blue-100 text-blue-800"
+    }
+  ],
+  "partners": [
+    {
+      "name": "Toyota Tsusho Manufacturing",
+      "country": "Jepang",
+      "sector": "Manufaktur Otomotif"
+    },
+    {
+      "name": "Nippon Food Processing Co.",
+      "country": "Jepang",
+      "sector": "Pengolahan Makanan"
+    },
+    {
+      "name": "Hyundai Heavy Industries",
+      "country": "Korea Selatan",
+      "sector": "Manufaktur & Konstruksi"
+    },
+    {
+      "name": "Royal Caribbean International",
+      "country": "USA / Global",
+      "sector": "Kapal Pesiar Mewah"
+    },
+    {
+      "name": "Maritim Hotelgesellschaft mbH",
+      "country": "Jerman",
+      "sector": "Perhotelan & Gastronomi"
+    },
+    {
+      "name": "PT PAL Indonesia (Persero)",
+      "country": "Indonesia",
+      "sector": "Industri Maritim & Pertahanan"
+    }
+  ],
+  "alumni_stories": [
+    {
+      "name": "Dimas Setiawan",
+      "origin": "Alumni Batch 2024 - Jurusan Tokutei Ginou Manufaktur",
+      "company": "Kawasumi Laboratories, Oita, Jepang",
+      "quote": "Belajar di LPK ini sangat terarah. Materi bahasa, etika 5S, simulasi ujian CBT hingga wawancara dibimbing langsung oleh Sensei berpengalaman. Sekarang saya sudah bekerja 2 tahun di Jepang dengan penghasilan Rp 24 Juta/bulan.",
+      "image": "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400&auto=format&fit=crop&q=80"
+    },
+    {
+      "name": "Anggun Permatasari",
+      "origin": "Alumni Batch 2025 - Jurusan Hospitality & Cruise Ship",
+      "quote": "Sistem e-learning modul dan ujian penilaiannya sangat praktis diakses lewat HP. Sertifikat QR Code resmi memudahkan proses verifikasi agensi kapal pesiar internasional.",
+      "company": "Celebrity Cruises - Miami, Florida",
+      "image": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&auto=format&fit=crop&q=80"
+    }
+  ]
+}

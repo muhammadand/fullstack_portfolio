@@ -41,5 +41,15 @@ class BusinessCategorySeeder extends Seeder
                 'domain_price' => 1200000,
             ]
         );
+
+        \App\Models\BusinessCategory::updateOrCreate(
+            ['slug' => 'lpk'],
+            [
+                'name' => 'LPK & Lembaga Pelatihan Kerja',
+                'wa_template' => 'Halo tim Scalify, saya dari Lembaga Pelatihan Kerja (LPK) dan tertarik untuk konsultasi pembuatan sistem website LMS, ujian online, absensi, sertifikat, dan pendaftaran calon pekerja.',
+                'project_price' => 5500000,
+                'domain_price' => 1200000,
+            ]
+        );
     }
 }
