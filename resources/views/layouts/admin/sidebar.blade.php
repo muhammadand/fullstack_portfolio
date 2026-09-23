@@ -56,6 +56,11 @@ $menus = [
 'icon' => 'fa-solid fa-cubes-stacked',
 ],
 [
+'label' => 'CV Service',
+'route' => 'admin.cv_service.index',
+'icon' => 'fa-solid fa-id-card',
+],
+[
 'label' => 'Marketing',
 'icon' => 'fa-solid fa-bullhorn',
 'submenu' => [

@@ -232,6 +232,8 @@ Route::get('/layanan/scm', [HomeController::class, 'scmService'])->name('layanan
 Route::get('/layanan/template-cv', [CvServiceController::class, 'index'])->name('layanan.cv');
 Route::post('/layanan/template-cv/chat', [CvServiceController::class, 'chat'])->name('layanan.cv.chat');
 Route::post('/layanan/template-cv/generate-ai', [CvServiceController::class, 'generateAi'])->name('layanan.cv.generate_ai');
+Route::post('/layanan/template-cv/review', [CvServiceController::class, 'storeReview'])->name('layanan.cv.review');
+Route::get('/admin/cv-service', [CvServiceController::class, 'adminCvService'])->name('admin.cv_service.index');
 Route::get('/partner-program', [HomeController::class, 'partnerProgram'])->name('partner.program');
 //Documentation
 Route::resource('documentation', DocumentationController::class);
@@ -358,6 +360,16 @@ Route::get('/secret-deploy-trigger-12345', function () {
 
         \Illuminate\Support\Facades\Artisan::call('migrate', [
             '--path' => 'database/migrations/2026_09_07_091321_drop_project_price_and_domain_price_from_client_proposals_table.php',
+            '--force' => true
+        ]);
+
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_09_21_114354_create_cv_reviews_table.php',
+            '--force' => true
+        ]);
+
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_09_21_144539_create_cv_page_visits_table.php',
             '--force' => true
         ]);
 

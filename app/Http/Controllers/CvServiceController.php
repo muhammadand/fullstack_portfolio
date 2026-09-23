@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CvReview;
+use App\Models\CvPageVisit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Gemini\Laravel\Facades\Gemini;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\File;
@@ -12,9 +15,102 @@ class CvServiceController extends Controller
     /**
      * Tampilkan Halaman Layanan Template CV & AI CV Builder
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('company.services.cv.index');
+        // Track page visit (1 per IP per day)
+        $today = now()->toDateString();
+        $ip    = $request->ip();
+        $alreadyVisited = CvPageVisit::where('visited_at', $today)->where('ip_address', $ip)->exists();
+        if (!$alreadyVisited) {
+            $ua = $request->header('User-Agent', '');
+            $device = 'desktop';
+            if (preg_match('/Mobile|Android|iPhone/i', $ua)) $device = 'mobile';
+            elseif (preg_match('/Tablet|iPad/i', $ua)) $device = 'tablet';
+
+            CvPageVisit::create([
+                'visited_at'  => $today,
+                'ip_address'  => $ip,
+                'user_agent'  => substr($ua, 0, 500),
+                'device_type' => $device,
+                'referer'     => substr($request->header('Referer', ''), 0, 500),
+            ]);
+        }
+
+        $recentReviews = CvReview::where('is_featured', true)
+            ->latest()
+            ->take(12)
+            ->get();
+
+        $totalReviews  = CvReview::count();
+        $averageRating = $totalReviews > 0 ? round(CvReview::avg('rating'), 1) : 4.9;
+
+        return view('company.services.cv.index', compact('recentReviews', 'totalReviews', 'averageRating'));
+    }
+
+    /**
+     * Admin: Halaman Analytics CV Service (Reviews + Pengunjung)
+     */
+    public function adminCvService()
+    {
+        // ---- Reviews ----
+        $reviews       = CvReview::latest()->paginate(20);
+        $totalReviews  = CvReview::count();
+        $avgRating     = $totalReviews > 0 ? round(CvReview::avg('rating'), 1) : 0;
+        $ratingDist    = CvReview::select('rating', DB::raw('count(*) as total'))
+                            ->groupBy('rating')->orderBy('rating', 'desc')->get();
+
+        // ---- Visits ----
+        $totalVisits   = CvPageVisit::count();
+        $uniqueVisits  = CvPageVisit::distinct('ip_address')->count('ip_address');
+        $todayVisits   = CvPageVisit::where('visited_at', today()->toDateString())->count();
+
+        $visitsByDay   = CvPageVisit::select('visited_at', DB::raw('count(*) as total'))
+                            ->where('visited_at', '>=', now()->subDays(29)->toDateString())
+                            ->groupBy('visited_at')
+                            ->orderBy('visited_at')
+                            ->get();
+
+        $deviceStats   = CvPageVisit::select('device_type', DB::raw('count(*) as total'))
+                            ->groupBy('device_type')->get();
+
+        return view('admin.cv-service.index', compact(
+            'reviews', 'totalReviews', 'avgRating', 'ratingDist',
+            'totalVisits', 'uniqueVisits', 'todayVisits', 'visitsByDay', 'deviceStats'
+        ));
+    }
+
+    /**
+     * Simpan Ulasan / Penilaian Sebelum Cetak PDF
+     */
+    public function storeReview(Request $request)
+    {
+        $validated = $request->validate([
+            'rating' => 'required|integer|min:1|max:5',
+            'note'   => 'nullable|string|max:500',
+        ]);
+
+        try {
+            $review = CvReview::create([
+                'name'       => 'Pengguna CV Builder',
+                'rating'     => (int)$validated['rating'],
+                'note'       => trim($validated['note'] ?? ''),
+                'ip_address' => $request->ip(),
+                'is_featured'=> true,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Terima kasih atas ulasan & penilaian Anda! Sedang mempersiapkan dokumen PDF...',
+                'review' => $review
+            ]);
+        } catch (\Exception $e) {
+            Log::error('CV Review Store Error: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kendala saat menyimpan ulasan, namun Anda tetap dapat melanjutkan cetak.'
+            ], 500);
+        }
     }
 
     /**

@@ -60,13 +60,16 @@
     {{-- 4. Showcase Template & Variasi Desain --}}
     @include('company.services.cv.partials.templates_showcase')
 
-    {{-- 5. Paket Jasa Revamp CV & Konsultasi Karir 1-on-1 --}}
+    {{-- 5. Ulasan & Penilaian Pengguna Real-Time --}}
+    @include('company.services.cv.partials.reviews')
+
+    {{-- 6. Paket Jasa Revamp CV & Konsultasi Karir 1-on-1 --}}
     @include('company.services.cv.partials.pricing')
 
-    {{-- 6. FAQ Seputar CV & Tips Melamar Kerja --}}
+    {{-- 7. FAQ Seputar CV & Tips Melamar Kerja --}}
     @include('company.services.cv.partials.faq')
 
-    {{-- 7. Call To Action WhatsApp --}}
+    {{-- 8. Call To Action WhatsApp --}}
     @include('company.services.cv.partials.cta')
 
 </div>

@@ -1108,7 +1108,13 @@
                 , defaultPhotoUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=600&auto=format&fit=crop'
                 , draggedIdx: null
                 , activeContext: null
-                , isChatDropTarget: false,
+                , isChatDropTarget: false
+                , showReviewModal: false
+                , reviewRating: 0
+                , reviewHover: 0
+                , reviewNote: ''
+                , isSubmittingReview: false
+                , hasReviewed: false,
 
                 init() {
                     // Responsive Auto-Fit Zoom on first load
@@ -2106,6 +2112,15 @@
                  * Ultra-reliable single-page A4 print using hidden isolated iframe
                  */
                 printCv() {
+                    // Intercept: show review modal first if not yet reviewed
+                    if (!this.hasReviewed) {
+                        this.showReviewModal = true;
+                        return;
+                    }
+                    this.executePrint();
+                },
+
+                executePrint() {
                     const sheet = document.getElementById('cv-printable-sheet');
                     if (!sheet) return;
 
@@ -2217,3 +2232,95 @@
         }
 
     </script>
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+
+    </style>
+
+    {{-- ===== REVIEW MODAL (Glassmorphism) ===== --}}
+    <div x-show="showReviewModal" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" x-cloak class="fixed inset-0 z-[999] flex items-center justify-center p-4">
+        {{-- Backdrop --}}
+        <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm" @click="showReviewModal = false"></div>
+
+        {{-- Modal Card --}}
+        <div x-show="showReviewModal" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-95 translate-y-4" x-transition:enter-end="opacity-100 scale-100 translate-y-0" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95" class="relative w-full max-w-md rounded-2xl border border-white/10 shadow-2xl overflow-hidden" style="background: rgba(9,13,41,0.85); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);" @click.stop>
+            {{-- Subtle gradient top line --}}
+            <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-cyan-400/50 to-transparent"></div>
+
+            <div class="p-7">
+                {{-- Header --}}
+                <div class="flex items-start justify-between mb-6">
+                    <div>
+                        <h3 class="text-white font-bold text-lg tracking-tight">Sebelum Mencetak</h3>
+                        <p class="text-white/50 text-xs mt-1">Bagikan penilaian Anda untuk membantu kami berkembang.</p>
+                    </div>
+                    <button @click="showReviewModal = false" class="text-white/30 hover:text-white/70 transition mt-0.5">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+
+                {{-- Star Rating --}}
+                <div class="mb-5">
+                    <p class="text-white/60 text-xs mb-3 uppercase tracking-widest font-semibold">Rating Pengalaman</p>
+                    <div class="flex items-center gap-2">
+                        <template x-for="star in [1,2,3,4,5]" :key="star">
+                            <button @click="reviewRating = star" @mouseenter="reviewHover = star" @mouseleave="reviewHover = 0" class="text-3xl transition-all duration-150 focus:outline-none" :class="(reviewHover || reviewRating) >= star ? 'text-amber-400 scale-110' : 'text-white/20'">★</button>
+                        </template>
+                        <span x-show="reviewRating > 0" x-text="['','Buruk','Cukup','Bagus','Sangat Bagus','Luar Biasa!'][reviewRating]" class="text-xs text-white/50 ml-2"></span>
+                    </div>
+                </div>
+
+                {{-- Quick Note Selector --}}
+                <div class="mb-5">
+                    <p class="text-white/60 text-xs mb-3 uppercase tracking-widest font-semibold">Catatan Cepat</p>
+                    <div class="flex flex-wrap gap-2">
+                        <template x-for="note in ['Sangat membantu','Mudah digunakan','Hasilnya bagus','AI-nya keren','Akan saya rekomendasikan']" :key="note">
+                            <button @click="reviewNote = note" :class="reviewNote === note ? 'bg-cyan-500/20 border-cyan-400/60 text-cyan-300' : 'bg-white/5 border-white/10 text-white/50 hover:border-white/25'" class="px-3 py-1.5 rounded-full border text-xs font-medium transition-all" x-text="note"></button>
+                        </template>
+                    </div>
+                </div>
+
+                {{-- Optional free text --}}
+                <div class="mb-6">
+                    <textarea x-model="reviewNote" placeholder="Atau tulis komentar Anda di sini... (opsional)" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white/80 text-xs placeholder-white/30 focus:outline-none focus:border-cyan-500/50 transition resize-none" rows="2"></textarea>
+                </div>
+
+                {{-- Actions --}}
+                <div class="flex items-center gap-3">
+                    <button @click="
+                            if (reviewRating === 0) { reviewRating = 3; }
+                            hasReviewed = true;
+                            showReviewModal = false;
+                            executePrint();
+                        " class="flex-1 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white/50 hover:text-white/70 hover:border-white/20 text-xs font-semibold transition">Lewati & Cetak</button>
+
+                    <button @click="
+                            if (reviewRating === 0) return;
+                            isSubmittingReview = true;
+                            fetch('{{ route('layanan.cv.review') }}', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                                body: JSON.stringify({ rating: reviewRating, note: reviewNote })
+                            })
+                            .finally(() => {
+                                isSubmittingReview = false;
+                                hasReviewed = true;
+                                showReviewModal = false;
+                                executePrint();
+                            });
+                        " :disabled="reviewRating === 0 || isSubmittingReview" class="flex-1 py-2.5 rounded-xl font-bold text-xs transition-all shadow-lg" :class="reviewRating > 0 && !isSubmittingReview
+                            ? 'bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white shadow-cyan-500/30'
+                            : 'bg-white/5 text-white/30 cursor-not-allowed'">
+                        <span x-show="!isSubmittingReview">Kirim & Cetak PDF</span>
+                        <span x-show="isSubmittingReview">Mengirim...</span>
+                    </button>
+                </div>
+            </div>
+
+            {{-- Bottom gradient line --}}
+            <div class="h-[1px] bg-gradient-to-r from-transparent via-blue-500/30 to-transparent"></div>
+        </div>
+    </div>
