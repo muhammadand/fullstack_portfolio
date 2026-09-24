@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>{{ $client->brand_name ?? 'SkyKey Travel' }} - Travel Shuttle Elf & Minibus Antar Kota Door to Door</title>
-    <meta name="description" content="Layanan travel shuttle Isuzu Elf, HiAce & Mini Bus eksekutif antar kota dengan jadwal harian Ciamis, Kuningan, Tasikmalaya, Bandung, Jakarta. Kuota kursi real-time, gratis snack & makan, serta program membership loyalitas.">
+    <title>{{ $client->brand_name ?? 'SkyKey Travel' }} - Executive Minibus & Shuttle Door to Door</title>
+    <meta name="description" content="Layanan travel shuttle Isuzu Elf & Toyota HiAce eksekutif antar kota dengan penjemputan door to door, transparansi kuota kursi real-time, gratis makan & snack di rest area, serta membership reward.">
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -15,24 +15,26 @@
                 extend: {
                     colors: {
                         travel: {
-                            50: '#f0f9ff'
-                            , 100: '#e0f2fe'
-                            , 200: '#bae6fd'
+                            50: '#f0f7ff'
+                            , 100: '#e0effe'
+                            , 200: '#bae0fd'
+                            , 300: '#7dd3fc'
                             , 400: '#38bdf8'
                             , 500: '#0ea5e9'
                             , 600: '#0284c7'
                             , 700: '#0369a1'
                             , 800: '#075985'
                             , 900: '#0c4a6e'
-                            , dark: '#0f172a'
-                            , navy: '#1e293b'
-                            , accent: '#f59e0b'
-                            , emerald: '#10b981'
+                            , 950: '#082f49'
+                            , dark: '#0a1120'
+                            , navy: '#0f172a'
+                            , gold: '#d97706'
+                            , goldlight: '#fef3c7'
                         }
                     }
                     , fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif']
-                        , heading: ['Montserrat', 'Plus Jakarta Sans', 'sans-serif']
+                        sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif']
+                        , heading: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif']
                     }
                 }
             }
@@ -40,10 +42,10 @@
 
     </script>
 
-    <!-- Google Fonts -->
+    <!-- Google Fonts: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -51,29 +53,22 @@
     <style>
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #f8fafc;
-            color: #1e293b;
+            background-color: #fafbfc;
+            color: #0f172a;
             overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        h1,
-        h2,
-        h3,
-        h4,
-        .font-heading {
-            font-family: 'Montserrat', sans-serif;
-        }
-
-        .glass-card {
-            background: rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.8);
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
         }
 
         .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
+            width: 5px;
+            height: 5px;
         }
 
         .custom-scrollbar::-webkit-scrollbar-track {
@@ -89,14 +84,18 @@
             background: #94a3b8;
         }
 
-        .membership-active {
-            box-shadow: 0 0 30px rgba(245, 158, 11, 0.2);
-            border-color: #f59e0b !important;
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
 
     </style>
 </head>
-<body class="antialiased selection:bg-travel-600 selection:text-white">
+<body class="antialiased selection:bg-travel-700 selection:text-white pb-16 md:pb-0">
 
     @php
     $cleanWa = preg_replace('/[^0-9]/', '', $client->wa_number ?? '6281234567890');
@@ -133,6 +132,24 @@
     @include('client-proposals.travel.partials.cta')
     @include('client-proposals.travel.partials.footer')
     @include('client-proposals.travel.partials.seat_modal')
+
+    <!-- Sticky Mobile Quick Action Bar -->
+    <div class="fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-lg border-t border-slate-200/80 py-2 px-3 z-40 md:hidden flex items-center gap-2 shadow-[0_-8px_20px_rgba(0,0,0,0.06)]">
+        @if(isset($client->slug))
+        <a href="{{ route('demo.customer.travel', $client->slug) }}" class="flex-1 py-2.5 px-2.5 rounded-xl bg-travel-700 text-white text-[11px] font-bold text-center flex items-center justify-center gap-1.5 active:scale-95 transition-all shadow-xs">
+            <i class="fas fa-mobile-screen-button text-xs"></i>
+            <span>Demo App</span>
+        </a>
+        @endif
+        <a href="#jadwal" class="flex-1 py-2.5 px-2.5 rounded-xl bg-slate-900 text-white text-[11px] font-bold text-center flex items-center justify-center gap-1.5 active:scale-95 transition-all">
+            <i class="fas fa-calendar-alt text-xs text-travel-400"></i>
+            <span>Cek Kursi</span>
+        </a>
+        <a href="https://wa.me/{{ $cleanWa }}?text={{ urlencode('Halo ' . $brandName . ', saya ingin pesan tiket travel.') }}" target="_blank" class="flex-1 py-2.5 px-2.5 rounded-xl bg-emerald-600 text-white text-[11px] font-bold text-center flex items-center justify-center gap-1.5 active:scale-95 transition-all shadow-sm">
+            <i class="fab fa-whatsapp text-xs"></i>
+            <span>WhatsApp</span>
+        </a>
+    </div>
 
     <!-- Dynamic JS Scripts Engine -->
     @include('client-proposals.travel.partials.scripts')

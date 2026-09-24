@@ -1,21 +1,21 @@
-<!-- Section: 10 Armada Pilihan (Elf Long, Elf Short & Minibus Collection) -->
-<section id="armada" class="py-20 bg-slate-50/70 border-t border-slate-100">
+<!-- Section: Armada Pilihan (Elf Long, HiAce & Minibus) -->
+<section id="armada" class="py-16 sm:py-24 bg-white border-b border-slate-200/80">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        <div class="text-center max-w-3xl mx-auto mb-16">
-            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-sky-50 text-travel-800 text-xs font-bold mb-3 border border-sky-200">
-                <i class="fas fa-van-shuttle text-travel-600"></i> Spesifikasi Kendaraan Minibus
-            </div>
-            <h2 class="font-heading text-2xl sm:text-4xl font-black text-slate-900 tracking-tight">
-                Armada Toyota HiAce & Isuzu Elf
+
+        <div class="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold mb-3">
+                <i class="fas fa-van-shuttle text-travel-700"></i> Armada Terawat & Nyaman
+            </span>
+            <h2 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+                Pilihan Armada Shuttle Eksekutif
             </h2>
-            <p class="text-sm sm:text-base text-slate-600 mt-2">
-                Kami mengoperasikan armada Isuzu Elf Long, Elf Short, Toyota HiAce Premio, dan Minibus Eksekutif dengan standar kenyamanan kabin ber-AC dingin & terawat.
+            <p class="text-sm sm:text-base text-slate-600 mt-2.5">
+                Armada Toyota HiAce Premio & Isuzu Elf Long dengan kabin ber-AC dingin, interior lega, dan perawatan rutin berkala.
             </p>
         </div>
 
         <!-- Dynamic Fleet Grid from JSON -->
-        <div id="dynamicFleetGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div id="dynamicFleetGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
             <!-- Rendered dynamically via JS -->
         </div>
 

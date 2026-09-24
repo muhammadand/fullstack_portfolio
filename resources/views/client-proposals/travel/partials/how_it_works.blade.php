@@ -1,62 +1,62 @@
 <!-- Section: Cara Booking Tiket (How It Works) -->
-<section id="cara-pesan" class="py-20 bg-white border-b border-slate-100">
+<section id="cara-pesan" class="py-16 sm:py-24 bg-white border-b border-slate-200/80">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        <div class="text-center max-w-3xl mx-auto mb-16">
-            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-sky-50 text-travel-800 text-xs font-bold mb-3 border border-sky-200">
-                <i class="fas fa-check-double text-sky-600"></i> Proses Pemesanan Cepat & Praktis
-            </div>
-            <h2 class="font-heading text-2xl sm:text-4xl font-black text-slate-900 tracking-tight">
-                Cara Mudah Pesan Tiket Minibus
+
+        <div class="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold mb-3">
+                <i class="fas fa-check-circle text-travel-700"></i> Proses Cepat & Praktis
+            </span>
+            <h2 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+                4 Langkah Mudah Pesan Tiket
             </h2>
-            <p class="text-sm sm:text-base text-slate-600 mt-2">
-                Hanya butuh 4 langkah praktis untuk mengamankan kursi travel Anda langsung dari smartphone.
+            <p class="text-sm sm:text-base text-slate-600 mt-2.5">
+                Pemesanan tiket online mudah tanpa antre, konfirmasi instan langsung ke WhatsApp Anda.
             </p>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative">
-            
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 relative">
+
             <!-- Step 1 -->
-            <div class="relative text-center bg-sky-50/40 p-7 rounded-3xl border border-sky-100/80 shadow-xs hover:shadow-lg hover:bg-white transition-all duration-300 group">
-                <div class="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-tr from-travel-600 to-sky-500 text-white flex items-center justify-center text-xl font-black mb-5 shadow-lg shadow-travel-600/25 group-hover:scale-110 transition-transform">
-                    1
+            <div class="bg-slate-50/70 p-6 rounded-2xl border border-slate-200/80 hover:border-slate-300 hover:bg-white transition-all duration-200 group">
+                <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center text-sm font-bold mb-4">
+                    01
                 </div>
-                <h3 class="font-heading font-extrabold text-base text-slate-900 mb-2">Pilih Rute & Jadwal</h3>
-                <p class="text-xs text-slate-600 leading-relaxed">
-                    Tentukan rute kota asal, tujuan, dan jam keberangkatan (Pagi, Siang, atau Malam).
+                <h3 class="font-bold text-base text-slate-900 mb-1.5">Pilih Rute & Jadwal</h3>
+                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                    Tentukan kota asal, tujuan, dan jam keberangkatan (Pagi, Siang, atau Malam).
                 </p>
             </div>
 
             <!-- Step 2 -->
-            <div class="relative text-center bg-sky-50/40 p-7 rounded-3xl border border-sky-100/80 shadow-xs hover:shadow-lg hover:bg-white transition-all duration-300 group">
-                <div class="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-tr from-travel-600 to-sky-500 text-white flex items-center justify-center text-xl font-black mb-5 shadow-lg shadow-travel-600/25 group-hover:scale-110 transition-transform">
-                    2
+            <div class="bg-slate-50/70 p-6 rounded-2xl border border-slate-200/80 hover:border-slate-300 hover:bg-white transition-all duration-200 group">
+                <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center text-sm font-bold mb-4">
+                    02
                 </div>
-                <h3 class="font-heading font-extrabold text-base text-slate-900 mb-2">Pilih Nomor Kursi</h3>
-                <p class="text-xs text-slate-600 leading-relaxed">
-                    Lihat denah kursi real-time, pilih posisi bangku kosong favorit Anda tanpa biaya tambahan.
+                <h3 class="font-bold text-base text-slate-900 mb-1.5">Pilih Nomor Kursi</h3>
+                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                    Buka denah denah live kursi dan pilih posisi nomor bangku kosong favorit Anda.
                 </p>
             </div>
 
             <!-- Step 3 -->
-            <div class="relative text-center bg-sky-50/40 p-7 rounded-3xl border border-sky-100/80 shadow-xs hover:shadow-lg hover:bg-white transition-all duration-300 group">
-                <div class="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-tr from-travel-600 to-sky-500 text-white flex items-center justify-center text-xl font-black mb-5 shadow-lg shadow-travel-600/25 group-hover:scale-110 transition-transform">
-                    3
+            <div class="bg-slate-50/70 p-6 rounded-2xl border border-slate-200/80 hover:border-slate-300 hover:bg-white transition-all duration-200 group">
+                <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center text-sm font-bold mb-4">
+                    03
                 </div>
-                <h3 class="font-heading font-extrabold text-base text-slate-900 mb-2">Isi Alamat Jemput</h3>
-                <p class="text-xs text-slate-600 leading-relaxed">
-                    Lengkapi data penumpang, nomor WhatsApp, titik jemput ke rumah dan alamat tujuan.
+                <h3 class="font-bold text-base text-slate-900 mb-1.5">Isi Alamat Jemput</h3>
+                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                    Masukkan detail nama, no. WhatsApp, serta titik alamat penjemputan door to door.
                 </p>
             </div>
 
             <!-- Step 4 -->
-            <div class="relative text-center bg-emerald-50/50 p-7 rounded-3xl border border-emerald-100/80 shadow-xs hover:shadow-lg hover:bg-white transition-all duration-300 group">
-                <div class="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-500 text-white flex items-center justify-center text-xl font-black mb-5 shadow-lg shadow-emerald-600/25 group-hover:scale-110 transition-transform">
-                    4
+            <div class="bg-slate-50/70 p-6 rounded-2xl border border-slate-200/80 hover:border-slate-300 hover:bg-white transition-all duration-200 group">
+                <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-sm font-bold mb-4">
+                    04
                 </div>
-                <h3 class="font-heading font-extrabold text-base text-slate-900 mb-2">Konfirmasi & Poin</h3>
-                <p class="text-xs text-slate-600 leading-relaxed">
-                    E-ticket otomatis terkirim via WhatsApp, dan poin member Anda langsung tercatat!
+                <h3 class="font-bold text-base text-slate-900 mb-1.5">Konfirmasi & Poin</h3>
+                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                    E-tiket dikonfirmasi instan via WhatsApp, dan poin loyalitas otomatis bertambah!
                 </p>
             </div>
 

@@ -70,6 +70,12 @@ class ClientProposalController extends Controller
         return view('client-proposals.travel.proposal', compact('client'));
     }
 
+    public function customerDemoTravel($slug)
+    {
+        $client = ClientProposal::where('slug', $slug)->firstOrFail();
+        return view('client-proposals.travel.customer-demo', compact('client'));
+    }
+
     public function landingLpk($slug)
     {
         $client = ClientProposal::where('slug', $slug)->firstOrFail();
