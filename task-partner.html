@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scalify Partner Executive Solutions & Visual Deck (A4 PDF)</title>
+
+    <!-- Tailwind CSS 3 CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        midnight: {
+                            950: '#03060d',
+                            900: '#050811',
+                            850: '#080d1a',
+                            800: '#0b1326',
+                            700: '#1e293b'
+                        },
+                        brand: {
+                            cyan: '#38bdf8',
+                            sky: '#0ea5e9',
+                            indigo: '#6366f1',
+                            violet: '#8b5cf6',
+                            amber: '#f59e0b',
+                            emerald: '#10b981',
+                            rose: '#f43f5e'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- html2pdf.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <style>
+        * {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+            color-adjust: exact !important;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #03060d;
+        }
+
+        .font-display {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* Glassmorphism Border & Backdrop */
+        .glass-card {
+            background: rgba(11, 19, 38, 0.92);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* A4 Page Styling (Exact 210mm x 297mm) */
+        .a4-page {
+            width: 210mm;
+            min-height: 297mm;
+            max-height: 297mm;
+            height: 297mm;
+            padding: 12mm 14mm 10mm 14mm;
+            margin: 0 auto 30px auto;
+            background-color: #050811;
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.06);
+            border-radius: 6px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Page Layout & Breaks */
+        .page-break {
+            page-break-before: always !important;
+            break-before: page !important;
+            clear: both;
+        }
+
+        .avoid-break {
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+        }
+
+        /* Print Page Optimization */
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 0;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+
+            body {
+                background: #050811 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            #deckContainer {
+                padding: 0 !important;
+                margin: 0 !important;
+                max-width: 100% !important;
+                width: 100% !important;
+            }
+
+            .a4-page {
+                width: 210mm !important;
+                height: 297mm !important;
+                min-height: 297mm !important;
+                max-height: 297mm !important;
+                margin: 0 !important;
+                padding: 12mm 14mm 10mm 14mm !important;
+                border: none !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                page-break-after: always !important;
+                break-after: page !important;
+                background-color: #050811 !important;
+            }
+
+            .a4-page:last-child {
+                page-break-after: auto !important;
+                break-after: auto !important;
+            }
+
+            .glass-card {
+                background: #0b1326 !important;
+                border: 1px solid #1e293b !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="text-slate-100 min-h-screen selection:bg-brand-cyan/20 selection:text-brand-cyan">
+
+    <!-- Top Action Bar (Fixed on Screen) -->
+    <header
+        class="no-print sticky top-0 z-50 bg-midnight-950/90 backdrop-blur-xl border-b border-slate-800/80 px-6 py-3">
+        <div class="max-w-5xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <img src="./scalify.png" alt="Scalify Intelligence Logo"
+                    class="w-8 h-8 rounded-lg object-contain bg-slate-900 border border-slate-800 p-0.5 shadow-md shadow-brand-cyan/25">
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="font-display font-bold text-sm text-white">Scalify <span
+                                class="text-brand-cyan">Intelligence</span></span>
+                        <span
+                            class="px-2 py-0.5 rounded text-[9.5px] font-bold bg-brand-cyan/10 text-brand-cyan border border-brand-cyan/20 uppercase tracking-wider">A4
+                            Document Deck</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex items-center gap-2.5">
+                <button onclick="window.print()"
+                    class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-300 bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded-lg transition shadow-sm">
+                    <i class="fa-solid fa-print text-slate-400"></i> Cetak Dokumen
+                </button>
+                <button id="exportPdfBtn" onclick="downloadExecutivePdf()"
+                    class="inline-flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold text-white bg-gradient-to-r from-brand-sky to-brand-indigo hover:from-brand-cyan hover:to-indigo-500 rounded-lg shadow-md shadow-brand-sky/25 transition transform active:scale-95">
+                    <i class="fa-solid fa-file-pdf"></i> Unduh PDF Resmi (A4)
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main PDF Content Container (4 Exact A4 Sheets) -->
+    <main class="py-6 sm:py-8 overflow-x-auto" id="deckContainer">
+        <div id="printableDeck">
+
+            <!-- ======================================================= -->
+            <!-- SHEET 1 OF 4: EXECUTIVE COVER & QUICK VISUAL STORY      -->
+            <!-- ======================================================= -->
+            <div class="a4-page">
+
+                <!-- Sheet 1 Content Top -->
+                <div class="space-y-4">
+
+                    <!-- Header Section with Scalify Logo -->
+                    <div class="relative pb-3 border-b border-slate-800 flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-3">
+                            <img src="./scalify.png" alt="Scalify Intelligence Logo"
+                                class="w-12 h-12 rounded-xl object-contain bg-slate-900 border border-brand-cyan/30 p-1 shadow-lg shadow-brand-cyan/20 shrink-0">
+                            <div class="space-y-0.5">
+                                <div
+                                    class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-brand-cyan/10 border border-brand-cyan/25 text-brand-cyan text-[9.5px] font-bold uppercase tracking-wider">
+                                    <i class="fa-solid fa-bolt text-brand-amber"></i> Official Partner Executive Deck
+                                </div>
+                                <h1 class="font-display text-lg font-extrabold text-white tracking-tight leading-tight">
+                                    Panduan Visual Partner & <span
+                                        class="bg-gradient-to-r from-brand-cyan via-sky-300 to-brand-indigo bg-clip-text text-transparent">Strategi
+                                        Closing Scalify</span>
+                                </h1>
+                                <p class="text-[10.5px] text-slate-400 leading-normal">
+                                    Panduan grafis & ekosistem teknologi: Solusi produk, cara kerja aplikasi, dan alur
+                                    komisi instan.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- 3 Badges -->
+                        <div
+                            class="grid grid-cols-3 gap-1.5 shrink-0 bg-slate-900/95 p-2 rounded-xl border border-slate-800 text-center">
+                            <div class="px-1.5">
+                                <div class="text-brand-cyan font-bold text-[11px] font-mono">0 MODAL</div>
+                                <div class="text-[8.5px] text-slate-400 font-medium">Zero Capital</div>
+                            </div>
+                            <div class="px-1.5 border-x border-slate-800">
+                                <div class="text-brand-amber font-bold text-[11px] font-mono">Rp 200k+</div>
+                                <div class="text-[8.5px] text-slate-400 font-medium">Min. Payout</div>
+                            </div>
+                            <div class="px-1.5">
+                                <div class="text-brand-emerald font-bold text-[11px] font-mono">100%</div>
+                                <div class="text-[8.5px] text-slate-400 font-medium">Teknis Siap</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- VISUAL HERO: 5-Step Closing Pipeline Infographic Ribbon -->
+                    <div
+                        class="bg-gradient-to-r from-slate-900 via-midnight-800 to-slate-900 border border-brand-cyan/25 rounded-xl p-3 shadow-md">
+                        <div class="flex items-center justify-between border-b border-slate-800/80 pb-1.5 mb-2">
+                            <span
+                                class="text-[11px] font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-route text-brand-cyan"></i> Alur Kilat Dari Install Sampai Cair
+                                Komisi
+                            </span>
+                            <span class="text-[9.5px] text-brand-amber font-semibold">5 Langkah Mudah</span>
+                        </div>
+
+                        <div class="grid grid-cols-5 gap-1.5 text-center">
+                            <div class="bg-slate-950/70 p-2 rounded-lg border border-slate-800">
+                                <div
+                                    class="w-5 h-5 mx-auto mb-1 rounded-full bg-brand-cyan/20 text-brand-cyan flex items-center justify-center text-[9.5px] font-bold font-mono">
+                                    1</div>
+                                <div class="text-[10px] font-bold text-white leading-tight">Install App</div>
+                                <div class="text-[8.5px] text-slate-400 mt-0.5">Absensi harian</div>
+                            </div>
+                            <div class="bg-slate-950/70 p-2 rounded-lg border border-slate-800">
+                                <div
+                                    class="w-5 h-5 mx-auto mb-1 rounded-full bg-pink-500/20 text-pink-400 flex items-center justify-center text-[9.5px] font-bold font-mono">
+                                    2</div>
+                                <div class="text-[10px] font-bold text-white leading-tight">Pilih Penawaran</div>
+                                <div class="text-[8.5px] text-slate-400 mt-0.5">Kategori klien</div>
+                            </div>
+                            <div class="bg-slate-950/70 p-2 rounded-lg border border-slate-800">
+                                <div
+                                    class="w-5 h-5 mx-auto mb-1 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center text-[9.5px] font-bold font-mono">
+                                    3</div>
+                                <div class="text-[10px] font-bold text-white leading-tight">Kirim Demo+PDF</div>
+                                <div class="text-[8.5px] text-slate-400 mt-0.5">Share via WA</div>
+                            </div>
+                            <div class="bg-slate-950/70 p-2 rounded-lg border border-slate-800">
+                                <div
+                                    class="w-5 h-5 mx-auto mb-1 rounded-full bg-purple-500/20 text-purple-400 flex items-center justify-center text-[9.5px] font-bold font-mono">
+                                    4</div>
+                                <div class="text-[10px] font-bold text-white leading-tight">Google Meet</div>
+                                <div class="text-[8.5px] text-slate-400 mt-0.5">Bareng tim Scalify</div>
+                            </div>
+                            <div
+                                class="bg-gradient-to-br from-amber-500/20 to-amber-600/10 p-2 rounded-lg border border-amber-500/40 text-center">
+                                <div
+                                    class="w-5 h-5 mx-auto mb-1 rounded-full bg-amber-400 text-slate-950 flex items-center justify-center text-[9px] font-bold font-mono">
+                                    <i class="fa-solid fa-check"></i></div>
+                                <div class="text-[10px] font-bold text-amber-300 leading-tight">Cair Komisi!</div>
+                                <div class="text-[8.5px] text-amber-200/90 font-mono font-bold mt-0.5">Rp 200k+</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- VISUAL STORY STRIP: 3-Panel Comic Illustration -->
+                    <div class="space-y-1.5">
+                        <div class="flex items-center justify-between">
+                            <span
+                                class="text-[11px] font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-film text-brand-amber"></i> Cerita Visual: Cara Praktis Mitra
+                                Menghasilkan Uang
+                            </span>
+                            <span class="text-[9.5px] text-slate-400">3 Langkah Closing Nyata</span>
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-2.5">
+                            <!-- Comic 1 -->
+                            <div class="glass-card rounded-xl overflow-hidden">
+                                <div class="h-28 overflow-hidden bg-slate-900 relative">
+                                    <img src="./public/images/comic_problem.jpg" alt="Masalah Klien Manual"
+                                        class="w-full h-full object-cover">
+                                    <span
+                                        class="absolute top-1.5 left-1.5 px-2 py-0.5 rounded text-[8px] font-bold bg-rose-500/90 text-white">1.
+                                        Masalah Klien</span>
+                                </div>
+                                <div class="p-2 text-[10px]">
+                                    <strong class="text-white block">Owner Pusing & Boncos:</strong>
+                                    <span class="text-slate-400 text-[9px] leading-tight block mt-0.5">Catatan buku
+                                        berantakan, stok raib, & jadwal rental bentrok.</span>
+                                </div>
+                            </div>
+
+                            <!-- Comic 2 -->
+                            <div class="glass-card rounded-xl overflow-hidden">
+                                <div class="h-28 overflow-hidden bg-slate-900 relative">
+                                    <img src="./public/images/comic_solution.jpg" alt="Partner Kirim Demo"
+                                        class="w-full h-full object-cover">
+                                    <span
+                                        class="absolute top-1.5 left-1.5 px-2 py-0.5 rounded text-[8px] font-bold bg-sky-500/90 text-white">2.
+                                        Solusi Partner</span>
+                                </div>
+                                <div class="p-2 text-[10px]">
+                                    <strong class="text-white block">Kirim Demo Dari HP:</strong>
+                                    <span class="text-slate-400 text-[9px] leading-tight block mt-0.5">Cukup share link
+                                        demo web & proposal PDF resmi dari app Scalify.</span>
+                                </div>
+                            </div>
+
+                            <!-- Comic 3 -->
+                            <div class="glass-card rounded-xl overflow-hidden">
+                                <div class="h-28 overflow-hidden bg-slate-900 relative">
+                                    <img src="./public/images/comic_payout.jpg" alt="Deal & Komisi"
+                                        class="w-full h-full object-cover">
+                                    <span
+                                        class="absolute top-1.5 left-1.5 px-2 py-0.5 rounded text-[8px] font-bold bg-emerald-500/90 text-white">3.
+                                        Deal & Komisi</span>
+                                </div>
+                                <div class="p-2 text-[10px]">
+                                    <strong class="text-white block">Closing & Payout:</strong>
+                                    <span class="text-slate-400 text-[9px] leading-tight block mt-0.5">Tim IT kerjakan
+                                        sistem, komisi Rp 200k+ langsung cair ke rekening!</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SECTION 1: Profil Scalify (3 Nilai Inti) -->
+                    <div class="space-y-1.5 pt-1">
+                        <div class="flex items-center gap-1.5">
+                            <span
+                                class="w-4 h-4 rounded bg-brand-cyan/10 text-brand-cyan border border-brand-cyan/25 flex items-center justify-center text-[9px]">
+                                <i class="fa-solid fa-cube"></i>
+                            </span>
+                            <h2 class="font-display text-[11px] font-bold text-white uppercase tracking-wider">1. Profil
+                                & Nilai Inti Scalify</h2>
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-2 text-[9.5px]">
+                            <div class="glass-card p-2 rounded-xl border-l-2 border-l-brand-cyan">
+                                <div class="text-brand-cyan font-bold flex items-center gap-1 mb-0.5">
+                                    <i class="fa-solid fa-bolt text-[9px]"></i> Otomatisasi Alur Kerja
+                                </div>
+                                <p class="text-slate-400 leading-tight">Mengeliminasi rekapan manual, memangkas
+                                    human-error operasional hingga 80%.</p>
+                            </div>
+                            <div class="glass-card p-2 rounded-xl border-l-2 border-l-brand-indigo">
+                                <div class="text-indigo-400 font-bold flex items-center gap-1 mb-0.5">
+                                    <i class="fa-solid fa-chart-pie text-[9px]"></i> Laporan Real-Time
+                                </div>
+                                <p class="text-slate-400 leading-tight">Owner memantau omzet, stok cabang, dan laba/rugi
+                                    harian langsung dari HP.</p>
+                            </div>
+                            <div class="glass-card p-2 rounded-xl border-l-2 border-l-brand-emerald">
+                                <div class="text-emerald-400 font-bold flex items-center gap-1 mb-0.5">
+                                    <i class="fa-solid fa-expand text-[9px]"></i> Skalabilitas Sistem
+                                </div>
+                                <p class="text-slate-400 leading-tight">Arsitektur modern siap ekspansi multi-cabang,
+                                    multi-gudang & WhatsApp bot.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Sheet 1 Footer -->
+                <div
+                    class="pt-2 border-t border-slate-800/80 flex items-center justify-between text-[9px] text-slate-500">
+                    <div class="flex items-center gap-1.5 text-slate-400 font-semibold">
+                        <img src="./scalify.png" alt="Scalify Logo" class="w-3.5 h-3.5 rounded object-contain">
+                        Scalify Intelligence • Digital Agency & Enterprise Solutions
+                    </div>
+                    <div>Dokumen Resmi Kemitraan • <strong class="text-slate-300">Halaman 1 dari 4</strong></div>
+                </div>
+
+            </div>
+
+            <!-- Page Break -->
+            <div class="page-break"></div>
+
+            <!-- ======================================================= -->
+            <!-- SHEET 2 OF 4: 6 PORTOFOLIO SOLUSI LAYANAN               -->
+            <!-- ======================================================= -->
+            <div class="a4-page">
+
+                <!-- Sheet 2 Content Top -->
+                <div class="space-y-3.5">
+
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                        <div class="flex items-center gap-2">
+                            <span
+                                class="w-5 h-5 rounded bg-brand-cyan/10 text-brand-cyan border border-brand-cyan/25 flex items-center justify-center text-[10px]">
+                                <i class="fa-solid fa-layer-group"></i>
+                            </span>
+                            <h2 class="font-display text-xs font-bold text-white uppercase tracking-wider">2. 6
+                                Portofolio Solusi yang Kita Jual (Visual Preview)</h2>
+                        </div>
+                        <span class="text-[9.5px] text-slate-400 font-mono">6 Core Solutions</span>
+                    </div>
+
+                    <!-- 6 Visual Cards Grid with Rich Real Images & Badges -->
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+
+                        <!-- Card 1: UMKM -->
+                        <div class="glass-card rounded-xl overflow-hidden">
+                            <div class="h-28 overflow-hidden bg-slate-900 relative">
+                                <img src="./public/images/klaundry_mockup.webp" alt="Website UMKM"
+                                    class="w-full h-full object-cover opacity-90">
+                                <span
+                                    class="absolute top-1.5 left-1.5 px-2 py-0.5 rounded text-[8px] font-bold bg-sky-500/90 text-white">UMKM
+                                    & Retail</span>
+                            </div>
+                            <div class="p-2.5 space-y-1">
+                                <h3 class="font-display text-[11px] font-bold text-white">Website Katalog & Order WA
+                                </h3>
+                                <p class="text-[9px] text-slate-400 leading-tight">Katalog produk cepat + form order
+                                    instan langsung ke WhatsApp owner.</p>
+                                <div class="text-[8.5px] text-brand-cyan font-semibold pt-0.5"><i
+                                        class="fa-solid fa-check text-[7px] mr-1"></i> Direct WA <span
+                                        class="text-slate-600 px-1">•</span> SEO Google</div>
+                            </div>
+                        </div>
+
+                        <!-- Card 2: Transport & Travel -->
+                        <div class="glass-card rounded-xl overflow-hidden">
+                            <div class="h-28 overflow-hidden bg-slate-900 relative">
+                                <img src="./public/images/travel/minibus_hero.jpg" alt="Travel & Transport"
+                                    class="w-full h-full object-cover opacity-90">
+                                <span
+                                    class="absolute top-1.5 left-1.5 px-2 py-0.5 rounded text-[8px] font-bold bg-indigo-500/90 text-white">Travel
+                                    & Rental</span>
+                            </div>
+                            <div class="p-2.5 space-y-1">
+                                <h3 class="font-display text-[11px] font-bold text-white">Sistem Booking Tiket Armada
+                                </h3>
+                                <p class="text-[9px] text-slate-400 leading-tight">Pilih nomor kursi live, jadwal
+                                    keberangkatan, tiket PDF & QRIS otomatis.</p>
+                                <div class="text-[8.5px] text-indigo-400 font-semibold pt-0.5"><i
+                                        class="fa-solid fa-check text-[7px] mr-1"></i> Denah Kursi <span
+                                        class="text-slate-600 px-1">•</span> E-Ticket</div>
+                            </div>
+                        </div>
+
+                        <!-- Card 3: Parfum & Luxury -->
+                        <div class="glass-card rounded-xl overflow-hidden">
+                            <div class="h-28 overflow-hidden bg-slate-900 relative">
+                                <img src="./public/images/permata-qiana/wedding_bouquet.webp" alt="Parfum & Luxury"
+                                    class="w-full h-full object-cover opacity-90">
+                                <span
+                                    class="absolute top-1.5 left-1.5 px-2 py-0.5 rounded text-[8px] font-bold bg-pink-500/90 text-white">Parfum
+                                    & Luxury</span>
+                            </div>
+                            <div class="p-2.5 space-y-1">
+                                <h3 class="font-display text-[11px] font-bold text-white">E-Commerce Luxury & Parfum
+                                </h3>
+                                <p class="text-[9px] text-slate-400 leading-tight">Visual mewah, piramida aroma notes
+                                    (Top, Heart, Base), bundle discount & loyalty.</p>
+                                <div class="text-[8.5px] text-pink-400 font-semibold pt-0.5"><i
+                                        class="fa-solid fa-check text-[7px] mr-1"></i> Scent Pyramid <span
+                                        class="text-slate-600 px-1">•</span> Member</div>
+                            </div>
+                        </div>
+
+                        <!-- Card 4: POS Kasir -->
+                        <div class="glass-card rounded-xl overflow-hidden">
+                            <div class="h-28 overflow-hidden bg-slate-900 relative">
+                                <img src="./public/images/budgetin_mockup.webp" alt="POS Kasir"
+                                    class="w-full h-full object-cover opacity-90">
+                                <span
+                                    class="absolute top-1.5 left-1.5 px-2 py-0.5 rounded text-[8px] font-bold bg-emerald-500/90 text-white">Cloud
+                                    POS</span>
+                            </div>
+                            <div class="p-2.5 space-y-1">
+                                <h3 class="font-display text-[11px] font-bold text-white">Sistem Kasir & Stok Inventori
+                                </h3>
+                                <p class="text-[9px] text-slate-400 leading-tight">Cetak struk thermal bluetooth,
+                                    multi-cabang, barcode, & rekap laba rugi.</p>
+                                <div class="text-[8.5px] text-emerald-400 font-semibold pt-0.5"><i
+                                        class="fa-solid fa-check text-[7px] mr-1"></i> Cetak Struk <span
+                                        class="text-slate-600 px-1">•</span> Stok Realtime</div>
+                            </div>
+                        </div>
+
+                        <!-- Card 5: Company Profile -->
+                        <div class="glass-card rounded-xl overflow-hidden">
+                            <div class="h-28 overflow-hidden bg-slate-900 relative">
+                                <img src="./public/images/service_webapp.png" alt="Company Profile"
+                                    class="w-full h-full object-cover opacity-90">
+                                <span
+                                    class="absolute top-1.5 left-1.5 px-2 py-0.5 rounded text-[8px] font-bold bg-amber-500/90 text-white">Corporate</span>
+                            </div>
+                            <div class="p-2.5 space-y-1">
+                                <h3 class="font-display text-[11px] font-bold text-white">Company Profile Korporat</h3>
+                                <p class="text-[9px] text-slate-400 leading-tight">Kredibilitas tender B2B, showcase
+                                    proyek, e-katalog unduh instan & form RFQ.</p>
+                                <div class="text-[8.5px] text-amber-400 font-semibold pt-0.5"><i
+                                        class="fa-solid fa-check text-[7px] mr-1"></i> Unduh Brosur <span
+                                        class="text-slate-600 px-1">•</span> RFQ Lead</div>
+                            </div>
+                        </div>
+
+                        <!-- Card 6: Custom ERP -->
+                        <div class="glass-card rounded-xl overflow-hidden">
+                            <div class="h-28 overflow-hidden bg-slate-900 relative">
+                                <img src="./public/images/omniscale_mockup.webp" alt="Custom Integration"
+                                    class="w-full h-full object-cover opacity-90">
+                                <span
+                                    class="absolute top-1.5 left-1.5 px-2 py-0.5 rounded text-[8px] font-bold bg-purple-500/90 text-white">Integrasi
+                                    ERP</span>
+                            </div>
+                            <div class="p-2.5 space-y-1">
+                                <h3 class="font-display text-[11px] font-bold text-white">Custom Business Integration
+                                </h3>
+                                <p class="text-[9px] text-slate-400 leading-tight">Integrasi database, bot WhatsApp
+                                    reminder tagihan, & executive dashboard.</p>
+                                <div class="text-[8.5px] text-purple-400 font-semibold pt-0.5"><i
+                                        class="fa-solid fa-check text-[7px] mr-1"></i> API Custom <span
+                                        class="text-slate-600 px-1">•</span> Bot WhatsApp</div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Keunggulan Bergabung -->
+                    <div class="space-y-1.5 pt-1 border-t border-slate-800">
+                        <div class="flex items-center gap-1.5">
+                            <span
+                                class="w-4 h-4 rounded bg-brand-cyan/10 text-brand-cyan border border-brand-cyan/25 flex items-center justify-center text-[9px]">
+                                <i class="fa-solid fa-gem"></i>
+                            </span>
+                            <h3 class="font-display text-[10.5px] font-bold text-white uppercase tracking-wider">
+                                Keunggulan Kemitraan Scalify Partner</h3>
+                        </div>
+
+                        <div class="grid grid-cols-4 gap-2 text-[9px]">
+                            <div class="glass-card p-2 rounded-xl text-center space-y-0.5">
+                                <i class="fa-solid fa-sack-dollar text-brand-cyan text-xs"></i>
+                                <div class="font-bold text-white text-[9.5px]">Komisi Besar</div>
+                                <div class="text-[8px] text-slate-400">Min. 200k s/d Jutaan</div>
+                            </div>
+                            <div class="glass-card p-2 rounded-xl text-center space-y-0.5">
+                                <i class="fa-solid fa-laptop-code text-indigo-400 text-xs"></i>
+                                <div class="font-bold text-white text-[9.5px]">Bebas Coding</div>
+                                <div class="text-[8px] text-slate-400">100% Tim IT Siap</div>
+                            </div>
+                            <div class="glass-card p-2 rounded-xl text-center space-y-0.5">
+                                <i class="fa-solid fa-file-contract text-emerald-400 text-xs"></i>
+                                <div class="font-bold text-white text-[9.5px]">Materi Lengkap</div>
+                                <div class="text-[8px] text-slate-400">Demo & Proposal PDF</div>
+                            </div>
+                            <div class="glass-card p-2 rounded-xl text-center space-y-0.5">
+                                <i class="fa-solid fa-shield-halved text-amber-400 text-xs"></i>
+                                <div class="font-bold text-white text-[9.5px]">Garansi Resmi</div>
+                                <div class="text-[8px] text-slate-400">Klien Pasti Puas</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Sheet 2 Footer -->
+                <div
+                    class="pt-2 border-t border-slate-800/80 flex items-center justify-between text-[9px] text-slate-500">
+                    <div class="flex items-center gap-1.5 text-slate-400 font-semibold">
+                        <img src="./scalify.png" alt="Scalify Logo" class="w-3.5 h-3.5 rounded object-contain">
+                        Scalify Intelligence • 6 Lini Layanan Solusi Bisnis
+                    </div>
+                    <div>Portofolio Siap Dipresentasikan • <strong class="text-slate-300">Halaman 2 dari 4</strong>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Page Break -->
+            <div class="page-break"></div>
+
+            <!-- ======================================================= -->
+            <!-- SHEET 3 OF 4: PANDUAN APLIKASI & ALUR PENAWARAN BISNIS  -->
+            <!-- ======================================================= -->
+            <div class="a4-page">
+
+                <!-- Sheet 3 Content Top -->
+                <div class="space-y-3.5">
+
+                    <!-- SECTION 3: Visual Guide Aplikasi Partner -->
+                    <div class="space-y-2">
+                        <div class="flex items-center gap-2 border-b border-slate-800 pb-1.5">
+                            <span
+                                class="w-5 h-5 rounded bg-brand-cyan/10 text-brand-cyan border border-brand-cyan/25 flex items-center justify-center text-[10px]">
+                                <i class="fa-solid fa-mobile-screen"></i>
+                            </span>
+                            <h2 class="font-display text-xs font-bold text-white uppercase tracking-wider">3. Panduan
+                                Tampilan Aplikasi Scalify Partner</h2>
+                        </div>
+
+                        <!-- Side-by-side Visual Layout with App Mockup -->
+                        <div class="grid grid-cols-12 gap-3.5 items-center">
+
+                            <!-- Left: Phone Mockup -->
+                            <div class="col-span-4 flex flex-col items-center">
+                                <div class="w-full max-w-[165px] relative flex flex-col items-center">
+                                    <div
+                                        class="absolute inset-0 bg-brand-cyan/20 blur-xl rounded-full scale-90 pointer-events-none">
+                                    </div>
+                                    <img src="./partner-app-preview.png" alt="Dashboard Partner"
+                                        class="relative z-10 w-full h-auto drop-shadow-[0_10px_20px_rgba(0,0,0,0.9)]">
+                                    <div class="mt-1 text-center relative z-10">
+                                        <span
+                                            class="px-2 py-0.5 rounded-full text-[8px] font-bold bg-slate-900 text-brand-cyan border border-brand-cyan/30 flex items-center gap-1">
+                                            <i
+                                                class="fa-solid fa-circle text-[4px] text-brand-emerald animate-pulse"></i>
+                                            Dashboard Utama Partner
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right: Feature Points -->
+                            <div class="col-span-8 space-y-1.5">
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div
+                                        class="bg-slate-900/90 p-2 rounded-xl border border-brand-cyan/30 flex items-start gap-1.5">
+                                        <span
+                                            class="w-4 h-4 rounded-full bg-brand-cyan text-slate-950 font-bold text-[9px] flex items-center justify-center shrink-0 font-mono">1</span>
+                                        <div>
+                                            <div class="text-[10px] font-bold text-white">Install & Notifikasi</div>
+                                            <p class="text-[8.5px] text-slate-400 leading-tight">Pasang di layar HP &
+                                                aktifkan notifikasi deal.</p>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="bg-slate-900/90 p-2 rounded-xl border border-brand-amber/30 flex items-start gap-1.5">
+                                        <span
+                                            class="w-4 h-4 rounded-full bg-brand-amber text-slate-950 font-bold text-[9px] flex items-center justify-center shrink-0 font-mono">2</span>
+                                        <div>
+                                            <div class="text-[10px] font-bold text-white">Nyalakan Api Streak</div>
+                                            <p class="text-[8.5px] text-slate-400 leading-tight">Absensi harian digital
+                                                & kumpulkan poin.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-1.5 bg-slate-900/95 p-2 rounded-xl border border-slate-800">
+                                    <div
+                                        class="flex items-center gap-2 p-1.5 rounded-lg bg-gradient-to-r from-brand-sky/25 via-midnight-800 to-brand-indigo/25 border border-brand-sky/40">
+                                        <div
+                                            class="w-5 h-5 rounded-lg bg-brand-sky text-white flex items-center justify-center text-[9px] shrink-0 font-bold">
+                                            <i class="fa-solid fa-briefcase"></i>
+                                        </div>
+                                        <div class="text-[9px]">
+                                            <strong class="text-white">Penawaran Bisnis (Fitur Utama):</strong>
+                                            <span class="text-slate-300"> Akses demo web live, proposal PDF resmi, &
+                                                materi jualan.</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="grid grid-cols-2 gap-1 text-[8.5px]">
+                                        <div
+                                            class="flex items-center gap-1.5 p-1 rounded-lg bg-slate-950/60 border border-slate-800">
+                                            <i
+                                                class="fa-solid fa-fire text-brand-amber text-[9px] w-3.5 text-center"></i>
+                                            <div><strong class="text-white">Api Streak:</strong> Absensi digital harian
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="flex items-center gap-1.5 p-1 rounded-lg bg-slate-950/60 border border-slate-800">
+                                            <i
+                                                class="fa-solid fa-wallet text-brand-cyan text-[9px] w-3.5 text-center"></i>
+                                            <div><strong class="text-white">Saldo:</strong> Tarik instan (Min. 50k)
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- SECTION 4: Detail Alur Penawaran Bisnis -->
+                    <div class="space-y-2 pt-2 border-t border-slate-800/80">
+                        <div class="flex items-center gap-2">
+                            <span
+                                class="w-5 h-5 rounded bg-pink-500/10 text-pink-400 border border-pink-500/25 flex items-center justify-center text-[10px]">
+                                <i class="fa-solid fa-bullseye"></i>
+                            </span>
+                            <h2 class="font-display text-xs font-bold text-white uppercase tracking-wider">4. Alur Kerja
+                                Fitur "Penawaran Bisnis" Sampai Closing</h2>
+                        </div>
+
+                        <!-- Side-by-side Penawaran Bisnis Mockup & Steps -->
+                        <div class="grid grid-cols-12 gap-3.5 items-center">
+
+                            <!-- Left: Screen Penawaran Bisnis -->
+                            <div class="col-span-4 flex flex-col items-center">
+                                <div class="w-full max-w-[165px] relative flex flex-col items-center">
+                                    <div
+                                        class="absolute inset-0 bg-pink-500/20 blur-xl rounded-full scale-90 pointer-events-none">
+                                    </div>
+                                    <img src="./partner-penawaran-bisnis.png" alt="Penawaran Bisnis"
+                                        class="relative z-10 w-full h-auto drop-shadow-[0_10px_20px_rgba(0,0,0,0.9)]">
+                                    <div class="mt-1 text-center relative z-10">
+                                        <span
+                                            class="px-2 py-0.5 rounded-full text-[8px] font-bold bg-slate-900 text-pink-400 border border-pink-500/30 flex items-center gap-1">
+                                            <i class="fa-solid fa-bullseye text-[6px]"></i> Menu Penawaran Bisnis
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right: Visual Steps -->
+                            <div class="col-span-8 space-y-1.5">
+                                <div class="grid grid-cols-2 gap-1.5 text-[9px]">
+                                    <div class="glass-card p-1.5 rounded-lg border-l-2 border-l-sky-400">
+                                        <div class="font-bold text-white flex items-center gap-1 mb-0.5 text-[9.5px]">
+                                            <i
+                                                class="fa-solid fa-arrow-up-right-from-square text-sky-400 text-[8px]"></i>
+                                            1. Tombol "Landing"
+                                        </div>
+                                        <p class="text-slate-400 leading-tight">Demo web interaktif sesuai industri
+                                            klien.</p>
+                                    </div>
+                                    <div class="glass-card p-1.5 rounded-lg border-l-2 border-l-emerald-400">
+                                        <div class="font-bold text-white flex items-center gap-1 mb-0.5 text-[9.5px]">
+                                            <i class="fa-solid fa-file-pdf text-emerald-400 text-[8px]"></i> 2. Unduh
+                                            Proposal
+                                        </div>
+                                        <p class="text-slate-400 leading-tight">Download proposal PDF dengan paket &
+                                            harga.</p>
+                                    </div>
+                                    <div class="glass-card p-1.5 rounded-lg border-l-2 border-l-indigo-400">
+                                        <div class="font-bold text-white flex items-center gap-1 mb-0.5 text-[9.5px]">
+                                            <i class="fa-brands fa-whatsapp text-indigo-400 text-[8px]"></i> 3. Share
+                                            WhatsApp
+                                        </div>
+                                        <p class="text-slate-400 leading-tight">Template chat dengan link affiliate
+                                            Anda.</p>
+                                    </div>
+                                    <div class="glass-card p-1.5 rounded-lg border-l-2 border-l-purple-400">
+                                        <div class="font-bold text-white flex items-center gap-1 mb-0.5 text-[9.5px]">
+                                            <i class="fa-solid fa-video text-purple-400 text-[8px]"></i> 4. Online
+                                            Meeting
+                                        </div>
+                                        <p class="text-slate-400 leading-tight">Google Meet bersama tim konsultan
+                                            Scalify.</p>
+                                    </div>
+                                </div>
+
+                                <!-- Step 5 Payout Big Banner -->
+                                <div
+                                    class="bg-gradient-to-r from-amber-500/25 via-slate-900 to-amber-500/15 border border-amber-500/40 rounded-xl p-2 flex items-center justify-between gap-2">
+                                    <div class="space-y-0.5">
+                                        <div class="text-[10px] font-bold text-white flex items-center gap-1.5">
+                                            <i class="fa-solid fa-handshake text-amber-400"></i> 5. Deal & Pencairan
+                                            Komisi
+                                        </div>
+                                        <p class="text-[8.5px] text-slate-300">Setelah kontrak ditandatangani, komisi
+                                            langsung cair.</p>
+                                    </div>
+                                    <div
+                                        class="bg-amber-400 text-slate-950 font-bold px-2 py-0.5 rounded-md text-[9.5px] font-mono shrink-0 shadow">
+                                        Min. Rp 200.000 / Deal
+                                    </div>
+                                </div>
+
+                                <!-- Special Feature: Tambah Bisnis (+) -->
+                                <div
+                                    class="bg-slate-950/75 border border-pink-500/35 rounded-xl p-1.5 flex items-center gap-2 text-[9px]">
+                                    <div
+                                        class="w-4 h-4 rounded-full bg-pink-500 text-white flex items-center justify-center text-[8px] shrink-0 font-bold">
+                                        <i class="fa-solid fa-plus"></i>
+                                    </div>
+                                    <div class="text-slate-300 leading-tight">
+                                        <strong class="text-pink-400">Target bisnis baru?</strong> Klik tombol
+                                        <strong>"+"</strong> di kanan atas untuk generate proposal kustom!
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Sheet 3 Footer -->
+                <div
+                    class="pt-2 border-t border-slate-800/80 flex items-center justify-between text-[9px] text-slate-500">
+                    <div class="flex items-center gap-1.5 text-slate-400 font-semibold">
+                        <img src="./scalify.png" alt="Scalify Logo" class="w-3.5 h-3.5 rounded object-contain">
+                        Scalify Intelligence • Dashboard Walkthrough & Pipeline Penawaran
+                    </div>
+                    <div>Alur Kerja Aplikasi & Deals • <strong class="text-slate-300">Halaman 3 dari 4</strong></div>
+                </div>
+
+            </div>
+
+            <!-- Page Break -->
+            <div class="page-break"></div>
+
+            <!-- ======================================================= -->
+            <!-- SHEET 4 OF 4: MEDSOS STRATEGY & TOP PARTNER SECRETS     -->
+            <!-- ======================================================= -->
+            <div class="a4-page">
+
+                <!-- Sheet 4 Content Top -->
+                <div class="space-y-4">
+
+                    <!-- SECTION 5: Social Media Growth Blueprint -->
+                    <div class="space-y-2.5">
+                        <div class="flex items-center gap-2 border-b border-slate-800 pb-1.5">
+                            <span
+                                class="w-5 h-5 rounded bg-gradient-to-br from-amber-400 to-brand-cyan text-slate-950 flex items-center justify-center text-[10px] font-bold">
+                                <i class="fa-solid fa-fire-flame-curved"></i>
+                            </span>
+                            <h2 class="font-display text-xs font-bold text-white uppercase tracking-wider">5. Blueprint
+                                Promosi Medsos (Visual Mockup Feed)</h2>
+                        </div>
+
+                        <!-- Visual Social Media Feed Mockups -->
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-[9px]">
+
+                            <!-- Threads Visual Post Mockup -->
+                            <div
+                                class="bg-slate-900/90 border border-purple-500/35 rounded-xl p-2.5 space-y-1.5 flex flex-col justify-between">
+                                <div class="space-y-1">
+                                    <div class="flex items-center justify-between border-b border-slate-800 pb-1">
+                                        <span class="font-bold text-purple-400 flex items-center gap-1"><i
+                                                class="fa-brands fa-threads text-xs"></i> Threads Post</span>
+                                        <span
+                                            class="text-[7.5px] bg-purple-500/20 text-purple-300 px-1 py-0.2 rounded font-mono">Storytelling</span>
+                                    </div>
+                                    <div
+                                        class="bg-slate-950/80 p-2 rounded-lg border border-slate-800 text-slate-300 italic text-[8.5px] leading-relaxed">
+                                        "Baru tahu banyak owner rental/toko boncos jutaan per bulan cuma gara-gara
+                                        catatan stok & kasir manual di buku. Solusinya simpel banget..."
+                                    </div>
+                                    <p class="text-slate-400 text-[8.5px]"><strong>CTA:</strong> <em>"Drop DM/Komen,
+                                            nanti aku kirim link demo sistemnya gratis!"</em></p>
+                                </div>
+                                <div
+                                    class="text-[8px] text-purple-400 font-semibold pt-1 border-t border-slate-800 flex items-center gap-1">
+                                    <i class="fa-solid fa-crosshairs text-[7px]"></i> Target: Soft-Selling & Edukasi
+                                </div>
+                            </div>
+
+                            <!-- Instagram Visual DM Mockup -->
+                            <div
+                                class="bg-slate-900/90 border border-pink-500/35 rounded-xl p-2.5 space-y-1.5 flex flex-col justify-between">
+                                <div class="space-y-1">
+                                    <div class="flex items-center justify-between border-b border-slate-800 pb-1">
+                                        <span class="font-bold text-pink-400 flex items-center gap-1"><i
+                                                class="fa-brands fa-instagram text-xs"></i> Instagram DM</span>
+                                        <span
+                                            class="text-[7.5px] bg-pink-500/20 text-pink-300 px-1 py-0.2 rounded font-mono">Direct
+                                            Pitch</span>
+                                    </div>
+                                    <div
+                                        class="bg-slate-950/80 p-2 rounded-lg border border-slate-800 text-slate-300 text-[8.5px] space-y-0.5">
+                                        <div class="text-slate-400 leading-snug">"Halo Kak! Keren banget bisnisnya. Btw
+                                            bio-nya belum ada katalog resmi ya? Kami ada contoh demo web khusus kategori
+                                            ini..."</div>
+                                    </div>
+                                    <p class="text-slate-400 text-[8.5px]">Kirim link <strong>Landing Demo</strong> dari
+                                        aplikasi.</p>
+                                </div>
+                                <div
+                                    class="text-[8px] text-pink-400 font-semibold pt-1 border-t border-slate-800 flex items-center gap-1">
+                                    <i class="fa-solid fa-crosshairs text-[7px]"></i> Target: UMKM & Brand Lokal</div>
+                            </div>
+
+                            <!-- Facebook Community Mockup -->
+                            <div
+                                class="bg-slate-900/90 border border-blue-500/35 rounded-xl p-2.5 space-y-1.5 flex flex-col justify-between">
+                                <div class="space-y-1">
+                                    <div class="flex items-center justify-between border-b border-slate-800 pb-1">
+                                        <span class="font-bold text-blue-400 flex items-center gap-1"><i
+                                                class="fa-brands fa-facebook text-xs"></i> Grup Facebook</span>
+                                        <span
+                                            class="text-[7.5px] bg-blue-500/20 text-blue-300 px-1 py-0.2 rounded font-mono">Komunitas</span>
+                                    </div>
+                                    <div
+                                        class="bg-slate-950/80 p-2 rounded-lg border border-slate-800 text-slate-300 text-[8.5px] leading-relaxed">
+                                        Join grup pengusaha (*Rental Mobil, UMKM, F&B*). Posting edukasi tentang
+                                        kemudahan cetak struk POS bluetooth & booking tiket otomatis.
+                                    </div>
+                                    <p class="text-slate-400 text-[8.5px]">Share link proposal PDF Scalify sebagai
+                                        solusi.</p>
+                                </div>
+                                <div
+                                    class="text-[8px] text-blue-400 font-semibold pt-1 border-t border-slate-800 flex items-center gap-1">
+                                    <i class="fa-solid fa-crosshairs text-[7px]"></i> Target: Komunitas Bisnis</div>
+                            </div>
+
+                        </div>
+
+                        <!-- 3 Rahasia Top Partner -->
+                        <div class="grid grid-cols-3 gap-2 pt-1">
+                            <div class="glass-card p-2 rounded-xl flex items-center gap-2">
+                                <div
+                                    class="w-5 h-5 rounded-lg bg-brand-cyan/20 text-brand-cyan flex items-center justify-center text-[9px] shrink-0 font-bold font-mono">
+                                    1</div>
+                                <div class="text-[9px]">
+                                    <strong class="text-white block">Bahasa Bisnis:</strong> Hemat waktu, omzet naik,
+                                    laporan rapi.
+                                </div>
+                            </div>
+
+                            <div class="glass-card p-2 rounded-xl flex items-center gap-2">
+                                <div
+                                    class="w-5 h-5 rounded-lg bg-brand-emerald/20 text-brand-emerald flex items-center justify-center text-[9px] shrink-0 font-bold font-mono">
+                                    2</div>
+                                <div class="text-[9px]">
+                                    <strong class="text-white block">Kirim Demo + PDF:</strong> Visual membuat calon
+                                    klien yakin.
+                                </div>
+                            </div>
+
+                            <div class="glass-card p-2 rounded-xl flex items-center gap-2">
+                                <div
+                                    class="w-5 h-5 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center text-[9px] shrink-0 font-bold font-mono">
+                                    3</div>
+                                <div class="text-[9px]">
+                                    <strong class="text-white block">Ajak ke Meet:</strong> Tim Scalify siap bantu
+                                    closing!
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Call To Action & Executive Closing Summary -->
+                    <div
+                        class="bg-gradient-to-br from-slate-900 via-midnight-800 to-slate-900 border border-brand-cyan/30 rounded-2xl p-3.5 space-y-2">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-1.5">
+                            <div class="text-[11px] font-bold text-white flex items-center gap-1.5">
+                                <i class="fa-solid fa-handshake-angle text-brand-cyan"></i> Komitmen Kemitraan Scalify
+                                Intelligence
+                            </div>
+                            <span
+                                class="px-2 py-0.5 rounded text-[8.5px] font-bold bg-brand-emerald/20 text-brand-emerald border border-brand-emerald/30 uppercase">
+                                Verified Partner
+                            </span>
+                        </div>
+                        <p class="text-[10px] text-slate-300 leading-relaxed">
+                            Kemitraan ini dirancang dengan prinsip <strong>Zero Capital & High Commission</strong>. Anda
+                            tidak perlu memikirkan urusan server, coding, deployment, atau customer support teknis.
+                            Fokuslah pada membangun relasi, bagikan link demo proposal, dan biarkan sistem serta tim
+                            konsultan Scalify yang mengonversi prospek menjadi deal nyata.
+                        </p>
+                        <div class="grid grid-cols-3 gap-2 pt-1 text-center text-[9px]">
+                            <div class="bg-slate-950/70 p-1.5 rounded-lg border border-slate-800">
+                                <div class="text-brand-cyan font-bold">Pencairan Dana</div>
+                                <div class="text-slate-400">Min. 50 Ribu Instan</div>
+                            </div>
+                            <div class="bg-slate-950/70 p-1.5 rounded-lg border border-slate-800">
+                                <div class="text-brand-amber font-bold">Komisi Deal</div>
+                                <div class="text-slate-400">Min. 200k s/d Jutaan</div>
+                            </div>
+                            <div class="bg-slate-950/70 p-1.5 rounded-lg border border-slate-800">
+                                <div class="text-brand-emerald font-bold">Dukungan Tim</div>
+                                <div class="text-slate-400">Konsultasi Live 24/7</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Sheet 4 Footer -->
+                <footer
+                    class="pt-2 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-1.5 text-[9px] text-slate-500">
+                    <div class="flex items-center gap-1.5 text-slate-400 font-semibold">
+                        <img src="./scalify.png" alt="Scalify Logo" class="w-3.5 h-3.5 rounded object-contain">
+                        <span>Scalify Intelligence • Dokumen Resmi Panduan Kemitraan</span>
+                    </div>
+                    <div>Hak Cipta Dilindungi • <strong class="text-slate-300">Halaman 4 dari 4</strong></div>
+                </footer>
+
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Script for PDF Generation -->
+    <script>
+        // High Precision A4 PDF Exporter
+        function downloadExecutivePdf() {
+            const element = document.getElementById('printableDeck');
+            const btn = document.getElementById('exportPdfBtn');
+            const originalHtml = btn.innerHTML;
+
+            // Loading state
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Merender PDF A4...';
+            btn.disabled = true;
+
+            const opt = {
+                margin: 0,
+                filename: 'Scalify_Partner_Executive_Deck.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: {
+                    scale: 2,
+                    useCORS: true,
+                    backgroundColor: '#050811',
+                    logging: false,
+                    letterRendering: true,
+                    scrollY: 0
+                },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                pagebreak: {
+                    mode: ['css', 'legacy'],
+                    before: '.a4-page'
+                }
+            };
+
+            html2pdf().set(opt).from(element).save().then(() => {
+                btn.innerHTML = originalHtml;
+                btn.disabled = false;
+            }).catch(err => {
+                console.error("PDF Export Error:", err);
+                window.print();
+                btn.innerHTML = originalHtml;
+                btn.disabled = false;
+            });
+        }
+    </script>
+</body>
+
+</html>
