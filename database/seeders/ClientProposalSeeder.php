@@ -46,5 +46,26 @@ class ClientProposalSeeder extends Seeder
                 'renewal_platinum' => '50% per tahun',
             ]
         );
+
+        $sportCategory = \App\Models\BusinessCategory::where('slug', 'sport')->first();
+
+        \App\Models\ClientProposal::updateOrCreate(
+            ['slug' => 'apex-arena-sport'],
+            [
+                'business_category_id' => $sportCategory ? $sportCategory->id : null,
+                'brand_name' => 'Apex Arena Sport Center',
+                'client_name' => 'Manajemen Pengelola Apex Arena',
+                'wa_number' => '6281234567890',
+                'wa_template' => 'Halo tim Scalify, kami dari Apex Arena tertarik untuk membuat sistem website booking lapangan, membership, dan komunitas mabar.',
+                'price_silver' => 850000,
+                'price_gold' => 1950000,
+                'price_diamond' => 2950000,
+                'price_platinum' => 4900000,
+                'renewal_silver' => '500rb/tahun',
+                'renewal_gold' => '750rb/tahun',
+                'renewal_diamond' => '1.2jt/tahun',
+                'renewal_platinum' => '50% per tahun',
+            ]
+        );
     }
 }

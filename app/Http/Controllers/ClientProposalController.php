@@ -87,4 +87,22 @@ class ClientProposalController extends Controller
         $client = ClientProposal::where('slug', $slug)->firstOrFail();
         return view('client-proposals.lpk.proposal', compact('client'));
     }
+
+    public function landingSport($slug)
+    {
+        $client = ClientProposal::where('slug', $slug)->firstOrFail();
+        return view('client-proposals.sport.landing', compact('client'));
+    }
+
+    public function proposalSport($slug)
+    {
+        $client = ClientProposal::where('slug', $slug)->firstOrFail();
+        return view('client-proposals.sport.proposal', compact('client'));
+    }
+
+    public function customerDemoSport($slug)
+    {
+        $client = ClientProposal::where('slug', $slug)->firstOrFail();
+        return view('client-proposals.sport.customer-demo', compact('client'));
+    }
 }

@@ -332,6 +332,9 @@ Route::get('/client/travel/{slug}/proposal', [ClientProposalController::class, '
 Route::get('/client/travel/{slug}/demo', [ClientProposalController::class, 'customerDemoTravel'])->name('demo.customer.travel');
 Route::get('/client/lpk/{slug}/landing', [ClientProposalController::class, 'landingLpk'])->name('landing.lpk');
 Route::get('/client/lpk/{slug}/proposal', [ClientProposalController::class, 'proposalLpk'])->name('proposal.lpk');
+Route::get('/client/sport/{slug}/landing', [ClientProposalController::class, 'landingSport'])->name('landing.sport');
+Route::get('/client/sport/{slug}/proposal', [ClientProposalController::class, 'proposalSport'])->name('proposal.sport');
+Route::get('/client/sport/{slug}/demo', [ClientProposalController::class, 'customerDemoSport'])->name('demo.customer.sport');
 Route::get('/client/rental-mobil/{slug}/admin-demo', [ClientProposalController::class, 'adminDemoRental'])->name('demo.admin.rental');
 Route::get('/client/parfum/{slug}/admin-demo', [ClientProposalController::class, 'adminDemoParfum'])->name('demo.admin.parfum');
 

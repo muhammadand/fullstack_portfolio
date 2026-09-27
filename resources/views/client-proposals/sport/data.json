@@ -1,0 +1,267 @@
+{
+  "brand": {
+    "name": "Apex Arena Sport Center",
+    "tagline": "Modern Sports Hub & Community Arena",
+    "description": "Pusat fasilitas olahraga terlengkap dengan standar internasional untuk Futsal, Badminton, Padel Tennis, Mini Soccer, dan Voli. Dilengkapi sistem booking online real-time, membership eksklusif, dan platform komunitas mabar.",
+    "phone": "6281234567890",
+    "address": "Jl. Boulevard Sport Arena No. 88, Pusat Olahraga Kota",
+    "operating_hours": "06:00 - 24:00 WIB (Setiap Hari)"
+  },
+  "sports": [
+    {
+      "id": "futsal",
+      "name": "Futsal",
+      "icon": "fa-futbol",
+      "badge": "Vinyl & Interlock",
+      "image": "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&auto=format&fit=crop&q=80",
+      "description": "Lapangan futsal standar kompetisi dengan pilihan lantai Vinyl Import empuk atau Interlock licin presisi, jaring keliling tebal, dan pencahayaan LED 500 Lux anti silau.",
+      "courts": [
+        { "id": "FUT-01", "name": "Lapangan 1 (Vinyl Pro)", "type": "Vinyl Import 8mm", "price_regular": 120000, "price_peak": 180000 },
+        { "id": "FUT-02", "name": "Lapangan 2 (Interlock Court)", "type": "Interlock Matte BWF Grade", "price_regular": 100000, "price_peak": 150000 }
+      ]
+    },
+    {
+      "id": "badminton",
+      "name": "Badminton",
+      "icon": "fa-feather",
+      "badge": "Karpet Standar BWF",
+      "image": "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=800&auto=format&fit=crop&q=80",
+      "description": "4 Lapangan badminton beralas karpet vinyl motif kayu standar BWF, jarak antar lapangan lega, langit-langit tinggi bebas gangguan angin, dan lampu LED side-beam.",
+      "courts": [
+        { "id": "BDM-01", "name": "Court 1 (BWF Pro 1)", "type": "Karpet Vinyl BWF Green", "price_regular": 50000, "price_peak": 80000 },
+        { "id": "BDM-02", "name": "Court 2 (BWF Pro 2)", "type": "Karpet Vinyl BWF Green", "price_regular": 50000, "price_peak": 80000 },
+        { "id": "BDM-03", "name": "Court 3 (BWF Pro 3)", "type": "Karpet Vinyl BWF Green", "price_regular": 50000, "price_peak": 80000 },
+        { "id": "BDM-04", "name": "Court 4 (BWF Pro 4)", "type": "Karpet Vinyl BWF Green", "price_regular": 50000, "price_peak": 80000 }
+      ]
+    },
+    {
+      "id": "padel",
+      "name": "Padel Tennis",
+      "icon": "fa-table-tennis-paddle-ball",
+      "badge": "Panoramic Glass Court",
+      "image": "https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=800&auto=format&fit=crop&q=80",
+      "description": "Olahraga raket paling tren saat ini! Lapangan Padel dengan dinding tempered glass panorama 12mm, rumput sintetis monofilamen padat, dan pantulan bola sempurna.",
+      "courts": [
+        { "id": "PDL-01", "name": "Padel Arena 1 (Panoramic)", "type": "Tempered Glass Panoramic", "price_regular": 200000, "price_peak": 320000 },
+        { "id": "PDL-02", "name": "Padel Arena 2 (Outdoor Breeze)", "type": "Tempered Glass Semi-Outdoor", "price_regular": 180000, "price_peak": 280000 }
+      ]
+    },
+    {
+      "id": "minisoccer",
+      "name": "Mini Soccer",
+      "icon": "fa-futbol",
+      "badge": "Rumput FIFA 7v7",
+      "image": "https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=800&auto=format&fit=crop&q=80",
+      "description": "Lapangan Mini Soccer 7v7 outdoor berukuran 55x35 meter dengan rumput sintetis bersertifikasi FIFA, sistem drainase anti banjir, dan tribun penonton nyaman.",
+      "courts": [
+        { "id": "MNS-01", "name": "Mini Soccer Field A (7v7 FIFA)", "type": "FIFA Grade Monofilament 50mm", "price_regular": 350000, "price_peak": 550000 },
+        { "id": "MNS-02", "name": "Mini Soccer Field B (7v7 Pro)", "type": "Synthetic Turf Premium", "price_regular": 320000, "price_peak": 500000 }
+      ]
+    },
+    {
+      "id": "volly",
+      "name": "Bola Voli",
+      "icon": "fa-volleyball",
+      "badge": "Interlock Anti-Slip",
+      "image": "https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?w=800&auto=format&fit=crop&q=80",
+      "description": "Lapangan voli indoor serbaguna dengan lantai interlock anti slip bersertifikasi FIVB, tiang net hidrolik presisi, dan garis batas standar turnamen.",
+      "courts": [
+        { "id": "VOL-01", "name": "Volley Court Utama (Indoor)", "type": "Interlock Anti-Slip FIVB", "price_regular": 90000, "price_peak": 140000 }
+      ]
+    }
+  ],
+  "time_slots": [
+    { "time": "06:00 - 07:00", "is_peak": false, "label": "Pagi Non-Peak" },
+    { "time": "07:00 - 08:00", "is_peak": false, "label": "Pagi Non-Peak" },
+    { "time": "08:00 - 09:00", "is_peak": false, "label": "Pagi Non-Peak" },
+    { "time": "09:00 - 10:00", "is_peak": false, "label": "Pagi Non-Peak" },
+    { "time": "10:00 - 11:00", "is_peak": false, "label": "Siang Non-Peak" },
+    { "time": "11:00 - 12:00", "is_peak": false, "label": "Siang Non-Peak" },
+    { "time": "13:00 - 14:00", "is_peak": false, "label": "Siang Non-Peak" },
+    { "time": "14:00 - 15:00", "is_peak": false, "label": "Sore Non-Peak" },
+    { "time": "15:00 - 16:00", "is_peak": false, "label": "Sore Non-Peak" },
+    { "time": "16:00 - 17:00", "is_peak": true, "label": "Sore Peak Hour" },
+    { "time": "17:00 - 18:00", "is_peak": true, "label": "Sore Peak Hour" },
+    { "time": "18:00 - 19:00", "is_peak": true, "label": "Malam Peak Hour" },
+    { "time": "19:00 - 20:00", "is_peak": true, "label": "Malam Prime Time" },
+    { "time": "20:00 - 21:00", "is_peak": true, "label": "Malam Prime Time" },
+    { "time": "21:00 - 22:00", "is_peak": true, "label": "Malam Prime Time" },
+    { "time": "22:00 - 23:00", "is_peak": true, "label": "Malam Peak Hour" },
+    { "time": "23:00 - 24:00", "is_peak": false, "label": "Late Night" }
+  ],
+  "memberships": [
+    {
+      "tier": "Silver Sporty",
+      "badge_color": "slate",
+      "price": 99000,
+      "period": "/bulan",
+      "discount_percent": 5,
+      "points_multiplier": "1x Poin",
+      "can_create_community": true,
+      "community_limit": "1 Komunitas",
+      "perks": [
+        "Diskon 5% sewa semua jenis lapangan",
+        "Akses join komunitas & mabar terbuka",
+        "Dapat membuat 1 Komunitas Olahraga sendiri",
+        "Poin reward di setiap jam booking"
+      ]
+    },
+    {
+      "tier": "Gold Athlete",
+      "badge_color": "amber",
+      "popular": true,
+      "price": 199000,
+      "period": "/bulan",
+      "discount_percent": 12,
+      "points_multiplier": "2x Poin",
+      "can_create_community": true,
+      "community_limit": "3 Komunitas",
+      "perks": [
+        "Diskon 12% sewa semua jenis lapangan",
+        "Prioritas booking slot prime time (19:00-22:00)",
+        "Bisa membuat hingga 3 Komunitas / Klub",
+        "Fitur Open Sparring & Tantang Komunitas Lawan",
+        "Gratis 1 set rompi tim per sesi booking",
+        "Poin reward 2x lipat (bisa ditukar jam main)"
+      ]
+    },
+    {
+      "tier": "Diamond VIP Club",
+      "badge_color": "emerald",
+      "price": 349000,
+      "period": "/bulan",
+      "discount_percent": 20,
+      "points_multiplier": "3x Poin VIP",
+      "can_create_community": true,
+      "community_limit": "Unlimited",
+      "perks": [
+        "Diskon 20% sewa semua jenis lapangan",
+        "Booking slot hingga 30 hari ke depan (Advance)",
+        "Bebas bikin UNLIMITED Komunitas & Turnamen",
+        "Gratis sewa raket Padel/Badminton + Rompi + Bola",
+        "Akses VIP Lounge, Locker khusus, & Shower Air Panas",
+        "Gratis 1 dus air mineral setiap sesi main"
+      ]
+    }
+  ],
+  "addons": [
+    { "id": "wasit", "name": "Wasit Berlisensi (1 Jam)", "price": 50000, "icon": "fa-whistle" },
+    { "id": "rompi", "name": "1 Set Rompi Tim (2 Warna)", "price": 25000, "icon": "fa-shirt" },
+    { "id": "raket_padel", "name": "Sewa 2 Raket Padel + Bola", "price": 40000, "icon": "fa-table-tennis-paddle-ball" },
+    { "id": "shuttlecock", "name": "1 Slop Shuttlecock BWF", "price": 85000, "icon": "fa-feather" },
+    { "id": "air_dus", "name": "1 Dus Air Mineral 330ml", "price": 35000, "icon": "fa-bottle-water" }
+  ],
+  "initial_communities": [
+    {
+      "id": "COM-01",
+      "name": "Garuda Futsal Squad",
+      "sport": "futsal",
+      "sport_name": "Futsal",
+      "icon": "fa-futbol",
+      "badge": "Semi-Pro",
+      "creator_name": "Andi Pratama (Gold Member)",
+      "members_count": 36,
+      "schedule": "Setiap Rabu & Sabtu (20:00 WIB)",
+      "homebase": "Lapangan 1 Vinyl Pro",
+      "description": "Komunitas fun futsal & sparring mingguan. Terbuka untuk all level yang suka passing cepat dan cari keringat sehat.",
+      "level": "Intermediate / All Level"
+    },
+    {
+      "id": "COM-02",
+      "name": "Smash Master Badminton Club",
+      "sport": "badminton",
+      "sport_name": "Badminton",
+      "icon": "fa-feather",
+      "badge": "Active",
+      "creator_name": "Reza Rahardian (Diamond VIP)",
+      "members_count": 42,
+      "schedule": "Setiap Selasa & Jumat (19:00 WIB)",
+      "homebase": "Court 1 & 2 BWF Pro",
+      "description": "Mabar badminton ganda putra/campuran rutin. Sistem rally point, sharing shuttlecock, & sparing antar klub.",
+      "level": "Intermediate - Advanced"
+    },
+    {
+      "id": "COM-03",
+      "name": "Padel Smash Society",
+      "sport": "padel",
+      "sport_name": "Padel Tennis",
+      "icon": "fa-table-tennis-paddle-ball",
+      "badge": "Trending",
+      "creator_name": "Budi Hartono (Gold Member)",
+      "members_count": 24,
+      "schedule": "Setiap Sabtu & Minggu (08:00 WIB)",
+      "homebase": "Padel Arena 1 (Panoramic)",
+      "description": "Komunitas padel tennis pertama di kota ini! Cocok buat yang baru belajar (coaching santai) atau rally santai pagi.",
+      "level": "Beginner to Intermediate"
+    },
+    {
+      "id": "COM-04",
+      "name": "Urban Minisoccer 7v7",
+      "sport": "minisoccer",
+      "sport_name": "Mini Soccer",
+      "icon": "fa-futbol",
+      "badge": "Liga Komunitas",
+      "creator_name": "Fajar Sidik (Diamond VIP)",
+      "members_count": 55,
+      "schedule": "Setiap Kamis & Minggu (19:00 WIB)",
+      "homebase": "Field A 7v7 FIFA",
+      "description": "Fun football 7v7 malam hari. Ada jersey tim, wasit berlisensi, dan dokumentasi foto/video highlight tiap main.",
+      "level": "All Level Fun"
+    },
+    {
+      "id": "COM-05",
+      "name": "Voli Nusantara Spike",
+      "sport": "volly",
+      "sport_name": "Bola Voli",
+      "icon": "fa-volleyball",
+      "badge": "Family",
+      "creator_name": "Dimas Anggara (Silver Member)",
+      "members_count": 28,
+      "schedule": "Setiap Minggu (16:00 WIB)",
+      "homebase": "Volley Court Utama",
+      "description": "Mabar voli santai antar pekerja kantoran & mahasiswa. Fokus fun match, silaturahmi, dan stamina prima.",
+      "level": "All Level"
+    }
+  ],
+  "initial_mabar_open": [
+    {
+      "id": "MBR-01",
+      "title": "Mabar Padel Ganda Sore (Kurang 2 Orang)",
+      "sport": "padel",
+      "sport_name": "Padel Tennis",
+      "community_name": "Padel Smash Society",
+      "court_name": "Padel Arena 1",
+      "date": "Besok",
+      "time": "17:00 - 19:00 WIB",
+      "slots_needed": 2,
+      "cost_per_person": "Rp 65.000 / orang",
+      "host": "Budi Hartono"
+    },
+    {
+      "id": "MBR-02",
+      "title": "Sparring Futsal Fun Match 5v5 (Cari 1 Tim Lawan)",
+      "sport": "futsal",
+      "sport_name": "Futsal",
+      "community_name": "Garuda Futsal Squad",
+      "court_name": "Lapangan 1 Vinyl Pro",
+      "date": "Malam Ini",
+      "time": "20:00 - 22:00 WIB",
+      "slots_needed": "1 Tim (5-8 Orang)",
+      "cost_per_person": "Patungan Rp 120.000/tim",
+      "host": "Andi Pratama"
+    },
+    {
+      "id": "MBR-03",
+      "title": "Mabar Badminton Ganda Campuran (Kurang 1 Orang)",
+      "sport": "badminton",
+      "sport_name": "Badminton",
+      "community_name": "Smash Master Badminton",
+      "court_name": "Court 2 BWF Pro",
+      "date": "Jumat Ini",
+      "time": "19:00 - 21:00 WIB",
+      "slots_needed": 1,
+      "cost_per_person": "Rp 25.000 (inc shuttlecock)",
+      "host": "Reza Rahardian"
+    }
+  ]
+}

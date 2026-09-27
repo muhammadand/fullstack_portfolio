@@ -51,5 +51,15 @@ class BusinessCategorySeeder extends Seeder
                 'domain_price' => 1200000,
             ]
         );
+
+        \App\Models\BusinessCategory::updateOrCreate(
+            ['slug' => 'sport'],
+            [
+                'name' => 'Sports Arena & Venue Booking',
+                'wa_template' => 'Halo tim Scalify, saya pengelola gelanggang/lapangan olahraga dan tertarik untuk konsultasi pembuatan sistem website booking lapangan, membership, dan modul komunitas mabar.',
+                'project_price' => 5000000,
+                'domain_price' => 1200000,
+            ]
+        );
     }
 }
