@@ -327,6 +327,7 @@ Route::get('/landing/{slug}', [ClientProposalController::class, 'landing'])->nam
 Route::get('/proposal/{slug}', [ClientProposalController::class, 'proposal'])->name('proposal.dynamic');
 Route::get('/client/cafe/{slug}/landing', [ClientProposalController::class, 'landingCafe'])->name('landing.cafe');
 Route::get('/client/cafe/{slug}/proposal', [ClientProposalController::class, 'proposalCafe'])->name('proposal.cafe');
+Route::get('/client/cafe/{slug}/demo', [ClientProposalController::class, 'customerDemoCafe'])->name('demo.customer.cafe');
 Route::get('/client/travel/{slug}/landing', [ClientProposalController::class, 'landingTravel'])->name('landing.travel');
 Route::get('/client/travel/{slug}/proposal', [ClientProposalController::class, 'proposalTravel'])->name('proposal.travel');
 Route::get('/client/travel/{slug}/demo', [ClientProposalController::class, 'customerDemoTravel'])->name('demo.customer.travel');

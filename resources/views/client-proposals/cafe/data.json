@@ -1,0 +1,313 @@
+{
+  "brand": {
+    "name": "Artisan Coffee & Roastery",
+    "tagline": "Specialty Coffee, Self-Order Meja & Modern POS System",
+    "description": "Menyajikan seduhan biji kopi pilihan terbaik dari petani nusantara dengan standar artisan. Dilengkapi sistem pemesanan modern mandiri (Self-Order Meja via QRIS), membership loyalty, dan POS kasir terintegrasi.",
+    "phone": "6281234567890",
+    "address": "Jl. Senopati No. 42, Kebayoran Baru, Jakarta Selatan",
+    "operating_hours": "07:00 - 23:00 WIB (Setiap Hari)",
+    "qris_nmid": "ID2026889210041",
+    "tax_percent": 10
+  },
+  "categories": [
+    {
+      "id": "all",
+      "name": "Semua Menu",
+      "icon": "fa-th-large",
+      "badge": "Pilihan Lengkap"
+    },
+    {
+      "id": "signature",
+      "name": "Signature Kopi",
+      "icon": "fa-mug-hot",
+      "badge": "House Blend"
+    },
+    {
+      "id": "manual-brew",
+      "name": "Manual Brew",
+      "icon": "fa-filter",
+      "badge": "Single Origin"
+    },
+    {
+      "id": "non-coffee",
+      "name": "Non-Coffee",
+      "icon": "fa-blender",
+      "badge": "Artisanal"
+    },
+    {
+      "id": "pastry",
+      "name": "Pastry & Bakery",
+      "icon": "fa-bread-slice",
+      "badge": "Fresh Oven"
+    },
+    {
+      "id": "main-bites",
+      "name": "Bites & Comfort Food",
+      "icon": "fa-utensils",
+      "badge": "Hearty Meal"
+    }
+  ],
+  "menu": [
+    {
+      "id": "CF-01",
+      "category": "signature",
+      "name": "Caramel Macchiato Reserve",
+      "price": 38000,
+      "badge": "Best Seller",
+      "rating": 4.9,
+      "description": "Double shot espresso blend artisan dengan sirup salted caramel buatan sendiri dan steamed velvet milk.",
+      "image": "https://images.unsplash.com/photo-1485808191679-5f86510681a2?auto=format&fit=crop&q=80&w=600"
+    },
+    {
+      "id": "CF-02",
+      "category": "signature",
+      "name": "Aren Brown Velvet Latte",
+      "price": 32000,
+      "badge": "Favorit Pelanggan",
+      "rating": 4.9,
+      "description": "Kopi susu gula aren organik khas dengan aroma butterscotch dan foam susu lembut melimpah.",
+      "image": "https://images.unsplash.com/photo-1541167760496-1628856ab772?auto=format&fit=crop&q=80&w=600"
+    },
+    {
+      "id": "CF-03",
+      "category": "signature",
+      "name": "Spanish Cortado Truffle",
+      "price": 36000,
+      "badge": "Barista Pick",
+      "rating": 4.8,
+      "description": "Rasio seimbang 1:1 espresso pekat dan susu condensed beraroma hint vanila hazelnut.",
+      "image": "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&q=80&w=600"
+    },
+    {
+      "id": "CF-04",
+      "category": "manual-brew",
+      "name": "Ethiopia Yirgacheffe V60",
+      "price": 42000,
+      "badge": "Single Origin",
+      "rating": 5.0,
+      "description": "Light roast notes of jasmine, bergamot, peach sweetness, dan silky clean lingering finish.",
+      "image": "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&q=80&w=600"
+    },
+    {
+      "id": "CF-05",
+      "category": "manual-brew",
+      "name": "Gayo Wine Fermented V60",
+      "price": 40000,
+      "badge": "Specialty Ferment",
+      "rating": 4.8,
+      "description": "Biji kopi Aceh Gayo dengan fermentasi anaerobik rasa anggur manis matang, dark cocoa & plum.",
+      "image": "https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&q=80&w=600"
+    },
+    {
+      "id": "CF-06",
+      "category": "non-coffee",
+      "name": "Uji Matcha Ceremonial Latte",
+      "price": 37000,
+      "badge": "Best Seller",
+      "rating": 4.9,
+      "description": "Matcha murni grade ceremonial langsung dari Kyoto dipadu fresh milk creamy dengan hint vanilla.",
+      "image": "https://images.unsplash.com/photo-1536256263959-770b48d82b0a?auto=format&fit=crop&q=80&w=600"
+    },
+    {
+      "id": "CF-07",
+      "category": "non-coffee",
+      "name": "Artisan Yuzu Berry Blossom",
+      "price": 34000,
+      "badge": "Refreshing Soda",
+      "rating": 4.7,
+      "description": "Sparkling soda infuse sari yuzu Jepang, strawberry puree dan remasan mint segar penyejuk hari.",
+      "image": "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&q=80&w=600"
+    },
+    {
+      "id": "CF-08",
+      "category": "pastry",
+      "name": "French Butter Croissant",
+      "price": 28000,
+      "badge": "Freshly Baked",
+      "rating": 4.9,
+      "description": "Flaky, airy, golden-brown crust dibuat dengan 100% butter Prancis impor Elle & Vire.",
+      "image": "https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&q=80&w=600"
+    },
+    {
+      "id": "CF-09",
+      "category": "pastry",
+      "name": "Almond Cream Danish",
+      "price": 33000,
+      "badge": "Chef Choice",
+      "rating": 4.8,
+      "description": "Pastry renyah berlapis dengan isian krim almond frangipane manis gurih dan roasted sliced almond.",
+      "image": "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&q=80&w=600"
+    },
+    {
+      "id": "CF-10",
+      "category": "main-bites",
+      "name": "Truffle Fries with Garlic Aioli",
+      "price": 35000,
+      "badge": "Sharing Platter",
+      "rating": 4.9,
+      "description": "Kentang goreng garing keemasan dengan siraman white truffle oil aromatik dan keju parmesan parut.",
+      "image": "https://images.unsplash.com/photo-1576107232684-1279f3908594?auto=format&fit=crop&q=80&w=600"
+    },
+    {
+      "id": "CF-11",
+      "category": "main-bites",
+      "name": "Smoked Beef & Melted Cheese Croissant",
+      "price": 45000,
+      "badge": "Signature Sandwich",
+      "rating": 4.9,
+      "description": "Butter croissant isi smoked beef brisket gurih, cheddar meleleh, daun arugula segar dan honey mustard.",
+      "image": "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&q=80&w=600"
+    },
+    {
+      "id": "CF-12",
+      "category": "main-bites",
+      "name": "Spaghetti Aglio Olio Smoked Tuna",
+      "price": 48000,
+      "badge": "Comfort Food",
+      "rating": 4.8,
+      "description": "Al dente pasta ditumis minyak zaitun extra virgin, bawang putih renyah, cabai kering, dan potongan tuna asap empuk.",
+      "image": "https://images.unsplash.com/photo-1621996346565-e3d5d6281691?auto=format&fit=crop&q=80&w=600"
+    }
+  ],
+  "membership_tiers": [
+    {
+      "id": "silver",
+      "name": "Silver Member",
+      "discount": "Diskon 5% Setiap Pembelian",
+      "min_spend": "Gratis Pendaftaran",
+      "icon": "fa-certificate",
+      "color": "from-slate-400 to-slate-200",
+      "perks": [
+        "Diskon 5% semua menu kopi & makanan",
+        "Poin 1 Poin per kelipatan Rp 1.000",
+        "Birthday Reward diskon 10%",
+        "Akses digital membership card di smartphone"
+      ]
+    },
+    {
+      "id": "gold",
+      "name": "Gold VIP Pass",
+      "discount": "Diskon 10% + Free Up-size",
+      "min_spend": "Akumulasi Rp 500.000",
+      "icon": "fa-crown",
+      "color": "from-amber-400 to-amber-200",
+      "is_popular": true,
+      "perks": [
+        "Diskon 10% setiap transaksi non-tunai / QRIS",
+        "Gratis 1x French Butter Croissant saat naik tier",
+        "Prioritas reservasi meja VIP & Event",
+        "Voucher promo mingguan eksklusif WhatsApp"
+      ]
+    },
+    {
+      "id": "platinum",
+      "name": "Platinum Roasters Club",
+      "discount": "Diskon 15% + Free Manual Brew",
+      "min_spend": "Akumulasi Rp 1.500.000",
+      "icon": "fa-gem",
+      "color": "from-amber-300 via-rose-300 to-purple-300",
+      "perks": [
+        "Diskon 15% flat untuk seluruh pesanan kafe",
+        "Gratis 1 Manual Brew Single Origin per bulan",
+        "Undangan khusus Private Cupping & Tasting Session",
+        "Dedicated VIP table booking tanpa minimum order"
+      ]
+    }
+  ],
+  "tables": [
+    {
+      "id": "01",
+      "name": "Meja 01",
+      "area": "Indoor Coffee Bar",
+      "seats": 2
+    },
+    {
+      "id": "02",
+      "name": "Meja 02",
+      "area": "Indoor Main Hall",
+      "seats": 4
+    },
+    {
+      "id": "04",
+      "name": "Meja 04",
+      "area": "Indoor Lounge Sofa",
+      "seats": 6
+    },
+    {
+      "id": "07",
+      "name": "Meja 07",
+      "area": "Window View Corner",
+      "seats": 2
+    },
+    {
+      "id": "11",
+      "name": "Meja 11",
+      "area": "Outdoor Garden",
+      "seats": 4
+    },
+    {
+      "id": "VIP-1",
+      "name": "VIP Room 1",
+      "area": "Private Meeting Area",
+      "seats": 8
+    }
+  ],
+  "how_it_works": [
+    {
+      "step": "01",
+      "title": "Scan QR Code di Meja",
+      "desc": "Duduk santai di meja favorit Anda, buka kamera smartphone dan scan barcode standee meja tanpa perlu install aplikasi apa pun.",
+      "icon": "fa-qrcode"
+    },
+    {
+      "step": "02",
+      "title": "Pilih Menu & Custom Rasa",
+      "desc": "Jelajahi menu digital berfoto lengkap, pilih tingkat kemanisan (less sugar), opsi susu oatmilk, atau catatan khusus lainnya.",
+      "icon": "fa-mug-hot"
+    },
+    {
+      "step": "03",
+      "title": "Bayar Instan via QRIS",
+      "desc": "QRIS dinamis langsung tergenerate di layar HP. Cukup scan dengan GoPay, OVO, Dana, BCA, Mandiri, atau m-banking apa saja.",
+      "icon": "fa-mobile-screen-button"
+    },
+    {
+      "step": "04",
+      "title": "Pesanan Diantar ke Meja",
+      "desc": "Pesanan langsung masuk ke printer barista / dapur. Anda cukup duduk santai, pesanan hangat akan diantar ke meja Anda.",
+      "icon": "fa-bell-concierge"
+    }
+  ],
+  "facilities": [
+    {
+      "title": "High-Speed WiFi Up to 150 Mbps",
+      "desc": "Koneksi internet fiber optik stabil dan kencang untuk kerja, meeting daring, streaming, atau skripsi.",
+      "icon": "fa-wifi"
+    },
+    {
+      "title": "Stopkontak di Setiap Meja",
+      "desc": "Tersedia colokan listrik di setiap sudut meja indoor maupun sofa, bebas rasa khawatir kehabisan baterai laptop & HP.",
+      "icon": "fa-plug"
+    },
+    {
+      "title": "Artisan Roastery & Ambiance",
+      "desc": "Aroma biji kopi segar yang disangrai sendiri dipadu alunan musik akustik jazz yang menenangkan.",
+      "icon": "fa-music"
+    },
+    {
+      "title": "Outdoor Garden & Smoking Area",
+      "desc": "Area terbuka yang asri dengan tanaman hijau tropis dan sirkulasi udara alami yang segar.",
+      "icon": "fa-tree"
+    },
+    {
+      "title": "Sistem Kasir & POS Terintegrasi",
+      "desc": "Operasional kafe otomatis, laporan penjualan real-time, pencatatan stok, dan sistem membership modern.",
+      "icon": "fa-cash-register"
+    },
+    {
+      "title": "Area Parkir Luas & Aman",
+      "desc": "Lahan parkir mobil dan motor yang luas dengan pengawasan security & CCTV 24 jam.",
+      "icon": "fa-square-parking"
+    }
+  ]
+}

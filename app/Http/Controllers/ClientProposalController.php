@@ -46,6 +46,12 @@ class ClientProposalController extends Controller
         return view('client-proposals.cafe.proposal', compact('client'));
     }
 
+    public function customerDemoCafe($slug)
+    {
+        $client = ClientProposal::where('slug', $slug)->firstOrFail();
+        return view('client-proposals.cafe.customer-demo', compact('client'));
+    }
+
     public function adminDemoRental($slug)
     {
         $client = ClientProposal::where('slug', $slug)->firstOrFail();

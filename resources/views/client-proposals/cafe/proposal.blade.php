@@ -139,19 +139,24 @@
                 Proposal ini ditujukan untuk membangun ekosistem digital <strong>{{ $client->brand_name }}</strong>. Website akan dirancang dengan menonjolkan visual makanan & minuman, suasana interior (ambiance), dan integrasi kemudahan akses lokasi serta kontak.
             </p>
 
-            <div class="mt-6 bg-brand-cream/40 border border-brand-caramel/30 rounded-xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div class="mt-6 bg-brand-cream/60 border border-brand-caramel/40 rounded-xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm">
                 <div>
                     <h3 class="font-bold text-brand-coffee text-sm mb-1 flex items-center gap-2">
-                        <i class="fas fa-desktop text-brand-caramel"></i> Preview Draft Landing Page
+                        <i class="fas fa-cash-register text-brand-caramel"></i> Live Demo: POS Kasir, Scan Meja QRIS & Membership
                     </h3>
-                    <p class="text-[13px] text-gray-700">Kami telah menyusun kerangka desain (mockup) khusus untuk {{ $client->brand_name }}. Anda dapat melihatnya pada tautan di bawah ini.</p>
+                    <p class="text-[13px] text-gray-700">Kami telah menyiapkan prototipe interaktif untuk {{ $client->brand_name }} lengkap dengan simulasi Self-Order Meja di Smartphone, QRIS Dinamis, dan Kartu Loyalty Member.</p>
                     <div class="hidden print:block text-[13px] font-medium text-blue-600 break-all mt-2 underline">
                         {{ route("landing.dynamic", $client->slug) }}
                     </div>
                 </div>
-                <a href="{{ route("landing.dynamic", $client->slug) }}" target="_blank" class="shrink-0 bg-brand-coffee hover:bg-brand-dark text-brand-cream px-5 py-2.5 rounded-full text-[13px] font-medium transition inline-flex items-center justify-center gap-2 no-print shadow-md">
-                    Lihat Demo Web <i class="fas fa-external-link-alt text-[10px]"></i>
-                </a>
+                <div class="flex items-center gap-2 no-print shrink-0">
+                    <a href="{{ route('landing.dynamic', $client->slug) }}" target="_blank" class="bg-brand-coffee hover:bg-brand-dark text-brand-cream px-4 py-2 rounded-full text-xs font-bold transition inline-flex items-center gap-1.5 shadow-sm">
+                        Lihat Web <i class="fas fa-external-link-alt text-[9px]"></i>
+                    </a>
+                    <a href="{{ route('demo.customer.cafe', $client->slug) }}" target="_blank" class="bg-brand-dark hover:bg-black text-amber-300 border border-amber-500/40 px-4 py-2 rounded-full text-xs font-bold transition inline-flex items-center gap-1.5 shadow-sm">
+                        Demo App HP <i class="fas fa-mobile-alt text-[9px]"></i>
+                    </a>
+                </div>
             </div>
         </div>
 
