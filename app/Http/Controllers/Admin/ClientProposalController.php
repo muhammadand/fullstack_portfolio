@@ -266,6 +266,8 @@ class ClientProposalController extends Controller
     {
         $duplicates = \Illuminate\Support\Facades\DB::table('client_proposals')
             ->select('wa_number', \Illuminate\Support\Facades\DB::raw('count(*) as count'))
+            ->whereNotNull('wa_number')
+            ->where('wa_number', '!=', '')
             ->groupBy('wa_number')
             ->having('count', '>', 1)
             ->get();
@@ -275,21 +277,37 @@ class ClientProposalController extends Controller
 
     public function cleanDuplicates(Request $request)
     {
-        $duplicates = \Illuminate\Support\Facades\DB::table('client_proposals')
-            ->select('wa_number', \Illuminate\Support\Facades\DB::raw('MIN(id) as keep_id'))
-            ->groupBy('wa_number')
-            ->havingRaw('COUNT(*) > 1')
-            ->get();
-
         $deletedCount = 0;
-        foreach ($duplicates as $duplicate) {
-            $deleted = \Illuminate\Support\Facades\DB::table('client_proposals')
-                ->where('wa_number', $duplicate->wa_number)
-                ->where('id', '!=', $duplicate->keep_id)
-                ->delete();
-            $deletedCount += $deleted;
-        }
 
-        return redirect()->back()->with('success', "Berhasil membersihkan {$deletedCount} data duplikat.");
+        \Illuminate\Support\Facades\DB::transaction(function () use (&$deletedCount) {
+            $duplicateNumbers = \Illuminate\Support\Facades\DB::table('client_proposals')
+                ->select('wa_number')
+                ->whereNotNull('wa_number')
+                ->where('wa_number', '!=', '')
+                ->groupBy('wa_number')
+                ->havingRaw('COUNT(*) > 1')
+                ->pluck('wa_number');
+
+            foreach ($duplicateNumbers as $waNumber) {
+                // Pilih 1 data yang akan DISIMPAN (prioritaskan yang sudah diclaim affiliate, lalu ID paling lama)
+                $keepId = \Illuminate\Support\Facades\DB::table('client_proposals')
+                    ->where('wa_number', $waNumber)
+                    ->orderByRaw('CASE WHEN affiliate_id IS NOT NULL THEN 0 ELSE 1 END ASC')
+                    ->orderBy('id', 'asc')
+                    ->value('id');
+
+                if ($keepId) {
+                    // Hapus duplikat lainnya, sisakan 1 data dengan ID $keepId
+                    $deleted = \Illuminate\Support\Facades\DB::table('client_proposals')
+                        ->where('wa_number', $waNumber)
+                        ->where('id', '!=', $keepId)
+                        ->delete();
+
+                    $deletedCount += $deleted;
+                }
+            }
+        });
+
+        return redirect()->back()->with('success', "Berhasil membersihkan {$deletedCount} data duplikat. Setiap nomor kini tersisa 1 data unik.");
     }
 }

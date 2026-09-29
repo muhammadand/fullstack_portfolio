@@ -40,7 +40,7 @@
                         <i class="fa-solid fa-triangle-exclamation text-amber-400 text-lg mt-0.5"></i>
                         <div>
                             <h5 class="text-sm font-bold text-amber-400">Ditemukan <span x-text="duplicateData.length"></span> Nomor Duplikat</h5>
-                            <p class="text-xs text-amber-200/70 mt-1">Hanya 1 data (paling lama) yang dipertahankan untuk tiap nomor duplikat, sisanya akan dihapus.</p>
+                            <p class="text-xs text-amber-200/70 mt-1">Setiap nomor akan <strong>disisakan 1 data</strong> (tidak terhapus semua). Hanya data kembarannya yang akan dihapus.</p>
                         </div>
                     </div>
                 </div>
