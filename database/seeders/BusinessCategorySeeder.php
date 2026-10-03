@@ -61,5 +61,15 @@ class BusinessCategorySeeder extends Seeder
                 'domain_price' => 1200000,
             ]
         );
+
+        \App\Models\BusinessCategory::updateOrCreate(
+            ['slug' => 'klinik'],
+            [
+                'name' => 'Klinik & Rekam Medis',
+                'wa_template' => 'Halo tim Scalify, saya pengelola Klinik dan tertarik untuk konsultasi sistem informasi klinik (SIM Klinik), antrean, dan rekam medis digital.',
+                'project_price' => 5500000,
+                'domain_price' => 1200000,
+            ]
+        );
     }
 }

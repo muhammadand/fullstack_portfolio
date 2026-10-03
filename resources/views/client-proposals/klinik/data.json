@@ -1,0 +1,443 @@
+{
+  "klinik": {
+    "name": "Klinik Pratama Medika Sehat",
+    "subname": "Pusat Pelayanan Medis & Rekam Medis Terpadu",
+    "address": "Jl. Wijaya Kusuma No. 28, Jakarta Selatan",
+    "phone": "021-7992041",
+    "whatsapp": "6281234567890",
+    "operating_hours": "Senin - Sabtu: 07.30 - 21.00 WIB",
+    "emergency_status": "Poli Umum Buka"
+  },
+  "stats": {
+    "total_patients_today": 42,
+    "active_queue": 6,
+    "finished_examinations": 31,
+    "revenue_today": 4850000,
+    "low_stock_medicines": 3,
+    "pending_prescriptions": 4
+  },
+  "poli": [
+    { "id": "umum", "name": "Poli Umum", "code": "A", "room": "Ruang 101", "doctor": "dr. Hendra Kusuma, Sp.PD", "active_queue": "A-06", "waiting_count": 3 },
+    { "id": "gigi", "name": "Poli Gigi & Mulut", "code": "B", "room": "Ruang 102", "doctor": "drg. Ahmad Fauzi", "active_queue": "B-03", "waiting_count": 2 },
+    { "id": "anak", "name": "Poli Spesialis Anak", "code": "C", "room": "Ruang 103", "doctor": "dr. Siti Rahmawati, Sp.A", "active_queue": "C-02", "waiting_count": 1 },
+    { "id": "kebidanan", "name": "Poli Kebidanan & KIA", "code": "D", "room": "Ruang 104", "doctor": "dr. Maria Fransisca, Sp.OG", "active_queue": "D-02", "waiting_count": 1 },
+    { "id": "farmasi", "name": "Instalasi Farmasi", "code": "F", "room": "Loket Apotek", "doctor": "Apt. Nurul Hidayah, S.Farm", "active_queue": "F-08", "waiting_count": 4 }
+  ],
+  "doctors": [
+    {
+      "id": 1,
+      "name": "dr. Hendra Kusuma, Sp.PD",
+      "specialist": "Spesialis Penyakit Dalam / Umum",
+      "sip": "SIP: 446/102/IP.DOKTER/2023",
+      "room": "Ruang 101",
+      "schedule": "Senin - Jumat (08:00 - 14:00)",
+      "fee": 100000,
+      "status": "Praktek",
+      "avatar": "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=150&auto=format&fit=crop&q=80",
+      "patient_count_today": 16
+    },
+    {
+      "id": 2,
+      "name": "dr. Siti Rahmawati, Sp.A",
+      "specialist": "Spesialis Anak (Pediatri)",
+      "sip": "SIP: 446/188/IP.DOKTER/2022",
+      "room": "Ruang 103",
+      "schedule": "Senin - Kamis (13:00 - 18:00)",
+      "fee": 120000,
+      "status": "Praktek",
+      "avatar": "https://images.unsplash.com/photo-1594824813627-c5339f408fc0?w=150&auto=format&fit=crop&q=80",
+      "patient_count_today": 9
+    },
+    {
+      "id": 3,
+      "name": "drg. Ahmad Fauzi",
+      "specialist": "Dokter Gigi & Mulut",
+      "sip": "SIP: 446/092/IP.GIGI/2021",
+      "room": "Ruang 102",
+      "schedule": "Selasa - Sabtu (09:00 - 15:00)",
+      "fee": 90000,
+      "status": "Praktek",
+      "avatar": "https://images.unsplash.com/photo-1537368910025-700350fe46c7?w=150&auto=format&fit=crop&q=80",
+      "patient_count_today": 8
+    },
+    {
+      "id": 4,
+      "name": "dr. Maria Fransisca, Sp.OG",
+      "specialist": "Spesialis Kebidanan & Kandungan",
+      "sip": "SIP: 446/215/IP.OBGYN/2023",
+      "room": "Ruang 104",
+      "schedule": "Rabu & Jumat (15:00 - 20:00)",
+      "fee": 130000,
+      "status": "Jadwal Sore",
+      "avatar": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=150&auto=format&fit=crop&q=80",
+      "patient_count_today": 5
+    }
+  ],
+  "patients": [
+    {
+      "id": 1,
+      "no_rm": "RM-2026-0182",
+      "nama": "Ananda Bagus Pratama",
+      "nik": "3174051208940003",
+      "tgl_lahir": "1994-08-12",
+      "umur": "31 Th",
+      "gender": "Laki-laki",
+      "gol_darah": "O+",
+      "no_hp": "081298451234",
+      "alamat": "Jl. Tebet Timur Dalam VI No. 12, Jaksel",
+      "pekerjaan": "Karyawan Swasta",
+      "penjamin": "BPJS Kesehatan",
+      "alergi": "Amoxicillin (Gatal ruam)",
+      "kontak_darurat": "Dewi Saraswati (Istri) - 081298459999",
+      "total_kunjungan": 5,
+      "terakhir_periksa": "2026-10-02"
+    },
+    {
+      "id": 2,
+      "no_rm": "RM-2026-0183",
+      "nama": "Siti Nurhaliza Putri",
+      "nik": "3174094503010002",
+      "tgl_lahir": "2001-03-05",
+      "umur": "25 Th",
+      "gender": "Perempuan",
+      "gol_darah": "B+",
+      "no_hp": "085712345678",
+      "alamat": "Jl. Radio Dalam No. 88, Kebayoran Baru",
+      "pekerjaan": "Mahasiswi",
+      "penjamin": "Umum / Mandiri",
+      "alergi": "Tidak Ada",
+      "kontak_darurat": "Bambang Sudibyo (Ayah) - 081288884433",
+      "total_kunjungan": 3,
+      "terakhir_periksa": "2026-10-03"
+    },
+    {
+      "id": 3,
+      "no_rm": "RM-2026-0184",
+      "nama": "Muhammad Rizky Fauzan",
+      "nik": "3171021907880005",
+      "tgl_lahir": "1988-07-19",
+      "umur": "38 Th",
+      "gender": "Laki-laki",
+      "gol_darah": "A+",
+      "no_hp": "081377889900",
+      "alamat": "Jl. Pancoran Barat IX No. 4, Jaksel",
+      "pekerjaan": "Wirausaha",
+      "penjamin": "Asuransi Mandiri Inhealth",
+      "alergi": "Sulfonamida",
+      "kontak_darurat": "Rina Marlina (Istri) - 081377889911",
+      "total_kunjungan": 8,
+      "terakhir_periksa": "2026-10-03"
+    },
+    {
+      "id": 4,
+      "no_rm": "RM-2026-0185",
+      "nama": "Alika Zahra Ramadhani",
+      "nik": "3174086609190001",
+      "tgl_lahir": "2019-09-26",
+      "umur": "6 Th",
+      "gender": "Perempuan",
+      "gol_darah": "AB+",
+      "no_hp": "081900112233",
+      "alamat": "Jl. Cilandak Tengah No. 15",
+      "pekerjaan": "Pelajar",
+      "penjamin": "BPJS Kesehatan",
+      "alergi": "Tidak Ada",
+      "kontak_darurat": "Hj. Ratna (Ibu) - 081900112233",
+      "total_kunjungan": 4,
+      "terakhir_periksa": "2026-09-28"
+    }
+  ],
+  "queues": [
+    {
+      "id": 1,
+      "nomor": "A-04",
+      "pasien_id": 1,
+      "pasien_nama": "Ananda Bagus Pratama",
+      "no_rm": "RM-2026-0182",
+      "poli": "Poli Umum",
+      "poli_code": "A",
+      "dokter": "dr. Hendra Kusuma, Sp.PD",
+      "status": "Sedang Diperiksa",
+      "waktu_ambil": "08:45 WIB",
+      "waktu_panggil": "09:12 WIB",
+      "penjamin": "BPJS Kesehatan"
+    },
+    {
+      "id": 2,
+      "nomor": "A-05",
+      "pasien_id": 3,
+      "pasien_nama": "Muhammad Rizky Fauzan",
+      "no_rm": "RM-2026-0184",
+      "poli": "Poli Umum",
+      "poli_code": "A",
+      "dokter": "dr. Hendra Kusuma, Sp.PD",
+      "status": "Menunggu",
+      "waktu_ambil": "09:05 WIB",
+      "waktu_panggil": "-",
+      "penjamin": "Asuransi Inhealth"
+    },
+    {
+      "id": 3,
+      "nomor": "B-02",
+      "pasien_id": 2,
+      "pasien_nama": "Siti Nurhaliza Putri",
+      "no_rm": "RM-2026-0183",
+      "poli": "Poli Gigi & Mulut",
+      "poli_code": "B",
+      "dokter": "drg. Ahmad Fauzi",
+      "status": "Dipanggil",
+      "waktu_ambil": "09:15 WIB",
+      "waktu_panggil": "09:30 WIB",
+      "penjamin": "Umum / Mandiri"
+    },
+    {
+      "id": 4,
+      "nomor": "C-02",
+      "pasien_id": 4,
+      "pasien_nama": "Alika Zahra Ramadhani",
+      "no_rm": "RM-2026-0185",
+      "poli": "Poli Spesialis Anak",
+      "poli_code": "C",
+      "dokter": "dr. Siti Rahmawati, Sp.A",
+      "status": "Menunggu",
+      "waktu_ambil": "09:20 WIB",
+      "waktu_panggil": "-",
+      "penjamin": "BPJS Kesehatan"
+    },
+    {
+      "id": 5,
+      "nomor": "F-05",
+      "pasien_id": 1,
+      "pasien_nama": "Budi Hermanto",
+      "no_rm": "RM-2026-0160",
+      "poli": "Instalasi Farmasi",
+      "poli_code": "F",
+      "dokter": "Apt. Nurul Hidayah",
+      "status": "Diracik",
+      "waktu_ambil": "09:25 WIB",
+      "waktu_panggil": "-",
+      "penjamin": "Umum"
+    }
+  ],
+  "appointments": [
+    {
+      "id": 1,
+      "pasien_id": 2,
+      "pasien_nama": "Siti Nurhaliza Putri",
+      "no_rm": "RM-2026-0183",
+      "no_hp": "085712345678",
+      "dokter": "drg. Ahmad Fauzi",
+      "poli": "Poli Gigi & Mulut",
+      "tanggal": "2026-10-03",
+      "sesi": "Sesi Pagi (09:30 - 10:00)",
+      "keluhan": "Pembersihan karang gigi & konsultasi tambal",
+      "status": "Terkonfirmasi",
+      "reminder_sent": true
+    },
+    {
+      "id": 2,
+      "pasien_id": 3,
+      "pasien_nama": "Muhammad Rizky Fauzan",
+      "no_rm": "RM-2026-0184",
+      "no_hp": "081377889900",
+      "dokter": "dr. Hendra Kusuma, Sp.PD",
+      "poli": "Poli Umum",
+      "tanggal": "2026-10-03",
+      "sesi": "Sesi Siang (10:15 - 10:45)",
+      "keluhan": "Pusing berputar dan tenggorokan sakit sejak 2 hari",
+      "status": "Terkonfirmasi",
+      "reminder_sent": true
+    },
+    {
+      "id": 3,
+      "pasien_id": 4,
+      "pasien_nama": "Alika Zahra Ramadhani",
+      "no_rm": "RM-2026-0185",
+      "no_hp": "081900112233",
+      "dokter": "dr. Siti Rahmawati, Sp.A",
+      "poli": "Poli Spesialis Anak",
+      "tanggal": "2026-10-04",
+      "sesi": "Sesi Sore (14:00 - 14:30)",
+      "keluhan": "Imunisasi lanjutan & cek tumbuh kembang",
+      "status": "Terjadwal",
+      "reminder_sent": false
+    },
+    {
+      "id": 4,
+      "pasien_id": 1,
+      "pasien_nama": "Ananda Bagus Pratama",
+      "no_rm": "RM-2026-0182",
+      "no_hp": "081298451234",
+      "dokter": "dr. Hendra Kusuma, Sp.PD",
+      "poli": "Poli Umum",
+      "tanggal": "2026-10-01",
+      "sesi": "Sesi Pagi",
+      "keluhan": "Kontrol tekanan darah rutin",
+      "status": "Selesai",
+      "reminder_sent": true
+    }
+  ],
+  "medical_records": [
+    {
+      "id": 1,
+      "no_rm": "RM-2026-0182",
+      "pasien_nama": "Ananda Bagus Pratama",
+      "tanggal": "2026-10-02 09:30",
+      "dokter": "dr. Hendra Kusuma, Sp.PD",
+      "poli": "Poli Umum",
+      "keluhan_utama": "Batuk kering berdahak sedikit, tenggorokan perih, demam sumeng-sumeng sejak 2 hari.",
+      "ttv": {
+        "tekanan_darah": "125/80 mmHg",
+        "suhu": "37.8 °C",
+        "nadi": "84 bpm",
+        "pernapasan": "19 x/mnt",
+        "berat_badan": "68 kg",
+        "tinggi_badan": "172 cm",
+        "spo2": "99 %"
+      },
+      "pemeriksaan_fisik": "Faring hiperemis (+), tonsil T1/T1 tidak membesar, rhonki (-/-), wheezing (-/-).",
+      "diagnosis": {
+        "kode_icd10": "J06.9",
+        "nama": "Acute Upper Respiratory Infection (ISPA)"
+      },
+      "tindakan": [
+        { "nama": "Pemeriksaan Dokter Umum", "biaya": 80000 },
+        { "nama": "Nebulizer Bronkodilator", "biaya": 65000 }
+      ],
+      "catatan_dokter": "Banyak minum air hangat, istirahat cukup 3 hari. Hindari gorengan dan es. Kontrol jika demam > 3 hari.",
+      "status_periksa": "Selesai"
+    },
+    {
+      "id": 2,
+      "no_rm": "RM-2026-0183",
+      "pasien_nama": "Siti Nurhaliza Putri",
+      "tanggal": "2026-10-03 09:40",
+      "dokter": "drg. Ahmad Fauzi",
+      "poli": "Poli Gigi & Mulut",
+      "keluhan_utama": "Gigi geraham kanan bawah ngilu saat minum dingin dan terselip makanan.",
+      "ttv": {
+        "tekanan_darah": "110/70 mmHg",
+        "suhu": "36.6 °C",
+        "nadi": "78 bpm",
+        "pernapasan": "18 x/mnt",
+        "berat_badan": "52 kg",
+        "tinggi_badan": "160 cm",
+        "spo2": "99 %"
+      },
+      "pemeriksaan_fisik": "Karies dentis profunda pada regio 46, perkusi (-), palpasi (-).",
+      "diagnosis": {
+        "kode_icd10": "K02.1",
+        "nama": "Caries of Dentine (Pulpitis Reversibel)"
+      },
+      "tindakan": [
+        { "nama": "Konsultasi Dokter Gigi", "biaya": 90000 },
+        { "nama": "Tumpatan Sementara Cavit + Eugenol", "biaya": 150000 },
+        { "nama": "Scaling Gigi Ringan", "biaya": 180000 }
+      ],
+      "catatan_dokter": "Penambalan sementara dilakukan. Pasien dijadwalkan tambal permanen komposit 1 minggu lagi.",
+      "status_periksa": "Selesai"
+    }
+  ],
+  "prescriptions": [
+    {
+      "id": 1,
+      "no_resep": "RXP-2026-0091",
+      "tanggal": "2026-10-02 09:45",
+      "no_rm": "RM-2026-0182",
+      "pasien_nama": "Ananda Bagus Pratama",
+      "dokter": "dr. Hendra Kusuma, Sp.PD",
+      "items": [
+        { "obat_id": 1, "nama": "Paracetamol 500mg", "dosis": "3 x 1 tablet", "aturan": "Sesudah makan (Bila demam/nyeri)", "qty": 10, "harga": 8000 },
+        { "obat_id": 5, "nama": "Ambroxol Sirup 30ml", "dosis": "3 x 1 sendok takar (5ml)", "aturan": "Sesudah makan", "qty": 1, "harga": 22000 },
+        { "obat_id": 3, "nama": "Cetirizine 10mg", "dosis": "1 x 1 tablet", "aturan": "Malam hari sebelum tidur", "qty": 5, "harga": 15000 }
+      ],
+      "total_obat": 45000,
+      "status": "Diserahkan",
+      "apoteker": "Apt. Nurul Hidayah, S.Farm"
+    },
+    {
+      "id": 2,
+      "no_resep": "RXP-2026-0092",
+      "tanggal": "2026-10-03 09:55",
+      "no_rm": "RM-2026-0183",
+      "pasien_nama": "Siti Nurhaliza Putri",
+      "dokter": "drg. Ahmad Fauzi",
+      "items": [
+        { "obat_id": 6, "nama": "Ibuprofen 400mg", "dosis": "3 x 1 tablet", "aturan": "Sesudah makan jika sakit", "qty": 10, "harga": 18000 },
+        { "obat_id": 9, "nama": "Asam Mefenamat 500mg", "dosis": "3 x 1 tablet", "aturan": "Sesudah makan", "qty": 6, "harga": 16000 },
+        { "obat_id": 10, "nama": "Obat Kumur Klorheksidin 0.2%", "dosis": "2 x sehari kumur 10ml", "aturan": "Setelah sikat gigi", "qty": 1, "harga": 35000 }
+      ],
+      "total_obat": 69000,
+      "status": "Siap Diserahkan",
+      "apoteker": "Apt. Nurul Hidayah, S.Farm"
+    }
+  ],
+  "inventory": [
+    { "id": 1, "kode": "OBT-001", "nama": "Paracetamol 500mg", "kategori": "Analgetik / Antipiretik", "satuan": "Strip (10 Tab)", "stok": 120, "min_stok": 30, "exp_date": "2027-11-20", "harga_beli": 4500, "harga_jual": 8000, "status": "Aman" },
+    { "id": 2, "kode": "OBT-002", "nama": "Amoxicillin 500mg", "kategori": "Antibiotik", "satuan": "Strip (10 Kapsul)", "stok": 85, "min_stok": 25, "exp_date": "2027-04-15", "harga_beli": 8000, "harga_jual": 14000, "status": "Aman" },
+    { "id": 3, "kode": "OBT-003", "nama": "Cetirizine 10mg", "kategori": "Antihistamin / Alergi", "satuan": "Strip (10 Tab)", "stok": 18, "min_stok": 20, "exp_date": "2026-12-05", "harga_beli": 9000, "harga_jual": 15000, "status": "Menipis" },
+    { "id": 4, "kode": "OBT-004", "nama": "Antasida Doen", "kategori": "Antasida Lambung", "satuan": "Strip (10 Tab Kunyah)", "stok": 94, "min_stok": 20, "exp_date": "2028-02-18", "harga_beli": 4000, "harga_jual": 7500, "status": "Aman" },
+    { "id": 5, "kode": "OBT-005", "nama": "Ambroxol Sirup 30ml", "kategori": "Mukolitik / Batuk", "satuan": "Botol 30ml", "stok": 12, "min_stok": 15, "exp_date": "2026-11-30", "harga_beli": 14000, "harga_jual": 22000, "status": "Menipis" },
+    { "id": 6, "kode": "OBT-006", "nama": "Ibuprofen 400mg", "kategori": "NSAID Antiinflamasi", "satuan": "Strip (10 Tab)", "stok": 65, "min_stok": 20, "exp_date": "2027-08-10", "harga_beli": 11000, "harga_jual": 18000, "status": "Aman" },
+    { "id": 7, "kode": "OBT-007", "nama": "Omeprazole 20mg", "kategori": "PPI Lambung / Maag", "satuan": "Strip (10 Kapsul)", "stok": 8, "min_stok": 15, "exp_date": "2026-10-30", "harga_beli": 18000, "harga_jual": 28000, "status": "Kritis" },
+    { "id": 8, "kode": "OBT-008", "nama": "Vitamin C 500mg Zinc", "kategori": "Suplemen Imunitas", "satuan": "Strip (6 Tab)", "stok": 140, "min_stok": 20, "exp_date": "2028-05-12", "harga_beli": 7000, "harga_jual": 12000, "status": "Aman" },
+    { "id": 9, "kode": "OBT-009", "nama": "Asam Mefenamat 500mg", "kategori": "Analgetik Sakit Gigi", "satuan": "Strip (10 Tab)", "stok": 42, "min_stok": 15, "exp_date": "2027-03-22", "harga_beli": 9500, "harga_jual": 16000, "status": "Aman" },
+    { "id": 10, "kode": "OBT-010", "nama": "Obat Kumur Klorheksidin", "kategori": "Antiseptik Gigi", "satuan": "Botol 150ml", "stok": 15, "min_stok": 10, "exp_date": "2027-09-01", "harga_beli": 24000, "harga_jual": 35000, "status": "Aman" }
+  ],
+  "invoices": [
+    {
+      "id": 1,
+      "no_invoice": "INV-2026-0428",
+      "tanggal": "2026-10-02 10:10",
+      "no_rm": "RM-2026-0182",
+      "pasien_nama": "Ananda Bagus Pratama",
+      "penjamin": "BPJS Kesehatan",
+      "items": [
+        { "deskripsi": "Konsultasi & Pemeriksaan Dokter Umum", "kategori": "Jasa Medis", "biaya": 80000 },
+        { "deskripsi": "Tindakan Nebulizer Bronkodilator", "kategori": "Tindakan", "biaya": 65000 },
+        { "deskripsi": "Resep Obat Farmasi (3 Item)", "kategori": "Farmasi", "biaya": 45000 }
+      ],
+      "subtotal": 190000,
+      "potongan_bpjs": 190000,
+      "total_bayar": 0,
+      "status": "Lunas (Klaim BPJS)",
+      "metode": "BPJS Kesehatan",
+      "kasir": "Rini Astuti, A.Md"
+    },
+    {
+      "id": 2,
+      "no_invoice": "INV-2026-0429",
+      "tanggal": "2026-10-03 10:15",
+      "no_rm": "RM-2026-0183",
+      "pasien_nama": "Siti Nurhaliza Putri",
+      "penjamin": "Umum / Mandiri",
+      "items": [
+        { "deskripsi": "Konsultasi Dokter Gigi", "kategori": "Jasa Medis", "biaya": 90000 },
+        { "deskripsi": "Tumpatan Sementara Gigi", "kategori": "Tindakan", "biaya": 150000 },
+        { "deskripsi": "Scaling Gigi Ringan", "kategori": "Tindakan", "biaya": 180000 },
+        { "deskripsi": "Resep Obat Gigi (3 Item)", "kategori": "Farmasi", "biaya": 69000 }
+      ],
+      "subtotal": 489000,
+      "potongan_bpjs": 0,
+      "total_bayar": 489000,
+      "status": "Lunas",
+      "metode": "QRIS Statis Bank BCA",
+      "kasir": "Rini Astuti, A.Md"
+    }
+  ],
+  "users": [
+    { "id": 1, "name": "dr. Hendra Kusuma, Sp.PD", "role": "Dokter Penanggung Jawab", "email": "hendra.kusuma@medikasehat.id", "status": "Aktif", "permission": "Full Rekam Medis, Resep, Jadwal" },
+    { "id": 2, "name": "drg. Ahmad Fauzi", "role": "Dokter Gigi", "email": "fauzi.gigi@medikasehat.id", "status": "Aktif", "permission": "Rekam Medis Gigi, Resep" },
+    { "id": 3, "name": "Apt. Nurul Hidayah, S.Farm", "role": "Kepala Apoteker", "email": "nurul.farmasi@medikasehat.id", "status": "Aktif", "permission": "Farmasi, Resep, Inventory Obat" },
+    { "id": 4, "name": "Ns. Dian Anggraeni, S.Kep", "role": "Perawat / Triage", "email": "dian.perawat@medikasehat.id", "status": "Aktif", "permission": "Registrasi, Antrean, Tanda Vital" },
+    { "id": 5, "name": "Rini Astuti, A.Md", "role": "Kasir & Admisi", "email": "rini.kasir@medikasehat.id", "status": "Aktif", "permission": "Billing, Invoice, Pendaftaran Pasien" },
+    { "id": 6, "name": "Administrator IT", "role": "Super Admin", "email": "admin@medikasehat.id", "status": "Aktif", "permission": "Semua Modul & Audit Log" }
+  ],
+  "audit_logs": [
+    { "waktu": "10:15 WIB", "user": "Rini Astuti (Kasir)", "aksi": "Pembayaran Invoice", "detail": "Menyelesaikan transaksi INV-2026-0429 Rp 489.000 via QRIS" },
+    { "waktu": "10:02 WIB", "user": "drg. Ahmad Fauzi", "aksi": "Input Rekam Medis", "detail": "Menyimpan pemeriksaan fisik dan tindakan karies pasien RM-2026-0183" },
+    { "waktu": "09:48 WIB", "user": "Apt. Nurul Hidayah", "aksi": "Penyerahan Obat", "detail": "Menyerahkan resep RXP-2026-0091 kepada Ananda Bagus Pratama" },
+    { "waktu": "09:20 WIB", "user": "Ns. Dian Anggraeni", "aksi": "Panggil Antrean", "detail": "Memanggil antrean A-04 menuju Poli Umum Ruang 101" },
+    { "waktu": "09:05 WIB", "user": "Ns. Dian Anggraeni", "aksi": "Registrasi Pasien Baru", "detail": "Mendaftarkan pasien baru RM-2026-0185 (Alika Zahra)" }
+  ]
+}

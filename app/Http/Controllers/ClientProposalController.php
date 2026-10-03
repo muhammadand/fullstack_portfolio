@@ -111,4 +111,37 @@ class ClientProposalController extends Controller
         $client = ClientProposal::where('slug', $slug)->firstOrFail();
         return view('client-proposals.sport.customer-demo', compact('client'));
     }
+
+    public function landingKlinik($slug)
+    {
+        $client = ClientProposal::where('slug', $slug)->firstOrFail();
+        return view('client-proposals.klinik.landing', compact('client'));
+    }
+
+    public function proposalKlinik($slug)
+    {
+        $client = ClientProposal::where('slug', $slug)->firstOrFail();
+        return view('client-proposals.klinik.proposal', compact('client'));
+    }
+
+    public function customerDemoKlinik($slug)
+    {
+        $client = ClientProposal::where('slug', $slug)->firstOrFail();
+        return view('client-proposals.klinik.landing', compact('client'));
+    }
+
+    public function standaloneKlinik()
+    {
+        $client = ClientProposal::where('slug', 'medika-sehat-utama')->first();
+        if (!$client) {
+            $client = (object)[
+                'brand_name' => 'Klinik Pratama Medika Sehat',
+                'client_name' => 'dr. Hendra Kusuma, Sp.PD',
+                'wa_number' => '6281234567890',
+                'slug' => 'medika-sehat-utama'
+            ];
+        }
+        return view('client-proposals.klinik.landing', compact('client'));
+    }
 }
+

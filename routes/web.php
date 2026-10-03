@@ -336,6 +336,11 @@ Route::get('/client/lpk/{slug}/proposal', [ClientProposalController::class, 'pro
 Route::get('/client/sport/{slug}/landing', [ClientProposalController::class, 'landingSport'])->name('landing.sport');
 Route::get('/client/sport/{slug}/proposal', [ClientProposalController::class, 'proposalSport'])->name('proposal.sport');
 Route::get('/client/sport/{slug}/demo', [ClientProposalController::class, 'customerDemoSport'])->name('demo.customer.sport');
+Route::get('/client/klinik/{slug}/landing', [ClientProposalController::class, 'landingKlinik'])->name('landing.klinik');
+Route::get('/client/klinik/{slug}/proposal', [ClientProposalController::class, 'proposalKlinik'])->name('proposal.klinik');
+Route::get('/client/klinik/{slug}/demo', [ClientProposalController::class, 'customerDemoKlinik'])->name('demo.customer.klinik');
+Route::get('/demo/klinik', [ClientProposalController::class, 'standaloneKlinik'])->name('demo.klinik');
+Route::get('/klinik', [ClientProposalController::class, 'standaloneKlinik'])->name('klinik.index');
 Route::get('/client/rental-mobil/{slug}/admin-demo', [ClientProposalController::class, 'adminDemoRental'])->name('demo.admin.rental');
 Route::get('/client/parfum/{slug}/admin-demo', [ClientProposalController::class, 'adminDemoParfum'])->name('demo.admin.parfum');
 

@@ -67,5 +67,26 @@ class ClientProposalSeeder extends Seeder
                 'renewal_platinum' => '50% per tahun',
             ]
         );
+
+        $klinikCategory = \App\Models\BusinessCategory::where('slug', 'klinik')->first();
+
+        \App\Models\ClientProposal::updateOrCreate(
+            ['slug' => 'medika-sehat-utama'],
+            [
+                'business_category_id' => $klinikCategory ? $klinikCategory->id : null,
+                'brand_name' => 'Klinik Utama Medika Sehat',
+                'client_name' => 'dr. Hendra Kusuma, Sp.PD (Direktur Medis)',
+                'wa_number' => '6281234567890',
+                'wa_template' => 'Halo tim Scalify, kami dari Manajemen Klinik Medika Sehat ingin konsultasi implementasi Sistem Informasi SIM Klinik & Rekam Medis Digital.',
+                'price_silver' => 850000,
+                'price_gold' => 1850000,
+                'price_diamond' => 2500000,
+                'price_platinum' => 3800000,
+                'renewal_silver' => '600rb/tahun',
+                'renewal_gold' => '800rb/tahun',
+                'renewal_diamond' => '1.2juta/tahun',
+                'renewal_platinum' => '50% per tahun',
+            ]
+        );
     }
 }
