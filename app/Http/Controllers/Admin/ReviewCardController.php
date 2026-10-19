@@ -331,6 +331,13 @@ class ReviewCardController extends Controller
 
         // Verifikasi PIN Aktivasi (Abaikan spasi & case-insensitive)
         if (strtoupper(trim($validated['pin'])) !== strtoupper(trim($card->activation_code))) {
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Kode PIN Aktivasi salah! Silakan periksa kembali nomor PIN di kartu atau kemasan produk Anda.'
+                ], 422);
+            }
+
             return redirect()->back()
                 ->withInput()
                 ->with('error', 'Kode PIN Aktivasi salah! Silakan periksa kembali nomor PIN di kartu atau kemasan produk Anda.');
@@ -346,6 +353,16 @@ class ReviewCardController extends Controller
             'activated_at' => $now,
             'updated_at' => $now,
         ]);
+
+        if ($request->expectsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'business_name' => trim($validated['business_name']),
+                'serial_number' => $card->serial_number,
+                'google_review_url' => trim($validated['google_review_url']),
+                'redirect_url' => route('review_cards.scan', $slug),
+            ]);
+        }
 
         return redirect()->route('review_cards.scan', $slug)
             ->with('activated_success', true);

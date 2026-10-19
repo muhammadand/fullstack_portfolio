@@ -18,14 +18,34 @@
             font-family: 'Outfit', sans-serif;
         }
 
+        @keyframes pulseCheck {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .animate-check {
+            animation: pulseCheck 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
     </style>
 </head>
-<body class="bg-gradient-to-br from-slate-900 via-slate-850 to-slate-900 text-slate-100 min-h-screen flex flex-col justify-between p-4 sm:p-6" style="background-color: #0F172A;">
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col justify-between p-4 sm:p-6" style="background-color: #0F172A;">
 
     <div class="max-w-md w-full mx-auto my-auto">
 
-        <!-- Card Container -->
-        <div class="bg-slate-850/90 rounded-3xl p-6 sm:p-8 border border-slate-700/60 shadow-2xl backdrop-blur-xl relative overflow-hidden" style="background-color: rgba(30, 41, 59, 0.7);">
+        <!-- Form Card Container (Visible by default) -->
+        <div id="activationCard" class="bg-slate-800/90 rounded-3xl p-6 sm:p-8 border border-slate-700/60 shadow-2xl backdrop-blur-xl relative overflow-hidden transition-all duration-300" style="background-color: rgba(30, 41, 59, 0.75);">
 
             <!-- Rainbow Accent Line at Top -->
             <div class="absolute top-0 left-0 right-0 h-1.5 flex">
@@ -60,39 +80,27 @@
                 </p>
             </div>
 
-            <!-- Error Notification -->
-            @if(session('error'))
-            <div class="p-3.5 rounded-xl bg-red-500/15 border border-red-500/30 text-red-300 text-xs flex items-center gap-2.5 mb-5" role="alert">
+            <!-- Dynamic Error Notification Box -->
+            <div id="errorAlertBox" class="{{ session('error') ? '' : 'hidden' }} p-3.5 rounded-xl bg-red-500/15 border border-red-500/30 text-red-300 text-xs flex items-center gap-2.5 mb-5" role="alert">
                 <i class="fa-solid fa-triangle-exclamation text-red-400 text-sm flex-shrink-0"></i>
-                <span>{{ session('error') }}</span>
+                <span id="errorMessageText">{{ session('error') }}</span>
             </div>
-            @endif
-
-            @if($errors->any())
-            <div class="p-3.5 rounded-xl bg-red-500/15 border border-red-500/30 text-red-300 text-xs mb-5">
-                <ul class="list-disc list-inside space-y-0.5">
-                    @foreach($errors->all() as $err)
-                    <li>{{ $err }}</li>
-                    @endforeach
-                </ul>
-            </div>
-            @endif
 
             <!-- Form Aktivasi -->
-            <form action="{{ route('review_cards.activate', $card->slug) }}" method="POST" class="space-y-4">
+            <form id="activationForm" action="{{ route('review_cards.activate', $card->slug) }}" method="POST" class="space-y-4">
                 @csrf
 
                 <!-- PIN Aktivasi -->
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center justify-between">
                         <span>Kode PIN Aktivasi</span>
-                        <span class="text-[11px] text-amber-400 font-normal">Lihat di stiker / box kemasan</span>
+                        <span class="text-[11px] text-amber-400 font-normal">Lihat di stiker / kemasan</span>
                     </label>
                     <div class="relative">
                         <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                             <i class="fa-solid fa-key text-xs"></i>
                         </span>
-                        <input type="text" name="pin" value="{{ old('pin') }}" required placeholder="Contoh: 847291" maxlength="16" autocomplete="off" class="w-full pl-10 pr-4 py-2.5 bg-slate-900/80 border border-slate-700 rounded-xl text-white font-mono text-sm tracking-wider focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder:text-slate-600">
+                        <input type="text" id="inputPin" name="pin" value="{{ old('pin') }}" required placeholder="Contoh: 847291" maxlength="16" autocomplete="off" class="w-full pl-10 pr-4 py-2.5 bg-slate-900/80 border border-slate-700 rounded-xl text-white font-mono text-sm tracking-wider focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder:text-slate-600">
                     </div>
                 </div>
 
@@ -105,7 +113,7 @@
                         <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                             <i class="fa-solid fa-store text-xs"></i>
                         </span>
-                        <input type="text" name="business_name" value="{{ old('business_name') }}" required placeholder="Contoh: Kopi Kenangan Cabang Tebet" class="w-full pl-10 pr-4 py-2.5 bg-slate-900/80 border border-slate-700 rounded-xl text-white text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder:text-slate-600">
+                        <input type="text" id="inputBusinessName" name="business_name" value="{{ old('business_name') }}" required placeholder="Contoh: Kopi Kenangan Cabang Tebet" class="w-full pl-10 pr-4 py-2.5 bg-slate-900/80 border border-slate-700 rounded-xl text-white text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder:text-slate-600">
                     </div>
                 </div>
 
@@ -113,15 +121,15 @@
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center justify-between">
                         <span>Link Google Review</span>
-                        <a href="#cara-dapat-link" onclick="document.getElementById('tutorialModal').classList.remove('hidden')" class="text-[11px] text-blue-400 hover:underline">
+                        <button type="button" onclick="document.getElementById('tutorialModal').classList.remove('hidden')" class="text-[11px] text-blue-400 hover:underline">
                             Cara dapatkan link?
-                        </a>
+                        </button>
                     </label>
                     <div class="relative">
                         <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                             <i class="fa-solid fa-link text-xs"></i>
                         </span>
-                        <input type="url" name="google_review_url" value="{{ old('google_review_url') }}" required placeholder="https://g.page/r/... atau https://maps.app.goo.gl/..." class="w-full pl-10 pr-4 py-2.5 bg-slate-900/80 border border-slate-700 rounded-xl text-white text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder:text-slate-600 font-mono text-xs">
+                        <input type="url" id="inputGoogleReviewUrl" name="google_review_url" value="{{ old('google_review_url') }}" required placeholder="https://g.page/r/... atau https://maps.app.goo.gl/..." class="w-full pl-10 pr-4 py-2.5 bg-slate-900/80 border border-slate-700 rounded-xl text-white text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder:text-slate-600 font-mono text-xs">
                     </div>
                     <p class="text-[11px] text-slate-500 mt-1">
                         Link yang akan langsung dibuka pengunjung saat scan stiker QR di meja.
@@ -140,14 +148,70 @@
                     </div>
                 </div>
 
-                <!-- Submit Button -->
+                <!-- Submit Button dengan Loading Spinner Interaktif -->
                 <div class="pt-3">
-                    <button type="submit" class="w-full py-3.5 px-4 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white font-semibold rounded-xl text-sm transition-all shadow-lg shadow-blue-500/25 flex items-center justify-center gap-2 group">
-                        <span>Aktifkan Kartu Sekarang</span>
-                        <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
+                    <button type="submit" id="btnSubmitActivation" class="w-full py-3.5 px-4 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white font-semibold rounded-xl text-sm transition-all shadow-lg shadow-blue-500/25 flex items-center justify-center gap-2 group cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed">
+                        <span id="btnText">Aktifkan Kartu Sekarang</span>
+                        <i id="btnIcon" class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
                     </button>
                 </div>
             </form>
+
+        </div>
+
+        <!-- Success Box Container (Hidden by default, shown via fast AJAX without page reload) -->
+        <div id="successCard" class="hidden bg-slate-850/90 rounded-3xl p-6 sm:p-8 border border-slate-700/60 shadow-2xl backdrop-blur-xl relative overflow-hidden text-center transition-all duration-300" style="background-color: rgba(30, 41, 59, 0.75);">
+
+            <!-- Rainbow Top Line -->
+            <div class="absolute top-0 left-0 right-0 h-1.5 flex">
+                <div class="flex-1" style="background-color: #4285F4;"></div>
+                <div class="flex-1" style="background-color: #34A853;"></div>
+                <div class="flex-1" style="background-color: #FBBC05;"></div>
+                <div class="flex-1" style="background-color: #EA4335;"></div>
+            </div>
+
+            <!-- Animated Check Circle -->
+            <div class="w-20 h-20 mx-auto my-4 rounded-full bg-emerald-500/15 border-2 border-emerald-500/30 flex items-center justify-center text-emerald-400 text-3xl shadow-lg shadow-emerald-500/20 animate-check">
+                <i class="fa-solid fa-check"></i>
+            </div>
+
+            <h2 class="text-2xl font-bold text-white font-outfit mb-2">
+                Kartu Berhasil Diaktifkan!
+            </h2>
+            <p class="text-xs text-slate-400 leading-relaxed mb-6">
+                Selamat! QR Google Review bisnis Anda sudah aktif. Stiker atau standee ini sekarang siap dipasang di meja kasir atau meja resto Anda.
+            </p>
+
+            <!-- Card Summary -->
+            <div class="bg-slate-900/80 rounded-2xl p-4 border border-slate-700/60 text-left mb-6 space-y-2.5">
+                <div>
+                    <span class="text-[11px] text-slate-400 uppercase tracking-wider block">Tempat Usaha</span>
+                    <span id="successBusinessName" class="font-bold text-white text-sm font-outfit"></span>
+                </div>
+
+                <div class="pt-2 border-t border-slate-800">
+                    <span class="text-[11px] text-slate-400 uppercase tracking-wider block">No. Serial Kartu</span>
+                    <span class="font-mono text-xs text-blue-400 font-semibold">{{ $card->serial_number }}</span>
+                </div>
+
+                <div class="pt-2 border-t border-slate-800">
+                    <span class="text-[11px] text-slate-400 uppercase tracking-wider block">Tujuan Google Review</span>
+                    <a id="successReviewLink" href="#" target="_blank" class="text-xs text-blue-400 hover:underline truncate block font-mono">
+                    </a>
+                </div>
+            </div>
+
+            <!-- Action Button -->
+            <div class="space-y-3">
+                <a id="btnTestReview" href="#" target="_blank" class="w-full py-3.5 px-4 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white font-semibold rounded-xl text-sm transition-all shadow-lg shadow-blue-500/25 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                    <span>Coba Buka Link Review Saya</span>
+                </a>
+
+                <p class="text-[11px] text-slate-500 pt-2 leading-relaxed">
+                    💡 Mulai detik ini, setiap ada orang yang scan stiker QR di meja, server akan otomatis melempar mereka langsung ke Google Review toko Anda.
+                </p>
+            </div>
 
         </div>
 
@@ -199,6 +263,80 @@
             </div>
         </div>
     </div>
+
+    <!-- Script Fast AJAX Submit + Spinner Loading -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('activationForm');
+            const btn = document.getElementById('btnSubmitActivation');
+            const btnText = document.getElementById('btnText');
+            const btnIcon = document.getElementById('btnIcon');
+            const errorAlert = document.getElementById('errorAlertBox');
+            const errorMsg = document.getElementById('errorMessageText');
+
+            const activationCard = document.getElementById('activationCard');
+            const successCard = document.getElementById('successCard');
+            const successBusinessName = document.getElementById('successBusinessName');
+            const successReviewLink = document.getElementById('successReviewLink');
+            const btnTestReview = document.getElementById('btnTestReview');
+
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                // Sembunyikan error alert sebelumnya
+                errorAlert.classList.add('hidden');
+
+                // Set state: Tombol Disabled + Muncul Animasi Muter (Spinner)
+                btn.disabled = true;
+                btnText.textContent = 'Memverifikasi PIN & Mengaktifkan...';
+                btnIcon.className = 'fa-solid fa-circle-notch fa-spin text-sm';
+
+                const formData = new FormData(form);
+
+                try {
+                    const response = await fetch(form.action, {
+                        method: 'POST'
+                        , headers: {
+                            'Accept': 'application/json'
+                            , 'X-Requested-With': 'XMLHttpRequest'
+                        }
+                        , body: formData
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok || !data.success) {
+                        // Ada error validasi atau PIN salah
+                        const msg = data.message || (data.errors ? Object.values(data.errors).flat().join('<br>') : 'Terjadi kesalahan. Silakan coba lagi.');
+                        errorMsg.innerHTML = msg;
+                        errorAlert.classList.remove('hidden');
+
+                        // Kembalikan tombol ke keadaan semula
+                        btn.disabled = false;
+                        btnText.textContent = 'Aktifkan Kartu Sekarang';
+                        btnIcon.className = 'fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform';
+                        return;
+                    }
+
+                    // SUKSES KILAT (Tanpa reload halaman, langsung ganti tampilan kartu!)
+                    successBusinessName.textContent = data.business_name;
+                    successReviewLink.textContent = data.google_review_url;
+                    successReviewLink.href = data.google_review_url;
+                    btnTestReview.href = data.google_review_url;
+
+                    // Transisi mulus: sembunyikan form, tampilkan kartu sukses
+                    activationCard.classList.add('hidden');
+                    successCard.classList.remove('hidden');
+
+                } catch (err) {
+                    console.error('Activation network error:', err);
+                    // Fallback submit biasa jika ada error koneksi fetch
+                    form.submit();
+                }
+            });
+        });
+
+    </script>
 
 </body>
 </html>
