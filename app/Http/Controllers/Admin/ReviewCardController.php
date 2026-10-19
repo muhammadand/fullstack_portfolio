@@ -58,7 +58,40 @@ class ReviewCardController extends Controller
 
         $cards = $query->orderBy('id', 'desc')->paginate(15)->withQueryString();
 
-        return view('admin.review_cards.index', compact('cards', 'stats'));
+        // 3. Ambil pesanan QRIS dari Partner yang sedang menunggu verifikasi admin
+        $pendingCards = DB::table('review_cards')
+            ->leftJoin('affiliates', 'review_cards.affiliate_id', '=', 'affiliates.id')
+            ->where('review_cards.payment_status', 'pending')
+            ->whereNotNull('review_cards.notes')
+            ->select([
+                'review_cards.id as card_id',
+                'review_cards.notes',
+                'review_cards.created_at',
+                'affiliates.name as partner_name',
+                'affiliates.email as partner_email',
+                'affiliates.bank_info as partner_bank',
+            ])
+            ->orderBy('review_cards.id', 'desc')
+            ->get();
+
+        $pendingOrders = [];
+        foreach ($pendingCards as $item) {
+            $notes = json_decode($item->notes, true);
+            if ($notes && isset($notes['order_id'])) {
+                $oid = $notes['order_id'];
+                if (!isset($pendingOrders[$oid])) {
+                    $pendingOrders[$oid] = array_merge($notes, [
+                        'partner_name'  => $item->partner_name ?? 'Partner #' . ($item->card_id ?? '-'),
+                        'partner_email' => $item->partner_email ?? '-',
+                        'created_at'    => $item->created_at,
+                        'card_ids'      => [],
+                    ]);
+                }
+                $pendingOrders[$oid]['card_ids'][] = $item->card_id;
+            }
+        }
+
+        return view('admin.review_cards.index', compact('cards', 'stats', 'pendingOrders'));
     }
 
     /**
@@ -366,5 +399,45 @@ class ReviewCardController extends Controller
 
         return redirect()->route('review_cards.scan', $slug)
             ->with('activated_success', true);
+    }
+
+    /**
+     * Admin verifies partner QRIS order payment and releases cards stock.
+     */
+    public function verifyOrderPayment(Request $request, string $orderId)
+    {
+        $updated = DB::table('review_cards')
+            ->where('payment_status', 'pending')
+            ->where('notes', 'like', "%{$orderId}%")
+            ->update([
+                'payment_status' => 'paid',
+                'purchased_at'   => now(),
+                'updated_at'     => now(),
+            ]);
+
+        if ($updated > 0) {
+            return redirect()->back()
+                ->with('success', "✅ Pesanan #{$orderId} berhasil diverifikasi! {$updated} unit kartu QR kini telah aktif di akun partner.");
+        }
+
+        return redirect()->back()->with('error', "Pesanan #{$orderId} tidak ditemukan atau sudah diverifikasi.");
+    }
+
+    /**
+     * Admin cancels/rejects partner QRIS order payment.
+     */
+    public function cancelOrderPayment(Request $request, string $orderId)
+    {
+        $deleted = DB::table('review_cards')
+            ->where('payment_status', 'pending')
+            ->where('notes', 'like', "%{$orderId}%")
+            ->delete();
+
+        if ($deleted > 0) {
+            return redirect()->back()
+                ->with('success', "Pesanan #{$orderId} ({$deleted} unit kartu) berhasil dibatalkan.");
+        }
+
+        return redirect()->back()->with('error', "Pesanan #{$orderId} tidak ditemukan.");
     }
 }

@@ -303,6 +303,13 @@ Route::middleware(['auth:affiliate'])->group(function () {
     // Digital Products (Lynk.id)
     Route::get('/partner/digital-products', [\App\Http\Controllers\Affiliate\DigitalProductController::class, 'index'])->name('affiliate.digital_products.index');
 
+    // Smart Google Review Cards (Partner Reseller Hub)
+    Route::get('/partner/review-cards', [\App\Http\Controllers\Affiliate\ReviewCardPartnerController::class, 'index'])->name('affiliate.review_cards.index');
+    Route::post('/partner/review-cards/buy', [\App\Http\Controllers\Affiliate\ReviewCardPartnerController::class, 'buy'])->name('affiliate.review_cards.buy');
+    Route::get('/partner/review-cards/orders/{orderId}/pay', [\App\Http\Controllers\Affiliate\ReviewCardPartnerController::class, 'payOrder'])->name('affiliate.review_cards.pay');
+    Route::get('/partner/review-cards/{id}/print', [\App\Http\Controllers\Affiliate\ReviewCardPartnerController::class, 'printCard'])->name('affiliate.review_cards.print');
+    Route::post('/partner/review-cards/{id}/activate-for-client', [\App\Http\Controllers\Affiliate\ReviewCardPartnerController::class, 'activateForClient'])->name('affiliate.review_cards.activate_for_client');
+
     // Profile
     Route::get('/partner/profile', [App\Http\Controllers\AffiliateController::class, 'profile'])->name('affiliate.profile');
     Route::post('/partner/profile', [App\Http\Controllers\AffiliateController::class, 'updateProfile'])->name('affiliate.profile.update');
@@ -416,6 +423,11 @@ Route::get('/secret-deploy-trigger-12345', function () {
 
         \Illuminate\Support\Facades\Artisan::call('migrate', [
             '--path' => 'database/migrations/2026_10_19_111500_create_review_cards_table.php',
+            '--force' => true
+        ]);
+
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_10_19_133000_add_affiliate_id_to_review_cards_table.php',
             '--force' => true
         ]);
 

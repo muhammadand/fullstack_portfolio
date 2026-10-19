@@ -163,6 +163,12 @@ $activeRoute = \Illuminate\Support\Facades\Route::currentRouteName();
                         {{ \App\Models\Blog::where('is_published', false)->whereNotNull('affiliate_id')->count() }}
                     </span>
                     @endif
+
+                    @if($menu['route'] === 'admin.review_cards.index' && ($pendingReviewCount = \Illuminate\Support\Facades\DB::table('review_cards')->where('payment_status', 'pending')->count()) > 0)
+                    <span class="ml-1.5 inline-flex items-center justify-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 animate-pulse">
+                        {{ $pendingReviewCount }}
+                    </span>
+                    @endif
                 </span>
             </a>
             @endif

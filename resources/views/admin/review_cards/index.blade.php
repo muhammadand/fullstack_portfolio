@@ -59,215 +59,278 @@
         </div>
     </div>
 
-    <!-- Filters & Search -->
-    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 mb-6">
-        <form method="GET" action="{{ route('admin.review_cards.index') }}" class="flex flex-col sm:flex-row gap-3">
-            <div class="flex-1 relative">
-                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 text-sm">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                </span>
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nomor serial, nama usaha, atau URL slug..." class="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all">
-            </div>
+    <!-- Pesanan QRIS Partner Menunggu Verifikasi (Full Width) -->
+    @if(!empty($pendingOrders))
+    <div class="bg-white border border-amber-200 rounded-2xl p-5 mb-6 shadow-sm overflow-hidden relative">
+        <div class="absolute top-0 left-0 bottom-0 w-1.5 bg-amber-500"></div>
 
-            <div class="sm:w-44">
-                <select name="status" onchange="this.form.submit()" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white">
-                    <option value="">Semua Status</option>
-                    <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Pending (Gudang)</option>
-                    <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Aktif</option>
-                    <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Nonaktif</option>
-                </select>
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 pl-1">
+            <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-lg bg-amber-50 border border-amber-200 text-amber-600 flex items-center justify-center text-sm">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                </div>
+                <div>
+                    <h2 class="text-sm font-bold text-slate-800">Menunggu Verifikasi Pembayaran QRIS ({{ count($pendingOrders) }} Pesanan)</h2>
+                    <p class="text-xs text-slate-500">Partner telah melakukan transfer QRIS. Klik verifikasi jika dana sudah masuk untuk menyerahkan kuota kartu.</p>
+                </div>
             </div>
+            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-200 w-fit">
+                Perlu Tindakan
+            </span>
+        </div>
 
-            <button type="submit" class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-lg text-sm font-medium transition-colors">
-                Filter
-            </button>
-            @if(request('search') || request('status'))
-            <a href="{{ route('admin.review_cards.index') }}" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-medium transition-colors text-center">
-                Reset
-            </a>
-            @endif
-        </form>
+        <div class="space-y-2.5 pl-1">
+            @foreach($pendingOrders as $order)
+            <div class="bg-slate-50 hover:bg-slate-100/80 transition-colors rounded-xl p-3.5 border border-slate-200/80 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                <div class="space-y-1">
+                    <div class="flex items-center gap-2">
+                        <span class="font-bold text-sm text-slate-800 font-mono">#{{ $order['order_id'] ?? '' }}</span>
+                        <span class="text-xs font-semibold px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 border border-blue-200/80">
+                            {{ $order['quantity'] ?? 1 }} Unit Kartu
+                        </span>
+                        <span class="text-[11px] text-slate-400">
+                            {{ \Carbon\Carbon::parse($order['ordered_at'] ?? now())->diffForHumans() }}
+                        </span>
+                    </div>
+
+                    <div class="text-xs text-slate-600 flex flex-wrap items-center gap-x-4 gap-y-1">
+                        <span>Partner: <b class="text-slate-800">{{ $order['partner_name'] ?? '-' }}</b> ({{ $order['partner_email'] ?? '-' }})</span>
+                        <span>Total Tagihan: <b class="text-emerald-600 font-mono font-bold">Rp {{ number_format($order['total_amount'] ?? 0, 0, ',', '.') }}</b> <span class="text-slate-400 text-[11px]">(Biaya Admin: Rp {{ number_format($order['unique_code'] ?? 0, 0, ',', '.') }})</span></span>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2 shrink-0">
+                    <form action="{{ route('admin.review_cards.verify_order', $order['order_id']) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin dana QRIS sebesar Rp {{ number_format($order['total_amount'] ?? 0, 0, ',', '.') }} sudah masuk dan ingin mengaktifkan stok partner?');">
+                        @csrf
+                        <button type="submit" class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold shadow-sm transition-all active:scale-95">
+                            <i class="fa-solid fa-check"></i>
+                            <span>Verifikasi & Aktifkan</span>
+                        </button>
+                    </form>
+
+                    <form action="{{ route('admin.review_cards.cancel_order', $order['order_id']) }}" method="POST" onsubmit="return confirm('Batalkan pesanan ini? Kartu yang di-reserve akan dihapus.');">
+                        @csrf
+                        <button type="submit" class="inline-flex items-center gap-1.5 px-3 py-2 bg-white hover:bg-red-50 text-slate-600 hover:text-red-600 border border-slate-200 rounded-lg text-xs font-medium transition-colors">
+                            <i class="fa-solid fa-xmark"></i>
+                            <span>Batalkan</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            @endforeach
+        </div>
     </div>
+    @endif
 
-    <!-- Table List -->
-    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-        <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm text-slate-600">
-                <thead class="bg-slate-50 text-slate-700 text-xs uppercase font-semibold border-b border-slate-200">
-                    <tr>
-                        <th class="py-3.5 px-4">Serial & PIN</th>
-                        <th class="py-3.5 px-4">Status</th>
-                        <th class="py-3.5 px-4">Bisnis / Pemilik</th>
-                        <th class="py-3.5 px-4">URL Scan (QR / NFC)</th>
-                        <th class="py-3.5 px-4 text-center">Scan</th>
-                        <th class="py-3.5 px-4 text-right">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-200">
-                    @forelse($cards as $card)
-                    <tr class="hover:bg-slate-50/80 transition-colors">
-                        <!-- Serial & PIN -->
-                        <td class="py-3.5 px-4">
-                            <div class="font-mono font-bold text-slate-900 text-xs tracking-wide">
-                                {{ $card->serial_number }}
-                            </div>
-                            <div class="text-[11px] text-slate-400 mt-0.5">
-                                PIN: <span class="font-mono text-slate-600 font-semibold">{{ $card->activation_code }}</span>
-                            </div>
-                        </td>
+        <!-- Filters & Search -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 mb-6">
+            <form method="GET" action="{{ route('admin.review_cards.index') }}" class="flex flex-col sm:flex-row gap-3">
+                <div class="flex-1 relative">
+                    <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 text-sm">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </span>
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nomor serial, nama usaha, atau URL slug..." class="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all">
+                </div>
 
-                        <!-- Status Badge -->
-                        <td class="py-3.5 px-4">
-                            @if($card->status === 'active')
+                <div class="sm:w-44">
+                    <select name="status" onchange="this.form.submit()" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white">
+                        <option value="">Semua Status</option>
+                        <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Pending (Gudang)</option>
+                        <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Aktif</option>
+                        <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Nonaktif</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-lg text-sm font-medium transition-colors">
+                    Filter
+                </button>
+                @if(request('search') || request('status'))
+                <a href="{{ route('admin.review_cards.index') }}" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-medium transition-colors text-center">
+                    Reset
+                </a>
+                @endif
+            </form>
+        </div>
+
+        <!-- Table List -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm text-slate-600">
+                    <thead class="bg-slate-50 text-slate-700 text-xs uppercase font-semibold border-b border-slate-200">
+                        <tr>
+                            <th class="py-3.5 px-4">Serial & PIN</th>
+                            <th class="py-3.5 px-4">Status</th>
+                            <th class="py-3.5 px-4">Bisnis / Pemilik</th>
+                            <th class="py-3.5 px-4">URL Scan (QR / NFC)</th>
+                            <th class="py-3.5 px-4 text-center">Scan</th>
+                            <th class="py-3.5 px-4 text-right">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-200">
+                        @forelse($cards as $card)
+                        <tr class="hover:bg-slate-50/80 transition-colors">
+                            <!-- Serial & PIN -->
+                            <td class="py-3.5 px-4">
+                                <div class="font-mono font-bold text-slate-900 text-xs tracking-wide">
+                                    {{ $card->serial_number }}
+                                </div>
+                                <div class="text-[11px] text-slate-400 mt-0.5">
+                                    PIN: <span class="font-mono text-slate-600 font-semibold">{{ $card->activation_code }}</span>
+                                </div>
+                            </td>
+
+                            <!-- Status Badge -->
+                            <td class="py-3.5 px-4">
+                                @if($card->status === 'active')
                                 <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
                                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                                     Aktif
                                 </span>
-                            @elseif($card->status === 'pending')
+                                @elseif($card->status === 'pending')
                                 <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">
                                     <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
                                     Belum Aktif
                                 </span>
-                            @else
+                                @else
                                 <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-600 border border-slate-200">
                                     <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
                                     Nonaktif
                                 </span>
-                            @endif
-                        </td>
+                                @endif
+                            </td>
 
-                        <!-- Bisnis & Link Google Review -->
-                        <td class="py-3.5 px-4">
-                            @if($card->business_name)
+                            <!-- Bisnis & Link Google Review -->
+                            <td class="py-3.5 px-4">
+                                @if($card->business_name)
                                 <div class="font-semibold text-slate-900">{{ $card->business_name }}</div>
                                 @if($card->google_review_url)
-                                    <a href="{{ $card->google_review_url }}" target="_blank" rel="noopener noreferrer" class="text-xs text-blue-600 hover:underline inline-flex items-center gap-1 mt-0.5 truncate max-w-xs block">
-                                        <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-                                        <span>Lihat Link Google Review</span>
-                                    </a>
+                                <a href="{{ $card->google_review_url }}" target="_blank" rel="noopener noreferrer" class="text-xs text-blue-600 hover:underline inline-flex items-center gap-1 mt-0.5 truncate max-w-xs block">
+                                    <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                                    <span>Lihat Link Google Review</span>
+                                </a>
                                 @endif
-                            @else
+                                @else
                                 <span class="text-slate-400 text-xs italic">Belum diklaim</span>
-                            @endif
-                        </td>
+                                @endif
+                            </td>
 
-                        <!-- URL Scan / Slug -->
-                        <td class="py-3.5 px-4">
-                            @php $scanUrl = url('/r/' . $card->slug); @endphp
-                            <div class="flex items-center gap-2">
-                                <a href="{{ $scanUrl }}" target="_blank" class="font-mono text-xs text-blue-600 hover:text-blue-800 bg-blue-50 px-2 py-1 rounded border border-blue-200">
-                                    /r/{{ $card->slug }}
-                                </a>
-                                <button type="button" onclick="navigator.clipboard.writeText('{{ $scanUrl }}'); alert('Link scan berhasil disalin!');" class="text-slate-400 hover:text-slate-600 p-1" title="Salin URL">
-                                    <i class="fa-regular fa-copy text-xs"></i>
-                                </button>
-                            </div>
-                        </td>
-
-                        <!-- Counter Scan -->
-                        <td class="py-3.5 px-4 text-center">
-                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-slate-100 text-slate-700">
-                                {{ number_format($card->total_scans) }}
-                            </span>
-                        </td>
-
-                        <!-- Actions -->
-                        <td class="py-3.5 px-4 text-right">
-                            <div class="flex items-center justify-end gap-1.5">
-                                <!-- Quick Toggle Status -->
-                                <form action="{{ route('admin.review_cards.toggle_status', $card->id) }}" method="POST" class="inline">
-                                    @csrf
-                                    <button type="submit" class="p-1.5 text-slate-400 hover:text-amber-600 rounded-lg hover:bg-slate-100 transition-colors" title="Ubah Status Aktif/Nonaktif">
-                                        <i class="fa-solid fa-power-off text-xs"></i>
+                            <!-- URL Scan / Slug -->
+                            <td class="py-3.5 px-4">
+                                @php $scanUrl = url('/r/' . $card->slug); @endphp
+                                <div class="flex items-center gap-2">
+                                    <a href="{{ $scanUrl }}" target="_blank" class="font-mono text-xs text-blue-600 hover:text-blue-800 bg-blue-50 px-2 py-1 rounded border border-blue-200">
+                                        /r/{{ $card->slug }}
+                                    </a>
+                                    <button type="button" onclick="navigator.clipboard.writeText('{{ $scanUrl }}'); alert('Link scan berhasil disalin!');" class="text-slate-400 hover:text-slate-600 p-1" title="Salin URL">
+                                        <i class="fa-regular fa-copy text-xs"></i>
                                     </button>
-                                </form>
+                                </div>
+                            </td>
 
-                                <!-- Detail & Template Cetak -->
-                                <a href="{{ route('admin.review_cards.show', $card->id) }}" class="p-1.5 text-blue-600 hover:text-blue-800 rounded-lg hover:bg-blue-50 transition-colors" title="Lihat Desain & Cetak Kartu">
-                                    <i class="fa-solid fa-eye text-xs"></i>
-                                </a>
+                            <!-- Counter Scan -->
+                            <td class="py-3.5 px-4 text-center">
+                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-slate-100 text-slate-700">
+                                    {{ number_format($card->total_scans) }}
+                                </span>
+                            </td>
 
-                                <!-- Edit -->
-                                <a href="{{ route('admin.review_cards.edit', $card->id) }}" class="p-1.5 text-slate-400 hover:text-blue-600 rounded-lg hover:bg-slate-100 transition-colors" title="Edit Kartu">
-                                    <i class="fa-regular fa-pen-to-square text-xs"></i>
-                                </a>
+                            <!-- Actions -->
+                            <td class="py-3.5 px-4 text-right">
+                                <div class="flex items-center justify-end gap-1.5">
+                                    <!-- Quick Toggle Status -->
+                                    <form action="{{ route('admin.review_cards.toggle_status', $card->id) }}" method="POST" class="inline">
+                                        @csrf
+                                        <button type="submit" class="p-1.5 text-slate-400 hover:text-amber-600 rounded-lg hover:bg-slate-100 transition-colors" title="Ubah Status Aktif/Nonaktif">
+                                            <i class="fa-solid fa-power-off text-xs"></i>
+                                        </button>
+                                    </form>
 
-                                <!-- Delete -->
-                                <form action="{{ route('admin.review_cards.destroy', $card->id) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus kartu {{ $card->serial_number }}?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="p-1.5 text-slate-400 hover:text-red-600 rounded-lg hover:bg-slate-100 transition-colors" title="Hapus">
-                                        <i class="fa-regular fa-trash-can text-xs"></i>
-                                    </button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="6" class="text-center py-12 text-slate-400">
-                            <i class="fa-solid fa-qrcode text-4xl mb-3 text-slate-300 block"></i>
-                            <p class="font-medium">Belum ada Review Card yang terdaftar.</p>
-                            <p class="text-xs text-slate-400 mt-1">Gunakan tombol "Generate Batch" untuk membuat unit siap cetak massal.</p>
-                        </td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                                    <!-- Detail & Template Cetak -->
+                                    <a href="{{ route('admin.review_cards.show', $card->id) }}" class="p-1.5 text-blue-600 hover:text-blue-800 rounded-lg hover:bg-blue-50 transition-colors" title="Lihat Desain & Cetak Kartu">
+                                        <i class="fa-solid fa-eye text-xs"></i>
+                                    </a>
+
+                                    <!-- Edit -->
+                                    <a href="{{ route('admin.review_cards.edit', $card->id) }}" class="p-1.5 text-slate-400 hover:text-blue-600 rounded-lg hover:bg-slate-100 transition-colors" title="Edit Kartu">
+                                        <i class="fa-regular fa-pen-to-square text-xs"></i>
+                                    </a>
+
+                                    <!-- Delete -->
+                                    <form action="{{ route('admin.review_cards.destroy', $card->id) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus kartu {{ $card->serial_number }}?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="p-1.5 text-slate-400 hover:text-red-600 rounded-lg hover:bg-slate-100 transition-colors" title="Hapus">
+                                            <i class="fa-regular fa-trash-can text-xs"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="6" class="text-center py-12 text-slate-400">
+                                <i class="fa-solid fa-qrcode text-4xl mb-3 text-slate-300 block"></i>
+                                <p class="font-medium">Belum ada Review Card yang terdaftar.</p>
+                                <p class="text-xs text-slate-400 mt-1">Gunakan tombol "Generate Batch" untuk membuat unit siap cetak massal.</p>
+                            </td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+
+            @if($cards->hasPages())
+            <div class="p-4 border-t border-slate-200">
+                {{ $cards->links() }}
+            </div>
+            @endif
         </div>
 
-        @if($cards->hasPages())
-        <div class="p-4 border-t border-slate-200">
-            {{ $cards->links() }}
-        </div>
-        @endif
-    </div>
+        <!-- Modal Generate Batch Massal (Cepat & Ringan) -->
+        <div x-show="batchModal" x-cloak class="fixed inset-0 z-50 overflow-y-auto" style="background-color: rgba(15, 23, 42, 0.6);">
+            <div class="flex items-center justify-center min-h-screen p-4">
+                <div @click.away="batchModal = false" class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-100">
+                    <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                        <h3 class="font-bold text-slate-800 text-lg flex items-center gap-2">
+                            <i class="fa-solid fa-layer-group text-blue-600"></i>
+                            Generate Batch Cetak
+                        </h3>
+                        <button @click="batchModal = false" class="text-slate-400 hover:text-slate-600">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
 
-    <!-- Modal Generate Batch Massal (Cepat & Ringan) -->
-    <div x-show="batchModal" x-cloak class="fixed inset-0 z-50 overflow-y-auto" style="background-color: rgba(15, 23, 42, 0.6);">
-        <div class="flex items-center justify-center min-h-screen p-4">
-            <div @click.away="batchModal = false" class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-100">
-                <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-                    <h3 class="font-bold text-slate-800 text-lg flex items-center gap-2">
-                        <i class="fa-solid fa-layer-group text-blue-600"></i>
-                        Generate Batch Cetak
-                    </h3>
-                    <button @click="batchModal = false" class="text-slate-400 hover:text-slate-600">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
+                    <form action="{{ route('admin.review_cards.batch_generate') }}" method="POST" class="mt-4 space-y-4">
+                        @csrf
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Jumlah Unit Kartu/Stiker</label>
+                            <input type="number" name="quantity" min="1" max="100" value="10" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                            <p class="text-[11px] text-slate-400 mt-1">Maksimal 100 unit per sekali generate untuk performa kilat.</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Prefix Serial Number</label>
+                            <input type="text" name="prefix" value="SCL" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                            <p class="text-[11px] text-slate-400 mt-1">Format: SCL-2610-XXXX (Tercetak di kartu/box).</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Catatan Batch (Opsional)</label>
+                            <input type="text" name="notes" placeholder="Contoh: Batch Cetak Vendor A 100 Pcs" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                        </div>
+
+                        <div class="pt-2 flex items-center justify-end gap-2">
+                            <button type="button" @click="batchModal = false" class="px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-lg">
+                                Batal
+                            </button>
+                            <button type="submit" class="px-4 py-2 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm">
+                                Generate Sekarang
+                            </button>
+                        </div>
+                    </form>
                 </div>
-
-                <form action="{{ route('admin.review_cards.batch_generate') }}" method="POST" class="mt-4 space-y-4">
-                    @csrf
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Jumlah Unit Kartu/Stiker</label>
-                        <input type="number" name="quantity" min="1" max="100" value="10" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
-                        <p class="text-[11px] text-slate-400 mt-1">Maksimal 100 unit per sekali generate untuk performa kilat.</p>
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Prefix Serial Number</label>
-                        <input type="text" name="prefix" value="SCL" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
-                        <p class="text-[11px] text-slate-400 mt-1">Format: SCL-2610-XXXX (Tercetak di kartu/box).</p>
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Catatan Batch (Opsional)</label>
-                        <input type="text" name="notes" placeholder="Contoh: Batch Cetak Vendor A 100 Pcs" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
-                    </div>
-
-                    <div class="pt-2 flex items-center justify-end gap-2">
-                        <button type="button" @click="batchModal = false" class="px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-lg">
-                            Batal
-                        </button>
-                        <button type="submit" class="px-4 py-2 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm">
-                            Generate Sekarang
-                        </button>
-                    </div>
-                </form>
             </div>
         </div>
-    </div>
 
-</div>
-@endsection
+    </div>
+    @endsection

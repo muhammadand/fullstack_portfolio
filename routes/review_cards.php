@@ -25,6 +25,10 @@ Route::prefix('admin/review-cards')->name('admin.review_cards.')->group(function
     Route::put('/{review_card}', [ReviewCardController::class, 'update'])->name('update');
     Route::delete('/{review_card}', [ReviewCardController::class, 'destroy'])->name('destroy');
     Route::post('/{id}/toggle-status', [ReviewCardController::class, 'toggleStatus'])->name('toggle_status');
+
+    // Admin Verification for Partner QRIS Orders
+    Route::post('/orders/{orderId}/verify', [ReviewCardController::class, 'verifyOrderPayment'])->name('verify_order');
+    Route::post('/orders/{orderId}/cancel', [ReviewCardController::class, 'cancelOrderPayment'])->name('cancel_order');
 });
 
 // Public Scan Gateway & Activation: domain.com/r/{slug}

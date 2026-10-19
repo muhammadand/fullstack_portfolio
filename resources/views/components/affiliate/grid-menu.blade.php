@@ -26,6 +26,16 @@
                 <span class="text-[10px] text-slate-300 font-medium text-center leading-tight group-hover:text-white transition-colors">Produk<br>Digital</span>
             </a>
 
+            <!-- 2.1 Smart Review Card (Bisnis Baru Reseller) -->
+            <a href="{{ route('affiliate.review_cards.index') }}" wire:navigate class="flex flex-col items-center gap-2 group">
+                <div class="w-12 h-12 rounded-2xl glass-panel flex items-center justify-center text-blue-400 text-lg shadow-inner relative transition-all duration-200 ease-out active:scale-90 active:opacity-60 group-hover:bg-blue-500/10 group-hover:border-blue-500/30">
+                    <i class="fa-solid fa-qrcode"></i>
+                    <!-- Clean Subtle Badge -->
+                    <span class="absolute -top-1.5 -right-1.5 bg-blue-500 text-white text-[8px] font-semibold px-1.5 py-0.2 rounded-full shadow-sm">New</span>
+                </div>
+                <span class="text-[10px] text-slate-300 font-medium text-center leading-tight group-hover:text-white transition-colors">Review<br>Cards</span>
+            </a>
+
             <!-- 3. Penawaran Bisnis -->
             <a href="{{ route('affiliate.proposals') }}" wire:navigate class="flex flex-col items-center gap-2 group">
                 <div class="w-12 h-12 rounded-2xl glass-panel flex items-center justify-center text-rose-400 text-lg shadow-inner relative transition-all duration-200 ease-out active:scale-90 active:opacity-60 group-hover:bg-rose-500/10 group-hover:border-rose-500/30">

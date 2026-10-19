@@ -171,7 +171,23 @@
         </div>
 
         <!-- Quick Actions (New Features) -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <!-- Review Cards (Reseller) -->
+            <div class="bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 border border-slate-100 p-5 flex items-center justify-between group">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fa-solid fa-qrcode"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-bold text-slate-800">Review Cards</h3>
+                        <p class="text-xs text-slate-500">Bisnis standee QR Google Review</p>
+                    </div>
+                </div>
+                <a href="{{ route('affiliate.review_cards.index') }}" wire:navigate class="w-8 h-8 rounded-full bg-slate-50 text-slate-400 hover:bg-blue-50 hover:text-blue-600 flex items-center justify-center transition-colors shrink-0 text-sm">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+
             <!-- Penawaran Bisnis -->
             <div class="bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 border border-slate-100 p-5 flex items-center justify-between group">
                 <div class="flex items-center gap-4">
@@ -180,7 +196,7 @@
                     </div>
                     <div>
                         <h3 class="text-base font-bold text-slate-800">Penawaran Bisnis</h3>
-                        <p class="text-xs text-slate-500">Pilih & bagikan landing page / proposal ke klien bisnis</p>
+                        <p class="text-xs text-slate-500">Pilih & bagikan landing page ke klien</p>
                     </div>
                 </div>
                 <a href="{{ route('affiliate.proposals') }}" wire:navigate class="w-8 h-8 rounded-full bg-slate-50 text-slate-400 hover:bg-rose-50 hover:text-rose-600 flex items-center justify-center transition-colors shrink-0 text-sm">
@@ -195,7 +211,7 @@
                         <i class="fa-solid fa-key"></i>
                     </div>
                     <div>
-                        <h3 class="text-base font-bold text-slate-800">Akses Login (Magic Link)</h3>
+                        <h3 class="text-base font-bold text-slate-800">Akses Login</h3>
                         <p class="text-xs text-slate-500">Login otomatis via QR untuk device lain</p>
                     </div>
                 </div>
