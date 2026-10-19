@@ -35,6 +35,7 @@
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
+
     </style>
 </head>
 <body class="pb-20 overflow-x-hidden min-h-screen flex flex-col relative">
@@ -208,7 +209,7 @@
                 </a>
 
                 <!-- Bantuan Admin WhatsApp -->
-                <a href="https://wa.me/6281234567890?text={{ urlencode('Halo Admin Scalify, saya sudah melakukan pembayaran QRIS untuk pesanan ' . $orderId . ' sebesar Rp ' . number_format($orderData['total_amount'] ?? 0, 0, ',', '.') . '. Mohon bantu verifikasi ya.') }}" target="_blank" class="py-2.5 px-3 rounded-xl glass-panel text-emerald-400 hover:text-emerald-300 font-medium text-xs flex items-center justify-center gap-1.5 transition-colors">
+                <a href="https://wa.me/6285221694067?text={{ urlencode('Halo Admin Scalify, saya sudah melakukan pembayaran QRIS untuk pesanan ' . $orderId . ' sebesar Rp ' . number_format($orderData['total_amount'] ?? 0, 0, ',', '.') . '. Mohon bantu verifikasi ya.') }}" target="_blank" class="py-2.5 px-3 rounded-xl glass-panel text-emerald-400 hover:text-emerald-300 font-medium text-xs flex items-center justify-center gap-1.5 transition-colors">
                     <i class="fa-brands fa-whatsapp text-sm"></i>
                     <span>Konfirmasi WA</span>
                 </a>
@@ -236,8 +237,8 @@
                 const minutes = Math.floor(duration / 60);
                 const seconds = duration % 60;
 
-                timerEl.textContent = 
-                    String(minutes).padStart(2, '0') + ':' + 
+                timerEl.textContent =
+                    String(minutes).padStart(2, '0') + ':' +
                     String(seconds).padStart(2, '0');
 
                 if (--duration < 0) {
@@ -247,6 +248,7 @@
                 }
             }, 1000);
         })();
+
     </script>
 
 </body>
