@@ -27,5 +27,6 @@ Route::prefix('admin/review-cards')->name('admin.review_cards.')->group(function
     Route::post('/{id}/toggle-status', [ReviewCardController::class, 'toggleStatus'])->name('toggle_status');
 });
 
-// Public Scan Gateway: domain.com/r/{slug}
+// Public Scan Gateway & Activation: domain.com/r/{slug}
 Route::get('r/{slug}', [ReviewCardController::class, 'scanRedirect'])->name('review_cards.scan');
+Route::post('r/{slug}/activate', [ReviewCardController::class, 'activateCard'])->name('review_cards.activate');

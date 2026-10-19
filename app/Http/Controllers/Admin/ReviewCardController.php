@@ -281,12 +281,17 @@ class ReviewCardController extends Controller
     public function scanRedirect(string $slug)
     {
         $card = DB::table('review_cards')
-            ->select(['id', 'google_review_url', 'status'])
+            ->select(['id', 'serial_number', 'slug', 'activation_code', 'google_review_url', 'business_name', 'status'])
             ->where('slug', $slug)
             ->first();
 
         if (!$card) {
             abort(404, 'Review Card QR tidak terdaftar.');
+        }
+
+        // Jika baru saja sukses diaktivasi (ada session flag), tampilkan layar sukses
+        if (session('activated_success')) {
+            return view('admin.review_cards.activated_success', compact('card'));
         }
 
         // Jika sudah aktif dan punya URL review Google, langsung redirect seketika!
@@ -295,7 +300,54 @@ class ReviewCardController extends Controller
             return redirect()->away($card->google_review_url);
         }
 
-        // Jika belum aktif, tampilkan info aktivasi sederhana
-        return response()->view('admin.review_cards.unactivated', ['slug' => $slug]);
+        // Jika belum aktif, tampilkan formulir aktivasi mandiri untuk pembeli
+        return view('admin.review_cards.activate', compact('card'));
+    }
+
+    /**
+     * Customer Self-Activation Handler: POST /r/{slug}/activate
+     */
+    public function activateCard(Request $request, string $slug)
+    {
+        $card = DB::table('review_cards')
+            ->where('slug', $slug)
+            ->first();
+
+        if (!$card) {
+            abort(404, 'Review Card QR tidak terdaftar.');
+        }
+
+        if ($card->status === 'active' && !empty($card->google_review_url)) {
+            return redirect()->route('review_cards.scan', $slug);
+        }
+
+        $validated = $request->validate([
+            'pin' => 'required|string',
+            'business_name' => 'required|string|max:255',
+            'google_review_url' => 'required|url',
+            'owner_name' => 'nullable|string|max:255',
+            'owner_phone' => 'nullable|string|max:50',
+        ]);
+
+        // Verifikasi PIN Aktivasi (Abaikan spasi & case-insensitive)
+        if (strtoupper(trim($validated['pin'])) !== strtoupper(trim($card->activation_code))) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Kode PIN Aktivasi salah! Silakan periksa kembali nomor PIN di kartu atau kemasan produk Anda.');
+        }
+
+        $now = now();
+        DB::table('review_cards')->where('id', $card->id)->update([
+            'business_name' => trim($validated['business_name']),
+            'google_review_url' => trim($validated['google_review_url']),
+            'owner_name' => $validated['owner_name'] ? trim($validated['owner_name']) : null,
+            'owner_phone' => $validated['owner_phone'] ? trim($validated['owner_phone']) : null,
+            'status' => 'active',
+            'activated_at' => $now,
+            'updated_at' => $now,
+        ]);
+
+        return redirect()->route('review_cards.scan', $slug)
+            ->with('activated_success', true);
     }
 }
