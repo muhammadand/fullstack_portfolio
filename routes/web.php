@@ -189,6 +189,9 @@ Route::resource('admin/chat-templates', App\Http\Controllers\Admin\ChatTemplateC
     'destroy' => 'admin.chat_templates.destroy',
 ]);
 
+// Review Cards (Smart Google Review QR)
+require __DIR__ . '/review_cards.php';
+
 // Profile
 Route::get('profile', [UserController::class, 'editProfile'])->name('profile.edit');
 Route::put('profile', [UserController::class, 'updateProfile'])->name('profile.update');
@@ -344,6 +347,9 @@ Route::get('/klinik', [ClientProposalController::class, 'standaloneKlinik'])->na
 Route::get('/client/rental-mobil/{slug}/admin-demo', [ClientProposalController::class, 'adminDemoRental'])->name('demo.admin.rental');
 Route::get('/client/parfum/{slug}/admin-demo', [ClientProposalController::class, 'adminDemoParfum'])->name('demo.admin.parfum');
 
+// Travel Module Routes (Ciamis - Bandung)
+require __DIR__ . '/travell.php';
+
 // Endpoint rahasia untuk trigger deploy (migrasi & cache) dari GitHub Actions (Tanpa SSH)
 Route::get('/secret-deploy-trigger-12345', function () {
     try {
@@ -408,11 +414,18 @@ Route::get('/secret-deploy-trigger-12345', function () {
             '--force' => true
         ]);
 
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_10_19_111500_create_review_cards_table.php',
+            '--force' => true
+        ]);
+
         // Jalankan Seeder yang diperlukan
         \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'BusinessCategorySeeder', '--force' => true]);
         \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'ClientProposalSeeder', '--force' => true]);
         \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'StudentServiceSeeder', '--force' => true]);
         \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'DigitalProductSeeder', '--force' => true]);
+        \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'RouteSeeder', '--force' => true]);
+        \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'ScheduleSeeder', '--force' => true]);
 
         \Illuminate\Support\Facades\Artisan::call('optimize:clear');
         return "Deploy commands executed successfully!";

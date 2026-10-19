@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    'qris' => [
+        'url' => env('SCALIFY_QRIS_URL', 'http://pay.scalifyintellegence.my.id/api/v1/qris/dynamic'),
+        'api_key' => env('SCALIFY_QRIS_API_KEY', env('QRIS_API_KEY', '')),
+        'project' => env('SCALIFY_PROJECT', ''),
+    ],
+
 ];

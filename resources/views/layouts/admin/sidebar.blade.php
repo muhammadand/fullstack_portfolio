@@ -61,6 +61,11 @@ $menus = [
 'icon' => 'fa-solid fa-id-card',
 ],
 [
+'label' => 'Review Cards',
+'route' => 'admin.review_cards.index',
+'icon' => 'fa-solid fa-qrcode',
+],
+[
 'label' => 'Marketing',
 'icon' => 'fa-solid fa-bullhorn',
 'submenu' => [
