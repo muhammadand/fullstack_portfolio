@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/product-sans" rel="stylesheet">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <!-- CDN html2canvas & html2pdf untuk ekspor cetak 300 DPI -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -23,6 +24,10 @@
 
         .font-outfit {
             font-family: 'Outfit', sans-serif;
+        }
+
+        .font-google {
+            font-family: 'Product Sans', 'Plus Jakarta Sans', sans-serif;
         }
 
         .glass-panel {
@@ -83,17 +88,17 @@
                 <span class="text-[10px] text-blue-400 font-normal">2 Pilihan Desain</span>
             </div>
             <div class="grid grid-cols-2 gap-1.5">
-                <!-- Option 1: Square NFC Tap & QR -->
+                <!-- Option 1: Square Google Card (Sesuai Foto - Scan QR) -->
                 <button type="button" @click="selectedTemplate = 'square_nfc'" :class="selectedTemplate === 'square_nfc' ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20 border-transparent' : 'text-slate-400 hover:text-white hover:bg-white/5 border-white/5'" class="p-2.5 rounded-xl border transition-all text-left flex items-start gap-2.5">
                     <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" :class="selectedTemplate === 'square_nfc' ? 'bg-white/20 text-white' : 'bg-slate-800 text-slate-400'">
-                        <i class="fa-solid fa-wifi text-xs rotate-90"></i>
+                        <i class="fa-solid fa-qrcode text-xs"></i>
                     </div>
                     <div class="flex-1 min-w-0">
                         <div class="flex items-center gap-1.5">
-                            <span class="text-xs font-bold font-outfit truncate">Square NFC</span>
-                            <span class="text-[9px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 font-semibold shrink-0">Hot</span>
+                            <span class="text-xs font-bold font-outfit truncate">Square Card</span>
+                            <span class="text-[9px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 font-semibold shrink-0">Sesuai Foto</span>
                         </div>
-                        <p class="text-[10px] opacity-80 leading-snug truncate">Tempel NFC + Scan QR</p>
+                        <p class="text-[10px] opacity-80 leading-snug truncate">Desain Kotak Google (QR)</p>
                     </div>
                 </button>
 
@@ -127,7 +132,7 @@
         <div class="glass-panel p-4 rounded-3xl space-y-2.5">
             <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2 font-outfit flex items-center gap-1.5">
                 <i class="fa-solid fa-download text-blue-400"></i>
-                Download Format Cetak (<span x-text="selectedTemplate === 'square_nfc' ? 'Square NFC' : 'Standee Portrait'"></span>)
+                Download Format Cetak (<span x-text="selectedTemplate === 'square_nfc' ? 'Square Card' : 'Standee Portrait'"></span>)
             </h3>
 
             <!-- Download PNG -->
@@ -191,7 +196,7 @@
                             , backgroundColor: null
                         });
 
-                        const suffix = this.selectedTemplate === 'square_nfc' ? 'Square-NFC' : 'Standee-Portrait';
+                        const suffix = this.selectedTemplate === 'square_nfc' ? 'Square-Google' : 'Standee-Portrait';
                         const link = document.createElement('a');
                         link.download = `Google-Review-${suffix}-{{ $card->serial_number }}.png`;
                         link.href = canvas.toDataURL('image/png');
@@ -214,7 +219,7 @@
                         return;
                     }
 
-                    const suffix = this.selectedTemplate === 'square_nfc' ? 'Square-NFC' : 'Standee-Portrait';
+                    const suffix = this.selectedTemplate === 'square_nfc' ? 'Square-Google' : 'Standee-Portrait';
                     const isSquare = this.selectedTemplate === 'square_nfc';
 
                     const opt = {
