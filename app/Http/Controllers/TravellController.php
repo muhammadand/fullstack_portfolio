@@ -7,6 +7,7 @@ use App\Models\BookingDetail;
 use App\Models\Customer;
 use App\Models\Route;
 use App\Models\Schedule;
+use App\Services\QrisPaymentService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -85,11 +86,76 @@ class TravellController extends Controller
             'dropoff_address' => 'nullable|string|max:255',
             'charter_date' => 'nullable|date',
             'duration_days' => 'nullable|integer|min:1',
+            'charter_purpose' => 'nullable|string|in:kondangan,liburan,dinas',
+            'charter_fleet' => 'nullable|string',
             'destination_note' => 'nullable|string|max:500',
             'notes' => 'nullable|string|max:500',
+            'seats' => 'nullable|array',
         ]);
 
-        // 1. Find or create Customer
+        // 1. Enforce Business Rule: Minimal 4 Kursi untuk Shuttle Reguler
+        $schedule = null;
+        $unitPrice = 190000;
+        $totalAmount = 0;
+
+        if ($validated['booking_type'] === 'reguler') {
+            if (empty($validated['schedule_id'])) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Pilih jadwal keberangkatan terlebih dahulu.',
+                ], 422);
+            }
+
+            $schedule = Schedule::with('route')->findOrFail($validated['schedule_id']);
+            $minQuota = (int) ($schedule->min_quota ?? 4);
+            $totalPassengers = (int) $validated['total_passengers'];
+
+            if ($totalPassengers < $minQuota) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "Pemesanan shuttle reguler minimal {$minQuota} kursi untuk pemberangkatan rombongan door to door.",
+                ], 422);
+            }
+
+            if ($schedule->route) {
+                $unitPrice = (float) $schedule->route->base_price;
+            }
+            $totalAmount = $unitPrice * $totalPassengers;
+        } else {
+            // 2. Charter Pricing Logic (Kondangan vs Liburan)
+            $purpose = $validated['charter_purpose'] ?? 'kondangan';
+            $fleet = $validated['charter_fleet'] ?? 'xenia_all_new';
+            $days = (int) ($validated['duration_days'] ?? 1);
+
+            $rates = [
+                'kondangan' => [
+                    'xenia_all_new' => 750000,
+                    'avanza_veloz' => 700000,
+                    'innova_zenix' => 1000000,
+                    'hiace_premio' => 1350000,
+                    'elf_long' => 1500000,
+                ],
+                'liburan' => [
+                    'xenia_all_new' => 950000,
+                    'avanza_veloz' => 850000,
+                    'innova_zenix' => 1250000,
+                    'hiace_premio' => 1650000,
+                    'elf_long' => 1800000,
+                ],
+                'dinas' => [
+                    'xenia_all_new' => 850000,
+                    'avanza_veloz' => 800000,
+                    'innova_zenix' => 1100000,
+                    'hiace_premio' => 1500000,
+                    'elf_long' => 1650000,
+                ],
+            ];
+
+            $dailyRate = $rates[$purpose][$fleet] ?? ($rates['kondangan']['xenia_all_new'] ?? 750000);
+            $totalAmount = $dailyRate * $days;
+        }
+
+        // 3. Find or create Customer
         $customer = Customer::firstOrCreate(
             ['phone' => $validated['phone']],
             ['name' => $validated['name']]
@@ -99,29 +165,11 @@ class TravellController extends Controller
             $customer->update(['name' => $validated['name']]);
         }
 
-        // 2. Determine price and calculate total
-        $totalAmount = 0;
-        $unitPrice = 190000;
-        $schedule = null;
-        if ($validated['booking_type'] === 'reguler') {
-            if (!empty($validated['schedule_id'])) {
-                $schedule = Schedule::with('route')->find($validated['schedule_id']);
-                if ($schedule && $schedule->route) {
-                    $unitPrice = (float) $schedule->route->base_price;
-                }
-            }
-            $totalAmount = $unitPrice * (int) $validated['total_passengers'];
-        } else {
-            // Charter sewa mobil harian (default 850.000 / hari all in sopir)
-            $dailyRate = 850000;
-            $days = $validated['duration_days'] ?? 1;
-            $totalAmount = $dailyRate * $days;
-        }
+        // 4. Generate Unique Booking Code
+        $prefix = $validated['booking_type'] === 'reguler' ? 'RVN' : 'CHR';
+        $bookingCode = $prefix . '-' . date('Ymd') . '-' . strtoupper(substr(uniqid(), -4));
 
-        // 3. Generate Unique Booking Code
-        $bookingCode = 'TRV-' . date('Ymd') . '-' . strtoupper(substr(uniqid(), -4));
-
-        // 4. Create Booking Header
+        // 5. Create Booking Header
         $booking = Booking::create([
             'booking_code' => $bookingCode,
             'customer_id' => $customer->id,
@@ -139,17 +187,21 @@ class TravellController extends Controller
             'notes' => $validated['notes'] ?? null,
         ]);
 
-        // 5. Create Booking Details (Line Items)
+        // 6. Create Booking Details (Line Items)
         if ($validated['booking_type'] === 'reguler') {
             $routeName = ($schedule && $schedule->route)
                 ? ($schedule->route->origin . ' - ' . $schedule->route->destination)
                 : 'Ciamis - Bandung';
 
+            $selectedSeats = $request->input('seats', []);
             for ($i = 1; $i <= (int) $validated['total_passengers']; $i++) {
+                $seatNumber = isset($selectedSeats[$i - 1]) ? ('K-0' . $selectedSeats[$i - 1]) : ('K-0' . $i);
+
                 BookingDetail::create([
                     'booking_id' => $booking->id,
                     'item_type' => BookingDetail::ITEM_TYPE_SEAT,
-                    'item_name' => 'Tiket Kursi ' . $routeName,
+                    'item_name' => 'Tiket Kursi ' . $seatNumber . ' (' . $routeName . ')',
+                    'seat_number' => $seatNumber,
                     'passenger_name' => $i === 1 ? $customer->name : 'Penumpang ' . $i . ' (Rombongan ' . $customer->name . ')',
                     'passenger_phone' => $i === 1 ? $customer->phone : null,
                     'pickup_point' => $validated['pickup_address'] ?? null,
@@ -160,10 +212,11 @@ class TravellController extends Controller
                 ]);
             }
         } else {
+            $purposeLabel = ucfirst($validated['charter_purpose'] ?? 'kondangan');
             BookingDetail::create([
                 'booking_id' => $booking->id,
                 'item_type' => BookingDetail::ITEM_TYPE_CHARTER_UNIT,
-                'item_name' => 'Sewa Mobil + Sopir (' . ($validated['duration_days'] ?? 1) . ' Hari) - ' . ($validated['destination_note'] ?? 'Wisata/Charter'),
+                'item_name' => 'Charter ' . strtoupper($validated['charter_fleet'] ?? 'Daihatsu Xenia') . ' (' . ($validated['duration_days'] ?? 1) . ' Hari - ' . $purposeLabel . ')',
                 'passenger_name' => $customer->name,
                 'passenger_phone' => $customer->phone,
                 'pickup_point' => $validated['pickup_address'] ?? null,
@@ -175,8 +228,24 @@ class TravellController extends Controller
             ]);
         }
 
-        // 6. Request Dynamic QRIS from Scalify Intelligence Payment Gateway
-        $qrisResult = $this->requestDynamicQris($booking, $customer, $totalAmount);
+        // 7. Request Dynamic QRIS via QrisPaymentService (Scalify Pay)
+        $qrisResult = QrisPaymentService::createDynamicQris(
+            $booking->booking_code,
+            $totalAmount,
+            [
+                'name' => $customer->name,
+                'phone' => $customer->phone,
+            ],
+            'DANA'
+        );
+
+        // Generate QR image URL if payload exists
+        $qrisPayload = $qrisResult['data']['qris_payload'] ?? null;
+        $qrisImageUrl = $qrisPayload
+            ? 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=8&data=' . urlencode($qrisPayload)
+            : null;
+
+        $finalAmount = $qrisResult['data']['total_amount'] ?? $totalAmount;
 
         return response()->json([
             'success' => true,
@@ -189,8 +258,13 @@ class TravellController extends Controller
                 'total_passengers' => $booking->total_passengers,
                 'pickup_address' => $booking->pickup_address,
                 'dropoff_address' => $booking->dropoff_address,
-                'total_amount' => (int) $booking->total_amount,
-                'formatted_amount' => 'Rp ' . number_format($booking->total_amount, 0, ',', '.'),
+                'base_amount' => (int) $totalAmount,
+                'total_amount' => (int) $finalAmount,
+                'unique_code' => (int) ($qrisResult['data']['unique_code'] ?? 0),
+                'formatted_amount' => 'Rp ' . number_format($finalAmount, 0, ',', '.'),
+                'qris_payload' => $qrisPayload,
+                'qris_image_url' => $qrisImageUrl,
+                'expires_at' => $qrisResult['data']['expires_at'] ?? now()->addMinutes(30)->toIso8601String(),
                 'qris' => $qrisResult,
             ],
         ]);

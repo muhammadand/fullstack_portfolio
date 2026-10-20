@@ -380,8 +380,8 @@ class ReviewCardController extends Controller
         DB::table('review_cards')->where('id', $card->id)->update([
             'business_name' => trim($validated['business_name']),
             'google_review_url' => trim($validated['google_review_url']),
-            'owner_name' => $validated['owner_name'] ? trim($validated['owner_name']) : null,
-            'owner_phone' => $validated['owner_phone'] ? trim($validated['owner_phone']) : null,
+            'owner_name' => !empty($validated['owner_name']) ? trim($validated['owner_name']) : null,
+            'owner_phone' => !empty($validated['owner_phone']) ? trim($validated['owner_phone']) : null,
             'status' => 'active',
             'activated_at' => $now,
             'updated_at' => $now,

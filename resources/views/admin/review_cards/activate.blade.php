@@ -136,20 +136,8 @@
                     </p>
                 </div>
 
-                <!-- Nama & No. WhatsApp (Opsional) -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-400 mb-1">Nama Pemilik (Opsional)</label>
-                        <input type="text" name="owner_name" value="{{ old('owner_name') }}" placeholder="Nama Anda" class="w-full px-3 py-2 bg-slate-900/80 border border-slate-700 rounded-xl text-white text-xs focus:ring-2 focus:ring-blue-500 outline-none placeholder:text-slate-600">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-400 mb-1">No. WhatsApp (Opsional)</label>
-                        <input type="text" name="owner_phone" value="{{ old('owner_phone') }}" placeholder="08xxxxxxxxxx" class="w-full px-3 py-2 bg-slate-900/80 border border-slate-700 rounded-xl text-white text-xs focus:ring-2 focus:ring-blue-500 outline-none placeholder:text-slate-600">
-                    </div>
-                </div>
-
                 <!-- Submit Button dengan Loading Spinner Interaktif -->
-                <div class="pt-3">
+                <div class="pt-2">
                     <button type="submit" id="btnSubmitActivation" class="w-full py-3.5 px-4 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white font-semibold rounded-xl text-sm transition-all shadow-lg shadow-blue-500/25 flex items-center justify-center gap-2 group cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed">
                         <span id="btnText">Aktifkan Kartu Sekarang</span>
                         <i id="btnIcon" class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
@@ -247,7 +235,7 @@
                     </div>
                     <div class="flex gap-2.5 items-start">
                         <span class="w-5 h-5 rounded-full bg-blue-500/20 text-blue-400 font-bold flex items-center justify-center text-[11px] flex-shrink-0">3</span>
-                        <span>Klik tombol <b>"Minta Ulasan"</b> atau tombol <b>"Bagikan Profil"</b>.</span>
+                        <span>Klik tombol <b>"Minta Ulasan"</b> (Dapatkan ulasan lainnya) agar saat discan langsung muncul pop-up bintang 5.</span>
                     </div>
                     <div class="flex gap-2.5 items-start">
                         <span class="w-5 h-5 rounded-full bg-blue-500/20 text-blue-400 font-bold flex items-center justify-center text-[11px] flex-shrink-0">4</span>
