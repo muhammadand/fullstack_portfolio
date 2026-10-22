@@ -17,7 +17,6 @@
         </div>
     </div>
 
-    <!-- Dashboard Stats Grid -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <!-- Total Partners -->
         <div class="group bg-white rounded-xl p-5 shadow-sm border border-slate-200 hover:border-blue-400 hover:shadow transition-all flex items-center justify-between">
