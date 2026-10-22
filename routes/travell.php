@@ -19,5 +19,8 @@ Route::prefix('travell')->name('travell.')->group(function () {
     Route::post('/book', [TravellController::class, 'storeBooking'])->name('book');
     Route::post('/qris/generate', [TravellController::class, 'generateQris'])->name('qris.generate');
     Route::get('/status/{code}', [TravellController::class, 'checkStatus'])->name('status');
+    Route::post('/my-tickets', [TravellController::class, 'myTickets'])->name('my_tickets');
+    Route::post('/pay/{code}', [TravellController::class, 'payBooking'])->name('pay');
+    Route::post('/customer/login', [TravellController::class, 'loginCustomer'])->name('customer.login');
+    Route::get('/customer/profile', [TravellController::class, 'customerProfile'])->name('customer.profile');
 });
-

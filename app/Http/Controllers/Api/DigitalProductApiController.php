@@ -10,9 +10,33 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Symfony\Component\DomCrawler\Crawler;
+use App\Services\GoogleMapsService;
 
 class DigitalProductApiController extends Controller
 {
+    public function getPlaceId(Request $request, GoogleMapsService $mapsService)
+    {
+        $request->validate([
+            'url' => 'required|url',
+        ]);
+
+        try {
+            $result = $mapsService->getPlaceDetailsFromUrl($request->input('url'));
+
+            return response()->json([
+                'status' => 'success',
+                'data'   => $result,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => $e->getMessage(),
+            ], 422);
+        }
+    }
+
+
+
     /**
      * Get list of digital products
      * GET /api/digital-products

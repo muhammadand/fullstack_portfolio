@@ -16,6 +16,10 @@ return Application::configure(basePath: dirname(__DIR__))
             \App\Http\Middleware\AffiliateTracker::class,
         ]);
 
+        $middleware->validateCsrfTokens(except: [
+            'travell/*',
+        ]);
+
         // Fix: Intercept 403 responses caused by hosting WAF and force 200
         $middleware->append(\App\Http\Middleware\ForceOkForBots::class);
 

@@ -66,6 +66,27 @@ $menus = [
 'icon' => 'fa-solid fa-qrcode',
 ],
 [
+'label' => 'Travel & Shuttle',
+'logo' => 'images/travel/rivian_logo.jpg',
+'submenu' => [
+[
+'label' => 'Pesanan Travel',
+'route' => 'admin.travel_bookings.index',
+'icon' => 'fa-solid fa-ticket',
+],
+[
+'label' => 'Rute Perjalanan',
+'route' => 'admin.travel_routes.index',
+'icon' => 'fa-solid fa-map-location-dot',
+],
+[
+'label' => 'Jadwal & Kuota',
+'route' => 'admin.travel_schedules.index',
+'icon' => 'fa-solid fa-calendar-days',
+],
+]
+],
+[
 'label' => 'Marketing',
 'icon' => 'fa-solid fa-bullhorn',
 'submenu' => [
@@ -123,15 +144,24 @@ $activeRoute = \Illuminate\Support\Facades\Route::currentRouteName();
             @php
             $isSubActive = collect($menu['submenu'])->contains(function($sub) use ($activeRoute) {
             $baseRoute = str_replace('.index', '', $sub['route']);
-            return $activeRoute === $sub['route'] || str_starts_with($activeRoute, $baseRoute . '.');
+            return $activeRoute === $sub['route'] || str_starts_with((string)$activeRoute, $baseRoute . '.');
             });
             @endphp
             <div x-data="{ open: {{ $isSubActive ? 'true' : 'false' }} }" class="col-span-3 sm:col-span-4 lg:col-span-1">
                 <button @click="open = !open" class="w-full flex flex-col lg:flex-row items-center lg:justify-between justify-center gap-1.5 lg:gap-3 p-3 lg:px-3 lg:py-2.5 rounded-xl transition-all duration-200 group relative {{ $isSubActive ? 'bg-white/5' : '' }}" style="border: 1px solid transparent;">
                     <div class="flex flex-col lg:flex-row items-center gap-1.5 lg:gap-3">
-                        <i class="{{ $menu['icon'] }} text-lg lg:text-sm w-4 text-center transition-colors duration-200 {{ $isSubActive ? 'text-blue-400' : 'text-white/40 group-hover:text-white/70' }}"></i>
-                        <span class="text-[10px] lg:text-sm font-medium transition-colors duration-200 text-center lg:text-left leading-tight {{ $isSubActive ? 'text-white' : 'text-white/55 group-hover:text-white/90' }}">
+                        @if(isset($menu['logo']))
+                            <img src="{{ asset($menu['logo']) }}" alt="{{ $menu['label'] }}" class="w-5 h-5 rounded-md object-cover border border-white/20 shrink-0">
+                        @else
+                            <i class="{{ $menu['icon'] ?? '' }} text-lg lg:text-sm w-4 text-center transition-colors duration-200 {{ $isSubActive ? 'text-blue-400' : 'text-white/40 group-hover:text-white/70' }}"></i>
+                        @endif
+                        <span class="text-[10px] lg:text-sm font-medium transition-colors duration-200 text-center lg:text-left leading-tight {{ $isSubActive ? 'text-white' : 'text-white/55 group-hover:text-white/90' }} flex items-center justify-center lg:justify-start">
                             {{ $menu['label'] }}
+                            @if($menu['label'] === 'Travel & Shuttle' && ($pendingTravelCount = \App\Models\Booking::where('status', 'pending')->count()) > 0)
+                            <span class="ml-1.5 inline-flex items-center justify-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 animate-pulse">
+                                {{ $pendingTravelCount }}
+                            </span>
+                            @endif
                         </span>
                     </div>
                     <i class="fa-solid fa-chevron-down text-[10px] text-white/40 hidden lg:block transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
@@ -142,8 +172,13 @@ $activeRoute = \Illuminate\Support\Facades\Route::currentRouteName();
                     @php $isActive = $activeRoute === $sub['route']; @endphp
                     <a href="{{ route($sub['route']) }}" class="flex flex-col lg:flex-row items-center lg:justify-start justify-center gap-1.5 lg:gap-3 p-3 lg:px-3 lg:py-2 rounded-lg transition-all duration-200 group relative {{ $isActive ? 'text-white' : '' }}" style="{{ $isActive ? 'background: linear-gradient(90deg, rgba(59,130,246,0.2) 0%, rgba(59,130,246,0.08) 100%); border: 1px solid rgba(59,130,246,0.25);' : 'border: 1px solid transparent;' }}">
                         <i class="{{ $sub['icon'] }} text-lg lg:text-[13px] w-4 text-center transition-colors duration-200 {{ $isActive ? 'text-blue-400' : 'text-white/40 group-hover:text-white/70' }}"></i>
-                        <span class="text-[10px] lg:text-[13px] font-medium transition-colors duration-200 text-center lg:text-left leading-tight {{ $isActive ? 'text-white' : 'text-white/55 group-hover:text-white/90' }}">
+                        <span class="text-[10px] lg:text-[13px] font-medium transition-colors duration-200 text-center lg:text-left leading-tight {{ $isActive ? 'text-white' : 'text-white/55 group-hover:text-white/90' }} flex items-center justify-center lg:justify-start">
                             {{ $sub['label'] }}
+                            @if($sub['route'] === 'admin.travel_bookings.index' && ($pendingTravelCount = \App\Models\Booking::where('status', 'pending')->count()) > 0)
+                            <span class="ml-1.5 inline-flex items-center justify-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 animate-pulse">
+                                {{ $pendingTravelCount }}
+                            </span>
+                            @endif
                         </span>
                     </a>
                     @endforeach

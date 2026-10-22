@@ -13,6 +13,11 @@ class Customer extends Model
     protected $fillable = [
         'name',
         'phone',
+        'points',
+    ];
+
+    protected $casts = [
+        'points' => 'integer',
     ];
 
     /**
@@ -23,4 +28,3 @@ class Customer extends Model
         return $this->hasMany(Booking::class);
     }
 }
-

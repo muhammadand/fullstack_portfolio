@@ -13,14 +13,14 @@
 
     <div class="p-3.5 space-y-3 flex-1">
         <form id="charterBookingForm" onsubmit="proceedCharterBooking(event)" class="space-y-3">
-            
+
             <!-- 1. Pilihan Keperluan / Paket Charter -->
             <div class="bg-white rounded-2xl p-3.5 border border-slate-200/80 shadow-xs">
                 <h4 class="text-xs font-extrabold text-slate-900 border-b border-slate-100 pb-2 mb-2 flex items-center justify-between">
                     <span>1. Pilih Keperluan Sewa</span>
                     <span class="text-[9px] text-sky-600 font-bold bg-sky-50 px-2 py-0.5 rounded-full">All-In Sopir & BBM</span>
                 </h4>
-                
+
                 <div class="grid grid-cols-2 gap-2">
                     <label class="charter-purpose-card p-2.5 rounded-xl border-2 border-sky-500 bg-sky-50/60 cursor-pointer flex flex-col justify-between transition">
                         <div class="flex items-center gap-2 mb-1">
@@ -48,7 +48,7 @@
                     <span>2. Pilih Tipe Armada</span>
                     <span class="text-[9px] text-slate-400 font-semibold">AC Dingin & Bersih</span>
                 </h4>
-                
+
                 <div class="space-y-2">
                     <!-- Option 1: Daihatsu Xenia (Primary Armada) -->
                     <label class="charter-fleet-card flex items-center justify-between p-2.5 rounded-xl border-2 border-sky-500 bg-sky-50/50 cursor-pointer transition">
@@ -103,7 +103,7 @@
             <!-- 3. Rute & Durasi Sewa -->
             <div class="bg-white rounded-2xl p-3.5 border border-slate-200/80 space-y-2.5 shadow-xs">
                 <h4 class="text-xs font-extrabold text-slate-900 border-b border-slate-100 pb-1.5">3. Rute & Waktu Pemakaian</h4>
-                
+
                 <div class="grid grid-cols-2 gap-2">
                     <div class="bg-slate-50 border border-slate-200/90 rounded-xl px-2.5 py-1.5">
                         <label class="block text-[8px] font-bold uppercase tracking-wider text-slate-400">Kota Penjemputan</label>
@@ -146,7 +146,7 @@
             <!-- 4. Form Kontak & Alamat -->
             <div class="bg-white rounded-2xl p-3.5 border border-slate-200/80 space-y-2.5 shadow-xs">
                 <h4 class="text-xs font-extrabold text-slate-900 border-b border-slate-100 pb-1.5">4. Kontak & Lokasi Jemput</h4>
-                
+
                 <div>
                     <label class="block text-[9px] font-bold text-slate-500 mb-1 uppercase">Nama Pemesan / Penanggung Jawab *</label>
                     <input type="text" id="charterName" required placeholder="Nama Lengkap Anda" value="" class="w-full h-9 bg-slate-50 border border-slate-200 rounded-xl px-3 text-xs text-slate-900 font-semibold focus:ring-2 focus:ring-sky-500 focus:bg-white focus:outline-none">
@@ -173,7 +173,7 @@
                     <span class="text-[9px] text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full font-bold">Include Driver & BBM</span>
                 </div>
                 <button type="submit" id="btnSubmitCharter" class="w-full py-3 rounded-xl bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-700 text-white font-bold text-xs shadow-md shadow-sky-500/20 transition flex items-center justify-center gap-2 whitespace-nowrap cursor-pointer">
-                    <span>Booking Charter & Lanjut Bayar QRIS</span>
+                    <span>Booking sekarang</span>
                     <i class="fas fa-arrow-right text-[10px]"></i>
                 </button>
             </div>

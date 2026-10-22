@@ -192,6 +192,31 @@ Route::resource('admin/chat-templates', App\Http\Controllers\Admin\ChatTemplateC
 // Review Cards (Smart Google Review QR)
 require __DIR__ . '/review_cards.php';
 
+// Travel Bookings Management (Admin)
+Route::prefix('admin/travel-bookings')->name('admin.travel_bookings.')->group(function () {
+    Route::get('/', [\App\Http\Controllers\Admin\TravelBookingController::class, 'index'])->name('index');
+    Route::get('/{id}', [\App\Http\Controllers\Admin\TravelBookingController::class, 'show'])->name('show');
+    Route::put('/{id}/status', [\App\Http\Controllers\Admin\TravelBookingController::class, 'updateStatus'])->name('update_status');
+    Route::post('/{id}/verify-payment', [\App\Http\Controllers\Admin\TravelBookingController::class, 'verifyPayment'])->name('verify_payment');
+    Route::delete('/{id}', [\App\Http\Controllers\Admin\TravelBookingController::class, 'destroy'])->name('destroy');
+});
+
+// Travel Routes Management (Admin)
+Route::resource('admin/travel-routes', \App\Http\Controllers\Admin\TravelRouteController::class)->except(['create', 'show', 'edit'])->names([
+    'index' => 'admin.travel_routes.index',
+    'store' => 'admin.travel_routes.store',
+    'update' => 'admin.travel_routes.update',
+    'destroy' => 'admin.travel_routes.destroy',
+]);
+
+// Travel Schedules Management (Admin)
+Route::resource('admin/travel-schedules', \App\Http\Controllers\Admin\TravelScheduleController::class)->except(['create', 'show', 'edit'])->names([
+    'index' => 'admin.travel_schedules.index',
+    'store' => 'admin.travel_schedules.store',
+    'update' => 'admin.travel_schedules.update',
+    'destroy' => 'admin.travel_schedules.destroy',
+]);
+
 // Profile
 Route::get('profile', [UserController::class, 'editProfile'])->name('profile.edit');
 Route::put('profile', [UserController::class, 'updateProfile'])->name('profile.update');
@@ -428,6 +453,11 @@ Route::get('/secret-deploy-trigger-12345', function () {
 
         \Illuminate\Support\Facades\Artisan::call('migrate', [
             '--path' => 'database/migrations/2026_10_19_133000_add_affiliate_id_to_review_cards_table.php',
+            '--force' => true
+        ]);
+
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_10_21_060813_add_points_to_customers_table.php',
             '--force' => true
         ]);
 

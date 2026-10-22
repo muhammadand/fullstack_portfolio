@@ -99,25 +99,53 @@ class TravellController extends Controller
         $totalAmount = 0;
 
         if ($validated['booking_type'] === 'reguler') {
-            if (empty($validated['schedule_id'])) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Pilih jadwal keberangkatan terlebih dahulu.',
-                ], 422);
-            }
-
-            $schedule = Schedule::with('route')->findOrFail($validated['schedule_id']);
-            $minQuota = (int) ($schedule->min_quota ?? 4);
             $totalPassengers = (int) $validated['total_passengers'];
-
-            if ($totalPassengers < $minQuota) {
+            if ($totalPassengers < 4) {
                 return response()->json([
                     'success' => false,
-                    'message' => "Pemesanan shuttle reguler minimal {$minQuota} kursi untuk pemberangkatan rombongan door to door.",
+                    'message' => "Pemesanan shuttle reguler minimal 4 kursi untuk pemberangkatan rombongan door to door via Tol.",
                 ], 422);
             }
 
-            if ($schedule->route) {
+            if (!empty($validated['schedule_id'])) {
+                $schedule = Schedule::with('route')->find($validated['schedule_id']);
+            }
+
+            if (!$schedule) {
+                $depDate = $request->input('departure_date', Carbon::today()->toDateString());
+                $rawTime = $request->input('departure_time', '06:00');
+                $depTime = strlen($rawTime) === 5 ? ($rawTime . ':00') : $rawTime;
+
+                // Determine route based on pickup / origin
+                $pickupRaw = strtolower($validated['pickup_address'] ?? $request->input('origin', 'ciamis'));
+                $route = null;
+                if (str_contains($pickupRaw, 'bandung') || str_contains($pickupRaw, 'pasteur') || str_contains($pickupRaw, 'dipatiukur')) {
+                    $route = Route::where('origin', 'like', '%Bandung%')->first();
+                } else {
+                    $route = Route::where('origin', 'like', '%Ciamis%')->first();
+                }
+
+                if (!$route) {
+                    $route = Route::first() ?? Route::create([
+                        'origin' => 'Ciamis',
+                        'destination' => 'Bandung',
+                        'base_price' => 190000,
+                    ]);
+                }
+
+                $schedule = Schedule::firstOrCreate([
+                    'route_id' => $route->id,
+                    'departure_date' => $depDate,
+                    'departure_time' => $depTime,
+                ], [
+                    'service_type' => Schedule::SERVICE_TYPE_REGULER,
+                    'min_quota' => 4,
+                    'status' => 'waiting_quota',
+                ]);
+            }
+
+            $unitPrice = 190000;
+            if ($schedule && $schedule->route) {
                 $unitPrice = (float) $schedule->route->base_price;
             }
             $totalAmount = $unitPrice * $totalPassengers;
@@ -155,14 +183,22 @@ class TravellController extends Controller
             $totalAmount = $dailyRate * $days;
         }
 
-        // 3. Find or create Customer
-        $customer = Customer::firstOrCreate(
-            ['phone' => $validated['phone']],
-            ['name' => $validated['name']]
-        );
+        // 3. Find or create Customer by unique phone
+        $cleanPhone = preg_replace('/[^0-9]/', '', $validated['phone']);
+        $customer = Customer::where('phone', $cleanPhone)
+            ->orWhere('phone', $validated['phone'])
+            ->first();
 
-        if ($customer->name !== $validated['name']) {
-            $customer->update(['name' => $validated['name']]);
+        if (!$customer) {
+            $customer = Customer::create([
+                'name' => $validated['name'],
+                'phone' => $cleanPhone,
+                'points' => 50, // Welcome points
+            ]);
+        } else {
+            if ($customer->name !== $validated['name'] && !empty($validated['name'])) {
+                $customer->update(['name' => $validated['name']]);
+            }
         }
 
         // 4. Generate Unique Booking Code
@@ -252,8 +288,10 @@ class TravellController extends Controller
             'message' => 'Pemesanan berhasil dibuat!',
             'data' => [
                 'booking_code' => $booking->booking_code,
+                'customer_id' => $customer->id,
                 'customer_name' => $customer->name,
                 'customer_phone' => $customer->phone,
+                'customer_points' => (int) ($customer->points ?? 0),
                 'booking_type' => $booking->booking_type,
                 'total_passengers' => $booking->total_passengers,
                 'pickup_address' => $booking->pickup_address,
@@ -386,6 +424,277 @@ class TravellController extends Controller
             'status' => $booking->status,
             'total_amount' => (int) $booking->total_amount,
             'formatted_amount' => 'Rp ' . number_format($booking->total_amount, 0, ',', '.'),
+        ]);
+    }
+
+    /**
+     * Get list of tickets / bookings for a customer by customer_id or phone number.
+     */
+    public function myTickets(Request $request)
+    {
+        $customerId = $request->input('customer_id');
+        $rawPhone = $request->input('phone');
+
+        if (empty($customerId) && empty($rawPhone)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Customer ID atau Nomor WhatsApp wajib diisi.',
+            ], 422);
+        }
+
+        $customerIds = collect();
+
+        if (!empty($customerId)) {
+            $customer = Customer::find($customerId);
+            if ($customer) {
+                $cleanPhone = preg_replace('/[^0-9]/', '', $customer->phone ?? '');
+                $customerIds = Customer::where('id', $customer->id)
+                    ->when(!empty($cleanPhone), function ($q) use ($cleanPhone) {
+                        $q->orWhere('phone', $cleanPhone);
+                        if (str_starts_with($cleanPhone, '62')) {
+                            $q->orWhere('phone', '0' . substr($cleanPhone, 2));
+                        } elseif (str_starts_with($cleanPhone, '0')) {
+                            $q->orWhere('phone', '62' . substr($cleanPhone, 1));
+                        }
+                        if (strlen($cleanPhone) >= 8) {
+                            $q->orWhere('phone', 'like', '%' . substr($cleanPhone, -8));
+                        }
+                    })->pluck('id');
+            } else {
+                $customerIds = collect([(int)$customerId]);
+            }
+        } elseif (!empty($rawPhone)) {
+            $cleanPhone = preg_replace('/[^0-9]/', '', $rawPhone);
+            if (strlen($cleanPhone) < 6) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Nomor HP tidak valid.',
+                ], 422);
+            }
+
+            // Find customer matching phone variations (08xxx vs 62xxx or last 8 digits)
+            $customerIds = Customer::where(function ($q) use ($cleanPhone) {
+                $q->where('phone', $cleanPhone);
+                if (str_starts_with($cleanPhone, '62')) {
+                    $alt = '0' . substr($cleanPhone, 2);
+                    $q->orWhere('phone', $alt);
+                } elseif (str_starts_with($cleanPhone, '0')) {
+                    $alt = '62' . substr($cleanPhone, 1);
+                    $q->orWhere('phone', $alt);
+                }
+                if (strlen($cleanPhone) >= 8) {
+                    $q->orWhere('phone', 'like', '%' . substr($cleanPhone, -8));
+                }
+            })->pluck('id');
+        }
+
+        $bookings = Booking::whereIn('customer_id', $customerIds)
+            ->with(['customer', 'schedule.route', 'details'])
+            ->latest()
+            ->get();
+
+        $formatted = $bookings->map(function ($b) {
+            $isCharter = $b->booking_type === 'charter';
+            $sched = $b->schedule;
+            $origin = $sched ? ($sched->route->origin ?? 'Ciamis') : 'Ciamis';
+            $dest = $sched ? ($sched->route->destination ?? 'Bandung') : ($b->destination_note ?? 'Bandung');
+            $depTime = $sched ? Carbon::parse($sched->departure_time)->format('H:i') . ' WIB' : '08:00 WIB';
+            $depDate = $isCharter
+                ? ($b->charter_date ? Carbon::parse($b->charter_date)->format('Y-m-d') : date('Y-m-d'))
+                : ($sched && $sched->departure_date ? Carbon::parse($sched->departure_date)->format('Y-m-d') : date('Y-m-d'));
+
+            $seatNumbers = $b->details ? $b->details->where('item_type', 'seat')->pluck('seat_number')->filter()->implode(', ') : null;
+            if (empty(trim((string)$seatNumbers))) {
+                $seatNumbers = $isCharter ? 'Sewa 1 Unit Mobil' : ($b->total_passengers ? $b->total_passengers . ' Kursi' : '1 Unit');
+            }
+
+            // Map status label for customer view
+            $statusLabel = 'Proses Verifikasi Pembayaran';
+            $statusColor = 'amber';
+            if ($b->payment_status === 'paid' || $b->status === 'confirmed') {
+                $statusLabel = 'PAID (Lunas & Terkonfirmasi)';
+                $statusColor = 'emerald';
+            } elseif ($b->status === 'completed') {
+                $statusLabel = 'Selesai';
+                $statusColor = 'sky';
+            } elseif ($b->status === 'cancelled') {
+                $statusLabel = 'Dibatalkan';
+                $statusColor = 'rose';
+            }
+
+            $paymentLabel = 'MENUNGGU PEMBAYARAN';
+            if ($b->payment_status === 'paid' || $b->status === 'confirmed') {
+                $paymentLabel = 'PAID / LUNAS';
+            } elseif ($b->payment_status === 'refunded') {
+                $paymentLabel = 'REFUND';
+            }
+
+            return [
+                'id' => $b->id,
+                'bookingCode' => $b->booking_code,
+                'orderType' => strtoupper($b->booking_type ?? 'REGULER'),
+                'passengerName' => $b->customer->name ?? 'Penumpang',
+                'phone' => $b->customer->phone ?? '',
+                'origin' => $origin,
+                'destination' => $dest,
+                'departureTime' => $depTime,
+                'departureDate' => $depDate,
+                'seats' => $seatNumbers,
+                'pickupAddress' => $b->pickup_address ?? '-',
+                'dropoffAddress' => $b->dropoff_address ?? '-',
+                'fleetName' => 'Daihatsu All New Xenia',
+                'totalPrice' => (int) $b->total_amount,
+                'totalFormatted' => 'Rp ' . number_format($b->total_amount, 0, ',', '.'),
+                'paymentStatus' => $paymentLabel,
+                'bookingStatus' => $b->status,
+                'statusLabel' => $statusLabel,
+                'statusColor' => $statusColor,
+                'createdAt' => $b->created_at ? $b->created_at->format('d M Y H:i') : '-',
+            ];
+        });
+
+        return response()->json([
+            'success' => true,
+            'count' => $formatted->count(),
+            'data' => $formatted,
+        ]);
+    }
+
+    /**
+     * Mark booking as paid (from QRIS screen simulation or webhook).
+     */
+    public function payBooking(Request $request, $bookingCode)
+    {
+        $booking = Booking::where('booking_code', $bookingCode)->first();
+        if (!$booking) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Pesanan tidak ditemukan.',
+            ], 404);
+        }
+
+        $booking->update([
+            'payment_status' => Booking::PAYMENT_UNPAID, // Proses verifikasi oleh admin
+            'payment_method' => $request->input('payment_method', 'QRIS Dynamic (Scalify Pay)'),
+            'status' => Booking::STATUS_PENDING, // 'pending' (Proses Verifikasi Pembayaran)
+        ]);
+
+        if ($booking->customer) {
+            $booking->customer->increment('points', 25);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Pembayaran Anda berhasil dikirim! Status pesanan saat ini: Proses Verifikasi Pembayaran oleh Admin.',
+            'data' => [
+                'booking_code' => $booking->booking_code,
+                'payment_status' => $booking->payment_status,
+                'status' => $booking->status,
+                'status_label' => 'Proses Verifikasi Pembayaran',
+                'total_amount' => (int) $booking->total_amount,
+                'customer_points' => (int) ($booking->customer->points ?? 0),
+            ],
+        ]);
+    }
+
+    /**
+     * Customer Login / Register by unique Phone & Name.
+     */
+    public function loginCustomer(Request $request)
+    {
+        $validated = $request->validate([
+            'phone' => 'required|string',
+            'name' => 'nullable|string|max:150',
+        ]);
+
+        $rawPhone = $validated['phone'];
+        $cleanPhone = preg_replace('/[^0-9]/', '', $rawPhone);
+        if (strlen($cleanPhone) < 8) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Nomor WhatsApp / HP tidak valid (minimal 8 digit).',
+            ], 422);
+        }
+
+        // Look up customer by phone variations
+        $customer = Customer::where('phone', $cleanPhone)
+            ->orWhere(function ($q) use ($cleanPhone) {
+                if (str_starts_with($cleanPhone, '62')) {
+                    $q->where('phone', '0' . substr($cleanPhone, 2));
+                } elseif (str_starts_with($cleanPhone, '0')) {
+                    $q->where('phone', '62' . substr($cleanPhone, 1));
+                }
+            })->first();
+
+        $isNew = false;
+        if (!$customer) {
+            $name = trim($validated['name'] ?? '');
+            if (empty($name)) {
+                return response()->json([
+                    'success' => true,
+                    'exists' => false,
+                    'message' => 'Nomor baru terdeteksi. Silakan masukkan nama Anda untuk pendaftaran akun.',
+                ]);
+            }
+
+            $customer = Customer::create([
+                'name' => $name,
+                'phone' => $cleanPhone,
+                'points' => 50, // Welcome bonus points
+            ]);
+            $isNew = true;
+        } else {
+            if (!empty($validated['name']) && ($customer->name === 'Penumpang' || $customer->name === 'Tamu')) {
+                $customer->update(['name' => $validated['name']]);
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'exists' => true,
+            'is_new' => $isNew,
+            'message' => $isNew ? 'Pendaftaran berhasil! Anda mendapatkan bonus 50 Poin.' : 'Selamat datang kembali, ' . $customer->name . '!',
+            'customer' => [
+                'id' => $customer->id,
+                'name' => $customer->name,
+                'phone' => $customer->phone,
+                'points' => (int) ($customer->points ?? 0),
+            ],
+        ]);
+    }
+
+    /**
+     * Get Customer Profile & Real-time Points.
+     */
+    public function customerProfile(Request $request)
+    {
+        $rawPhone = $request->query('phone');
+        if (empty($rawPhone)) {
+            return response()->json(['success' => false, 'message' => 'Nomor HP wajib.'], 422);
+        }
+
+        $cleanPhone = preg_replace('/[^0-9]/', '', $rawPhone);
+        $customer = Customer::where('phone', $cleanPhone)
+            ->orWhere(function ($q) use ($cleanPhone) {
+                if (str_starts_with($cleanPhone, '62')) {
+                    $q->where('phone', '0' . substr($cleanPhone, 2));
+                } elseif (str_starts_with($cleanPhone, '0')) {
+                    $q->where('phone', '62' . substr($cleanPhone, 1));
+                }
+            })->first();
+
+        if (!$customer) {
+            return response()->json(['success' => false, 'message' => 'Customer tidak ditemukan.'], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'customer' => [
+                'id' => $customer->id,
+                'name' => $customer->name,
+                'phone' => $customer->phone,
+                'points' => (int) ($customer->points ?? 0),
+            ],
         ]);
     }
 }

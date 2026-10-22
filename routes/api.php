@@ -25,6 +25,10 @@ Route::match(['get', 'post'], '/koperasi/nik/{nik?}', [DigitalProductApiControll
 Route::match(['get', 'post'], '/koperasi/check-nik', [DigitalProductApiController::class, 'getByNIK']);
 
 
+//extract
+Route::post('/placeid/extract', [DigitalProductApiController::class, 'getPlaceId']);
+
+
 // Endpoint Manual & Cron: Kirim Push Notification Harian
 use App\Models\Affiliate;
 use App\Notifications\DailyAffiliateReminder;

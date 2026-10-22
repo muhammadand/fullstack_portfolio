@@ -13,24 +13,25 @@
                 extend: {
                     colors: {
                         cafe: {
-                            espresso: '#140F0C',
-                            dark: '#1C1612',
-                            mocha: '#261E18',
-                            roast: '#3A2C22',
-                            bronze: '#C59B6C',
-                            gold: '#D8AA73',
-                            cream: '#FAF7F2',
-                            card: '#1F1813'
+                            espresso: '#140F0C'
+                            , dark: '#1C1612'
+                            , mocha: '#261E18'
+                            , roast: '#3A2C22'
+                            , bronze: '#C59B6C'
+                            , gold: '#D8AA73'
+                            , cream: '#FAF7F2'
+                            , card: '#1F1813'
                         }
-                    },
-                    fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-                        serif: ['"Playfair Display"', 'serif'],
-                        mono: ['"JetBrains Mono"', 'monospace']
+                    }
+                    , fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif']
+                        , serif: ['"Playfair Display"', 'serif']
+                        , mono: ['"JetBrains Mono"', 'monospace']
                     }
                 }
             }
         }
+
     </script>
 
     <!-- Google Fonts & FontAwesome -->
@@ -38,7 +39,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <!-- QRCode JS & Confetti -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -55,6 +56,7 @@
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
+
         .no-scrollbar {
             -ms-overflow-style: none;
             scrollbar-width: none;
@@ -82,32 +84,39 @@
         }
 
         @keyframes shimmer {
-            100% { transform: translateX(100%); }
+            100% {
+                transform: translateX(100%);
+            }
         }
+
         .shimmer-btn {
             position: relative;
             overflow: hidden;
         }
+
         .shimmer-btn::after {
             position: absolute;
-            top: 0; right: 0; bottom: 0; left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
             transform: translateX(-100%);
-            background-image: linear-gradient(
-                90deg,
-                rgba(255, 255, 255, 0) 0,
-                rgba(255, 255, 255, 0.25) 50%,
-                rgba(255, 255, 255, 0) 100%
-            );
+            background-image: linear-gradient(90deg,
+                    rgba(255, 255, 255, 0) 0,
+                    rgba(255, 255, 255, 0.25) 50%,
+                    rgba(255, 255, 255, 0) 100%);
             animation: shimmer 2.5s infinite;
             content: '';
         }
+
     </style>
 </head>
 <body class="h-full flex flex-col items-center justify-center antialiased p-0 sm:p-4">
 
     <!-- SOUND SYNTHESIZER (Web Audio API - Instant, Zero Delay) -->
     <script>
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+
         function playBeep(freq = 600, duration = 0.08, type = 'sine') {
             try {
                 if (audioCtx.state === 'suspended') audioCtx.resume();
@@ -123,6 +132,7 @@
                 osc.stop(audioCtx.currentTime + duration);
             } catch (e) {}
         }
+
         function playSuccessSound() {
             try {
                 if (audioCtx.state === 'suspended') audioCtx.resume();
@@ -132,20 +142,21 @@
                 setTimeout(() => playBeep(1046.50, 0.4), 280);
             } catch (e) {}
         }
+
     </script>
 
     @php
     $cleanWa = preg_replace('/[^0-9]/', '', $client->wa_number ?? '6281234567890');
     if (str_starts_with($cleanWa, '0')) {
-        $cleanWa = '62' . substr($cleanWa, 1);
+    $cleanWa = '62' . substr($cleanWa, 1);
     }
     $brandName = $client->brand_name ?? 'Artisan Coffee Roasters';
 
     $jsonPath = resource_path('views/client-proposals/cafe/data.json');
     if (file_exists($jsonPath)) {
-        $cafeDatabase = json_decode(file_get_contents($jsonPath), true);
+    $cafeDatabase = json_decode(file_get_contents($jsonPath), true);
     } else {
-        $cafeDatabase = [];
+    $cafeDatabase = [];
     }
     @endphp
 
@@ -173,7 +184,7 @@
 
     <!-- Main Mobile Device Screen -->
     <main class="w-full h-full sm:h-auto mobile-device-wrapper bg-[#140F0C] flex flex-col relative overflow-hidden text-cafe-cream">
-        
+
         <!-- Mobile Status Bar (Espresso & Gold Theme) -->
         <div class="bg-gradient-to-r from-[#241A14] via-[#1F1612] to-[#140F0C] text-white px-6 pt-3 pb-2 flex items-center justify-between text-[11px] font-semibold shrink-0 z-40 select-none border-b border-white/5">
             <span id="statusBarClock" class="font-bold">12:30</span>
@@ -194,7 +205,7 @@
 
             <!-- ================= VIEW 1: MENU SELF-ORDER (DEFAULT) ================= -->
             <section id="viewMenu" class="flex-1 flex flex-col space-y-4 p-4">
-                
+
                 <!-- Table & Location Header -->
                 <div class="bg-gradient-to-r from-[#2A1F17] to-[#1F1612] rounded-2xl p-3.5 border border-[#C59B6C]/30 flex items-center justify-between shadow-lg">
                     <div class="flex items-center gap-3">
@@ -262,7 +273,7 @@
 
             <!-- ================= VIEW 2: VIP MEMBERSHIP ================= -->
             <section id="viewMember" class="flex-1 hidden flex-col space-y-4 p-4">
-                
+
                 <div class="text-center pt-2">
                     <span class="text-[10px] uppercase tracking-widest text-[#D8AA73] font-bold">Exclusive Coffee Club</span>
                     <h3 class="font-serif font-bold text-xl text-white mt-0.5">VIP Loyalty Pass</h3>
@@ -406,7 +417,7 @@
         </nav>
 
         <!-- ================= MODALS INSIDE PHONE ================= -->
-        
+
         <!-- 1. CART SHEET DRAWER -->
         <div id="appCartSheet" class="absolute inset-0 bg-black/80 backdrop-blur-sm hidden flex-col justify-end z-50">
             <div class="bg-[#1C1612] rounded-t-3xl border-t border-[#C59B6C]/40 p-5 max-h-[80%] flex flex-col shadow-2xl">
@@ -444,8 +455,7 @@
                 </div>
 
                 <button onclick="closeAppCartSheet(); openAppCheckoutModal();" class="shimmer-btn mt-4 w-full py-2.5 rounded-xl bg-gradient-to-r from-[#C59B6C] to-[#D8AA73] text-[#140F0C] text-xs font-bold tracking-wide transition flex items-center justify-center gap-2">
-                    <i class="fas fa-qrcode text-xs"></i>
-                    <span>Lanjut Bayar QRIS</span>
+                    <span>Bayar Sekarang</span>
                 </button>
             </div>
         </div>
@@ -556,23 +566,53 @@
     <!-- ================= JS ENGINE ================= -->
     <script>
         const db = @json($cafeDatabase);
-        
-        let sampleMembers = [
-            { phone: "081234567890", name: "Sarah Anggraini", tier: "Gold VIP", discount: 10, points: 2450 },
-            { phone: "087788991122", name: "Dimas Prasetyo", tier: "Platinum Club", discount: 15, points: 5120 },
-            { phone: "085612345678", name: "Jessica Amanda", tier: "Silver Member", discount: 5, points: 850 }
+
+        let sampleMembers = [{
+                phone: "081234567890"
+                , name: "Sarah Anggraini"
+                , tier: "Gold VIP"
+                , discount: 10
+                , points: 2450
+            }
+            , {
+                phone: "087788991122"
+                , name: "Dimas Prasetyo"
+                , tier: "Platinum Club"
+                , discount: 15
+                , points: 5120
+            }
+            , {
+                phone: "085612345678"
+                , name: "Jessica Amanda"
+                , tier: "Silver Member"
+                , discount: 5
+                , points: 850
+            }
         ];
 
         let currentTableIdx = 0;
         let activeCategory = 'all';
         let currentMember = sampleMembers[0];
-        let appCart = [
-            { id: "CF-01", name: "Caramel Macchiato Reserve", price: 38000, qty: 1 },
-            { id: "CF-08", name: "French Butter Croissant", price: 28000, qty: 1 }
+        let appCart = [{
+                id: "CF-01"
+                , name: "Caramel Macchiato Reserve"
+                , price: 38000
+                , qty: 1
+            }
+            , {
+                id: "CF-08"
+                , name: "French Butter Croissant"
+                , price: 28000
+                , qty: 1
+            }
         ];
-        let orderHistory = [
-            { id: "#CF-9081", table: "Meja 04", items: "2x Caramel Macchiato, 1x Truffle Fries", total: 111000, status: "Lunas (QRIS)" }
-        ];
+        let orderHistory = [{
+            id: "#CF-9081"
+            , table: "Meja 04"
+            , items: "2x Caramel Macchiato, 1x Truffle Fries"
+            , total: 111000
+            , status: "Lunas (QRIS)"
+        }];
         let qrisTimerInterval = null;
 
         function formatRp(num) {
@@ -721,7 +761,12 @@
             if (exist) {
                 exist.qty += 1;
             } else {
-                appCart.push({ id: item.id, name: item.name, price: item.price, qty: 1 });
+                appCart.push({
+                    id: item.id
+                    , name: item.name
+                    , price: item.price
+                    , qty: 1
+                });
             }
             renderCart();
         }
@@ -744,11 +789,25 @@
             const grandTotal = afterDisc + tax;
             const totalQty = appCart.reduce((sum, i) => sum + i.qty, 0);
 
-            return { subtotal, discountRate, discountAmount, tax, grandTotal, totalQty };
+            return {
+                subtotal
+                , discountRate
+                , discountAmount
+                , tax
+                , grandTotal
+                , totalQty
+            };
         }
 
         function renderCart() {
-            const { subtotal, discountRate, discountAmount, tax, grandTotal, totalQty } = calcBill();
+            const {
+                subtotal
+                , discountRate
+                , discountAmount
+                , tax
+                , grandTotal
+                , totalQty
+            } = calcBill();
 
             // Floating bar
             const floatingBar = document.getElementById('appFloatingCart');
@@ -810,19 +869,21 @@
                 return;
             }
             playBeep(800, 0.05);
-            const { grandTotal } = calcBill();
+            const {
+                grandTotal
+            } = calcBill();
             document.getElementById('appQrisAmount').innerText = formatRp(grandTotal);
 
             // Generate QR Graphic
             const container = document.getElementById('appQrisGraphic');
             container.innerHTML = '';
             new QRCode(container, {
-                text: `00020101021226590014ID.LINKAJA.WWW01189360099900000000000215ID202688921004151440014ID.CO.QRIS.WWW0215ID20268892100415204581253033605406${grandTotal}5802ID5914{{ strtoupper($brandName) }}6007JAKARTA6304`,
-                width: 150,
-                height: 150,
-                colorDark: "#140F0C",
-                colorLight: "#FFFFFF",
-                correctLevel: QRCode.CorrectLevel.M
+                text: `00020101021226590014ID.LINKAJA.WWW01189360099900000000000215ID202688921004151440014ID.CO.QRIS.WWW0215ID20268892100415204581253033605406${grandTotal}5802ID5914{{ strtoupper($brandName) }}6007JAKARTA6304`
+                , width: 150
+                , height: 150
+                , colorDark: "#140F0C"
+                , colorLight: "#FFFFFF"
+                , correctLevel: QRCode.CorrectLevel.M
             });
 
             startAppQrisTimer();
@@ -852,9 +913,20 @@
         function simulateAppPaymentSuccess() {
             closeAppQrisModal();
             playSuccessSound();
-            confetti({ particleCount: 70, spread: 60, origin: { y: 0.6 } });
+            confetti({
+                particleCount: 70
+                , spread: 60
+                , origin: {
+                    y: 0.6
+                }
+            });
 
-            const { subtotal, discountAmount, tax, grandTotal } = calcBill();
+            const {
+                subtotal
+                , discountAmount
+                , tax
+                , grandTotal
+            } = calcBill();
             const tables = db.tables || [];
             const tableName = tables[currentTableIdx] ? tables[currentTableIdx].name : 'Meja 04';
             const invId = '#CF-' + Math.floor(1000 + Math.random() * 9000);
@@ -883,11 +955,11 @@
 
             // Push to Order History
             orderHistory.unshift({
-                id: invId,
-                table: tableName,
-                items: appCart.map(c => `${c.qty}x ${c.name}`).join(', '),
-                total: grandTotal,
-                status: 'Lunas (QRIS)'
+                id: invId
+                , table: tableName
+                , items: appCart.map(c => `${c.qty}x ${c.name}`).join(', ')
+                , total: grandTotal
+                , status: 'Lunas (QRIS)'
             });
             renderOrderHistory();
             renderKitchenQueue();
@@ -959,7 +1031,13 @@
                 return;
             }
             playSuccessSound();
-            const newM = { phone, name, tier: "Silver Member", discount: 5, points: 100 };
+            const newM = {
+                phone
+                , name
+                , tier: "Silver Member"
+                , discount: 5
+                , points: 100
+            };
             sampleMembers.unshift(newM);
             currentMember = newM;
             syncMemberViews();
@@ -1025,6 +1103,7 @@
             renderOrderHistory();
             renderKitchenQueue();
         });
+
     </script>
 </body>
 </html>
