@@ -112,33 +112,41 @@
         }
     }
 
+    // Tab Switcher Edge Fade Synchronisation
+    function handleTabScroll(container) {
+        if (!container) container = document.getElementById('guideTabsContainer');
+        if (!container) return;
+        const fadeLeft = document.getElementById('tab-fade-left');
+        const fadeRight = document.getElementById('tab-fade-right');
+        if (fadeLeft) {
+            fadeLeft.style.opacity = container.scrollLeft > 15 ? '1' : '0';
+        }
+        if (fadeRight) {
+            const maxScroll = container.scrollWidth - container.clientWidth;
+            fadeRight.style.opacity = (maxScroll - container.scrollLeft > 15) ? '1' : '0';
+        }
+    }
+
     // Initialize sprint status on load & livewire navigation
     function initGuideView() {
         updateSprintProgress();
         selectSprintDay(1);
+        setTimeout(() => {
+            const container = document.getElementById('guideTabsContainer');
+            if (container) handleTabScroll(container);
+        }, 150);
     }
 
     document.addEventListener('DOMContentLoaded', initGuideView);
     document.addEventListener('livewire:navigated', initGuideView);
 
-    // Tab Switcher Logic (Instant 0 Latency)
+    // Tab Switcher / Module Navigation Logic
     function switchTab(tabId) {
-        document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
-        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-
-        const targetPane = document.getElementById('tab-content-' + tabId);
-        const targetBtn = document.getElementById('tab-btn-' + tabId);
-
-        if (targetPane) targetPane.classList.remove('hidden');
-        if (targetBtn) targetBtn.classList.add('active');
-
-        // Scroll tab button into view smoothly
-        if (targetBtn) {
-            targetBtn.scrollIntoView({
-                behavior: 'smooth'
-                , inline: 'center'
-                , block: 'nearest'
-            });
+        const guideUrl = "{{ route('affiliate.guide') }}?section=" + encodeURIComponent(tabId);
+        if (typeof Livewire !== 'undefined' && Livewire.navigate) {
+            Livewire.navigate(guideUrl);
+        } else {
+            window.location.href = guideUrl;
         }
     }
 

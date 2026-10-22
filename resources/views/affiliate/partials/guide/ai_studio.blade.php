@@ -19,31 +19,77 @@
     <div class="glass-panel p-5 rounded-2xl space-y-4">
         <!-- Platform Selection -->
         <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-2">1. Pilih Saluran Media Sosial</label>
+            <div class="flex items-center justify-between mb-2.5">
+                <label class="block text-xs font-semibold text-slate-300">1. Pilih Saluran Media Sosial</label>
+                <span class="text-[10px] text-indigo-300/80 font-medium flex items-center gap-1">
+                    <i class="fa-solid fa-sparkles text-[9px] text-indigo-400"></i> Format Disesuaikan
+                </span>
+            </div>
             <div class="grid grid-cols-3 gap-2">
-                <label class="flex items-center gap-1.5 p-2 rounded-xl border border-white/10 bg-slate-900/50 cursor-pointer hover:border-blue-500 transition-colors">
-                    <input type="radio" name="ai_platform" value="wa_story" checked class="text-blue-600 focus:ring-0">
-                    <span class="text-[11px] text-white flex items-center gap-1"><i class="fa-brands fa-whatsapp text-emerald-400"></i> WhatsApp</span>
+                <!-- WhatsApp -->
+                <label class="cursor-pointer select-none">
+                    <input type="radio" name="ai_platform" value="wa_story" checked class="peer sr-only">
+                    <div class="flex items-center gap-2 px-2.5 py-2 sm:py-2.5 rounded-xl border border-white/10 bg-slate-900/60 hover:bg-slate-800/80 transition-all duration-200 peer-checked:border-blue-500 peer-checked:bg-gradient-to-r peer-checked:from-blue-600/25 peer-checked:to-indigo-600/20 peer-checked:shadow-[0_0_15px_rgba(59,130,246,0.25)]">
+                        <div class="w-6 h-6 rounded-lg bg-emerald-500/15 flex items-center justify-center text-emerald-400 shrink-0 text-xs">
+                            <i class="fa-brands fa-whatsapp"></i>
+                        </div>
+                        <span class="text-xs font-semibold text-slate-300 peer-checked:text-white truncate">WhatsApp</span>
+                    </div>
                 </label>
-                <label class="flex items-center gap-1.5 p-2 rounded-xl border border-white/10 bg-slate-900/50 cursor-pointer hover:border-blue-500 transition-colors">
-                    <input type="radio" name="ai_platform" value="facebook" class="text-blue-600 focus:ring-0">
-                    <span class="text-[11px] text-white flex items-center gap-1"><i class="fa-brands fa-facebook text-blue-400"></i> Facebook</span>
+
+                <!-- Facebook -->
+                <label class="cursor-pointer select-none">
+                    <input type="radio" name="ai_platform" value="facebook" class="peer sr-only">
+                    <div class="flex items-center gap-2 px-2.5 py-2 sm:py-2.5 rounded-xl border border-white/10 bg-slate-900/60 hover:bg-slate-800/80 transition-all duration-200 peer-checked:border-blue-500 peer-checked:bg-gradient-to-r peer-checked:from-blue-600/25 peer-checked:to-indigo-600/20 peer-checked:shadow-[0_0_15px_rgba(59,130,246,0.25)]">
+                        <div class="w-6 h-6 rounded-lg bg-blue-500/15 flex items-center justify-center text-blue-400 shrink-0 text-xs">
+                            <i class="fa-brands fa-facebook-f"></i>
+                        </div>
+                        <span class="text-xs font-semibold text-slate-300 peer-checked:text-white truncate">Facebook</span>
+                    </div>
                 </label>
-                <label class="flex items-center gap-1.5 p-2 rounded-xl border border-white/10 bg-slate-900/50 cursor-pointer hover:border-blue-500 transition-colors">
-                    <input type="radio" name="ai_platform" value="instagram" class="text-blue-600 focus:ring-0">
-                    <span class="text-[11px] text-white flex items-center gap-1"><i class="fa-brands fa-instagram text-pink-400"></i> Instagram</span>
+
+                <!-- Instagram -->
+                <label class="cursor-pointer select-none">
+                    <input type="radio" name="ai_platform" value="instagram" class="peer sr-only">
+                    <div class="flex items-center gap-2 px-2.5 py-2 sm:py-2.5 rounded-xl border border-white/10 bg-slate-900/60 hover:bg-slate-800/80 transition-all duration-200 peer-checked:border-blue-500 peer-checked:bg-gradient-to-r peer-checked:from-blue-600/25 peer-checked:to-indigo-600/20 peer-checked:shadow-[0_0_15px_rgba(59,130,246,0.25)]">
+                        <div class="w-6 h-6 rounded-lg bg-pink-500/15 flex items-center justify-center text-pink-400 shrink-0 text-xs">
+                            <i class="fa-brands fa-instagram"></i>
+                        </div>
+                        <span class="text-xs font-semibold text-slate-300 peer-checked:text-white truncate">Instagram</span>
+                    </div>
                 </label>
-                <label class="flex items-center gap-1.5 p-2 rounded-xl border border-white/10 bg-slate-900/50 cursor-pointer hover:border-blue-500 transition-colors">
-                    <input type="radio" name="ai_platform" value="telegram" class="text-blue-600 focus:ring-0">
-                    <span class="text-[11px] text-white flex items-center gap-1"><i class="fa-brands fa-telegram text-sky-400"></i> Telegram</span>
+
+                <!-- Telegram -->
+                <label class="cursor-pointer select-none">
+                    <input type="radio" name="ai_platform" value="telegram" class="peer sr-only">
+                    <div class="flex items-center gap-2 px-2.5 py-2 sm:py-2.5 rounded-xl border border-white/10 bg-slate-900/60 hover:bg-slate-800/80 transition-all duration-200 peer-checked:border-blue-500 peer-checked:bg-gradient-to-r peer-checked:from-blue-600/25 peer-checked:to-indigo-600/20 peer-checked:shadow-[0_0_15px_rgba(59,130,246,0.25)]">
+                        <div class="w-6 h-6 rounded-lg bg-sky-500/15 flex items-center justify-center text-sky-400 shrink-0 text-xs">
+                            <i class="fa-brands fa-telegram"></i>
+                        </div>
+                        <span class="text-xs font-semibold text-slate-300 peer-checked:text-white truncate">Telegram</span>
+                    </div>
                 </label>
-                <label class="flex items-center gap-1.5 p-2 rounded-xl border border-white/10 bg-slate-900/50 cursor-pointer hover:border-blue-500 transition-colors">
-                    <input type="radio" name="ai_platform" value="twitter" class="text-blue-600 focus:ring-0">
-                    <span class="text-[11px] text-white flex items-center gap-1"><i class="fa-brands fa-x-twitter text-slate-300"></i> Twitter / X</span>
+
+                <!-- Twitter / X -->
+                <label class="cursor-pointer select-none">
+                    <input type="radio" name="ai_platform" value="twitter" class="peer sr-only">
+                    <div class="flex items-center gap-2 px-2.5 py-2 sm:py-2.5 rounded-xl border border-white/10 bg-slate-900/60 hover:bg-slate-800/80 transition-all duration-200 peer-checked:border-blue-500 peer-checked:bg-gradient-to-r peer-checked:from-blue-600/25 peer-checked:to-indigo-600/20 peer-checked:shadow-[0_0_15px_rgba(59,130,246,0.25)]">
+                        <div class="w-6 h-6 rounded-lg bg-white/10 flex items-center justify-center text-slate-200 shrink-0 text-xs">
+                            <i class="fa-brands fa-x-twitter"></i>
+                        </div>
+                        <span class="text-xs font-semibold text-slate-300 peer-checked:text-white truncate">X (Twitter)</span>
+                    </div>
                 </label>
-                <label class="flex items-center gap-1.5 p-2 rounded-xl border border-white/10 bg-slate-900/50 cursor-pointer hover:border-blue-500 transition-colors">
-                    <input type="radio" name="ai_platform" value="linkedin" class="text-blue-600 focus:ring-0">
-                    <span class="text-[11px] text-white flex items-center gap-1"><i class="fa-brands fa-linkedin text-blue-400"></i> LinkedIn</span>
+
+                <!-- LinkedIn -->
+                <label class="cursor-pointer select-none">
+                    <input type="radio" name="ai_platform" value="linkedin" class="peer sr-only">
+                    <div class="flex items-center gap-2 px-2.5 py-2 sm:py-2.5 rounded-xl border border-white/10 bg-slate-900/60 hover:bg-slate-800/80 transition-all duration-200 peer-checked:border-blue-500 peer-checked:bg-gradient-to-r peer-checked:from-blue-600/25 peer-checked:to-indigo-600/20 peer-checked:shadow-[0_0_15px_rgba(59,130,246,0.25)]">
+                        <div class="w-6 h-6 rounded-lg bg-blue-600/15 flex items-center justify-center text-blue-400 shrink-0 text-xs">
+                            <i class="fa-brands fa-linkedin-in"></i>
+                        </div>
+                        <span class="text-xs font-semibold text-slate-300 peer-checked:text-white truncate">LinkedIn</span>
+                    </div>
                 </label>
             </div>
         </div>
