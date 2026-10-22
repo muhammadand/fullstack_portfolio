@@ -8,13 +8,28 @@ use Illuminate\Support\Facades\Auth;
 
 class AffiliateChatTemplateController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $affiliate = Auth::guard('affiliate')->user();
-        $templates = ChatTemplate::where('affiliate_id', $affiliate->id)->latest()->get();
-        $categories = \App\Models\BusinessCategory::all();
+        $selectedProduct = $request->query('product_type');
 
-        return view('affiliate.chat_templates.index', compact('templates', 'affiliate', 'categories'));
+        // Query ringan: select kolom yang dibutuhkan saja dan eager load businessCategory untuk cegah N+1
+        $templates = ChatTemplate::query()
+            ->select(['id', 'affiliate_id', 'name', 'product_type', 'business_category_id', 'content', 'created_at'])
+            ->with(['businessCategory:id,name'])
+            ->where('affiliate_id', $affiliate->id)
+            ->when($selectedProduct, function ($q, $product) {
+                $q->where('product_type', $product);
+            })
+            ->latest('id')
+            ->get();
+
+        $categories = \App\Models\BusinessCategory::query()
+            ->select(['id', 'name'])
+            ->orderBy('name')
+            ->get();
+
+        return view('affiliate.chat_templates.index', compact('templates', 'affiliate', 'categories', 'selectedProduct'));
     }
 
     public function store(Request $request)
@@ -23,10 +38,15 @@ class AffiliateChatTemplateController extends Controller
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'product_type' => 'nullable|string|in:website,review_card',
             'content' => 'required|string',
             'business_category_id' => 'nullable',
             'new_business_category' => 'nullable|string|max:255',
         ]);
+
+        if (empty($validated['product_type'])) {
+            $validated['product_type'] = 'website';
+        }
 
         if (!empty($validated['new_business_category'])) {
             $newCategory = \App\Models\BusinessCategory::create([
@@ -57,10 +77,15 @@ class AffiliateChatTemplateController extends Controller
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'product_type' => 'nullable|string|in:website,review_card',
             'content' => 'required|string',
             'business_category_id' => 'nullable',
             'new_business_category' => 'nullable|string|max:255',
         ]);
+
+        if (empty($validated['product_type'])) {
+            $validated['product_type'] = $chat_template->product_type ?? 'website';
+        }
 
         if (!empty($validated['new_business_category'])) {
             $newCategory = \App\Models\BusinessCategory::create([
