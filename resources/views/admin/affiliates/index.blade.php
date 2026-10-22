@@ -147,7 +147,7 @@
                             <div class="flex items-center justify-end gap-1.5">
                                 <form action="{{ route('admin.affiliates.approve', $affiliate->id) }}" method="POST">
                                     @csrf
-                                    <button type="submit" class="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 px-2 py-1 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors min-w-[50px]" onclick="return confirm('Setujui partner ini?')">
+                                    <button type="submit" class="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 px-2 py-1 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors min-w-[50px]">
                                         <i class="fa-solid fa-check text-[10px] sm:text-[12px]"></i>
                                         <span class="text-[9px] sm:text-xs">Approve</span>
                                     </button>
@@ -244,7 +244,7 @@
                     @if($affiliate->status === 'pending')
                     <form action="{{ route('admin.affiliates.approve', $affiliate->id) }}" method="POST" class="flex-1">
                         @csrf
-                        <button type="submit" class="w-full flex items-center justify-center gap-1.5 px-3 py-2 bg-green-600 hover:bg-green-700 text-white text-xs font-bold rounded-lg transition-colors" onclick="return confirm('Setujui partner ini?')">
+                        <button type="submit" class="w-full flex items-center justify-center gap-1.5 px-3 py-2 bg-green-600 hover:bg-green-700 text-white text-xs font-bold rounded-lg transition-colors">
                             <i class="fa-solid fa-check"></i> Approve
                         </button>
                     </form>
