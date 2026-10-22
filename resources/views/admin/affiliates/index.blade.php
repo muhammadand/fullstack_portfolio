@@ -1,87 +1,88 @@
 @extends('layouts.admin.app')
 
 @section('content')
-<div class="px-4 lg:px-6 py-6 lg:py-8">
-    <div class="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+<div class="px-4 lg:px-6 py-5 lg:py-7">
+    <div class="mb-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-3.5">
         <div>
-            <h1 class="text-2xl font-bold text-slate-800">Affiliate Dashboard</h1>
-            <p class="text-slate-500 text-sm mt-1">Pantau performa partner dan kelola komisi di satu tempat.</p>
+            <h1 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Affiliate Dashboard</h1>
+            <p class="text-slate-500 text-xs sm:text-sm mt-0.5">Pantau performa partner dan kelola komisi di satu tempat.</p>
         </div>
-        <div class="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
-            <button onclick="sendPushNotification()" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm flex items-center justify-center gap-2">
-                <i class="fa-solid fa-bell"></i> Broadcast Notif
+        <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
+            <button onclick="sendPushNotification()" class="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl transition-all shadow-sm flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-bell text-[11px]"></i> Broadcast Notif
             </button>
-            <button onclick="openAddPartnerModal()" class="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm flex items-center justify-center gap-2">
-                <i class="fa-solid fa-plus"></i> Tambah Partner
+            <button onclick="openAddPartnerModal()" class="px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-xl transition-all shadow-sm flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-plus text-[11px]"></i> Tambah Partner
             </button>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <!-- Dashboard Stats Grid -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
         <!-- Total Partners -->
-        <div class="group bg-white rounded-xl p-5 shadow-sm border border-slate-200 hover:border-blue-400 hover:shadow transition-all flex items-center justify-between">
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl shrink-0 group-hover:scale-110 transition-transform">
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/80 hover:border-blue-400 hover:shadow-md transition-all flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center text-sm shrink-0">
                     <i class="fa-solid fa-users"></i>
                 </div>
                 <div>
-                    <p class="text-slate-500 text-xs font-semibold uppercase tracking-wider">Total Partner</p>
-                    <div class="flex items-baseline gap-2 mt-0.5">
-                        <p class="text-2xl font-bold text-slate-800">{{ $totalPartners }}</p>
-                    </div>
+                    <p class="text-slate-500 text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider">Total Partner</p>
+                    <p class="text-base sm:text-lg font-bold text-slate-900 tracking-tight mt-0.5">{{ $totalPartners }}</p>
                 </div>
             </div>
         </div>
 
         <!-- Total Clicks -->
-        <div class="group bg-white rounded-xl p-5 shadow-sm border border-slate-200 hover:border-purple-400 hover:shadow transition-all flex items-center justify-between">
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-xl shrink-0 group-hover:scale-110 transition-transform">
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/80 hover:border-purple-400 hover:shadow-md transition-all flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 border border-purple-100 flex items-center justify-center text-sm shrink-0">
                     <i class="fa-solid fa-hand-pointer"></i>
                 </div>
                 <div>
-                    <p class="text-slate-500 text-xs font-semibold uppercase tracking-wider">Total Klik</p>
-                    <div class="flex items-baseline gap-2 mt-0.5">
-                        <p class="text-2xl font-bold text-slate-800">{{ $totalClicks }}</p>
-                    </div>
+                    <p class="text-slate-500 text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider">Total Klik</p>
+                    <p class="text-base sm:text-lg font-bold text-slate-900 tracking-tight mt-0.5">{{ $totalClicks }}</p>
                 </div>
             </div>
         </div>
 
         <!-- Total Commissions -->
-        <div class="group bg-white rounded-xl p-5 shadow-sm border border-slate-200 hover:border-emerald-400 hover:shadow transition-all flex items-center justify-between">
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl shrink-0 group-hover:scale-110 transition-transform">
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/80 hover:border-emerald-400 hover:shadow-md transition-all flex items-center justify-between">
+            <div class="flex items-center gap-3 min-w-0">
+                <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center text-sm shrink-0">
                     <i class="fa-solid fa-wallet"></i>
                 </div>
-                <div>
-                    <p class="text-slate-500 text-xs font-semibold uppercase tracking-wider">Diberikan</p>
-                    <div class="flex items-baseline gap-2 mt-0.5">
-                        <p class="text-2xl font-bold text-emerald-600">Rp {{ number_format($totalCommissions, 0, ',', '.') }}</p>
-                    </div>
+                <div class="min-w-0">
+                    <p class="text-slate-500 text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider truncate">Komisi Diberikan</p>
+                    <p class="text-base sm:text-lg font-bold text-emerald-600 tracking-tight mt-0.5 whitespace-nowrap">
+                        <span class="text-xs font-semibold text-emerald-700/80 mr-0.5">Rp</span>{{ number_format($totalCommissions, 0, ',', '.') }}
+                    </p>
                 </div>
             </div>
         </div>
 
         <!-- Pending Approval -->
-        <div class="group bg-white rounded-xl p-5 shadow-sm border border-slate-200 hover:border-yellow-400 hover:shadow transition-all flex items-center justify-between">
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-xl bg-yellow-50 text-yellow-600 flex items-center justify-center text-xl shrink-0 group-hover:scale-110 transition-transform">
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/80 hover:border-amber-400 hover:shadow-md transition-all flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 border border-amber-100 flex items-center justify-center text-sm shrink-0">
                     <i class="fa-solid fa-user-clock"></i>
                 </div>
                 <div>
-                    <p class="text-slate-500 text-xs font-semibold uppercase tracking-wider">Persetujuan</p>
-                    <div class="flex items-baseline gap-2 mt-0.5">
-                        <p class="text-2xl font-bold text-yellow-600">{{ $totalPending }}</p>
-                    </div>
+                    <p class="text-slate-500 text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider">Perlu Approval</p>
+                    <p class="text-base sm:text-lg font-bold {{ $totalPending > 0 ? 'text-amber-600' : 'text-slate-900' }} tracking-tight mt-0.5">{{ $totalPending }}</p>
                 </div>
             </div>
+            @if($totalPending > 0)
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200 animate-pulse">
+                Baru
+            </span>
+            @endif
         </div>
     </div>
 
     @if($errors->any())
-    <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6" role="alert">
-        <ul class="list-disc ml-5">
+    <div class="bg-rose-50 border border-rose-200 text-rose-700 px-4 py-3 rounded-2xl mb-5 flex items-start gap-2.5 shadow-sm text-xs" role="alert">
+        <i class="fa-solid fa-circle-exclamation text-rose-500 text-sm mt-0.5 shrink-0"></i>
+        <ul class="list-disc ml-3.5 space-y-0.5">
             @foreach($errors->all() as $err)
             <li>{{ $err }}</li>
             @endforeach
@@ -90,53 +91,58 @@
     @endif
 
     @if(session('success'))
-    <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6" role="alert">
+    <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 px-4 py-3 rounded-2xl mb-5 flex items-center gap-2.5 shadow-sm text-xs font-medium" role="alert">
+        <div class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 text-[10px]">
+            <i class="fa-solid fa-check"></i>
+        </div>
         <p>{{ session('success') }}</p>
     </div>
     @endif
 
-    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden">
 
         <!-- Desktop Table View -->
         <div class="hidden md:block overflow-x-auto">
-            <table class="w-full text-left border-collapse text-sm">
+            <table class="w-full text-left border-collapse text-xs">
                 <thead>
-                    <tr class="bg-slate-50 border-b border-slate-200">
-                        <th class="px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Partner</th>
-                        <th class="px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider text-center">Performa</th>
-                        <th class="px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Saldo Komisi</th>
-                        <th class="px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Status</th>
-                        <th class="px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">Aksi</th>
+                    <tr class="bg-slate-50/80 border-b border-slate-200/80">
+                        <th class="px-4 py-3 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Partner</th>
+                        <th class="px-4 py-3 text-[11px] font-semibold text-slate-500 uppercase tracking-wider text-center">Performa</th>
+                        <th class="px-4 py-3 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Saldo Komisi</th>
+                        <th class="px-4 py-3 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Status</th>
+                        <th class="px-4 py-3 text-[11px] font-semibold text-slate-500 uppercase tracking-wider text-right">Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-200">
+                <tbody class="divide-y divide-slate-100">
                     @forelse($affiliates as $affiliate)
-                    <tr class="hover:bg-slate-50 transition-colors">
+                    <tr class="hover:bg-slate-50/70 transition-colors">
                         <td class="px-4 py-3">
-                            <div class="font-medium text-slate-800">{{ $affiliate->name }}</div>
-                            <div class="text-xs text-slate-500">{{ $affiliate->email }}</div>
-                            <div class="text-[10px] text-slate-400 mt-0.5">Kode: <span class="font-bold text-blue-600">{{ $affiliate->affiliate_code }}</span></div>
+                            <div class="font-semibold text-slate-800 text-xs sm:text-sm">{{ $affiliate->name }}</div>
+                            <div class="text-[11px] text-slate-400">{{ $affiliate->email }}</div>
+                            <div class="text-[10px] text-slate-400 mt-0.5">
+                                Kode: <span class="font-mono font-bold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-200/60">{{ $affiliate->affiliate_code }}</span>
+                            </div>
                         </td>
                         <td class="px-4 py-3 text-center">
-                            <div class="inline-flex items-center gap-1 px-2.5 py-0.5 bg-purple-50 text-purple-700 rounded-lg text-xs font-medium">
-                                <i class="fa-solid fa-hand-pointer"></i> {{ $affiliate->clicks_count ?? 0 }} Klik
+                            <div class="inline-flex items-center gap-1 px-2.5 py-1 bg-purple-50 text-purple-700 border border-purple-200/50 rounded-lg text-[11px] font-semibold">
+                                <i class="fa-solid fa-hand-pointer text-[10px]"></i> {{ $affiliate->clicks_count ?? 0 }} Klik
                             </div>
                         </td>
                         <td class="px-4 py-3">
-                            <div class="text-sm font-bold text-slate-800">Rp {{ number_format($affiliate->balance, 0, ',', '.') }}</div>
-                            <div class="text-[10px] text-slate-500 mt-0.5">{{ $affiliate->bank_info }}</div>
+                            <div class="text-xs sm:text-sm font-bold text-slate-800 whitespace-nowrap">Rp {{ number_format($affiliate->balance, 0, ',', '.') }}</div>
+                            <div class="text-[10px] text-slate-400 mt-0.5 truncate max-w-[140px]">{{ $affiliate->bank_info ?: '-' }}</div>
                         </td>
                         <td class="px-4 py-3">
                             @if($affiliate->status === 'pending')
-                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-yellow-100 text-yellow-800">
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-200/80">
                                 Pending
                             </span>
                             @elseif($affiliate->status === 'approved')
-                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-green-100 text-green-800">
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/80">
                                 Approved
                             </span>
                             @else
-                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-red-100 text-red-800">
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-rose-50 text-rose-700 border border-rose-200/80">
                                 Rejected
                             </span>
                             @endif
@@ -146,16 +152,16 @@
                             <div class="flex items-center justify-end gap-1.5">
                                 <form action="{{ route('admin.affiliates.approve', $affiliate->id) }}" method="POST">
                                     @csrf
-                                    <button type="submit" class="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 px-2 py-1 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors min-w-[50px]">
-                                        <i class="fa-solid fa-check text-[10px] sm:text-[12px]"></i>
-                                        <span class="text-[9px] sm:text-xs">Approve</span>
+                                    <button type="submit" class="inline-flex items-center justify-center gap-1 px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg text-[11px] transition-colors shadow-sm">
+                                        <i class="fa-solid fa-check text-[10px]"></i>
+                                        <span>Approve</span>
                                     </button>
                                 </form>
                                 <form action="{{ route('admin.affiliates.reject', $affiliate->id) }}" method="POST">
                                     @csrf
-                                    <button type="submit" class="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 px-2 py-1 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors min-w-[50px]" onclick="return confirm('Tolak partner ini?')">
-                                        <i class="fa-solid fa-xmark text-[10px] sm:text-[12px]"></i>
-                                        <span class="text-[9px] sm:text-xs">Reject</span>
+                                    <button type="submit" class="inline-flex items-center justify-center gap-1 px-2.5 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-semibold rounded-lg text-[11px] transition-colors shadow-sm" onclick="return confirm('Tolak partner ini?')">
+                                        <i class="fa-solid fa-xmark text-[10px]"></i>
+                                        <span>Reject</span>
                                     </button>
                                 </form>
                             </div>
@@ -164,30 +170,30 @@
                                 @php
                                 $magicLoginUrl = \Illuminate\Support\Facades\URL::signedRoute('affiliate.magic_login', ['affiliate' => $affiliate->id]);
                                 @endphp
-                                <button type="button" onclick="copyMagicLink('{{ $magicLoginUrl }}')" class="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 px-2 py-1 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-lg transition-colors shadow-sm min-w-[50px]" title="Salin Magic Login Link">
-                                    <i class="fa-solid fa-link text-[10px] sm:text-[12px]"></i>
-                                    <span class="text-[9px] sm:text-xs">Magic Link</span>
+                                <button type="button" onclick="copyMagicLink('{{ $magicLoginUrl }}')" class="inline-flex items-center justify-center gap-1 px-2.5 py-1.5 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg text-[11px] transition-colors shadow-sm" title="Salin Magic Login Link">
+                                    <i class="fa-solid fa-link text-[10px]"></i>
+                                    <span>Link</span>
                                 </button>
-                                <a href="{{ route('admin.affiliates.show', $affiliate->id) }}" class="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-lg transition-colors border border-slate-200 min-w-[50px]">
-                                    <i class="fa-solid fa-eye text-[10px] sm:text-[12px]"></i>
-                                    <span class="text-[9px] sm:text-xs">Detail</span>
+                                <a href="{{ route('admin.affiliates.show', $affiliate->id) }}" class="inline-flex items-center justify-center gap-1 px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-lg text-[11px] transition-colors border border-slate-200">
+                                    <i class="fa-solid fa-eye text-[10px]"></i>
+                                    <span>Detail</span>
                                 </a>
-                                <button type="button" onclick="openCommissionModal({{ $affiliate->id }}, '{{ addslashes($affiliate->name) }}')" class="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors shadow-sm min-w-[50px]">
-                                    <i class="fa-solid fa-plus text-[10px] sm:text-[12px]"></i>
-                                    <span class="text-[9px] sm:text-xs">Komisi</span>
+                                <button type="button" onclick="openCommissionModal({{ $affiliate->id }}, '{{ addslashes($affiliate->name) }}')" class="inline-flex items-center justify-center gap-1 px-2.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg text-[11px] transition-colors shadow-sm">
+                                    <i class="fa-solid fa-plus text-[10px]"></i>
+                                    <span>Komisi</span>
                                 </button>
                             </div>
                             @else
-                            <a href="{{ route('admin.affiliates.show', $affiliate->id) }}" class="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-lg transition-colors border border-slate-200 inline-flex min-w-[50px]">
-                                <i class="fa-solid fa-eye text-[10px] sm:text-[12px]"></i>
-                                <span class="text-[9px] sm:text-xs">Detail</span>
+                            <a href="{{ route('admin.affiliates.show', $affiliate->id) }}" class="inline-flex items-center justify-center gap-1 px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-lg text-[11px] transition-colors border border-slate-200">
+                                <i class="fa-solid fa-eye text-[10px]"></i>
+                                <span>Detail</span>
                             </a>
                             @endif
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="5" class="px-4 py-6 text-center text-slate-500 text-sm">
+                        <td colspan="5" class="px-4 py-8 text-center text-slate-400 text-xs">
                             Belum ada pendaftar affiliate.
                         </td>
                     </tr>
@@ -199,82 +205,82 @@
         <!-- Mobile Card View -->
         <div class="md:hidden divide-y divide-slate-100">
             @forelse($affiliates as $affiliate)
-            <div class="p-4 hover:bg-slate-50 transition-colors">
-                <div class="flex justify-between items-start mb-3">
+            <div class="p-3.5 hover:bg-slate-50/70 transition-colors">
+                <div class="flex justify-between items-start mb-2.5">
                     <div>
-                        <div class="font-bold text-slate-800 text-sm">{{ $affiliate->name }}</div>
-                        <div class="text-[11px] text-slate-500">{{ $affiliate->email }}</div>
+                        <div class="font-bold text-slate-900 text-xs sm:text-sm">{{ $affiliate->name }}</div>
+                        <div class="text-[11px] text-slate-400">{{ $affiliate->email }}</div>
                     </div>
                     <div>
                         @if($affiliate->status === 'pending')
-                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-yellow-100 text-yellow-800">Pending</span>
+                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-200/80">Pending</span>
                         @elseif($affiliate->status === 'approved')
-                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-green-100 text-green-800">Approved</span>
+                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/80">Approved</span>
                         @else
-                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-red-100 text-red-800">Rejected</span>
+                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-rose-50 text-rose-700 border border-rose-200/80">Rejected</span>
                         @endif
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-3 mb-4 bg-slate-50 rounded-lg p-3 border border-slate-100">
+                <div class="grid grid-cols-2 gap-2.5 mb-3 bg-slate-50/80 rounded-xl p-2.5 border border-slate-100">
                     <div>
-                        <p class="text-[10px] text-slate-500 mb-0.5">Kode Referral</p>
-                        <p class="text-xs font-bold text-blue-600">{{ $affiliate->affiliate_code }}</p>
+                        <p class="text-[10px] text-slate-400 mb-0.5">Kode Referral</p>
+                        <p class="text-xs font-mono font-bold text-blue-600">{{ $affiliate->affiliate_code }}</p>
                     </div>
                     <div>
-                        <p class="text-[10px] text-slate-500 mb-0.5">Performa</p>
-                        <p class="text-xs font-medium text-purple-700"><i class="fa-solid fa-hand-pointer mr-1"></i> {{ $affiliate->clicks_count ?? 0 }} Klik</p>
+                        <p class="text-[10px] text-slate-400 mb-0.5">Performa</p>
+                        <p class="text-xs font-semibold text-purple-700"><i class="fa-solid fa-hand-pointer mr-1 text-[10px]"></i> {{ $affiliate->clicks_count ?? 0 }} Klik</p>
                     </div>
-                    <div class="col-span-2 pt-2 border-t border-slate-200">
+                    <div class="col-span-2 pt-2 border-t border-slate-200/60">
                         <div class="flex justify-between items-center">
                             <div>
-                                <p class="text-[10px] text-slate-500 mb-0.5">Saldo Komisi</p>
-                                <p class="text-sm font-bold text-emerald-600">Rp {{ number_format($affiliate->balance, 0, ',', '.') }}</p>
+                                <p class="text-[10px] text-slate-400 mb-0.5">Saldo Komisi</p>
+                                <p class="text-xs sm:text-sm font-bold text-emerald-600">Rp {{ number_format($affiliate->balance, 0, ',', '.') }}</p>
                             </div>
                             <div class="text-right max-w-[50%]">
-                                <p class="text-[10px] text-slate-500 mb-0.5">Bank</p>
-                                <p class="text-[10px] font-medium text-slate-700 truncate">{{ $affiliate->bank_info ?: '-' }}</p>
+                                <p class="text-[10px] text-slate-400 mb-0.5">Bank</p>
+                                <p class="text-[10px] font-medium text-slate-600 truncate">{{ $affiliate->bank_info ?: '-' }}</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="flex flex-wrap gap-2 justify-end">
+                <div class="flex flex-wrap gap-1.5 justify-end">
                     @if($affiliate->status === 'pending')
                     <form action="{{ route('admin.affiliates.approve', $affiliate->id) }}" method="POST" class="flex-1">
                         @csrf
-                        <button type="submit" class="w-full flex items-center justify-center gap-1.5 px-3 py-2 bg-green-600 hover:bg-green-700 text-white text-xs font-bold rounded-lg transition-colors">
-                            <i class="fa-solid fa-check"></i> Approve
+                        <button type="submit" class="w-full flex items-center justify-center gap-1 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-semibold rounded-lg transition-colors shadow-sm">
+                            <i class="fa-solid fa-check text-[10px]"></i> Approve
                         </button>
                     </form>
                     <form action="{{ route('admin.affiliates.reject', $affiliate->id) }}" method="POST" class="flex-1">
                         @csrf
-                        <button type="submit" class="w-full flex items-center justify-center gap-1.5 px-3 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-lg transition-colors" onclick="return confirm('Tolak partner ini?')">
-                            <i class="fa-solid fa-xmark"></i> Reject
+                        <button type="submit" class="w-full flex items-center justify-center gap-1 px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white text-[11px] font-semibold rounded-lg transition-colors shadow-sm" onclick="return confirm('Tolak partner ini?')">
+                            <i class="fa-solid fa-xmark text-[10px]"></i> Reject
                         </button>
                     </form>
                     @elseif($affiliate->status === 'approved')
                     @php
                     $magicLoginUrl = \Illuminate\Support\Facades\URL::signedRoute('affiliate.magic_login', ['affiliate' => $affiliate->id]);
                     @endphp
-                    <button type="button" onclick="copyMagicLink('{{ $magicLoginUrl }}')" class="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold rounded-lg transition-colors shadow-sm">
-                        <i class="fa-solid fa-link"></i> Link
+                    <button type="button" onclick="copyMagicLink('{{ $magicLoginUrl }}')" class="flex-1 flex items-center justify-center gap-1 px-2.5 py-1.5 bg-purple-600 hover:bg-purple-700 text-white text-[11px] font-semibold rounded-lg transition-colors shadow-sm">
+                        <i class="fa-solid fa-link text-[10px]"></i> Link
                     </button>
-                    <a href="{{ route('admin.affiliates.show', $affiliate->id) }}" class="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition-colors border border-slate-200">
-                        <i class="fa-solid fa-eye"></i> Detail
+                    <a href="{{ route('admin.affiliates.show', $affiliate->id) }}" class="flex-1 flex items-center justify-center gap-1 px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-semibold rounded-lg transition-colors border border-slate-200">
+                        <i class="fa-solid fa-eye text-[10px]"></i> Detail
                     </a>
-                    <button type="button" onclick="openCommissionModal({{ $affiliate->id }}, '{{ addslashes($affiliate->name) }}')" class="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg transition-colors shadow-sm">
-                        <i class="fa-solid fa-plus"></i> Komisi
+                    <button type="button" onclick="openCommissionModal({{ $affiliate->id }}, '{{ addslashes($affiliate->name) }}')" class="flex-1 flex items-center justify-center gap-1 px-2.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-[11px] font-semibold rounded-lg transition-colors shadow-sm">
+                        <i class="fa-solid fa-plus text-[10px]"></i> Komisi
                     </button>
                     @else
-                    <a href="{{ route('admin.affiliates.show', $affiliate->id) }}" class="w-full flex items-center justify-center gap-1.5 px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition-colors border border-slate-200">
-                        <i class="fa-solid fa-eye"></i> Detail
+                    <a href="{{ route('admin.affiliates.show', $affiliate->id) }}" class="w-full flex items-center justify-center gap-1 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-semibold rounded-lg transition-colors border border-slate-200">
+                        <i class="fa-solid fa-eye text-[10px]"></i> Detail
                     </a>
                     @endif
                 </div>
             </div>
             @empty
-            <div class="p-8 text-center text-slate-500 text-sm">
+            <div class="p-6 text-center text-slate-400 text-xs">
                 Belum ada pendaftar affiliate.
             </div>
             @endforelse
