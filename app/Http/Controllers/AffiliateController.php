@@ -29,7 +29,7 @@ class AffiliateController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:affiliates,email',
             'password' => 'required|min:6',
-            'bank_info' => 'required|string',
+            'bank_info' => 'nullable|string',
         ]);
 
         $affiliate = Affiliate::create([
@@ -37,7 +37,7 @@ class AffiliateController extends Controller
             'email' => $request->email,
             'password' => bcrypt($request->password),
             'affiliate_code' => strtoupper(substr(preg_replace('/[^a-zA-Z0-9]/', '', $request->name), 0, 5)) . rand(10, 99),
-            'bank_info' => $request->bank_info,
+            'bank_info' => $request->bank_info ?? null,
             'status' => 'pending',
             'balance' => 0,
         ]);
