@@ -376,10 +376,17 @@ class ReviewCardController extends Controller
                 ->with('error', 'Kode PIN Aktivasi salah! Silakan periksa kembali nomor PIN di kartu atau kemasan produk Anda.');
         }
 
+        $rawReviewUrl = trim($validated['google_review_url']);
+        try {
+            $finalReviewUrl = app(\App\Services\GoogleMapsService::class)->convertToWriteReviewUrl($rawReviewUrl);
+        } catch (\Exception $e) {
+            $finalReviewUrl = $rawReviewUrl;
+        }
+
         $now = now();
         DB::table('review_cards')->where('id', $card->id)->update([
             'business_name' => trim($validated['business_name']),
-            'google_review_url' => trim($validated['google_review_url']),
+            'google_review_url' => $finalReviewUrl,
             'owner_name' => !empty($validated['owner_name']) ? trim($validated['owner_name']) : null,
             'owner_phone' => !empty($validated['owner_phone']) ? trim($validated['owner_phone']) : null,
             'status' => 'active',

@@ -36,7 +36,7 @@
 
     </style>
 </head>
-<body class="pb-24 overflow-x-hidden min-h-screen flex flex-col relative" x-data="{ buyModal: false, activateModal: false, selectedQty: 1, selectedCost: 10000, activeCard: null }">
+<body class="pb-24 overflow-x-hidden min-h-screen flex flex-col relative" x-data="{ buyModal: false, activateModal: false, isActivating: false, selectedQty: 1, selectedCost: 10000, activeCard: null }">
 
     <!-- Subtle Background Glow -->
     <div class="fixed top-0 left-0 w-full h-56 bg-blue-600/10 rounded-full blur-[100px] -translate-y-1/2 pointer-events-none z-0"></div>
@@ -373,7 +373,7 @@
                 </button>
             </div>
 
-            <form :action="'{{ url('/partner/review-cards') }}/' + (activeCard ? activeCard.id : '') + '/activate-for-client'" method="POST" class="space-y-3 text-xs">
+            <form :action="'{{ url('/partner/review-cards') }}/' + (activeCard ? activeCard.id : '') + '/activate-for-client'" method="POST" class="space-y-3 text-xs" @submit="isActivating = true">
                 @csrf
 
                 <div>
@@ -382,9 +382,12 @@
                 </div>
 
                 <div>
-                    <label class="block font-medium text-slate-300 mb-1">Link Google Review Toko</label>
-                    <input type="url" name="google_review_url" :value="activeCard ? activeCard.google_review_url : ''" required placeholder="https://g.page/r/... atau https://maps.app.goo.gl/..." class="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white text-xs focus:ring-1 focus:ring-blue-500 outline-none">
-                    <p class="text-[10px] text-slate-500 mt-1">Dapatkan dari tombol 'Minta Ulasan' di Google Maps bisnis klien.</p>
+                    <label class="block font-medium text-slate-300 mb-1">Link Google Maps / Review Toko</label>
+                    <input type="url" name="google_review_url" :value="activeCard ? activeCard.google_review_url : ''" required placeholder="Contoh: https://maps.app.goo.gl/... atau link Google Maps toko" class="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white text-xs focus:ring-1 focus:ring-blue-500 outline-none">
+                    <p class="text-[10px] text-slate-400 mt-1 flex items-start gap-1.5 leading-relaxed">
+                        <i class="fa-brands fa-google text-blue-400 mt-0.5 flex-shrink-0"></i>
+                        <span>Cukup masukkan link share dari Google Maps toko klien. Sistem akan otomatis mengubahnya menjadi link review langsung (Google Place ID).</span>
+                    </p>
                 </div>
 
                 <div>
@@ -393,8 +396,11 @@
                 </div>
 
                 <div class="pt-2">
-                    <button type="submit" class="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs rounded-lg">
-                        Simpan & Aktifkan
+                    <button type="submit" :disabled="isActivating" class="w-full py-2.5 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-medium text-xs rounded-lg flex items-center justify-center gap-2 transition">
+                        <template x-if="isActivating">
+                            <i class="fa-solid fa-circle-notch fa-spin"></i>
+                        </template>
+                        <span x-text="isActivating ? 'Memproses Google Place ID...' : 'Simpan & Aktifkan'"></span>
                     </button>
                 </div>
             </form>

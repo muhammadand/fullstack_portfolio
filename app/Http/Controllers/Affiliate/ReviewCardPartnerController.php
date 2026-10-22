@@ -231,7 +231,7 @@ class ReviewCardPartnerController extends Controller
     /**
      * Partner helps local client activate the card on the spot.
      */
-    public function activateForClient(Request $request, int $id)
+    public function activateForClient(Request $request, int $id, \App\Services\GoogleMapsService $mapsService)
     {
         $affiliate = Auth::guard('affiliate')->user();
 
@@ -247,13 +247,25 @@ class ReviewCardPartnerController extends Controller
 
         $validated = $request->validate([
             'business_name'     => 'required|string|max:150',
-            'google_review_url' => 'required|url|max:500',
+            'google_review_url' => 'required|url|max:1000',
             'owner_phone'       => 'nullable|string|max:30',
         ]);
 
+        $rawUrl = trim($validated['google_review_url']);
+
+        try {
+            // Resolve URL via Productmate & konversi otomatis ke link review langsung dengan Place ID
+            $finalReviewUrl = $mapsService->convertToWriteReviewUrl($rawUrl);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::warning('Gagal konversi Google Maps URL: ' . $e->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Gagal memproses link Google Maps: ' . $e->getMessage() . '. Pastikan link mengarah ke lokasi bisnis Google Maps yang valid.');
+        }
+
         DB::table('review_cards')->where('id', $id)->update([
             'business_name'     => trim($validated['business_name']),
-            'google_review_url' => trim($validated['google_review_url']),
+            'google_review_url' => $finalReviewUrl,
             'owner_phone'       => $validated['owner_phone'] ?? null,
             'status'            => 'active',
             'activated_at'      => now(),
@@ -261,6 +273,6 @@ class ReviewCardPartnerController extends Controller
         ]);
 
         return redirect()->route('affiliate.review_cards.index')
-            ->with('success', "Berhasil mengaktifkan kartu {$card->serial_number} untuk {$validated['business_name']}! Siap ditempel di toko.");
+            ->with('success', "Berhasil menghubungkan kartu {$card->serial_number} ke {$validated['business_name']}! Link review langsung telah aktif.");
     }
 }
