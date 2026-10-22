@@ -31,7 +31,7 @@
                 <div class="w-12 h-12 rounded-2xl glass-panel flex items-center justify-center text-blue-400 text-lg shadow-inner relative transition-all duration-200 ease-out active:scale-90 active:opacity-60 group-hover:bg-blue-500/10 group-hover:border-blue-500/30">
                     <i class="fa-solid fa-qrcode"></i>
                     <!-- Clean Subtle Badge -->
-                    <span class="absolute -top-1.5 -right-1.5 bg-blue-500 text-white text-[8px] font-semibold px-1.5 py-0.2 rounded-full shadow-sm">New</span>
+                    <span class="absolute -top-1.5 -right-1.5 bg-blue-500 text-white text-[8px] font-semibold px-1.5 py-0.5 rounded-full shadow-sm leading-none">New</span>
                 </div>
                 <span class="text-[10px] text-slate-300 font-medium text-center leading-tight group-hover:text-white transition-colors">Review<br>Cards</span>
             </a>
@@ -41,7 +41,16 @@
                 <div class="w-12 h-12 rounded-2xl glass-panel flex items-center justify-center text-rose-400 text-lg shadow-inner relative transition-all duration-200 ease-out active:scale-90 active:opacity-60 group-hover:bg-rose-500/10 group-hover:border-rose-500/30">
                     <i class="fa-solid fa-briefcase"></i>
                 </div>
-                <span class="text-[10px] text-slate-300 font-medium text-center leading-tight group-hover:text-white transition-colors">Penawaran<br>Bisnis</span>
+                <span class="text-[10px] text-slate-300 font-medium text-center leading-tight group-hover:text-white transition-colors">Penawaran<br>Website</span>
+            </a>
+
+            <!-- 3.1 Penawaran Kartu Review (Google Review Card Leads) -->
+            <a href="{{ route('affiliate.review_proposals') }}" wire:navigate class="flex flex-col items-center gap-2 group">
+                <div class="w-12 h-12 rounded-2xl glass-panel flex items-center justify-center text-sky-400 text-lg shadow-inner relative transition-all duration-200 ease-out active:scale-90 active:opacity-60 group-hover:bg-sky-500/10 group-hover:border-sky-500/30">
+                    <i class="fa-solid fa-star-half-stroke"></i>
+                    <span class="absolute -top-1.5 -right-1.5 bg-sky-500 text-white text-[8px] font-semibold px-1.5 py-0.5 rounded-full shadow-sm leading-none">Hot</span>
+                </div>
+                <span class="text-[10px] text-slate-300 font-medium text-center leading-tight group-hover:text-white transition-colors">Tawarkan<br>Review Card</span>
             </a>
 
             <!-- 3. Template Chat -->

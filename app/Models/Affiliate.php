@@ -59,6 +59,11 @@ class Affiliate extends Authenticatable
         return $this->hasMany(Blog::class, 'affiliate_id');
     }
 
+    public function leadOfferings()
+    {
+        return $this->hasMany(LeadOffering::class);
+    }
+
     /**
      * Generate link Lynk.id spesifik untuk produk digital tertentu
      * 

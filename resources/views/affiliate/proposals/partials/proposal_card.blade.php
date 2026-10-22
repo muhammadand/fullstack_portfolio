@@ -2,12 +2,31 @@
                 <div class="flex items-start justify-between mb-3">
                     <div>
                         <h3 class="text-base font-bold text-white mb-0.5">{{ $p->brand_name }}</h3>
-                        <div class="flex items-center gap-2 text-[10px] text-slate-400">
+                        <div class="flex flex-wrap items-center gap-1.5 text-[10px] text-slate-400 mt-1">
                             <span class="px-2 py-0.5 rounded {{ $p->category_name ? 'bg-blue-500/20 text-blue-400' : 'bg-slate-700/50 text-slate-300' }}">
                                 {{ $p->category_name ?? 'Tanpa Kategori' }}
                             </span>
                             @if($p->price_silver)
                             <span><i class="fa-solid fa-tag mr-1 text-slate-500"></i>Mulai Rp {{ number_format($p->price_silver, 0, ',', '.') }}</span>
+                            @endif
+
+                            @php
+                            $reviewOffer = \App\Models\LeadOffering::where('client_proposal_id', $p->id)->where('product_type', 'review_card')->first();
+                            @endphp
+                            @if($reviewOffer)
+                            @if($reviewOffer->affiliate_id === $affiliate->id)
+                            <span class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 font-medium" title="Bisnis ini sudah Anda follow up untuk Kartu Review">
+                                <i class="fa-solid fa-qrcode mr-0.5"></i> Review Card: Anda
+                            </span>
+                            @else
+                            <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-medium" title="Bisnis ini sudah di-follow up kartu review oleh partner lain">
+                                <i class="fa-solid fa-user-check mr-0.5"></i> Review Card: Partner Lain
+                            </span>
+                            @endif
+                            @else
+                            <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-400" title="Bisnis ini belum ditawari kartu review">
+                                <i class="fa-solid fa-circle-notch mr-0.5"></i> Review Card: Belum
+                            </span>
                             @endif
                         </div>
                     </div>

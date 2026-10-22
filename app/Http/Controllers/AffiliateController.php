@@ -401,8 +401,12 @@ class AffiliateController extends Controller
         $categories = \Illuminate\Support\Facades\DB::table('business_categories')->get();
 
         $chatTemplates = \Illuminate\Support\Facades\DB::table('chat_templates')
-            ->whereNull('affiliate_id')
-            ->orWhere('affiliate_id', $affiliate->id)
+            ->where(function ($q) {
+                $q->where('product_type', 'website')->orWhereNull('product_type');
+            })
+            ->where(function ($q) use ($affiliate) {
+                $q->whereNull('affiliate_id')->orWhere('affiliate_id', $affiliate->id);
+            })
             ->get();
 
         return view('affiliate.proposals_mobile', compact('affiliate', 'proposals', 'categories', 'chatTemplates', 'tab', 'search'));
@@ -430,7 +434,7 @@ class AffiliateController extends Controller
             $slug = $slug . '-' . time();
         }
 
-        ClientProposal::create([
+        $newProposal = ClientProposal::create([
             'business_category_id' => $request->business_category_id,
             'brand_name' => $request->brand_name,
             'slug' => $slug,
@@ -439,6 +443,14 @@ class AffiliateController extends Controller
             'domain_price' => 1200000,
             'affiliate_id' => $affiliate->id,
             'status' => 'contacted',
+        ]);
+
+        \App\Models\LeadOffering::create([
+            'client_proposal_id' => $newProposal->id,
+            'affiliate_id'       => $affiliate->id,
+            'product_type'       => 'website',
+            'status'             => 'contacted',
+            'contacted_at'       => now(),
         ]);
 
         return redirect()->back()->with('success', 'Website & Proposal berhasil dibuat!');
@@ -480,14 +492,27 @@ class AffiliateController extends Controller
         $affiliate = Auth::guard('affiliate')->user();
         $proposal = ClientProposal::findOrFail($id);
 
-        if ($proposal->affiliate_id === null) {
+        $existing = \App\Models\LeadOffering::where('client_proposal_id', $id)
+            ->where('product_type', 'website')
+            ->first();
+
+        if (!$existing) {
+            \App\Models\LeadOffering::create([
+                'client_proposal_id' => $id,
+                'affiliate_id'       => $affiliate->id,
+                'product_type'       => 'website',
+                'status'             => 'contacted',
+                'contacted_at'       => now(),
+            ]);
+
             $proposal->affiliate_id = $affiliate->id;
             $proposal->status = 'contacted';
             $proposal->save();
+
             return response()->json(['success' => true]);
         }
 
-        return response()->json(['success' => false, 'message' => 'Proposal sudah diklaim.'], 403);
+        return response()->json(['success' => false, 'message' => 'Proposal website sudah diklaim partner lain.'], 403);
     }
 
     public function generateAiChat(Request $request, $id)

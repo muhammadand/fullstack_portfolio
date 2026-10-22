@@ -287,6 +287,12 @@ Route::middleware(['auth:affiliate'])->group(function () {
     Route::post('/partner/proposals', [App\Http\Controllers\AffiliateController::class, 'generateProposal'])->name('affiliate.proposals.generate');
     Route::post('/partner/proposals/{id}/claim', [App\Http\Controllers\AffiliateController::class, 'claimProposal'])->name('affiliate.proposals.claim');
     Route::post('/partner/proposals/{id}/generate-ai-chat', [App\Http\Controllers\AffiliateController::class, 'generateAiChat'])->name('affiliate.proposals.generate_ai_chat');
+
+    // Penawaran Google Review Card Leads (QR / NFC Cards)
+    Route::get('/partner/review-proposals/search', [\App\Http\Controllers\Affiliate\ReviewCardProposalController::class, 'search'])->name('affiliate.review_proposals.search');
+    Route::get('/partner/review-proposals', [\App\Http\Controllers\Affiliate\ReviewCardProposalController::class, 'index'])->name('affiliate.review_proposals');
+    Route::post('/partner/review-proposals/{id}/claim', [\App\Http\Controllers\Affiliate\ReviewCardProposalController::class, 'claim'])->name('affiliate.review_proposals.claim');
+    Route::post('/partner/review-proposals/{id}/generate-ai-chat', [\App\Http\Controllers\Affiliate\ReviewCardProposalController::class, 'generateAiChat'])->name('affiliate.review_proposals.generate_ai_chat');
     Route::post('/partner/logout', [App\Http\Controllers\AffiliateController::class, 'logout'])->name('affiliate.logout');
     Route::post('/partner/withdraw', [App\Http\Controllers\AffiliateController::class, 'withdraw'])->name('affiliate.withdraw');
 
@@ -458,6 +464,16 @@ Route::get('/secret-deploy-trigger-12345', function () {
 
         \Illuminate\Support\Facades\Artisan::call('migrate', [
             '--path' => 'database/migrations/2026_10_21_060813_add_points_to_customers_table.php',
+            '--force' => true
+        ]);
+
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_10_22_022524_create_lead_offerings_table.php',
+            '--force' => true
+        ]);
+
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_10_22_022636_add_product_type_to_chat_templates_table.php',
             '--force' => true
         ]);
 

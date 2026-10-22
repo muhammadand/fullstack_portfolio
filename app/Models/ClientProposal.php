@@ -21,6 +21,21 @@ class ClientProposal extends Model
         return $this->belongsTo(Affiliate::class);
     }
 
+    public function offerings()
+    {
+        return $this->hasMany(LeadOffering::class, 'client_proposal_id');
+    }
+
+    public function websiteOffering()
+    {
+        return $this->hasOne(LeadOffering::class, 'client_proposal_id')->where('product_type', 'website');
+    }
+
+    public function reviewCardOffering()
+    {
+        return $this->hasOne(LeadOffering::class, 'client_proposal_id')->where('product_type', 'review_card');
+    }
+
     public function getSilverPriceAttribute()
     {
         return $this->price_silver ?? 700000;
