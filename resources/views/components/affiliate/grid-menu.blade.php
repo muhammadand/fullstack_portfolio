@@ -132,14 +132,15 @@
                 </div>
                 <span class="text-[10px] text-slate-300 font-medium text-center leading-tight group-hover:text-white transition-colors">Edukasi<br>& AI Hub</span>
 
-                <!-- Coach Mark -->
-                <div id="dashboardCoachMark" class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden z-[60] w-44 pointer-events-none">
-                    <div class="bg-blue-600 text-white text-[11px] font-medium p-3 rounded-2xl shadow-xl shadow-blue-500/30 relative animate-bounce text-center">
+                <!-- Coach Mark (Disesuaikan agar tidak terpotong di tepi layar mobile) -->
+                <div id="dashboardCoachMark" class="absolute bottom-full left-0 sm:left-1/2 sm:-translate-x-1/2 mb-3 hidden z-[60] w-48 max-w-[calc(100vw-2.5rem)] pointer-events-none">
+                    <div class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-[11px] font-medium p-2.5 rounded-2xl shadow-xl shadow-blue-500/30 relative animate-bounce text-center border border-blue-400/30">
                         Yuk baca panduan Cara Kerja dulu!
-                        <div class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-blue-600 rotate-45"></div>
+                        <!-- Panah mengarah tepat ke tengah ikon (x = 24px / left-6) di mobile, dan tengah di desktop -->
+                        <div class="absolute -bottom-1.5 left-6 sm:left-1/2 sm:-translate-x-1/2 w-3 h-3 bg-indigo-600 rotate-45 border-r border-b border-blue-400/30"></div>
                     </div>
                     <!-- Glow ring around the icon -->
-                    <div class="absolute top-[3rem] left-1/2 -translate-x-1/2 w-16 h-16 rounded-3xl border-2 border-blue-500 animate-ping"></div>
+                    <div class="absolute top-[3.25rem] left-6 -translate-x-1/2 sm:left-1/2 w-14 h-14 rounded-2xl border-2 border-blue-400/80 animate-ping pointer-events-none"></div>
                 </div>
             </a>
 
