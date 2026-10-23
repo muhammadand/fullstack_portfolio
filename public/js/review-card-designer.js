@@ -109,11 +109,7 @@ function partnerCardDesigner() {
                 : document.getElementById("cardPortraitStandee");
         },
 
-        // ══════════════════════════════════════════════
-        //  CAPTURE: Prioritaskan htmlToImage (ForeignObject SVG)
-        //  agar 100% identik dengan apa yang terlihat di preview browser.
-        //  Fallback otomatis ke html2canvas jika library belum siap.
-        // ══════════════════════════════════════════════
+
         captureToCanvas: function (element, bgColor) {
             var rect = element.getBoundingClientRect();
             var w = Math.round(rect.width);
