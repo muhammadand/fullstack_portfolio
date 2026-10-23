@@ -24,8 +24,8 @@ class ReviewCardPartnerController extends Controller
             ->where('payment_status', 'paid')
             ->selectRaw('
                 COUNT(*) as total_cards,
-                SUM(CASE WHEN status = "active" THEN 1 ELSE 0 END) as active_cards,
-                SUM(CASE WHEN status = "pending" THEN 1 ELSE 0 END) as ready_cards,
+                SUM(CASE WHEN is_sold = 1 THEN 1 ELSE 0 END) as sold_cards,
+                SUM(CASE WHEN is_sold = 0 THEN 1 ELSE 0 END) as ready_cards,
                 COALESCE(SUM(total_scans), 0) as total_scans
             ')
             ->first();
@@ -61,6 +61,7 @@ class ReviewCardPartnerController extends Controller
                 'business_name',
                 'google_review_url',
                 'status',
+                'is_sold',
                 'buy_price',
                 'total_scans',
                 'purchased_at',
@@ -71,9 +72,9 @@ class ReviewCardPartnerController extends Controller
         // Filter status kartu milik partner
         if ($request->filled('filter')) {
             if ($request->filter === 'ready') {
-                $query->where('status', 'pending');
-            } elseif ($request->filter === 'active') {
-                $query->where('status', 'active');
+                $query->where('is_sold', false);
+            } elseif ($request->filter === 'sold' || $request->filter === 'active') {
+                $query->where('is_sold', true);
             }
         }
 
@@ -245,8 +246,8 @@ class ReviewCardPartnerController extends Controller
             return redirect()->back()->with('error', 'Kartu tidak valid atau bukan milik Anda.');
         }
 
-        if ($card->status === 'active') {
-            return redirect()->back()->with('error', 'Kartu ini sudah berstatus Terjual dan telah terkunci. Data toko tidak dapat diubah lagi.');
+        if ($card->is_sold) {
+            return redirect()->back()->with('error', 'Kartu ini sudah berstatus Terjual dan telah terkunci permanen. Data toko tidak dapat diubah lagi.');
         }
 
         $validated = $request->validate([
@@ -278,6 +279,36 @@ class ReviewCardPartnerController extends Controller
 
         return redirect()->route('affiliate.review_cards.index')
             ->with('success', "Berhasil menghubungkan kartu {$card->serial_number} ke {$validated['business_name']}! Link review langsung telah aktif.");
+    }
+
+    /**
+     * Mark a review card as sold permanently, locking it from further changes.
+     */
+    public function markAsSold(int $id)
+    {
+        $affiliate = Auth::guard('affiliate')->user();
+
+        $card = DB::table('review_cards')
+            ->where('id', $id)
+            ->where('affiliate_id', $affiliate->id)
+            ->where('payment_status', 'paid')
+            ->first();
+
+        if (!$card) {
+            return redirect()->back()->with('error', 'Kartu tidak valid atau bukan milik Anda.');
+        }
+
+        if ($card->is_sold) {
+            return redirect()->back()->with('info', 'Kartu ini sudah ditandai Terjual sebelumnya.');
+        }
+
+        DB::table('review_cards')->where('id', $id)->update([
+            'is_sold'    => true,
+            'status'     => 'active',
+            'updated_at' => now(),
+        ]);
+
+        return redirect()->back()->with('success', "Kartu {$card->serial_number} berhasil ditandai Terjual dan terkunci permanen.");
     }
 
     /**

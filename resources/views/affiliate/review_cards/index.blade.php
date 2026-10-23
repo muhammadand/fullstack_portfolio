@@ -166,7 +166,7 @@
             </div>
             <div class="glass-panel p-3 rounded-xl text-center">
                 <div class="text-[10px] text-emerald-400 font-medium uppercase">Terjual</div>
-                <div class="text-base font-bold text-emerald-400 mt-0.5">{{ number_format($stats->active_cards ?? 0) }}</div>
+                <div class="text-base font-bold text-emerald-400 mt-0.5">{{ number_format($stats->sold_cards ?? 0) }}</div>
             </div>
         </div>
 
@@ -181,7 +181,7 @@
                 <div class="flex items-center gap-1 text-xs">
                     <a href="{{ route('affiliate.review_cards.index') }}" class="px-2 py-0.5 rounded-lg {{ !request('filter') ? 'bg-blue-600 text-white font-medium' : 'text-slate-400 hover:text-white' }}">Semua</a>
                     <a href="{{ route('affiliate.review_cards.index', ['filter' => 'ready']) }}" class="px-2 py-0.5 rounded-lg {{ request('filter') === 'ready' ? 'bg-amber-500/20 text-amber-300 font-medium' : 'text-slate-400 hover:text-white' }}">Stok</a>
-                    <a href="{{ route('affiliate.review_cards.index', ['filter' => 'active']) }}" class="px-2 py-0.5 rounded-lg {{ request('filter') === 'active' ? 'bg-emerald-500/20 text-emerald-300 font-medium' : 'text-slate-400 hover:text-white' }}">Terjual</a>
+                    <a href="{{ route('affiliate.review_cards.index', ['filter' => 'sold']) }}" class="px-2 py-0.5 rounded-lg {{ request('filter') === 'sold' || request('filter') === 'active' ? 'bg-emerald-500/20 text-emerald-300 font-medium' : 'text-slate-400 hover:text-white' }}">Terjual</a>
                 </div>
             </div>
 
@@ -213,10 +213,15 @@
                         </div>
 
                         <!-- Status Badge -->
-                        @if($card->status === 'active')
+                        @if($card->is_sold)
                         <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                             <i class="fa-solid fa-lock text-[9px]"></i>
                             Terjual
+                        </span>
+                        @elseif($card->business_name)
+                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                            <i class="fa-solid fa-store text-[9px]"></i>
+                            Toko Terhubung
                         </span>
                         @else
                         <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20">
@@ -239,6 +244,7 @@
                     </div>
 
                     <!-- Action Buttons -->
+                    @if($card->is_sold)
                     <div class="grid grid-cols-2 gap-2 pt-1">
                         <!-- Cetak Template Card -->
                         <a href="{{ route('affiliate.review_cards.print', $card->id) }}" class="py-2 px-3 rounded-lg bg-blue-600/15 hover:bg-blue-600/25 text-blue-300 font-medium text-xs flex items-center justify-center gap-1.5 transition-colors border border-blue-500/20">
@@ -246,19 +252,44 @@
                             <span>Desain Cetak</span>
                         </a>
 
-                        <!-- Bantu Aktivasi Toko Klien / Terkunci jika sudah Terjual -->
-                        @if($card->status !== 'active')
+                        <!-- Terkunci Permanen -->
+                        <div class="py-2 px-3 rounded-lg bg-slate-800/60 text-slate-400 text-xs flex items-center justify-center gap-1.5 border border-white/5 cursor-not-allowed select-none" title="Kartu sudah terjual dan terkunci permanen">
+                            <i class="fa-solid fa-lock text-[11px] text-slate-500"></i>
+                            <span>Terkunci (Terjual)</span>
+                        </div>
+                    </div>
+                    @else
+                    <div class="grid grid-cols-2 gap-2 pt-1">
+                        <!-- Cetak Template Card -->
+                        <a href="{{ route('affiliate.review_cards.print', $card->id) }}" class="py-2 px-3 rounded-lg bg-blue-600/15 hover:bg-blue-600/25 text-blue-300 font-medium text-xs flex items-center justify-center gap-1.5 transition-colors border border-blue-500/20">
+                            <i class="fa-solid fa-file-arrow-down text-xs"></i>
+                            <span>Desain Cetak</span>
+                        </a>
+
+                        @if(!$card->business_name)
+                        <!-- Bantu Aktivasi Toko Klien Pertama Kali -->
                         <button type="button" @click="activeCard = {{ json_encode($card) }}; activateModal = true;" class="py-2 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-xs flex items-center justify-center gap-1.5 transition-colors">
                             <i class="fa-solid fa-check text-xs"></i>
                             <span>Aktivasi Toko</span>
                         </button>
                         @else
-                        <div class="py-2 px-3 rounded-lg bg-slate-800/60 text-slate-400 text-xs flex items-center justify-center gap-1.5 border border-white/5 cursor-not-allowed select-none" title="Kartu sudah terjual dan terkunci permanen">
-                            <i class="fa-solid fa-lock text-[11px] text-slate-500"></i>
-                            <span>Terkunci (Terjual)</span>
-                        </div>
+                        <!-- Edit Link Toko Klien -->
+                        <button type="button" @click="activeCard = {{ json_encode($card) }}; activateModal = true;" class="py-2 px-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs flex items-center justify-center gap-1.5 transition-colors border border-white/5">
+                            <i class="fa-solid fa-pen text-xs"></i>
+                            <span>Edit Link</span>
+                        </button>
                         @endif
                     </div>
+
+                    <!-- Tombol Kunci / Tandai Terjual -->
+                    <form action="{{ route('affiliate.review_cards.mark_sold', $card->id) }}" method="POST" class="pt-2" onsubmit="return confirm('Tandai kartu {{ $card->serial_number }} sebagai Terjual?\n\nPERHATIAN: Setelah ditandai Terjual, kartu akan dikunci permanen dan data toko tidak dapat diedit atau dihapus lagi.');">
+                        @csrf
+                        <button type="submit" class="w-full py-1.5 px-3 rounded-lg bg-emerald-600/20 hover:bg-emerald-600 text-emerald-300 hover:text-white font-medium text-xs flex items-center justify-center gap-1.5 transition-all border border-emerald-500/30">
+                            <i class="fa-solid fa-lock text-[10px]"></i>
+                            <span>Tandai Sebagai Terjual (Kunci)</span>
+                        </button>
+                    </form>
+                    @endif
 
                 </div>
                 @empty

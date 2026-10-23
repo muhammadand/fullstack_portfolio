@@ -341,6 +341,7 @@ Route::middleware(['auth:affiliate'])->group(function () {
     Route::get('/partner/review-cards/{id}/print', [\App\Http\Controllers\Affiliate\ReviewCardPartnerController::class, 'printCard'])->name('affiliate.review_cards.print');
     Route::post('/partner/review-cards/download-export', [\App\Http\Controllers\Affiliate\ReviewCardPartnerController::class, 'downloadExport'])->name('affiliate.review_cards.download_export');
     Route::post('/partner/review-cards/{id}/activate-for-client', [\App\Http\Controllers\Affiliate\ReviewCardPartnerController::class, 'activateForClient'])->name('affiliate.review_cards.activate_for_client');
+    Route::post('/partner/review-cards/{id}/mark-sold', [\App\Http\Controllers\Affiliate\ReviewCardPartnerController::class, 'markAsSold'])->name('affiliate.review_cards.mark_sold');
 
     // Profile
     Route::get('/partner/profile', [App\Http\Controllers\AffiliateController::class, 'profile'])->name('affiliate.profile');
@@ -475,6 +476,11 @@ Route::get('/secret-deploy-trigger-12345', function () {
 
         \Illuminate\Support\Facades\Artisan::call('migrate', [
             '--path' => 'database/migrations/2026_10_22_022636_add_product_type_to_chat_templates_table.php',
+            '--force' => true
+        ]);
+
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_10_23_143647_add_is_sold_to_review_cards_table.php',
             '--force' => true
         ]);
 

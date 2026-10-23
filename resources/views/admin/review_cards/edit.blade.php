@@ -91,6 +91,14 @@
                     <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Catatan Internal</label>
                     <input type="text" name="notes" value="{{ old('notes', $card->notes) }}" placeholder="Catatan no pesanan / lokasi meja" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none">
                 </div>
+
+                <div class="p-3.5 bg-amber-50 border border-amber-200 rounded-xl flex items-start gap-3">
+                    <input type="checkbox" name="is_sold" id="is_sold" value="1" {{ old('is_sold', $card->is_sold) ? 'checked' : '' }} class="mt-0.5 rounded text-blue-600 focus:ring-blue-500">
+                    <label for="is_sold" class="text-xs text-amber-900 cursor-pointer">
+                        <span class="font-bold block">Tandai Sebagai Terjual (Kunci Kartu)</span>
+                        <span class="text-amber-700">Centang opsi ini jika kartu telah diserahkan/terjual ke klien. Kartu yang ditandai terjual akan dikunci permanen.</span>
+                    </label>
+                </div>
             </div>
 
             <!-- Submit -->

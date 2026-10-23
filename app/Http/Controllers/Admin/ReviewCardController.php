@@ -18,8 +18,8 @@ class ReviewCardController extends Controller
         $stats = DB::table('review_cards')
             ->selectRaw('
                 COUNT(*) as total,
-                SUM(CASE WHEN status = "active" THEN 1 ELSE 0 END) as active,
-                SUM(CASE WHEN status = "pending" THEN 1 ELSE 0 END) as pending,
+                SUM(CASE WHEN is_sold = 1 THEN 1 ELSE 0 END) as sold,
+                SUM(CASE WHEN is_sold = 0 THEN 1 ELSE 0 END) as unsold,
                 COALESCE(SUM(total_scans), 0) as total_scans
             ')
             ->first();
@@ -34,6 +34,7 @@ class ReviewCardController extends Controller
                 'business_name',
                 'google_review_url',
                 'status',
+                'is_sold',
                 'owner_name',
                 'total_scans',
                 'activated_at',
@@ -52,8 +53,14 @@ class ReviewCardController extends Controller
         }
 
         // Filter Status
-        if ($request->filled('status') && in_array($request->status, ['pending', 'active', 'inactive'])) {
-            $query->where('status', $request->status);
+        if ($request->filled('status')) {
+            if ($request->status === 'sold') {
+                $query->where('is_sold', true);
+            } elseif ($request->status === 'unsold') {
+                $query->where('is_sold', false);
+            } elseif (in_array($request->status, ['pending', 'active', 'inactive'])) {
+                $query->where('status', $request->status);
+            }
         }
 
         $cards = $query->orderBy('id', 'desc')->paginate(15)->withQueryString();
@@ -221,7 +228,7 @@ class ReviewCardController extends Controller
                 ->with('error', 'Kartu review tidak ditemukan.');
         }
 
-        if ($card->status === 'active') {
+        if ($card->is_sold) {
             return redirect()->route('admin.review_cards.index')
                 ->with('error', "Kartu {$card->serial_number} sudah berstatus Terjual dan terkunci. Tidak dapat diedit lagi.");
         }
@@ -241,7 +248,7 @@ class ReviewCardController extends Controller
                 ->with('error', 'Kartu review tidak ditemukan.');
         }
 
-        if ($card->status === 'active') {
+        if ($card->is_sold) {
             return redirect()->route('admin.review_cards.index')
                 ->with('error', "Kartu {$card->serial_number} sudah berstatus Terjual dan terkunci. Tidak dapat diubah lagi.");
         }
@@ -262,10 +269,13 @@ class ReviewCardController extends Controller
             $activatedAt = $now;
         }
 
+        $isSold = $request->boolean('is_sold');
+
         DB::table('review_cards')->where('id', $id)->update([
             'business_name' => $validated['business_name'] ?? null,
             'google_review_url' => $validated['google_review_url'] ?? null,
             'status' => $validated['status'],
+            'is_sold' => $isSold,
             'owner_name' => $validated['owner_name'] ?? null,
             'owner_phone' => $validated['owner_phone'] ?? null,
             'activated_at' => $activatedAt,
@@ -289,7 +299,7 @@ class ReviewCardController extends Controller
                 ->with('error', 'Kartu review tidak ditemukan.');
         }
 
-        if ($card->status === 'active') {
+        if ($card->is_sold) {
             return redirect()->route('admin.review_cards.index')
                 ->with('error', "Kartu {$card->serial_number} sudah berstatus Terjual dan terkunci. Kartu yang sudah terjual tidak dapat dihapus.");
         }
@@ -316,7 +326,7 @@ class ReviewCardController extends Controller
             return response()->json(['success' => false, 'message' => 'Kartu tidak ditemukan.'], 404);
         }
 
-        if ($card->status === 'active') {
+        if ($card->is_sold) {
             return redirect()->back()
                 ->with('error', "Kartu {$card->serial_number} sudah berstatus Terjual dan terkunci permanen.");
         }
@@ -332,6 +342,33 @@ class ReviewCardController extends Controller
 
         return redirect()->back()
             ->with('success', "Status kartu {$card->serial_number} diubah menjadi {$newStatus}.");
+    }
+
+    /**
+     * Mark card as sold from admin panel.
+     */
+    public function markAsSold(int $id)
+    {
+        $card = DB::table('review_cards')->where('id', $id)->first();
+
+        if (!$card) {
+            return redirect()->route('admin.review_cards.index')
+                ->with('error', 'Kartu review tidak ditemukan.');
+        }
+
+        if ($card->is_sold) {
+            return redirect()->route('admin.review_cards.index')
+                ->with('info', 'Kartu ini sudah ditandai Terjual sebelumnya.');
+        }
+
+        DB::table('review_cards')->where('id', $id)->update([
+            'is_sold'    => true,
+            'status'     => 'active',
+            'updated_at' => now(),
+        ]);
+
+        return redirect()->route('admin.review_cards.index')
+            ->with('success', "Kartu {$card->serial_number} berhasil ditandai Terjual dan terkunci permanen.");
     }
 
     /**
