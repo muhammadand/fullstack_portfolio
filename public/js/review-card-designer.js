@@ -110,7 +110,8 @@ function partnerCardDesigner() {
         },
 
         // ══════════════════════════════════════════════
-        //  CAPTURE: Clone kartu ke offscreen → html2canvas
+        //  CAPTURE: Render langsung via html2canvas onclone
+        //  (Tanpa append clone ke document.body agar tidak muncul kartu hantu di background)
         // ══════════════════════════════════════════════
         captureToCanvas: function (element, bgColor) {
             var rect = element.getBoundingClientRect();
@@ -120,48 +121,35 @@ function partnerCardDesigner() {
                 return Promise.reject(new Error("Ukuran kartu 0. Refresh halaman."));
             }
 
-            // Buat wrapper offscreen
-            var wrapper = document.createElement("div");
-            wrapper.style.cssText =
-                "position:fixed;left:0;top:0;z-index:-9999;pointer-events:none;overflow:hidden;" +
-                "width:" + w + "px;height:" + h + "px";
-
-            // Clone elemen — hilangkan ID ganda, reset transform
-            var clone = element.cloneNode(true);
-            clone.removeAttribute("id");
-            clone.style.cssText =
-                "position:relative;left:0;top:0;margin:0;transform:none;" +
-                "box-shadow:none;visibility:visible;opacity:1;" +
-                "width:" + w + "px;height:" + h + "px";
-
-            // Bersihkan SEMUA box-shadow dan filter di elemen anak agar html2canvas tidak membuat artefak kotak abu-abu
-            var subEls = clone.querySelectorAll("*");
-            for (var i = 0; i < subEls.length; i++) {
-                subEls[i].style.boxShadow = "none";
-                subEls[i].style.filter = "none";
-                subEls[i].style.webkitFilter = "none";
-            }
-
-            wrapper.appendChild(clone);
-            document.body.appendChild(wrapper);
-
             // Hitung scale optimal (max 4x, limit 16MP canvas utk mobile)
             var maxPx = 16000000;
             var scale = Math.min(4, Math.sqrt(maxPx / (w * h)));
 
             function doRender(s) {
-                return html2canvas(clone, {
+                return html2canvas(element, {
                     scale: s,
                     useCORS: true,
                     allowTaint: false,
                     backgroundColor: bgColor || null,
                     scrollX: 0,
                     scrollY: 0,
-                    x: 0,
-                    y: 0,
-                    width: w,
-                    height: h,
                     logging: false,
+                    onclone: function (clonedDoc) {
+                        var cardId = element.id;
+                        var clonedCard = cardId ? clonedDoc.getElementById(cardId) : null;
+                        if (!clonedCard) return;
+
+                        // Bersihkan SEMUA box-shadow dan filter di elemen clone agar html2canvas tidak membuat artefak kotak abu-abu
+                        var subEls = clonedCard.querySelectorAll("*");
+                        for (var i = 0; i < subEls.length; i++) {
+                            subEls[i].style.boxShadow = "none";
+                            subEls[i].style.filter = "none";
+                            subEls[i].style.webkitFilter = "none";
+                        }
+                        clonedCard.style.boxShadow = "none";
+                        clonedCard.style.filter = "none";
+                        clonedCard.style.transform = "none";
+                    },
                 });
             }
 
@@ -184,11 +172,6 @@ function partnerCardDesigner() {
                 .catch(function () {
                     // Fallback scale lebih rendah jika memori mobile terbatas
                     return doRender(2);
-                })
-                .finally(function () {
-                    if (document.body.contains(wrapper)) {
-                        document.body.removeChild(wrapper);
-                    }
                 });
         },
 
@@ -431,7 +414,7 @@ function partnerCardDesigner() {
             var self = this;
             try {
                 var tempDiv = document.createElement("div");
-                tempDiv.style.cssText = "position:fixed;left:-9999px;top:-9999px;";
+                tempDiv.style.cssText = "position:fixed;left:-9999px;top:-9999px;width:0;height:0;overflow:hidden;opacity:0;pointer-events:none;";
                 document.body.appendChild(tempDiv);
 
                 new QRCode(tempDiv, {

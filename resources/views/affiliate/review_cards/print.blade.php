@@ -199,52 +199,32 @@
                 <span x-text="statusMessage" class="leading-tight"></span>
             </div>
 
-            {{-- 1. Tombol Download Dokumen PDF (Siap Cetak) --}}
-            <button type="button" @click="downloadPDF()" :disabled="isGenerating" class="group w-full py-3.5 px-4 bg-gradient-to-r from-red-600 via-rose-600 to-red-500 hover:from-red-500 hover:to-rose-500 text-white font-semibold rounded-2xl text-xs transition-all shadow-lg shadow-red-500/25 flex items-center justify-between disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer active:scale-[0.99]">
-                <div class="flex items-center gap-3 text-left">
-                    <div class="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
-                        <i class="fa-solid fa-file-pdf text-base text-white"></i>
-                    </div>
-                    <div>
-                        <div class="font-bold font-outfit text-white text-[13px] leading-tight">Download Dokumen PDF (Siap Cetak)</div>
-                        <div class="text-[10px] text-red-100/90 leading-tight mt-0.5">Ukuran pas sesuai template cetak (Vektor Tajam)</div>
-                    </div>
-                </div>
-                <div class="shrink-0 ml-2">
-                    <i class="fa-solid text-sm" :class="isGenerating && generatingType === 'pdf' ? 'fa-spin fa-circle-notch text-white' : 'fa-arrow-down group-hover:translate-y-0.5 transition-transform'"></i>
-                </div>
-            </button>
+            {{-- Tombol Aksi Download & Cetak (Grid 2x2 Elegan, Ringkas & Cepat) --}}
+            <div class="grid grid-cols-2 gap-2.5 pt-1">
+                {{-- 1. Download PDF --}}
+                <button type="button" @click="downloadPDF()" :disabled="isGenerating" class="group relative py-3 px-3.5 bg-gradient-to-r from-red-600 via-rose-600 to-red-500 hover:from-red-500 hover:to-rose-500 text-white font-semibold rounded-2xl text-xs transition-all shadow-md shadow-red-500/25 flex items-center justify-center gap-2 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer">
+                    <i class="fa-solid text-sm shrink-0" :class="isGenerating && generatingType === 'pdf' ? 'fa-circle-notch fa-spin text-white' : 'fa-file-pdf'"></i>
+                    <span class="font-outfit font-bold tracking-wide">Download PDF</span>
+                </button>
 
-            {{-- 2. Tombol Download Gambar PNG HD --}}
-            <button type="button" @click="downloadPNG()" :disabled="isGenerating" class="group w-full py-3 px-4 bg-slate-800 hover:bg-slate-700/90 text-white font-semibold rounded-2xl text-xs transition-all border border-slate-700/80 shadow-md flex items-center justify-between disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer active:scale-[0.99]">
-                <div class="flex items-center gap-3 text-left">
-                    <div class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
-                        <i class="fa-solid fa-file-image text-sm"></i>
-                    </div>
-                    <div>
-                        <div class="font-bold font-outfit text-slate-100 text-[12px] leading-tight">Download Gambar PNG (Resolusi Tinggi)</div>
-                        <div class="text-[10px] text-slate-400 leading-tight mt-0.5">Bisa langsung kirim via WhatsApp ke percetakan</div>
-                    </div>
-                </div>
-                <div class="shrink-0 ml-2">
-                    <i class="fa-solid text-sm text-slate-300" :class="isGenerating && generatingType === 'png' ? 'fa-spin fa-circle-notch text-blue-400' : 'fa-arrow-down group-hover:translate-y-0.5 transition-transform'"></i>
-                </div>
-            </button>
+                {{-- 2. Download PNG --}}
+                <button type="button" @click="downloadPNG()" :disabled="isGenerating" class="group relative py-3 px-3.5 bg-slate-800 hover:bg-slate-700/90 text-white font-semibold rounded-2xl text-xs transition-all border border-slate-700/80 shadow-sm flex items-center justify-center gap-2 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer">
+                    <i class="fa-solid text-sm shrink-0 text-emerald-400" :class="isGenerating && generatingType === 'png' ? 'fa-circle-notch fa-spin text-white' : 'fa-file-image'"></i>
+                    <span class="font-outfit font-bold tracking-wide">Download PNG</span>
+                </button>
 
-            {{-- 3. Tombol Download Hanya QR Code --}}
-            <button type="button" @click="downloadQR()" :disabled="isGenerating" class="group w-full py-2.5 px-4 bg-slate-800/60 hover:bg-slate-700/60 text-slate-300 hover:text-white font-medium rounded-2xl text-xs transition-all border border-slate-700/50 flex items-center justify-between disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer">
-                <div class="flex items-center gap-2.5">
-                    <i class="fa-solid fa-qrcode text-amber-400 text-sm"></i>
-                    <span class="text-[11px]">Download Hanya QR Code (PNG Ultra-HD)</span>
-                </div>
-                <i class="fa-solid text-xs text-slate-400" :class="isGenerating && generatingType === 'qr' ? 'fa-spin fa-circle-notch text-amber-400' : 'fa-arrow-down'"></i>
-            </button>
+                {{-- 3. Download QR Code --}}
+                <button type="button" @click="downloadQR()" :disabled="isGenerating" class="group py-2.5 px-3 bg-slate-800/60 hover:bg-slate-700/70 text-slate-300 hover:text-white font-medium rounded-2xl text-xs transition-all border border-slate-700/50 flex items-center justify-center gap-2 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer">
+                    <i class="fa-solid text-xs shrink-0 text-amber-400" :class="isGenerating && generatingType === 'qr' ? 'fa-circle-notch fa-spin' : 'fa-qrcode'"></i>
+                    <span>QR Code Saja</span>
+                </button>
 
-            {{-- 4. Print Langsung ke Printer Fisik / AirPrint --}}
-            <button type="button" @click="window.print()" :disabled="isGenerating" class="w-full py-2 px-4 bg-transparent hover:bg-white/5 text-slate-400 hover:text-slate-200 font-medium rounded-2xl text-[11px] transition-all flex items-center justify-center gap-2 border border-slate-700/40 disabled:opacity-60 cursor-pointer">
-                <i class="fa-solid fa-print text-slate-500 text-xs"></i>
-                <span>Cetak Langsung via Printer Browser (Ctrl / Cmd + P)</span>
-            </button>
+                {{-- 4. Print Browser --}}
+                <button type="button" @click="window.print()" :disabled="isGenerating" class="group py-2.5 px-3 bg-slate-800/60 hover:bg-slate-700/70 text-slate-300 hover:text-white font-medium rounded-2xl text-xs transition-all border border-slate-700/50 flex items-center justify-center gap-2 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer">
+                    <i class="fa-solid fa-print text-xs shrink-0 text-blue-400"></i>
+                    <span>Cetak Browser</span>
+                </button>
+            </div>
         </div>
 
         {{-- Petunjuk Khusus Pengguna HP --}}
