@@ -221,6 +221,11 @@ class ReviewCardController extends Controller
                 ->with('error', 'Kartu review tidak ditemukan.');
         }
 
+        if ($card->status === 'active') {
+            return redirect()->route('admin.review_cards.index')
+                ->with('error', "Kartu {$card->serial_number} sudah berstatus Terjual dan terkunci. Tidak dapat diedit lagi.");
+        }
+
         return view('admin.review_cards.edit', compact('card'));
     }
 
@@ -234,6 +239,11 @@ class ReviewCardController extends Controller
         if (!$card) {
             return redirect()->route('admin.review_cards.index')
                 ->with('error', 'Kartu review tidak ditemukan.');
+        }
+
+        if ($card->status === 'active') {
+            return redirect()->route('admin.review_cards.index')
+                ->with('error', "Kartu {$card->serial_number} sudah berstatus Terjual dan terkunci. Tidak dapat diubah lagi.");
         }
 
         $validated = $request->validate([
@@ -272,6 +282,18 @@ class ReviewCardController extends Controller
      */
     public function destroy(int $id)
     {
+        $card = DB::table('review_cards')->where('id', $id)->first();
+
+        if (!$card) {
+            return redirect()->route('admin.review_cards.index')
+                ->with('error', 'Kartu review tidak ditemukan.');
+        }
+
+        if ($card->status === 'active') {
+            return redirect()->route('admin.review_cards.index')
+                ->with('error', "Kartu {$card->serial_number} sudah berstatus Terjual dan terkunci. Kartu yang sudah terjual tidak dapat dihapus.");
+        }
+
         $deleted = DB::table('review_cards')->where('id', $id)->delete();
 
         if ($deleted) {
@@ -292,6 +314,11 @@ class ReviewCardController extends Controller
 
         if (!$card) {
             return response()->json(['success' => false, 'message' => 'Kartu tidak ditemukan.'], 404);
+        }
+
+        if ($card->status === 'active') {
+            return redirect()->back()
+                ->with('error', "Kartu {$card->serial_number} sudah berstatus Terjual dan terkunci permanen.");
         }
 
         $newStatus = $card->status === 'active' ? 'inactive' : 'active';

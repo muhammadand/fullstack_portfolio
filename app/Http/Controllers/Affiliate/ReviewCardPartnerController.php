@@ -245,6 +245,10 @@ class ReviewCardPartnerController extends Controller
             return redirect()->back()->with('error', 'Kartu tidak valid atau bukan milik Anda.');
         }
 
+        if ($card->status === 'active') {
+            return redirect()->back()->with('error', 'Kartu ini sudah berstatus Terjual dan telah terkunci. Data toko tidak dapat diubah lagi.');
+        }
+
         $validated = $request->validate([
             'business_name'     => 'required|string|max:150',
             'google_review_url' => 'required|url|max:1000',

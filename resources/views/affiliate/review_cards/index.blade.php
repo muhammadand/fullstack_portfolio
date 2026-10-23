@@ -165,7 +165,7 @@
                 <div class="text-base font-bold text-amber-400 mt-0.5">{{ number_format($stats->ready_cards ?? 0) }}</div>
             </div>
             <div class="glass-panel p-3 rounded-xl text-center">
-                <div class="text-[10px] text-emerald-400 font-medium uppercase">Sudah Aktif</div>
+                <div class="text-[10px] text-emerald-400 font-medium uppercase">Terjual</div>
                 <div class="text-base font-bold text-emerald-400 mt-0.5">{{ number_format($stats->active_cards ?? 0) }}</div>
             </div>
         </div>
@@ -181,7 +181,7 @@
                 <div class="flex items-center gap-1 text-xs">
                     <a href="{{ route('affiliate.review_cards.index') }}" class="px-2 py-0.5 rounded-lg {{ !request('filter') ? 'bg-blue-600 text-white font-medium' : 'text-slate-400 hover:text-white' }}">Semua</a>
                     <a href="{{ route('affiliate.review_cards.index', ['filter' => 'ready']) }}" class="px-2 py-0.5 rounded-lg {{ request('filter') === 'ready' ? 'bg-amber-500/20 text-amber-300 font-medium' : 'text-slate-400 hover:text-white' }}">Stok</a>
-                    <a href="{{ route('affiliate.review_cards.index', ['filter' => 'active']) }}" class="px-2 py-0.5 rounded-lg {{ request('filter') === 'active' ? 'bg-emerald-500/20 text-emerald-300 font-medium' : 'text-slate-400 hover:text-white' }}">Aktif</a>
+                    <a href="{{ route('affiliate.review_cards.index', ['filter' => 'active']) }}" class="px-2 py-0.5 rounded-lg {{ request('filter') === 'active' ? 'bg-emerald-500/20 text-emerald-300 font-medium' : 'text-slate-400 hover:text-white' }}">Terjual</a>
                 </div>
             </div>
 
@@ -214,8 +214,9 @@
 
                         <!-- Status Badge -->
                         @if($card->status === 'active')
-                        <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                            Aktif
+                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                            <i class="fa-solid fa-lock text-[9px]"></i>
+                            Terjual
                         </span>
                         @else
                         <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20">
@@ -245,17 +246,17 @@
                             <span>Desain Cetak</span>
                         </a>
 
-                        <!-- Bantu Aktivasi Toko Klien -->
+                        <!-- Bantu Aktivasi Toko Klien / Terkunci jika sudah Terjual -->
                         @if($card->status !== 'active')
                         <button type="button" @click="activeCard = {{ json_encode($card) }}; activateModal = true;" class="py-2 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-xs flex items-center justify-center gap-1.5 transition-colors">
                             <i class="fa-solid fa-check text-xs"></i>
                             <span>Aktivasi Toko</span>
                         </button>
                         @else
-                        <button type="button" @click="activeCard = {{ json_encode($card) }}; activateModal = true;" class="py-2 px-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs flex items-center justify-center gap-1.5 transition-colors border border-white/5">
-                            <i class="fa-solid fa-pen text-xs"></i>
-                            <span>Edit Link</span>
-                        </button>
+                        <div class="py-2 px-3 rounded-lg bg-slate-800/60 text-slate-400 text-xs flex items-center justify-center gap-1.5 border border-white/5 cursor-not-allowed select-none" title="Kartu sudah terjual dan terkunci permanen">
+                            <i class="fa-solid fa-lock text-[11px] text-slate-500"></i>
+                            <span>Terkunci (Terjual)</span>
+                        </div>
                         @endif
                     </div>
 
