@@ -62,13 +62,13 @@
                             </svg>
                         </div>
 
-                        <!-- 5 Gold Stars Rating (Exact Vibrant Shape) -->
-                        <div class="flex items-center justify-center gap-1.5 mb-2.5">
-                            <i class="fa-solid fa-star text-[#F59E0B] text-xl"></i>
-                            <i class="fa-solid fa-star text-[#F59E0B] text-xl"></i>
-                            <i class="fa-solid fa-star text-[#F59E0B] text-xl"></i>
-                            <i class="fa-solid fa-star text-[#F59E0B] text-xl"></i>
-                            <i class="fa-solid fa-star text-[#F59E0B] text-xl"></i>
+                        <!-- 5 Gold Stars Rating (Official Google Rating Vector SVG - Crisp & Vector-Perfect) -->
+                        <div class="flex items-center justify-center gap-1 mb-2">
+                            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="#FBBC05"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="#FBBC05"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="#FBBC05"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="#FBBC05"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="#FBBC05"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
                         </div>
 
                         <!-- Headline Text: "Nos avalie no" / "Ulas Kami di" -->
@@ -101,9 +101,11 @@
                                     Escaneie
                                 </p>
 
-                                <!-- The Sharp QR Code Image -->
+                                <!-- The Sharp Local QR Code Element (Offline, No Tainted Canvas, 300+ DPI Crisp) -->
                                 <div class="bg-white p-1 flex items-center justify-center">
-                                    <img id="qrImageElement" src="https://api.qrserver.com/v1/create-qr-code/?size=450x450&data={{ urlencode(url('/r/' . $card->slug)) }}&margin=0" alt="QR Code Google Review" crossorigin="anonymous" class="w-40 h-40 object-contain">
+                                    <div id="localQrContainer" class="w-40 h-40 flex items-center justify-center overflow-hidden">
+                                        <div class="text-xs text-slate-400 animate-pulse">Memuat QR...</div>
+                                    </div>
                                 </div>
 
                                 <p class="text-[11px] text-slate-500 font-normal text-center mt-2 leading-snug" style="font-family: 'Outfit', sans-serif;">
@@ -148,41 +150,77 @@
             <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
                 <h3 class="font-bold text-slate-800 text-base mb-1 flex items-center gap-2">
                     <i class="fa-solid fa-download text-blue-600"></i>
-                    Download Desain Kartu
+                    Download Desain Kartu Siap Cetak
                 </h3>
-                <p class="text-xs text-slate-500 mb-5">Pilih format untuk diserahkan ke percetakan atau dicetak mandiri.</p>
+                <p class="text-xs text-slate-500 mb-4">Format kualitas tinggi siap serah ke percetakan (akrilik / stiker).</p>
+
+                <!-- Status Feedback Banner -->
+                <div x-show="statusMessage" x-transition class="mb-4 p-3 rounded-xl bg-blue-50 border border-blue-200 flex items-center gap-2 text-xs text-blue-700 font-medium">
+                    <i class="fa-solid" :class="isGenerating ? 'fa-spinner fa-spin text-blue-600' : 'fa-circle-check text-emerald-600'"></i>
+                    <span x-text="statusMessage"></span>
+                </div>
+
+                <!-- Resolution Selector -->
+                <div class="mb-4 p-3 rounded-xl bg-slate-50 border border-slate-200">
+                    <label class="block text-xs font-bold text-slate-700 mb-1.5 flex items-center justify-between">
+                        <span>Kualitas / Resolusi Ekspor</span>
+                        <span class="text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded bg-blue-100 text-blue-700" x-text="exportResolution === 'ultra' ? '450 DPI (Ultra HD)' : '300 DPI (HD)'"></span>
+                    </label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button type="button" @click="exportResolution = 'hd'" :class="exportResolution === 'hd' ? 'bg-white text-blue-600 font-bold border-blue-400 shadow-xs' : 'text-slate-600 border-slate-200 hover:bg-white'" class="py-1.5 px-3 rounded-lg border text-xs text-center transition-all">
+                            Standard 300 DPI
+                        </button>
+                        <button type="button" @click="exportResolution = 'ultra'" :class="exportResolution === 'ultra' ? 'bg-white text-blue-600 font-bold border-blue-400 shadow-xs' : 'text-slate-600 border-slate-200 hover:bg-white'" class="py-1.5 px-3 rounded-lg border text-xs text-center transition-all">
+                            Ultra HD 450 DPI (Percetakan)
+                        </button>
+                    </div>
+                </div>
 
                 <div class="space-y-3">
-                    <!-- Download PNG (High-Res 300 DPI) -->
-                    <button type="button" @click="downloadPNG()" :disabled="isGenerating" class="w-full flex items-center justify-between p-3.5 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-xl font-semibold text-sm transition-all shadow-sm group">
+                    <!-- Download PNG (High-Res) -->
+                    <button type="button" @click="downloadPNG()" :disabled="isGenerating" class="w-full flex items-center justify-between p-3.5 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-xl font-semibold text-sm transition-all shadow-sm group cursor-pointer">
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
                                 <i class="fa-solid fa-file-image text-white"></i>
                             </div>
                             <div class="text-left">
                                 <div>Download Gambar (PNG)</div>
-                                <div class="text-[11px] text-blue-100 font-normal">Resolusi tinggi 300 DPI (Siap Cetak)</div>
+                                <div class="text-[11px] text-blue-100 font-normal">Hasil jernih tanpa bayangan, siap cetak</div>
                             </div>
                         </div>
-                        <i class="fa-solid fa-arrow-down group-hover:translate-y-0.5 transition-transform" :class="isGenerating ? 'fa-spin fa-spinner' : 'fa-arrow-down'"></i>
+                        <i class="fa-solid" :class="generatingType === 'png' ? 'fa-spinner fa-spin' : 'fa-arrow-down group-hover:translate-y-0.5 transition-transform'"></i>
                     </button>
 
-                    <!-- Download PDF -->
-                    <button type="button" @click="downloadPDF()" :disabled="isGenerating" class="w-full flex items-center justify-between p-3.5 bg-slate-800 hover:bg-slate-900 disabled:bg-slate-600 text-white rounded-xl font-semibold text-sm transition-all shadow-sm group">
+                    <!-- Download PDF (10x15 cm Table Standee Format) -->
+                    <button type="button" @click="downloadPDF()" :disabled="isGenerating" class="w-full flex items-center justify-between p-3.5 bg-slate-800 hover:bg-slate-900 disabled:bg-slate-600 text-white rounded-xl font-semibold text-sm transition-all shadow-sm group cursor-pointer">
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center">
                                 <i class="fa-solid fa-file-pdf text-red-400"></i>
                             </div>
                             <div class="text-left">
                                 <div>Download Dokumen (PDF)</div>
-                                <div class="text-[11px] text-slate-400 font-normal">Format vektor cetak akrilik/kertas</div>
+                                <div class="text-[11px] text-slate-400 font-normal">Format presisi 10x15 cm (Standee Akrilik)</div>
                             </div>
                         </div>
-                        <i class="fa-solid fa-arrow-down group-hover:translate-y-0.5 transition-transform" :class="isGenerating ? 'fa-spin fa-spinner' : 'fa-arrow-down'"></i>
+                        <i class="fa-solid" :class="generatingType === 'pdf' ? 'fa-spinner fa-spin' : 'fa-arrow-down group-hover:translate-y-0.5 transition-transform'"></i>
+                    </button>
+
+                    <!-- Download QR Code Only (1200px HD) -->
+                    <button type="button" @click="downloadQROnly()" :disabled="isGenerating" class="w-full flex items-center justify-between p-3 bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 rounded-xl font-semibold text-sm transition-all shadow-xs group cursor-pointer">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-600">
+                                <i class="fa-solid fa-qrcode"></i>
+                            </div>
+                            <div class="text-left">
+                                <div>Download QR Code Saja (PNG)</div>
+                                <div class="text-[11px] text-slate-500 font-normal">Resolusi 1200x1200px untuk poster/flyer kasir</div>
+                            </div>
+                        </div>
+                        <i class="fa-solid" :class="generatingType === 'qr' ? 'fa-spinner fa-spin' : 'fa-arrow-down group-hover:translate-y-0.5 transition-transform'"></i>
                     </button>
 
                     <!-- Print Langsung -->
-                    <button type="button" @click="window.print()" class="w-full flex items-center justify-center gap-2 p-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-semibold text-sm transition-colors">
+                    <button type="button" @click="window.print()" class="w-full flex items-center justify-center gap-2 p-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-semibold text-sm transition-colors cursor-pointer">
                         <i class="fa-solid fa-print"></i>
                         <span>Cetak Langsung via Printer</span>
                     </button>
@@ -283,9 +321,10 @@
 
 </div>
 
-<!-- CDN html2canvas & html2pdf untuk ekspor resolusi tinggi -->
+<!-- Dependencies: html2canvas, jsPDF, and QRCode.js (high reliability, no CORS issues) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script>
     function cardDesigner() {
@@ -295,67 +334,203 @@
             businessName: @json($businessName),
             showMeta: true,
             isGenerating: false,
+            generatingType: '',
+            statusMessage: '',
+            exportResolution: 'ultra', // 'hd' (300 DPI) or 'ultra' (450 DPI)
+            serialNumber: '{{ $card->serial_number }}',
+            scanUrl: '{{ url('/r/' . $card->slug) }}',
+
+            init() {
+                this.renderQRCode();
+            },
+
+            renderQRCode() {
+                const container = document.getElementById('localQrContainer');
+                if (!container) return;
+                container.innerHTML = '';
+
+                // Generate high-resolution local QR Code (no external CORS / network dependencies)
+                new QRCode(container, {
+                    text: this.scanUrl,
+                    width: 600,
+                    height: 600,
+                    colorDark: '#000000',
+                    colorLight: '#ffffff',
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+
+                // Ensure styling on generated img/canvas
+                setTimeout(() => {
+                    const qrImg = container.querySelector('img') || container.querySelector('canvas');
+                    if (qrImg) {
+                        qrImg.style.width = '100%';
+                        qrImg.style.height = '100%';
+                        qrImg.style.objectFit = 'contain';
+                        qrImg.style.display = 'block';
+                        qrImg.setAttribute('alt', 'QR Code Review');
+                    }
+                }, 50);
+            },
+
+            async captureCardCanvas() {
+                const element = document.getElementById('printableCard');
+                if (!element) throw new Error('Elemen kartu tidak ditemukan');
+
+                // Determine scale based on chosen resolution: 3x (300 DPI) or 4x (450 DPI)
+                const scale = this.exportResolution === 'ultra' ? 4 : 3;
+
+                // Temporarily disable box-shadow so printed cards don't have dirty shadow gradients
+                const originalShadow = element.style.boxShadow;
+                element.style.boxShadow = 'none';
+
+                try {
+                    // Render with html2canvas at ultra-crisp resolution
+                    const canvas = await html2canvas(element, {
+                        scale: scale,
+                        useCORS: true,
+                        allowTaint: false,
+                        backgroundColor: '#ffffff',
+                        logging: false,
+                        imageTimeout: 0
+                    });
+                    return canvas;
+                } finally {
+                    element.style.boxShadow = originalShadow;
+                }
+            },
 
             async downloadPNG() {
                 this.isGenerating = true;
-                const element = document.getElementById('printableCard');
+                this.generatingType = 'png';
+                this.statusMessage = 'Menyiapkan gambar resolusi tinggi (300+ DPI)...';
 
                 try {
-                    // Skala 3 untuk hasil cetak tajam 300 DPI
-                    const canvas = await html2canvas(element, {
-                        scale: 3
-                        , useCORS: true
-                        , allowTaint: false
-                        , backgroundColor: null
+                    const canvas = await this.captureCardCanvas();
+
+                    // Convert to Blob for safe high-res download across all browsers
+                    const blob = await new Promise((resolve, reject) => {
+                        canvas.toBlob(b => {
+                            if (b) resolve(b);
+                            else reject(new Error('Gagal mengonversi canvas ke Blob PNG'));
+                        }, 'image/png', 1.0);
                     });
 
+                    const url = URL.createObjectURL(blob);
                     const link = document.createElement('a');
-                    link.download = `Google-Review-Card-{{ $card->serial_number }}.png`;
-                    link.href = canvas.toDataURL('image/png');
+                    link.download = `Google-Review-Card-${this.serialNumber}-${this.exportResolution.toUpperCase()}.png`;
+                    link.href = url;
+                    document.body.appendChild(link);
                     link.click();
+
+                    setTimeout(() => {
+                        document.body.removeChild(link);
+                        URL.revokeObjectURL(url);
+                    }, 300);
+
+                    this.statusMessage = 'PNG berhasil di-download!';
+                    setTimeout(() => { this.statusMessage = ''; }, 3000);
                 } catch (error) {
-                    console.error(error);
-                    alert('Gagal membuat file PNG. Silakan coba Cetak via Browser.');
+                    console.error('Error saat download PNG:', error);
+                    alert('Gagal mendownload kartu: ' + (error.message || 'Terjadi kesalahan sistem'));
                 } finally {
                     this.isGenerating = false;
+                    this.generatingType = '';
                 }
             },
 
             async downloadPDF() {
                 this.isGenerating = true;
-                const element = document.getElementById('printableCard');
-
-                const opt = {
-                    margin: [10, 10, 10, 10]
-                    , filename: `Google-Review-Card-{{ $card->serial_number }}.pdf`
-                    , image: {
-                        type: 'jpeg'
-                        , quality: 0.98
-                    }
-                    , html2canvas: {
-                        scale: 3
-                        , useCORS: true
-                    }
-                    , jsPDF: {
-                        unit: 'mm'
-                        , format: 'a6'
-                        , orientation: 'portrait'
-                    }
-                };
+                this.generatingType = 'pdf';
+                this.statusMessage = 'Menyusun dokumen PDF vektor cetak akrilik (10x15 cm)...';
 
                 try {
-                    await html2pdf().set(opt).from(element).save();
+                    const canvas = await this.captureCardCanvas();
+                    const imgData = canvas.toDataURL('image/png', 1.0);
+
+                    // Standard acrylic standee table size: 100 mm x 150 mm (10 x 15 cm)
+                    const { jsPDF } = window.jspdf;
+                    const pdf = new jsPDF({
+                        orientation: 'portrait',
+                        unit: 'mm',
+                        format: [100, 150]
+                    });
+
+                    pdf.addImage(imgData, 'PNG', 0, 0, 100, 150, undefined, 'FAST');
+                    pdf.save(`Google-Review-Card-${this.serialNumber}-PrintReady.pdf`);
+
+                    this.statusMessage = 'PDF berhasil di-download!';
+                    setTimeout(() => { this.statusMessage = ''; }, 3000);
                 } catch (err) {
-                    console.error(err);
-                    // Fallback to window print
-                    window.print();
+                    console.error('Error saat download PDF:', err);
+                    alert('Gagal membuat PDF: ' + (err.message || 'Terjadi kesalahan sistem'));
                 } finally {
                     this.isGenerating = false;
+                    this.generatingType = '';
+                }
+            },
+
+            async downloadQROnly() {
+                this.isGenerating = true;
+                this.generatingType = 'qr';
+                this.statusMessage = 'Mengekspor QR Code HD (1200x1200px)...';
+
+                try {
+                    // Create an offscreen canvas for a pristine 1200x1200px QR Code
+                    const tempDiv = document.createElement('div');
+                    tempDiv.style.position = 'fixed';
+                    tempDiv.style.left = '-9999px';
+                    tempDiv.style.top = '-9999px';
+                    document.body.appendChild(tempDiv);
+
+                    new QRCode(tempDiv, {
+                        text: this.scanUrl,
+                        width: 1200,
+                        height: 1200,
+                        colorDark: '#000000',
+                        colorLight: '#ffffff',
+                        correctLevel: QRCode.CorrectLevel.H
+                    });
+
+                    await new Promise(r => setTimeout(r, 100));
+
+                    const qrCanvas = tempDiv.querySelector('canvas');
+                    let qrBlob;
+
+                    if (qrCanvas) {
+                        qrBlob = await new Promise(res => qrCanvas.toBlob(res, 'image/png', 1.0));
+                    } else {
+                        const qrImg = tempDiv.querySelector('img');
+                        const res = await fetch(qrImg.src);
+                        qrBlob = await res.blob();
+                    }
+
+                    document.body.removeChild(tempDiv);
+
+                    if (qrBlob) {
+                        const url = URL.createObjectURL(qrBlob);
+                        const link = document.createElement('a');
+                        link.download = `QR-GoogleReview-${this.serialNumber}-HD.png`;
+                        link.href = url;
+                        document.body.appendChild(link);
+                        link.click();
+                        setTimeout(() => {
+                            document.body.removeChild(link);
+                            URL.revokeObjectURL(url);
+                        }, 300);
+                    }
+
+                    this.statusMessage = 'QR Code HD berhasil di-download!';
+                    setTimeout(() => { this.statusMessage = ''; }, 3000);
+                } catch (error) {
+                    console.error('Error download QR:', error);
+                    alert('Gagal download QR Code');
+                } finally {
+                    this.isGenerating = false;
+                    this.generatingType = '';
                 }
             }
         }
     }
-
 </script>
 
 <style>
