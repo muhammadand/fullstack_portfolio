@@ -36,7 +36,7 @@
 
     </style>
 </head>
-<body class="pb-24 overflow-x-hidden min-h-screen flex flex-col relative" x-data="{ buyModal: false, activateModal: false, isActivating: false, selectedQty: 1, selectedCost: 10000, activeCard: null }">
+<body class="pb-24 overflow-x-hidden min-h-screen flex flex-col relative" x-data="{ buyModal: false, activateModal: false, markSoldModal: false, isActivating: false, selectedQty: 1, selectedCost: 10000, activeCard: null, soldCard: null }">
 
     <!-- Subtle Background Glow -->
     <div class="fixed top-0 left-0 w-full h-56 bg-blue-600/10 rounded-full blur-[100px] -translate-y-1/2 pointer-events-none z-0"></div>
@@ -281,14 +281,13 @@
                         @endif
                     </div>
 
-                    <!-- Tombol Kunci / Tandai Terjual -->
-                    <form action="{{ route('affiliate.review_cards.mark_sold', $card->id) }}" method="POST" class="pt-2" onsubmit="return confirm('Tandai kartu {{ $card->serial_number }} sebagai Terjual?\n\nPERHATIAN: Setelah ditandai Terjual, kartu akan dikunci permanen dan data toko tidak dapat diedit atau dihapus lagi.');">
-                        @csrf
-                        <button type="submit" class="w-full py-1.5 px-3 rounded-lg bg-emerald-600/20 hover:bg-emerald-600 text-emerald-300 hover:text-white font-medium text-xs flex items-center justify-center gap-1.5 transition-all border border-emerald-500/30">
+                    <!-- Tombol Kunci / Tandai Terjual (Membuka Modal) -->
+                    <div class="pt-2">
+                        <button type="button" @click="soldCard = {{ json_encode($card) }}; markSoldModal = true;" class="w-full py-1.5 px-3 rounded-lg bg-emerald-600/20 hover:bg-emerald-600 text-emerald-300 hover:text-white font-medium text-xs flex items-center justify-center gap-1.5 transition-all border border-emerald-500/30 active:scale-[0.98]">
                             <i class="fa-solid fa-lock text-[10px]"></i>
                             <span>Tandai Sebagai Terjual (Kunci)</span>
                         </button>
-                    </form>
+                    </div>
                     @endif
 
                 </div>
@@ -433,6 +432,47 @@
                             <i class="fa-solid fa-circle-notch fa-spin"></i>
                         </template>
                         <span x-text="isActivating ? 'Memproses Google Place ID...' : 'Simpan & Aktifkan'"></span>
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <!-- Modal Konfirmasi Tandai Terjual & Kunci -->
+    <div x-show="markSoldModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4" style="background-color: rgba(11, 17, 32, 0.85); backdrop-filter: blur(8px);">
+        <div @click.away="markSoldModal = false" class="bg-slate-900 border border-slate-700 rounded-2xl max-w-sm w-full p-5 shadow-2xl relative text-center">
+
+            <!-- Icon Gembok / Terjual -->
+            <div class="w-14 h-14 mx-auto rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center text-2xl mb-3 shadow-lg shadow-emerald-500/10">
+                <i class="fa-solid fa-lock"></i>
+            </div>
+
+            <h3 class="font-bold text-sm text-white mb-1">
+                Kunci Kartu Sebagai Terjual?
+            </h3>
+
+            <p class="text-xs text-slate-300 leading-relaxed mb-3">
+                Nomor Seri: <span class="font-mono font-bold text-white" x-text="soldCard ? soldCard.serial_number : ''"></span>
+                <template x-if="soldCard && soldCard.business_name">
+                    <span class="block text-emerald-400 font-semibold mt-0.5" x-text="'Toko: ' + soldCard.business_name"></span>
+                </template>
+            </p>
+
+            <div class="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl text-left text-[11px] text-amber-300 leading-relaxed mb-4 flex items-start gap-2">
+                <i class="fa-solid fa-triangle-exclamation text-amber-400 mt-0.5 shrink-0 text-xs"></i>
+                <span><b>Perhatian:</b> Setelah ditandai Terjual, kartu akan dikunci permanen. Anda dan Admin tidak akan dapat mengubah nama toko atau link review lagi.</span>
+            </div>
+
+            <form :action="'{{ url('/partner/review-cards') }}/' + (soldCard ? soldCard.id : '') + '/mark-sold'" method="POST">
+                @csrf
+                <div class="flex items-center gap-2">
+                    <button type="button" @click="markSoldModal = false" class="flex-1 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium text-xs rounded-xl transition">
+                        Batal
+                    </button>
+                    <button type="submit" class="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-xs rounded-xl shadow-lg shadow-emerald-600/30 flex items-center justify-center gap-1.5 transition">
+                        <i class="fa-solid fa-check text-xs"></i>
+                        <span>Ya, Kunci Kartu</span>
                     </button>
                 </div>
             </form>
