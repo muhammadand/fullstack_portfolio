@@ -414,29 +414,19 @@
                     const canvas = await this.captureCardCanvas();
                     const filename = `Google-Review-Card-${this.serialNumber}-${this.exportResolution.toUpperCase()}.png`;
 
-                    canvas.toBlob(blob => {
-                        if (blob && typeof saveAs !== 'undefined') {
-                            saveAs(blob, filename);
-                        } else if (blob) {
-                            const url = URL.createObjectURL(blob);
-                            const link = document.createElement('a');
-                            link.download = filename;
-                            link.href = url;
-                            document.body.appendChild(link);
-                            link.click();
-                            setTimeout(() => {
-                                document.body.removeChild(link);
-                                setTimeout(() => URL.revokeObjectURL(url), 15000);
-                            }, 500);
-                        } else {
-                            const link = document.createElement('a');
-                            link.download = filename;
-                            link.href = canvas.toDataURL('image/png', 1.0);
-                            document.body.appendChild(link);
-                            link.click();
-                            setTimeout(() => document.body.removeChild(link), 500);
+                    // Direct DataURL guarantees exact filename and .png extension
+                    const dataUrl = canvas.toDataURL('image/png', 1.0);
+                    const link = document.createElement('a');
+                    link.download = filename;
+                    link.href = dataUrl;
+                    document.body.appendChild(link);
+                    link.click();
+
+                    setTimeout(() => {
+                        if (document.body.contains(link)) {
+                            document.body.removeChild(link);
                         }
-                    }, 'image/png', 1.0);
+                    }, 500);
 
                     this.statusMessage = 'PNG berhasil di-download!';
                     setTimeout(() => {

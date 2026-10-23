@@ -204,7 +204,7 @@
                 , generatingType: ''
                 , statusMessage: ''
                 , selectedTemplate: 'square_nfc'
-                , scanUrl: '{{ url(' / r / ' . $card->slug) }}'
+                , scanUrl: @json(url('/r/' . $card->slug))
                 , serialNumber: '{{ $card->serial_number }}',
 
                 init() {
@@ -306,31 +306,19 @@
                         const suffix = this.selectedTemplate === 'square_nfc' ? 'Square-Google' : 'Standee-Portrait';
                         const filename = `Google-Review-${suffix}-${this.serialNumber}-HD.png`;
 
-                        // Convert to Blob and download safely with FileSaver.js
-                        canvas.toBlob(blob => {
-                            if (blob && typeof saveAs !== 'undefined') {
-                                saveAs(blob, filename);
-                            } else if (blob) {
-                                const url = URL.createObjectURL(blob);
-                                const link = document.createElement('a');
-                                link.download = filename;
-                                link.href = url;
-                                document.body.appendChild(link);
-                                link.click();
-                                setTimeout(() => {
-                                    document.body.removeChild(link);
-                                    setTimeout(() => URL.revokeObjectURL(url), 15000);
-                                }, 500);
-                            } else {
-                                // Fallback DataURL
-                                const link = document.createElement('a');
-                                link.download = filename;
-                                link.href = canvas.toDataURL('image/png', 1.0);
-                                document.body.appendChild(link);
-                                link.click();
-                                setTimeout(() => document.body.removeChild(link), 500);
+                        // Direct DataURL guarantees Chrome and Arc never assign random UUIDs and preserves the .png extension
+                        const dataUrl = canvas.toDataURL('image/png', 1.0);
+                        const link = document.createElement('a');
+                        link.download = filename;
+                        link.href = dataUrl;
+                        document.body.appendChild(link);
+                        link.click();
+
+                        setTimeout(() => {
+                            if (document.body.contains(link)) {
+                                document.body.removeChild(link);
                             }
-                        }, 'image/png', 1.0);
+                        }, 500);
 
                         this.statusMessage = 'PNG berhasil di-download!';
                         setTimeout(() => {
