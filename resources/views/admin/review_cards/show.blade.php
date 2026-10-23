@@ -64,11 +64,16 @@
 
                         <!-- 5 Gold Stars Rating (Official Google Rating Vector SVG - Crisp & Vector-Perfect) -->
                         <div class="flex items-center justify-center gap-1 mb-2">
-                            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="#FBBC05"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="#FBBC05"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="#FBBC05"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="#FBBC05"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="#FBBC05"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="#FBBC05">
+                                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg>
+                            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="#FBBC05">
+                                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg>
+                            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="#FBBC05">
+                                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg>
+                            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="#FBBC05">
+                                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg>
+                            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="#FBBC05">
+                                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg>
                         </div>
 
                         <!-- Headline Text: "Nos avalie no" / "Ulas Kami di" -->
@@ -321,24 +326,25 @@
 
 </div>
 
-<!-- Dependencies: html2canvas, jsPDF, and QRCode.js (high reliability, no CORS issues) -->
+<!-- Dependencies: html2canvas, jsPDF, QRCode.js, and FileSaver.js (Guarantees proper filenames and extensions) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
 
 <script>
     function cardDesigner() {
         return {
-            headlineText: 'Nos avalie no',
-            showBusinessName: false,
-            businessName: @json($businessName),
-            showMeta: true,
-            isGenerating: false,
-            generatingType: '',
-            statusMessage: '',
-            exportResolution: 'ultra', // 'hd' (300 DPI) or 'ultra' (450 DPI)
-            serialNumber: '{{ $card->serial_number }}',
-            scanUrl: '{{ url('/r/' . $card->slug) }}',
+            headlineText: 'Nos avalie no'
+            , showBusinessName: false
+            , businessName: @json($businessName)
+            , showMeta: true
+            , isGenerating: false
+            , generatingType: ''
+            , statusMessage: ''
+            , exportResolution: 'ultra', // 'hd' (300 DPI) or 'ultra' (450 DPI)
+            serialNumber: '{{ $card->serial_number }}'
+            , scanUrl: '{{ url(' / r / ' . $card->slug) }}',
 
             init() {
                 this.renderQRCode();
@@ -351,12 +357,12 @@
 
                 // Generate high-resolution local QR Code (no external CORS / network dependencies)
                 new QRCode(container, {
-                    text: this.scanUrl,
-                    width: 600,
-                    height: 600,
-                    colorDark: '#000000',
-                    colorLight: '#ffffff',
-                    correctLevel: QRCode.CorrectLevel.H
+                    text: this.scanUrl
+                    , width: 600
+                    , height: 600
+                    , colorDark: '#000000'
+                    , colorLight: '#ffffff'
+                    , correctLevel: QRCode.CorrectLevel.H
                 });
 
                 // Ensure styling on generated img/canvas
@@ -386,12 +392,12 @@
                 try {
                     // Render with html2canvas at ultra-crisp resolution
                     const canvas = await html2canvas(element, {
-                        scale: scale,
-                        useCORS: true,
-                        allowTaint: false,
-                        backgroundColor: '#ffffff',
-                        logging: false,
-                        imageTimeout: 0
+                        scale: scale
+                        , useCORS: true
+                        , allowTaint: false
+                        , backgroundColor: '#ffffff'
+                        , logging: false
+                        , imageTimeout: 0
                     });
                     return canvas;
                 } finally {
@@ -406,29 +412,36 @@
 
                 try {
                     const canvas = await this.captureCardCanvas();
+                    const filename = `Google-Review-Card-${this.serialNumber}-${this.exportResolution.toUpperCase()}.png`;
 
-                    // Convert to Blob for safe high-res download across all browsers
-                    const blob = await new Promise((resolve, reject) => {
-                        canvas.toBlob(b => {
-                            if (b) resolve(b);
-                            else reject(new Error('Gagal mengonversi canvas ke Blob PNG'));
-                        }, 'image/png', 1.0);
-                    });
-
-                    const url = URL.createObjectURL(blob);
-                    const link = document.createElement('a');
-                    link.download = `Google-Review-Card-${this.serialNumber}-${this.exportResolution.toUpperCase()}.png`;
-                    link.href = url;
-                    document.body.appendChild(link);
-                    link.click();
-
-                    setTimeout(() => {
-                        document.body.removeChild(link);
-                        URL.revokeObjectURL(url);
-                    }, 300);
+                    canvas.toBlob(blob => {
+                        if (blob && typeof saveAs !== 'undefined') {
+                            saveAs(blob, filename);
+                        } else if (blob) {
+                            const url = URL.createObjectURL(blob);
+                            const link = document.createElement('a');
+                            link.download = filename;
+                            link.href = url;
+                            document.body.appendChild(link);
+                            link.click();
+                            setTimeout(() => {
+                                document.body.removeChild(link);
+                                setTimeout(() => URL.revokeObjectURL(url), 15000);
+                            }, 500);
+                        } else {
+                            const link = document.createElement('a');
+                            link.download = filename;
+                            link.href = canvas.toDataURL('image/png', 1.0);
+                            document.body.appendChild(link);
+                            link.click();
+                            setTimeout(() => document.body.removeChild(link), 500);
+                        }
+                    }, 'image/png', 1.0);
 
                     this.statusMessage = 'PNG berhasil di-download!';
-                    setTimeout(() => { this.statusMessage = ''; }, 3000);
+                    setTimeout(() => {
+                        this.statusMessage = '';
+                    }, 3000);
                 } catch (error) {
                     console.error('Error saat download PNG:', error);
                     alert('Gagal mendownload kartu: ' + (error.message || 'Terjadi kesalahan sistem'));
@@ -446,20 +459,31 @@
                 try {
                     const canvas = await this.captureCardCanvas();
                     const imgData = canvas.toDataURL('image/png', 1.0);
+                    const filename = `Google-Review-Card-${this.serialNumber}-PrintReady.pdf`;
 
                     // Standard acrylic standee table size: 100 mm x 150 mm (10 x 15 cm)
-                    const { jsPDF } = window.jspdf;
+                    const {
+                        jsPDF
+                    } = window.jspdf;
                     const pdf = new jsPDF({
-                        orientation: 'portrait',
-                        unit: 'mm',
-                        format: [100, 150]
+                        orientation: 'portrait'
+                        , unit: 'mm'
+                        , format: [100, 150]
                     });
 
                     pdf.addImage(imgData, 'PNG', 0, 0, 100, 150, undefined, 'FAST');
-                    pdf.save(`Google-Review-Card-${this.serialNumber}-PrintReady.pdf`);
+
+                    const pdfBlob = pdf.output('blob');
+                    if (typeof saveAs !== 'undefined') {
+                        saveAs(pdfBlob, filename);
+                    } else {
+                        pdf.save(filename);
+                    }
 
                     this.statusMessage = 'PDF berhasil di-download!';
-                    setTimeout(() => { this.statusMessage = ''; }, 3000);
+                    setTimeout(() => {
+                        this.statusMessage = '';
+                    }, 3000);
                 } catch (err) {
                     console.error('Error saat download PDF:', err);
                     alert('Gagal membuat PDF: ' + (err.message || 'Terjadi kesalahan sistem'));
@@ -483,12 +507,12 @@
                     document.body.appendChild(tempDiv);
 
                     new QRCode(tempDiv, {
-                        text: this.scanUrl,
-                        width: 1200,
-                        height: 1200,
-                        colorDark: '#000000',
-                        colorLight: '#ffffff',
-                        correctLevel: QRCode.CorrectLevel.H
+                        text: this.scanUrl
+                        , width: 1200
+                        , height: 1200
+                        , colorDark: '#000000'
+                        , colorLight: '#ffffff'
+                        , correctLevel: QRCode.CorrectLevel.H
                     });
 
                     await new Promise(r => setTimeout(r, 100));
@@ -506,21 +530,26 @@
 
                     document.body.removeChild(tempDiv);
 
-                    if (qrBlob) {
+                    const filename = `QR-GoogleReview-${this.serialNumber}-HD.png`;
+                    if (qrBlob && typeof saveAs !== 'undefined') {
+                        saveAs(qrBlob, filename);
+                    } else if (qrBlob) {
                         const url = URL.createObjectURL(qrBlob);
                         const link = document.createElement('a');
-                        link.download = `QR-GoogleReview-${this.serialNumber}-HD.png`;
+                        link.download = filename;
                         link.href = url;
                         document.body.appendChild(link);
                         link.click();
                         setTimeout(() => {
                             document.body.removeChild(link);
-                            URL.revokeObjectURL(url);
-                        }, 300);
+                            setTimeout(() => URL.revokeObjectURL(url), 15000);
+                        }, 500);
                     }
 
                     this.statusMessage = 'QR Code HD berhasil di-download!';
-                    setTimeout(() => { this.statusMessage = ''; }, 3000);
+                    setTimeout(() => {
+                        this.statusMessage = '';
+                    }, 3000);
                 } catch (error) {
                     console.error('Error download QR:', error);
                     alert('Gagal download QR Code');
@@ -531,6 +560,7 @@
             }
         }
     }
+
 </script>
 
 <style>

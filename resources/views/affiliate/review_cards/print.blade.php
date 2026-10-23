@@ -11,10 +11,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/product-sans" rel="stylesheet">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <!-- CDN Dependencies: QRCode.js, html2canvas, and jsPDF -->
+    <!-- CDN Dependencies: QRCode.js, html2canvas, jsPDF, and FileSaver.js (Guarantees proper filenames and extensions) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
     <style>
         body {
             background-color: #0B1120;
@@ -39,7 +40,9 @@
         }
 
         @media print {
-            html, body {
+
+            html,
+            body {
                 background: #ffffff !important;
                 margin: 0 !important;
                 padding: 0 !important;
@@ -70,7 +73,8 @@
                 transform: none !important;
             }
 
-            #cardSquareNfc, #cardPortraitStandee {
+            #cardSquareNfc,
+            #cardPortraitStandee {
                 box-shadow: none !important;
                 page-break-inside: avoid !important;
                 break-inside: avoid !important;
@@ -196,12 +200,12 @@
     <script>
         function partnerCardDesigner() {
             return {
-                isGenerating: false,
-                generatingType: '',
-                statusMessage: '',
-                selectedTemplate: 'square_nfc',
-                scanUrl: '{{ url('/r/' . $card->slug) }}',
-                serialNumber: '{{ $card->serial_number }}',
+                isGenerating: false
+                , generatingType: ''
+                , statusMessage: ''
+                , selectedTemplate: 'square_nfc'
+                , scanUrl: '{{ url(' / r / ' . $card->slug) }}'
+                , serialNumber: '{{ $card->serial_number }}',
 
                 init() {
                     this.renderQRCodes();
@@ -209,20 +213,20 @@
 
                 renderQRCodes() {
                     const containers = [
-                        document.getElementById('localQrSquare'),
-                        document.getElementById('localQrPortrait')
+                        document.getElementById('localQrSquare')
+                        , document.getElementById('localQrPortrait')
                     ];
 
                     containers.forEach(container => {
                         if (!container) return;
                         container.innerHTML = '';
                         new QRCode(container, {
-                            text: this.scanUrl,
-                            width: 600,
-                            height: 600,
-                            colorDark: '#000000',
-                            colorLight: '#ffffff',
-                            correctLevel: QRCode.CorrectLevel.H
+                            text: this.scanUrl
+                            , width: 600
+                            , height: 600
+                            , colorDark: '#000000'
+                            , colorLight: '#ffffff'
+                            , correctLevel: QRCode.CorrectLevel.H
                         });
 
                         setTimeout(() => {
@@ -267,16 +271,16 @@
 
                         const canvas = await html2canvas(clone, {
                             scale: 4, // 450 DPI Ultra Crisp
-                            useCORS: true,
-                            allowTaint: false,
-                            backgroundColor: null,
-                            scrollX: 0,
-                            scrollY: 0,
-                            x: 0,
-                            y: 0,
-                            width: width,
-                            height: height,
-                            logging: false
+                            useCORS: true
+                            , allowTaint: false
+                            , backgroundColor: null
+                            , scrollX: 0
+                            , scrollY: 0
+                            , x: 0
+                            , y: 0
+                            , width: width
+                            , height: height
+                            , logging: false
                         });
 
                         return canvas;
@@ -288,7 +292,7 @@
                 async downloadPNG() {
                     this.isGenerating = true;
                     this.generatingType = 'png';
-                    this.statusMessage = 'Menyiapkan gambar PNG (resolusi tinggi)...';
+                    this.statusMessage = 'Menyiapkan gambar PNG resolusi tinggi...';
                     const element = this.getActiveCardElement();
 
                     if (!element) {
@@ -300,29 +304,38 @@
                     try {
                         const canvas = await this.captureCardCanvas(element);
                         const suffix = this.selectedTemplate === 'square_nfc' ? 'Square-Google' : 'Standee-Portrait';
+                        const filename = `Google-Review-${suffix}-${this.serialNumber}-HD.png`;
 
-                        // Convert to Blob for safe high-res download
-                        const blob = await new Promise((resolve, reject) => {
-                            canvas.toBlob(b => {
-                                if (b) resolve(b);
-                                else reject(new Error('Gagal mengonversi canvas ke Blob'));
-                            }, 'image/png', 1.0);
-                        });
-
-                        const url = URL.createObjectURL(blob);
-                        const link = document.createElement('a');
-                        link.download = `Google-Review-${suffix}-${this.serialNumber}-HD.png`;
-                        link.href = url;
-                        document.body.appendChild(link);
-                        link.click();
-
-                        setTimeout(() => {
-                            document.body.removeChild(link);
-                            URL.revokeObjectURL(url);
-                        }, 300);
+                        // Convert to Blob and download safely with FileSaver.js
+                        canvas.toBlob(blob => {
+                            if (blob && typeof saveAs !== 'undefined') {
+                                saveAs(blob, filename);
+                            } else if (blob) {
+                                const url = URL.createObjectURL(blob);
+                                const link = document.createElement('a');
+                                link.download = filename;
+                                link.href = url;
+                                document.body.appendChild(link);
+                                link.click();
+                                setTimeout(() => {
+                                    document.body.removeChild(link);
+                                    setTimeout(() => URL.revokeObjectURL(url), 15000);
+                                }, 500);
+                            } else {
+                                // Fallback DataURL
+                                const link = document.createElement('a');
+                                link.download = filename;
+                                link.href = canvas.toDataURL('image/png', 1.0);
+                                document.body.appendChild(link);
+                                link.click();
+                                setTimeout(() => document.body.removeChild(link), 500);
+                            }
+                        }, 'image/png', 1.0);
 
                         this.statusMessage = 'PNG berhasil di-download!';
-                        setTimeout(() => { this.statusMessage = ''; }, 3000);
+                        setTimeout(() => {
+                            this.statusMessage = '';
+                        }, 3000);
                     } catch (error) {
                         console.error('Error PNG:', error);
                         alert('Gagal mendownload kartu: ' + (error.message || 'Silakan coba lagi.'));
@@ -349,22 +362,33 @@
                         const imgData = canvas.toDataURL('image/png', 1.0);
                         const suffix = this.selectedTemplate === 'square_nfc' ? 'Square-Google' : 'Standee-Portrait';
                         const isSquare = this.selectedTemplate === 'square_nfc';
+                        const filename = `Google-Review-${suffix}-${this.serialNumber}-PrintReady.pdf`;
 
-                        const { jsPDF } = window.jspdf;
+                        const {
+                            jsPDF
+                        } = window.jspdf;
                         const pdfWidth = isSquare ? 110 : 100;
                         const pdfHeight = isSquare ? 130 : 150;
 
                         const pdf = new jsPDF({
-                            orientation: 'portrait',
-                            unit: 'mm',
-                            format: [pdfWidth, pdfHeight]
+                            orientation: 'portrait'
+                            , unit: 'mm'
+                            , format: [pdfWidth, pdfHeight]
                         });
 
                         pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight, undefined, 'FAST');
-                        pdf.save(`Google-Review-${suffix}-${this.serialNumber}-PrintReady.pdf`);
+
+                        const pdfBlob = pdf.output('blob');
+                        if (typeof saveAs !== 'undefined') {
+                            saveAs(pdfBlob, filename);
+                        } else {
+                            pdf.save(filename);
+                        }
 
                         this.statusMessage = 'PDF berhasil di-download!';
-                        setTimeout(() => { this.statusMessage = ''; }, 3000);
+                        setTimeout(() => {
+                            this.statusMessage = '';
+                        }, 3000);
                     } catch (err) {
                         console.error('Error PDF:', err);
                         alert('Gagal membuat PDF: ' + (err.message || 'Silakan coba lagi.'));
@@ -375,6 +399,7 @@
                 }
             }
         }
+
     </script>
 
 </body>
