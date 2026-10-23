@@ -114,7 +114,7 @@
             </div>
             <div class="grid grid-cols-2 gap-1.5">
                 <!-- Option 1: Square Google Card (Sesuai Foto - Scan QR) -->
-                <button type="button" @click="selectedTemplate = 'square_nfc'" :class="selectedTemplate === 'square_nfc' ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20 border-transparent' : 'text-slate-400 hover:text-white hover:bg-white/5 border-white/5'" class="p-2.5 rounded-xl border transition-all text-left flex items-start gap-2.5 cursor-pointer">
+                <button type="button" @click="selectedTemplate = 'square_nfc'" :disabled="isGenerating" :class="selectedTemplate === 'square_nfc' ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20 border-transparent' : 'text-slate-400 hover:text-white hover:bg-white/5 border-white/5'" class="p-2.5 rounded-xl border transition-all text-left flex items-start gap-2.5 cursor-pointer disabled:cursor-not-allowed">
                     <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" :class="selectedTemplate === 'square_nfc' ? 'bg-white/20 text-white' : 'bg-slate-800 text-slate-400'">
                         <i class="fa-solid fa-qrcode text-xs"></i>
                     </div>
@@ -128,7 +128,7 @@
                 </button>
 
                 <!-- Option 2: Standee Meja Portrait -->
-                <button type="button" @click="selectedTemplate = 'portrait_standee'" :class="selectedTemplate === 'portrait_standee' ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20 border-transparent' : 'text-slate-400 hover:text-white hover:bg-white/5 border-white/5'" class="p-2.5 rounded-xl border transition-all text-left flex items-start gap-2.5 cursor-pointer">
+                <button type="button" @click="selectedTemplate = 'portrait_standee'" :disabled="isGenerating" :class="selectedTemplate === 'portrait_standee' ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20 border-transparent' : 'text-slate-400 hover:text-white hover:bg-white/5 border-white/5'" class="p-2.5 rounded-xl border transition-all text-left flex items-start gap-2.5 cursor-pointer disabled:cursor-not-allowed">
                     <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" :class="selectedTemplate === 'portrait_standee' ? 'bg-white/20 text-white' : 'bg-slate-800 text-slate-400'">
                         <i class="fa-solid fa-id-card text-xs"></i>
                     </div>
@@ -161,13 +161,13 @@
             </h3>
 
             <!-- Status Feedback Banner -->
-            <div x-show="statusMessage" x-transition class="p-2.5 rounded-xl bg-blue-500/20 border border-blue-400/30 flex items-center gap-2 text-xs text-blue-200 font-medium">
-                <i class="fa-solid" :class="isGenerating ? 'fa-spinner fa-spin text-blue-400' : 'fa-circle-check text-emerald-400'"></i>
+            <div x-show="statusMessage" x-transition x-cloak :class="statusType === 'error' ? 'bg-red-500/15 border-red-400/30 text-red-200' : 'bg-blue-500/20 border-blue-400/30 text-blue-200'" class="p-2.5 rounded-xl border flex items-center gap-2 text-xs font-medium">
+                <i class="fa-solid" :class="isGenerating ? 'fa-spinner fa-spin text-blue-400' : (statusType === 'error' ? 'fa-circle-exclamation text-red-400' : 'fa-circle-check text-emerald-400')"></i>
                 <span x-text="statusMessage"></span>
             </div>
 
-            <!-- Download PNG (Ultra-Crisp 450 DPI, Zero Clipping) -->
-            <button type="button" @click="downloadPNG()" :disabled="isGenerating" class="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white font-semibold rounded-2xl text-xs transition-all shadow-lg shadow-blue-500/25 flex items-center justify-between group disabled:opacity-60 cursor-pointer">
+            <!-- Download PNG -->
+            <button type="button" @click="downloadPNG()" :disabled="isGenerating" class="group w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white font-semibold rounded-2xl text-xs transition-all shadow-lg shadow-blue-500/25 flex items-center justify-between disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer">
                 <div class="flex items-center gap-2.5">
                     <i class="fa-solid fa-file-image text-sm"></i>
                     <span>Download Gambar (PNG Siap Cetak)</span>
@@ -175,21 +175,24 @@
                 <i class="fa-solid" :class="isGenerating && generatingType === 'png' ? 'fa-spin fa-circle-notch' : 'fa-arrow-down group-hover:translate-y-0.5 transition-transform'"></i>
             </button>
 
-            <!-- Download PDF (Precision Print Dimensions) -->
-            <button type="button" @click="downloadPDF()" :disabled="isGenerating" class="w-full py-3 px-4 bg-slate-800 hover:bg-slate-700 text-white font-semibold rounded-2xl text-xs transition-all flex items-center justify-between border border-slate-700 disabled:opacity-60 cursor-pointer">
+            <!-- Download PDF -->
+            <button type="button" @click="downloadPDF()" :disabled="isGenerating" class="group w-full py-3 px-4 bg-slate-800 hover:bg-slate-700 text-white font-semibold rounded-2xl text-xs transition-all flex items-center justify-between border border-slate-700 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer">
                 <div class="flex items-center gap-2.5">
                     <i class="fa-solid fa-file-pdf text-red-400 text-sm"></i>
-                    <span>Download Dokumen PDF (Vektor Cetak)</span>
+                    <span>Download Dokumen PDF (Siap Cetak)</span>
                 </div>
                 <i class="fa-solid" :class="isGenerating && generatingType === 'pdf' ? 'fa-spin fa-circle-notch' : 'fa-arrow-down group-hover:translate-y-0.5 transition-transform'"></i>
             </button>
 
             <!-- Direct Print via Browser -->
-            <button type="button" @click="window.print()" :disabled="isGenerating" class="w-full py-2.5 px-4 bg-transparent hover:bg-white/5 text-slate-300 hover:text-white font-medium rounded-2xl text-xs transition-all flex items-center justify-center gap-2 border border-slate-700/60 cursor-pointer">
+            <button type="button" @click="window.print()" :disabled="isGenerating" class="w-full py-2.5 px-4 bg-transparent hover:bg-white/5 text-slate-300 hover:text-white font-medium rounded-2xl text-xs transition-all flex items-center justify-center gap-2 border border-slate-700/60 disabled:opacity-60 cursor-pointer">
                 <i class="fa-solid fa-print text-slate-400 text-xs"></i>
                 <span>Cetak Langsung via Browser (Ctrl / Cmd + P)</span>
             </button>
         </div>
+
+        <!-- Hidden Config Data to keep <script> 100% pure JS and prevent auto-formatter breaking PHP -->
+        <div id="cardConfig" data-serial="{{ $card->serial_number }}" data-scan-url="{{ url('/r/' . $card->slug) }}" data-export-url="{{ route('affiliate.review_cards.download_export') }}" data-csrf="{{ csrf_token() }}" style="display: none;"></div>
 
         <p class="text-center text-[11px] text-slate-500 mt-4 leading-relaxed">
             💡 Serahkan file gambar/PDF ini ke percetakan terdekat untuk dicetak di stiker vinyl, kartu akrilik, kartu PVC NFC, atau standee meja.
@@ -199,16 +202,45 @@
 
     <script>
         function partnerCardDesigner() {
+            const cfg = document.getElementById('cardConfig');
+            const ds = (cfg && cfg.dataset) ? cfg.dataset : {};
+
             return {
                 isGenerating: false
                 , generatingType: ''
                 , statusMessage: ''
+                , statusType: 'info'
                 , selectedTemplate: 'square_nfc'
-                , scanUrl: @json(url('/r/' . $card->slug))
-                , serialNumber: '{{ $card->serial_number }}',
+                , scanUrl: ds.scanUrl || ''
+                , serialNumber: ds.serial || ''
+                , exportUrl: ds.exportUrl || ''
+                , csrfToken: ds.csrf || '',
+
+                pdfWidthMm: {
+                    square_nfc: 110
+                    , portrait_standee: 100
+                },
 
                 init() {
                     this.renderQRCodes();
+                },
+
+                setStatus(message, type = 'info', clearAfterMs = 0) {
+                    this.statusMessage = message;
+                    this.statusType = type;
+                    if (clearAfterMs > 0) {
+                        setTimeout(() => {
+                            this.statusMessage = '';
+                        }, clearAfterMs);
+                    }
+                },
+
+                get safeSerial() {
+                    return String(this.serialNumber).replace(/[^a-zA-Z0-9_-]+/g, '-');
+                },
+
+                get templateSuffix() {
+                    return this.selectedTemplate === 'square_nfc' ? 'Square-Google' : 'Standee-Portrait';
                 },
 
                 renderQRCodes() {
@@ -247,86 +279,204 @@
                         document.getElementById('cardPortraitStandee');
                 },
 
-                async captureCardCanvas(element) {
-                    // Clone the element into an isolated offscreen container (at 0,0, no transforms, no scroll offset)
-                    // This 100% eliminates cropping, clipping, and scroll displacement bugs!
+                async waitForAssets(root) {
+                    if (document.fonts && document.fonts.ready) {
+                        try {
+                            await document.fonts.ready;
+                        } catch (e) {}
+                    }
+                    const imgs = Array.from(root.querySelectorAll('img'));
+                    await Promise.all(imgs.map(img => {
+                        if (img.complete && img.naturalWidth > 0) return Promise.resolve();
+                        return new Promise(resolve => {
+                            img.onload = img.onerror = resolve;
+                        });
+                    }));
+                },
+
+                async inlineImages(root) {
+                    const imgs = Array.from(root.querySelectorAll('img'));
+                    await Promise.all(imgs.map(async img => {
+                        const src = img.currentSrc || img.src;
+                        if (!src || src.startsWith('data:')) return;
+                        try {
+                            const res = await fetch(src, {
+                                mode: 'cors'
+                                , cache: 'force-cache'
+                            });
+                            if (!res.ok) throw new Error('HTTP ' + res.status);
+                            const blob = await res.blob();
+                            const dataUrl = await new Promise((resolve, reject) => {
+                                const reader = new FileReader();
+                                reader.onload = () => resolve(reader.result);
+                                reader.onerror = reject;
+                                reader.readAsDataURL(blob);
+                            });
+                            await new Promise(resolve => {
+                                img.onload = img.onerror = resolve;
+                                img.removeAttribute('srcset');
+                                img.src = dataUrl;
+                            });
+                        } catch (e) {
+                            console.warn('Gagal inline gambar:', src, e);
+                        }
+                    }));
+                },
+
+                async captureCardCanvas(element, {
+                    background = null
+                } = {}) {
+                    await this.waitForAssets(element);
+
+                    const rect = element.getBoundingClientRect();
+                    const width = Math.round(rect.width);
+                    const height = Math.round(rect.height);
+
+                    if (!width || !height) {
+                        throw new Error('Ukuran kartu tidak terbaca. Silakan refresh halaman.');
+                    }
+
+                    const wrapper = document.createElement('div');
+                    wrapper.style.cssText = [
+                        'position:fixed', 'left:0', 'top:0'
+                        , `width:${width}px`, `height:${height}px`
+                        , 'z-index:-1', 'pointer-events:none', 'overflow:hidden'
+                    ].join(';');
+
                     const clone = element.cloneNode(true);
-                    clone.style.position = 'fixed';
+                    clone.removeAttribute('id');
+                    clone.style.position = 'relative';
                     clone.style.left = '0';
                     clone.style.top = '0';
-                    clone.style.zIndex = '-99999';
-                    clone.style.transform = 'none';
+                    clone.style.width = width + 'px';
+                    clone.style.height = height + 'px';
                     clone.style.margin = '0';
+                    clone.style.transform = 'none';
                     clone.style.boxShadow = 'none';
                     clone.style.visibility = 'visible';
                     clone.style.opacity = '1';
-                    document.body.appendChild(clone);
+                    clone.style.display = getComputedStyle(element).display;
 
-                    // Allow browser to render layout of cloned element
-                    await new Promise(r => setTimeout(r, 60));
+                    wrapper.appendChild(clone);
+                    document.body.appendChild(wrapper);
 
                     try {
-                        const width = element.offsetWidth;
-                        const height = element.offsetHeight;
+                        await this.inlineImages(clone);
+                        await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
 
-                        const canvas = await html2canvas(clone, {
-                            scale: 4, // 450 DPI Ultra Crisp
-                            useCORS: true
+                        const MAX_PIXELS = 16000000;
+                        let scale = Math.min(4, Math.sqrt(MAX_PIXELS / (width * height)));
+
+                        const render = (s) => html2canvas(clone, {
+                            scale: s
+                            , useCORS: true
                             , allowTaint: false
-                            , backgroundColor: null
+                            , backgroundColor: background
                             , scrollX: 0
                             , scrollY: 0
                             , x: 0
                             , y: 0
                             , width: width
                             , height: height
+                            , windowWidth: document.documentElement.clientWidth
+                            , windowHeight: document.documentElement.clientHeight
                             , logging: false
                         });
 
-                        return canvas;
+                        try {
+                            return await render(scale);
+                        } catch (err) {
+                            console.warn('Capture scale 4 gagal, coba scale 2:', err);
+                            return await render(2);
+                        }
                     } finally {
-                        document.body.removeChild(clone);
+                        if (document.body.contains(wrapper)) {
+                            document.body.removeChild(wrapper);
+                        }
                     }
                 },
 
-                async downloadPNG() {
-                    this.isGenerating = true;
-                    this.generatingType = 'png';
-                    this.statusMessage = 'Menyiapkan gambar PNG resolusi tinggi...';
-                    const element = this.getActiveCardElement();
+                streamDownload(dataUrl, filename, fileType = 'png') {
+                    if (this.exportUrl && this.csrfToken) {
+                        try {
+                            const form = document.createElement('form');
+                            form.method = 'POST';
+                            form.action = this.exportUrl;
+                            form.style.display = 'none';
 
+                            const csrf = document.createElement('input');
+                            csrf.type = 'hidden';
+                            csrf.name = '_token';
+                            csrf.value = this.csrfToken;
+                            form.appendChild(csrf);
+
+                            const fileData = document.createElement('input');
+                            fileData.type = 'hidden';
+                            fileData.name = 'file_data';
+                            fileData.value = dataUrl;
+                            form.appendChild(fileData);
+
+                            const fileNameInput = document.createElement('input');
+                            fileNameInput.type = 'hidden';
+                            fileNameInput.name = 'filename';
+                            fileNameInput.value = filename;
+                            form.appendChild(fileNameInput);
+
+                            const fileTypeInput = document.createElement('input');
+                            fileTypeInput.type = 'hidden';
+                            fileTypeInput.name = 'file_type';
+                            fileTypeInput.value = fileType;
+                            form.appendChild(fileTypeInput);
+
+                            document.body.appendChild(form);
+                            form.submit();
+                            setTimeout(() => {
+                                if (document.body.contains(form)) {
+                                    document.body.removeChild(form);
+                                }
+                            }, 2000);
+                            return true;
+                        } catch (e) {
+                            console.warn('Gagal stream via backend, coba client download:', e);
+                        }
+                    }
+
+                    // Fallback browser download
+                    const link = document.createElement('a');
+                    link.href = dataUrl;
+                    link.download = filename;
+                    document.body.appendChild(link);
+                    link.click();
+                    setTimeout(() => {
+                        if (document.body.contains(link)) document.body.removeChild(link);
+                    }, 1000);
+                    return false;
+                },
+
+                async downloadPNG() {
+                    if (this.isGenerating) return;
+                    const element = this.getActiveCardElement();
                     if (!element) {
-                        alert('Elemen desain tidak ditemukan.');
-                        this.isGenerating = false;
+                        this.setStatus('Elemen desain tidak ditemukan.', 'error', 4000);
                         return;
                     }
 
+                    this.isGenerating = true;
+                    this.generatingType = 'png';
+                    this.setStatus('Menyiapkan gambar PNG resolusi tinggi...');
+
                     try {
-                        const canvas = await this.captureCardCanvas(element);
-                        const suffix = this.selectedTemplate === 'square_nfc' ? 'Square-Google' : 'Standee-Portrait';
-                        const filename = `Google-Review-${suffix}-${this.serialNumber}-HD.png`;
-
-                        // Direct DataURL guarantees Chrome and Arc never assign random UUIDs and preserves the .png extension
+                        const canvas = await this.captureCardCanvas(element, {
+                            background: null
+                        });
                         const dataUrl = canvas.toDataURL('image/png', 1.0);
-                        const link = document.createElement('a');
-                        link.download = filename;
-                        link.href = dataUrl;
-                        document.body.appendChild(link);
-                        link.click();
+                        const filename = `Google-Review-${this.templateSuffix}-${this.safeSerial}-HD.png`;
 
-                        setTimeout(() => {
-                            if (document.body.contains(link)) {
-                                document.body.removeChild(link);
-                            }
-                        }, 500);
-
-                        this.statusMessage = 'PNG berhasil di-download!';
-                        setTimeout(() => {
-                            this.statusMessage = '';
-                        }, 3000);
+                        this.streamDownload(dataUrl, filename, 'png');
+                        this.setStatus('PNG berhasil di-download!', 'info', 3000);
                     } catch (error) {
                         console.error('Error PNG:', error);
-                        alert('Gagal mendownload kartu: ' + (error.message || 'Silakan coba lagi.'));
+                        this.setStatus('Gagal download PNG: ' + (error.message || 'Silakan coba lagi.'), 'error', 6000);
                     } finally {
                         this.isGenerating = false;
                         this.generatingType = '';
@@ -334,58 +484,57 @@
                 },
 
                 async downloadPDF() {
-                    this.isGenerating = true;
-                    this.generatingType = 'pdf';
-                    this.statusMessage = 'Menyusun dokumen PDF siap cetak...';
+                    if (this.isGenerating) return;
                     const element = this.getActiveCardElement();
-
                     if (!element) {
-                        alert('Elemen desain tidak ditemukan.');
-                        this.isGenerating = false;
+                        this.setStatus('Elemen desain tidak ditemukan.', 'error', 4000);
                         return;
                     }
 
+                    this.isGenerating = true;
+                    this.generatingType = 'pdf';
+                    this.setStatus('Menyusun dokumen PDF siap cetak...');
+
                     try {
-                        const canvas = await this.captureCardCanvas(element);
+                        const canvas = await this.captureCardCanvas(element, {
+                            background: '#ffffff'
+                        });
                         const imgData = canvas.toDataURL('image/png', 1.0);
-                        const suffix = this.selectedTemplate === 'square_nfc' ? 'Square-Google' : 'Standee-Portrait';
-                        const isSquare = this.selectedTemplate === 'square_nfc';
-                        const filename = `Google-Review-${suffix}-${this.serialNumber}-PrintReady.pdf`;
+
+                        const pdfWidth = this.pdfWidthMm[this.selectedTemplate] || 100;
+                        const pdfHeight = +(pdfWidth * (canvas.height / canvas.width)).toFixed(2);
 
                         const {
                             jsPDF
                         } = window.jspdf;
-                        const pdfWidth = isSquare ? 110 : 100;
-                        const pdfHeight = isSquare ? 130 : 150;
-
                         const pdf = new jsPDF({
-                            orientation: 'portrait'
+                            orientation: pdfHeight >= pdfWidth ? 'portrait' : 'landscape'
                             , unit: 'mm'
                             , format: [pdfWidth, pdfHeight]
+                            , compress: true
+                        });
+
+                        pdf.setProperties({
+                            title: `Google Review ${this.templateSuffix} ${this.serialNumber}`
+                            , creator: 'Review Card Designer'
                         });
 
                         pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight, undefined, 'FAST');
 
-                        const pdfBlob = pdf.output('blob');
-                        if (typeof saveAs !== 'undefined') {
-                            saveAs(pdfBlob, filename);
-                        } else {
-                            pdf.save(filename);
-                        }
+                        const filename = `Google-Review-${this.templateSuffix}-${this.safeSerial}-PrintReady.pdf`;
+                        const pdfDataUri = pdf.output('datauristring');
+                        this.streamDownload(pdfDataUri, filename, 'pdf');
 
-                        this.statusMessage = 'PDF berhasil di-download!';
-                        setTimeout(() => {
-                            this.statusMessage = '';
-                        }, 3000);
+                        this.setStatus('PDF berhasil di-download!', 'info', 3000);
                     } catch (err) {
                         console.error('Error PDF:', err);
-                        alert('Gagal membuat PDF: ' + (err.message || 'Silakan coba lagi.'));
+                        this.setStatus('Gagal membuat PDF: ' + (err.message || 'Silakan coba lagi.'), 'error', 6000);
                     } finally {
                         this.isGenerating = false;
                         this.generatingType = '';
                     }
                 }
-            }
+            };
         }
 
     </script>

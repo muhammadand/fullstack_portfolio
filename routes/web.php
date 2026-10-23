@@ -339,6 +339,7 @@ Route::middleware(['auth:affiliate'])->group(function () {
     Route::post('/partner/review-cards/buy', [\App\Http\Controllers\Affiliate\ReviewCardPartnerController::class, 'buy'])->name('affiliate.review_cards.buy');
     Route::get('/partner/review-cards/orders/{orderId}/pay', [\App\Http\Controllers\Affiliate\ReviewCardPartnerController::class, 'payOrder'])->name('affiliate.review_cards.pay');
     Route::get('/partner/review-cards/{id}/print', [\App\Http\Controllers\Affiliate\ReviewCardPartnerController::class, 'printCard'])->name('affiliate.review_cards.print');
+    Route::post('/partner/review-cards/download-export', [\App\Http\Controllers\Affiliate\ReviewCardPartnerController::class, 'downloadExport'])->name('affiliate.review_cards.download_export');
     Route::post('/partner/review-cards/{id}/activate-for-client', [\App\Http\Controllers\Affiliate\ReviewCardPartnerController::class, 'activateForClient'])->name('affiliate.review_cards.activate_for_client');
 
     // Profile

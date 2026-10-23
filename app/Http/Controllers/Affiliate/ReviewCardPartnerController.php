@@ -275,4 +275,42 @@ class ReviewCardPartnerController extends Controller
         return redirect()->route('affiliate.review_cards.index')
             ->with('success', "Berhasil menghubungkan kartu {$card->serial_number} ke {$validated['business_name']}! Link review langsung telah aktif.");
     }
+
+    /**
+     * Stream export image or PDF as a standard HTTP download attachment.
+     * Prevents browser download manager issues (like Arc/Chrome UUID filename bugs).
+     */
+    public function downloadExport(Request $request)
+    {
+        $validated = $request->validate([
+            'file_data' => 'required|string',
+            'filename'  => 'required|string|max:255',
+            'file_type' => 'nullable|string|in:png,pdf',
+        ]);
+
+        $fileType = $validated['file_type'] ?? 'png';
+        $base64 = preg_replace('/^data:[a-zA-Z0-9\/\+]+;base64,/', '', $validated['file_data']);
+        $binary = base64_decode($base64);
+
+        if (!$binary) {
+            return response('Data file tidak valid.', 400);
+        }
+
+        $filename = preg_replace('/[^a-zA-Z0-9_\-\.]/', '_', basename($validated['filename']));
+        $mime = $fileType === 'pdf' ? 'application/pdf' : 'image/png';
+
+        if ($fileType === 'pdf' && !str_ends_with(strtolower($filename), '.pdf')) {
+            $filename .= '.pdf';
+        } elseif ($fileType === 'png' && !str_ends_with(strtolower($filename), '.png')) {
+            $filename .= '.png';
+        }
+
+        return response($binary, 200, [
+            'Content-Type'        => $mime,
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+            'Content-Length'      => strlen($binary),
+            'Cache-Control'       => 'no-store, no-cache, must-revalidate',
+            'Pragma'              => 'no-cache',
+        ]);
+    }
 }
