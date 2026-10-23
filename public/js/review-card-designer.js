@@ -110,8 +110,9 @@ function partnerCardDesigner() {
         },
 
         // ══════════════════════════════════════════════
-        //  CAPTURE: Render langsung via html2canvas onclone
-        //  (Tanpa append clone ke document.body agar tidak muncul kartu hantu di background)
+        //  CAPTURE: Prioritaskan htmlToImage (ForeignObject SVG)
+        //  agar 100% identik dengan apa yang terlihat di preview browser.
+        //  Fallback otomatis ke html2canvas jika library belum siap.
         // ══════════════════════════════════════════════
         captureToCanvas: function (element, bgColor) {
             var rect = element.getBoundingClientRect();
@@ -121,13 +122,16 @@ function partnerCardDesigner() {
                 return Promise.reject(new Error("Ukuran kartu 0. Refresh halaman."));
             }
 
-            // Hitung scale optimal (max 4x, limit 16MP canvas utk mobile)
-            var maxPx = 16000000;
-            var scale = Math.min(4, Math.sqrt(maxPx / (w * h)));
+            var fontPromise = (document.fonts && document.fonts.ready)
+                ? document.fonts.ready
+                : Promise.resolve();
 
-            function doRender(s) {
+            function fallbackRender() {
+                var maxPx = 16000000;
+                var scale = Math.min(4, Math.sqrt(maxPx / (w * h)));
+
                 return html2canvas(element, {
-                    scale: s,
+                    scale: scale,
                     useCORS: true,
                     allowTaint: false,
                     backgroundColor: bgColor || null,
@@ -139,7 +143,6 @@ function partnerCardDesigner() {
                         var clonedCard = cardId ? clonedDoc.getElementById(cardId) : null;
                         if (!clonedCard) return;
 
-                        // Bersihkan SEMUA box-shadow dan filter di elemen clone agar html2canvas tidak membuat artefak kotak abu-abu
                         var subEls = clonedCard.querySelectorAll("*");
                         for (var i = 0; i < subEls.length; i++) {
                             subEls[i].style.boxShadow = "none";
@@ -153,11 +156,36 @@ function partnerCardDesigner() {
                 });
             }
 
-            // Pastikan font siap dan layout stabil sebelum render
-            var fontPromise = (document.fonts && document.fonts.ready)
-                ? document.fonts.ready
-                : Promise.resolve();
+            // 1. Prioritas: html-to-image (SVG ForeignObject)
+            // Menggunakan engine rendering browser asli, semua flexbox, margin, line-height 100% presisi
+            if (window.htmlToImage && typeof window.htmlToImage.toCanvas === "function") {
+                return fontPromise
+                    .then(function () {
+                        return new Promise(function (ok) {
+                            requestAnimationFrame(function () {
+                                requestAnimationFrame(ok);
+                            });
+                        });
+                    })
+                    .then(function () {
+                        return window.htmlToImage.toCanvas(element, {
+                            pixelRatio: 3, // Ultra-HD 3x resolusi untuk cetak tajam
+                            backgroundColor: bgColor || null,
+                            cacheBust: true,
+                            style: {
+                                boxShadow: "none",
+                                transform: "none",
+                                margin: "0",
+                            },
+                        });
+                    })
+                    .catch(function (err) {
+                        console.warn("htmlToImage fallback:", err);
+                        return fallbackRender();
+                    });
+            }
 
+            // 2. Fallback: html2canvas
             return fontPromise
                 .then(function () {
                     return new Promise(function (ok) {
@@ -167,11 +195,7 @@ function partnerCardDesigner() {
                     });
                 })
                 .then(function () {
-                    return doRender(scale);
-                })
-                .catch(function () {
-                    // Fallback scale lebih rendah jika memori mobile terbatas
-                    return doRender(2);
+                    return fallbackRender();
                 });
         },
 
