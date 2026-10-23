@@ -28,7 +28,7 @@
             <!-- Top Header & Rating -->
             <div class="w-full flex flex-col items-center">
                 @if($card->business_name)
-                <div class="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 text-[10px] font-medium tracking-wide max-w-[200px] truncate mb-0.5">
+                <div class="px-3 py-0.5 rounded-full bg-slate-100 text-slate-700 text-[10px] font-semibold tracking-wide max-w-[240px] truncate mb-0.5 text-center">
                     {{ $card->business_name }}
                 </div>
                 @endif
@@ -43,20 +43,27 @@
                     Google Review
                 </h2>
 
-                <!-- 5 Gold Stars Rating -->
-                <div class="flex items-center justify-center gap-1.5 mt-1">
-                    <i class="fa-solid fa-star text-[#FBBC05] text-[14px]"></i>
-                    <i class="fa-solid fa-star text-[#FBBC05] text-[14px]"></i>
-                    <i class="fa-solid fa-star text-[#FBBC05] text-[14px]"></i>
-                    <i class="fa-solid fa-star text-[#FBBC05] text-[14px]"></i>
-                    <i class="fa-solid fa-star text-[#FBBC05] text-[14px]"></i>
+                <!-- 5 Gold Stars Rating (Crisp Vector SVG) -->
+                <div class="flex items-center justify-center gap-1 mt-1">
+                    <svg class="w-4 h-4 fill-[#FBBC05]" viewBox="0 0 24 24">
+                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg>
+                    <svg class="w-4 h-4 fill-[#FBBC05]" viewBox="0 0 24 24">
+                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg>
+                    <svg class="w-4 h-4 fill-[#FBBC05]" viewBox="0 0 24 24">
+                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg>
+                    <svg class="w-4 h-4 fill-[#FBBC05]" viewBox="0 0 24 24">
+                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg>
+                    <svg class="w-4 h-4 fill-[#FBBC05]" viewBox="0 0 24 24">
+                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg>
                 </div>
             </div>
 
             <!-- Center: QR Code Container -->
             <div class="flex flex-col items-center justify-center my-auto">
                 <div class="bg-white p-2 rounded-2xl border border-slate-200/90 shadow-2xs flex items-center justify-center">
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=450x450&data={{ urlencode(url('/r/' . $card->slug)) }}&margin=0" alt="QR Code Google Review" crossorigin="anonymous" class="w-[115px] h-[115px] object-contain">
+                    <div id="localQrSquare" class="w-[115px] h-[115px] flex items-center justify-center overflow-hidden">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=450x450&data={{ urlencode(url('/r/' . $card->slug)) }}&margin=0" alt="QR Code Google Review" crossorigin="anonymous" class="w-full h-full object-contain">
+                    </div>
                 </div>
 
                 <p class="text-[10.5px] font-bold text-[#202124] tracking-wider mt-2 leading-none uppercase" style="font-family: 'Product Sans', sans-serif;">
@@ -69,7 +76,7 @@
 
             <!-- Bottom Metadata: Serial Number -->
             <div class="w-full text-center pt-0.5">
-                <span class="text-[8px] font-mono text-slate-400 tracking-wider">
+                <span class="text-[8.5px] font-mono text-slate-400 tracking-wider">
                     SN: {{ $card->serial_number }}
                 </span>
             </div>

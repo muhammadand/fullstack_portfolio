@@ -1,7 +1,5 @@
 {{-- Template 2: Standee Portrait (Desain Banner Meja Elegan) --}}
-<div id="cardPortraitStandee" 
-     class="card-render-node bg-white text-slate-900 rounded-[30px] shadow-2xl relative overflow-hidden flex flex-col items-center justify-between transition-all duration-300 select-none" 
-     style="width: 320px; min-height: 520px; font-family: 'Outfit', sans-serif; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 20px 45px -15px rgba(0, 0, 0, 0.35);">
+<div id="cardPortraitStandee" class="card-render-node bg-white text-slate-900 rounded-[30px] shadow-2xl relative overflow-hidden flex flex-col items-center justify-between transition-all duration-300 select-none" style="width: 320px; min-height: 520px; font-family: 'Outfit', sans-serif; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 20px 45px -15px rgba(0, 0, 0, 0.35);">
 
     <!-- Top Area: Google G, 5 Stars, Headline & Google Wordmark -->
     <div class="w-full pt-7 px-5 flex flex-col items-center text-center">
@@ -16,13 +14,18 @@
             </svg>
         </div>
 
-        <!-- 5 Gold Stars Rating -->
+        <!-- 5 Gold Stars Rating (Crisp Vector SVG) -->
         <div class="flex items-center justify-center gap-1 mb-2">
-            <i class="fa-solid fa-star text-[#F59E0B] text-lg"></i>
-            <i class="fa-solid fa-star text-[#F59E0B] text-lg"></i>
-            <i class="fa-solid fa-star text-[#F59E0B] text-lg"></i>
-            <i class="fa-solid fa-star text-[#F59E0B] text-lg"></i>
-            <i class="fa-solid fa-star text-[#F59E0B] text-lg"></i>
+            <svg class="w-5 h-5 fill-[#FBBC05]" viewBox="0 0 24 24">
+                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg>
+            <svg class="w-5 h-5 fill-[#FBBC05]" viewBox="0 0 24 24">
+                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg>
+            <svg class="w-5 h-5 fill-[#FBBC05]" viewBox="0 0 24 24">
+                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg>
+            <svg class="w-5 h-5 fill-[#FBBC05]" viewBox="0 0 24 24">
+                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg>
+            <svg class="w-5 h-5 fill-[#FBBC05]" viewBox="0 0 24 24">
+                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg>
         </div>
 
         <!-- Headline Text -->
@@ -41,7 +44,7 @@
         </div>
 
         @if($card->business_name)
-        <div class="mt-1 px-3 py-0.5 rounded-full bg-slate-100 text-slate-700 text-[11px] font-semibold max-w-[240px] truncate">
+        <div class="mt-1 px-3 py-0.5 rounded-full bg-slate-100 text-slate-700 text-[11px] font-semibold max-w-[260px] truncate text-center">
             {{ $card->business_name }}
         </div>
         @endif
@@ -56,12 +59,11 @@
                     Scan QR
                 </p>
 
-                <!-- The Sharp QR Code Image -->
+                <!-- The Sharp QR Code Image Container -->
                 <div class="bg-white p-1 flex items-center justify-center">
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=450x450&data={{ urlencode(url('/r/' . $card->slug)) }}&margin=0" 
-                         alt="QR Code Google Review" 
-                         crossorigin="anonymous" 
-                         class="w-36 h-36 object-contain">
+                    <div id="localQrPortrait" class="w-36 h-36 flex items-center justify-center overflow-hidden">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=450x450&data={{ urlencode(url('/r/' . $card->slug)) }}&margin=0" alt="QR Code Google Review" crossorigin="anonymous" class="w-full h-full object-contain">
+                    </div>
                 </div>
 
                 <p class="text-[10px] text-slate-500 font-normal text-center mt-1.5 leading-snug" style="font-family: 'Outfit', sans-serif;">
