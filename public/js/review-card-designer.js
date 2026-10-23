@@ -165,17 +165,24 @@ function partnerCardDesigner() {
                 });
             }
 
-            // Tunggu 2 frame agar browser layout clone
-            return new Promise(function (ok) {
-                requestAnimationFrame(function () {
-                    requestAnimationFrame(ok);
-                });
-            })
+            // Pastikan font siap dan layout stabil sebelum render
+            var fontPromise = (document.fonts && document.fonts.ready)
+                ? document.fonts.ready
+                : Promise.resolve();
+
+            return fontPromise
+                .then(function () {
+                    return new Promise(function (ok) {
+                        requestAnimationFrame(function () {
+                            requestAnimationFrame(ok);
+                        });
+                    });
+                })
                 .then(function () {
                     return doRender(scale);
                 })
                 .catch(function () {
-                    // Fallback scale lebih rendah jika gagal (memory limit mobile)
+                    // Fallback scale lebih rendah jika memori mobile terbatas
                     return doRender(2);
                 })
                 .finally(function () {
@@ -185,14 +192,79 @@ function partnerCardDesigner() {
                 });
         },
 
+        // Deteksi in-app browser (WhatsApp, Instagram, dsb)
+        isInAppBrowser: function () {
+            var ua = navigator.userAgent || navigator.vendor || (window.opera ? window.opera : "");
+            return /FBAN|FBAV|Instagram|WhatsApp|Line\/|Snapchat/i.test(ua);
+        },
+
         // ══════════════════════════════════════════════
-        //  DOWNLOAD: Kirim data ke server via <form POST>
-        //  Server merespons Content-Disposition: attachment
-        //  → Browser PASTI simpan dengan nama file + ekstensi yang benar.
-        //  Tidak ada lagi file UUID tanpa ekstensi.
+        //  UNIVERSAL DOWNLOAD & SHARE (Android, iPhone & Desktop)
         // ══════════════════════════════════════════════
+        saveOrShareFile: function (blob, filename, mimeType) {
+            var self = this;
+            var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            var file = null;
+
+            try {
+                file = new File([blob], filename, { type: mimeType });
+            } catch (e) {
+                file = null;
+            }
+
+            // 1. Mobile (iPhone / Android) dengan Web Share API yang mendukung file
+            // Ini solusi paling aman & native di smartphone:
+            // - Di iPhone: Membuka menu native iOS -> "Simpan ke File", "Kirim ke WhatsApp", "AirDrop"
+            // - Di Android: Membuka Share Sheet -> Simpan ke Google Files / WhatsApp / Download
+            if (isMobile && file && navigator.canShare && navigator.canShare({ files: [file] })) {
+                return navigator.share({
+                    files: [file],
+                    title: filename,
+                }).then(function () {
+                    self.setStatus("File berhasil disimpan / dibagikan! ✅", "info", 4000);
+                }).catch(function (shareErr) {
+                    if (shareErr && (shareErr.name === "AbortError" || shareErr.code === 20)) {
+                        // User menutup share sheet (bukan error teknis)
+                        self.setStatus("Penyimpanan dibatalkan oleh pengguna.", "info", 2500);
+                        return;
+                    }
+                    // Jika share gagal, coba fallback langsung ke trigger download
+                    self.triggerBlobDownload(blob, filename);
+                });
+            }
+
+            // 2. Desktop atau browser standar (Chrome, Safari PC, Edge, Firefox)
+            this.triggerBlobDownload(blob, filename);
+            return Promise.resolve();
+        },
+
+        triggerBlobDownload: function (blob, filename) {
+            var self = this;
+            try {
+                var blobUrl = URL.createObjectURL(blob);
+                var link = document.createElement("a");
+                link.href = blobUrl;
+                link.download = filename;
+                link.style.display = "none";
+                document.body.appendChild(link);
+                link.click();
+
+                setTimeout(function () {
+                    if (document.body.contains(link)) document.body.removeChild(link);
+                    URL.revokeObjectURL(blobUrl);
+                    self.setStatus("Download berhasil dimulai! Periksa folder Download / File Anda. ✅", "info", 4000);
+                }, 1200);
+            } catch (e) {
+                console.warn("Direct blob download gagal, mencoba fallback dataURI:", e);
+                // Fallback terakhir: buka blob di tab baru
+                var url = URL.createObjectURL(blob);
+                window.open(url, "_blank");
+                self.setStatus("File dibuka di tab baru. Silakan simpan / unduh.", "info", 4000);
+            }
+        },
+
+        // Fallback server POST bila diperlukan
         sendToServer: function (dataUrl, filename, fileType) {
-            // Jika export endpoint tersedia → kirim via form POST
             if (this.exportUrl && this.csrfToken) {
                 var form = document.createElement("form");
                 form.method = "POST";
@@ -223,7 +295,6 @@ function partnerCardDesigner() {
                 return;
             }
 
-            // Fallback: client-side <a download>
             var a = document.createElement("a");
             a.href = dataUrl;
             a.download = filename;
@@ -252,15 +323,34 @@ function partnerCardDesigner() {
             var self = this;
             this.captureToCanvas(card, null)
                 .then(function (canvas) {
-                    var dataUrl = canvas.toDataURL("image/png", 1.0);
-                    var name =
+                    var filename =
                         "Google-Review-" +
                         self.templateLabel +
                         "-" +
                         self.safeSerial +
                         "-HD.png";
-                    self.sendToServer(dataUrl, name, "png");
-                    self.setStatus("PNG berhasil di-download! ✅", "info", 4000);
+
+                    if (canvas.toBlob) {
+                        canvas.toBlob(function (blob) {
+                            if (!blob) {
+                                self.setStatus("Gagal membuat gambar PNG.", "error", 4000);
+                                self.isGenerating = false;
+                                self.generatingType = "";
+                                return;
+                            }
+                            self.saveOrShareFile(blob, filename, "image/png")
+                                .finally(function () {
+                                    self.isGenerating = false;
+                                    self.generatingType = "";
+                                });
+                        }, "image/png");
+                    } else {
+                        var dataUrl = canvas.toDataURL("image/png", 1.0);
+                        self.sendToServer(dataUrl, filename, "png");
+                        self.setStatus("PNG berhasil di-download! ✅", "info", 4000);
+                        self.isGenerating = false;
+                        self.generatingType = "";
+                    }
                 })
                 .catch(function (err) {
                     console.error("PNG error:", err);
@@ -269,8 +359,6 @@ function partnerCardDesigner() {
                         "error",
                         6000,
                     );
-                })
-                .finally(function () {
                     self.isGenerating = false;
                     self.generatingType = "";
                 });
@@ -307,15 +395,15 @@ function partnerCardDesigner() {
                     });
                     pdf.addImage(imgData, "PNG", 0, 0, pdfW, pdfH, undefined, "FAST");
 
-                    var name =
+                    var filename =
                         "Google-Review-" +
                         self.templateLabel +
                         "-" +
                         self.safeSerial +
                         "-PrintReady.pdf";
-                    var pdfUri = pdf.output("datauristring");
-                    self.sendToServer(pdfUri, name, "pdf");
-                    self.setStatus("PDF berhasil di-download! ✅", "info", 4000);
+
+                    var pdfBlob = pdf.output("blob");
+                    return self.saveOrShareFile(pdfBlob, filename, "application/pdf");
                 })
                 .catch(function (err) {
                     console.error("PDF error:", err);
@@ -357,27 +445,36 @@ function partnerCardDesigner() {
 
                 setTimeout(function () {
                     var canvas = tempDiv.querySelector("canvas");
-                    var dataUrl = "";
-                    if (canvas) {
-                        dataUrl = canvas.toDataURL("image/png");
+                    var filename = "Google-Review-QRCode-" + self.safeSerial + "-1024px.png";
+
+                    if (canvas && canvas.toBlob) {
+                        canvas.toBlob(function (blob) {
+                            if (document.body.contains(tempDiv)) {
+                                document.body.removeChild(tempDiv);
+                            }
+                            if (blob) {
+                                self.saveOrShareFile(blob, filename, "image/png");
+                            } else {
+                                self.setStatus("Gagal membuat QR Code.", "error", 4000);
+                            }
+                            self.isGenerating = false;
+                            self.generatingType = "";
+                        }, "image/png");
                     } else {
                         var img = tempDiv.querySelector("img");
-                        if (img) dataUrl = img.src;
+                        var dataUrl = canvas ? canvas.toDataURL("image/png") : (img ? img.src : "");
+                        if (document.body.contains(tempDiv)) {
+                            document.body.removeChild(tempDiv);
+                        }
+                        if (dataUrl) {
+                            self.sendToServer(dataUrl, filename, "png");
+                            self.setStatus("QR Code berhasil di-download! ✅", "info", 4000);
+                        } else {
+                            self.setStatus("Gagal membuat QR Code.", "error", 4000);
+                        }
+                        self.isGenerating = false;
+                        self.generatingType = "";
                     }
-
-                    if (document.body.contains(tempDiv)) {
-                        document.body.removeChild(tempDiv);
-                    }
-
-                    if (dataUrl) {
-                        var name = "Google-Review-QRCode-" + self.safeSerial + "-1024px.png";
-                        self.sendToServer(dataUrl, name, "png");
-                        self.setStatus("QR Code berhasil di-download! ✅", "info", 4000);
-                    } else {
-                        self.setStatus("Gagal membuat QR Code.", "error", 4000);
-                    }
-                    self.isGenerating = false;
-                    self.generatingType = "";
                 }, 150);
             } catch (err) {
                 console.error("QR download error:", err);

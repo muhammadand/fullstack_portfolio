@@ -168,27 +168,97 @@
             </div>
         </div>
 
-        {{-- ── Cetak Actions ── --}}
+        {{-- ── Download & Cetak Actions ── --}}
         <div class="glass-panel p-4 rounded-3xl space-y-2.5">
-            <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2 font-outfit flex items-center gap-1.5">
-                <i class="fa-solid fa-print text-blue-400"></i>
-                Cetak Desain
-                (<span x-text="selectedTemplate === 'square_nfc' ? 'Square Card' : 'Standee Portrait'"></span>)
+            <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2 font-outfit flex items-center justify-between">
+                <span class="flex items-center gap-1.5">
+                    <i class="fa-solid fa-cloud-arrow-down text-blue-400"></i>
+                    Download & Cetak
+                </span>
+                <span class="text-[10px] text-slate-400 font-normal">
+                    Format: <span class="text-blue-400 font-semibold" x-text="selectedTemplate === 'square_nfc' ? 'Square (110mm)' : 'Standee (100mm)'"></span>
+                </span>
             </h3>
 
-            {{-- Print via Browser (Langsung cetak ke printer atau Simpan PDF) --}}
-            <button type="button" @click="window.print()" class="group w-full py-3.5 px-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold rounded-2xl text-xs transition-all shadow-lg shadow-blue-500/25 flex items-center justify-between cursor-pointer">
-                <div class="flex items-center gap-2.5">
-                    <i class="fa-solid fa-print text-base"></i>
-                    <span>Cetak Desain / Simpan PDF (Ctrl / Cmd + P)</span>
+            {{-- Deteksi In-App Browser (WhatsApp / Instagram / Line) --}}
+            <div x-show="isInAppBrowser()" x-cloak class="p-3 rounded-2xl bg-amber-500/15 border border-amber-500/30 text-amber-200 text-[11px] flex items-start gap-2.5">
+                <i class="fa-solid fa-circle-exclamation text-amber-400 mt-0.5 text-sm shrink-0"></i>
+                <div class="leading-relaxed">
+                    <span class="font-bold text-amber-300">Tips Membuka dari WhatsApp/Instagram:</span><br>
+                    Jika file tidak tersimpan otomatis, ketuk ikon <span class="font-bold text-white">titik tiga (⋮)</span> di pojok atas lalu pilih <span class="font-bold text-white underline">"Buka di Browser / Chrome / Safari"</span> agar file langsung masuk ke memori HP.
                 </div>
-                <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+            </div>
+
+            {{-- Status Banner (Animasi Loading / Pesan Sukses / Error) --}}
+            <div x-show="statusMessage" x-transition x-cloak :class="statusType === 'error'
+                    ? 'bg-red-500/15 border-red-400/30 text-red-200'
+                    : 'bg-blue-500/20 border-blue-400/30 text-blue-200'" class="p-2.5 rounded-xl border flex items-center gap-2.5 text-xs font-medium">
+                <i class="fa-solid text-sm shrink-0" :class="isGenerating
+                        ? 'fa-spinner fa-spin text-blue-400'
+                        : (statusType === 'error' ? 'fa-circle-xmark text-red-400' : 'fa-circle-check text-emerald-400')"></i>
+                <span x-text="statusMessage" class="leading-tight"></span>
+            </div>
+
+            {{-- 1. Tombol Download Dokumen PDF (Siap Cetak) --}}
+            <button type="button" @click="downloadPDF()" :disabled="isGenerating" class="group w-full py-3.5 px-4 bg-gradient-to-r from-red-600 via-rose-600 to-red-500 hover:from-red-500 hover:to-rose-500 text-white font-semibold rounded-2xl text-xs transition-all shadow-lg shadow-red-500/25 flex items-center justify-between disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer active:scale-[0.99]">
+                <div class="flex items-center gap-3 text-left">
+                    <div class="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-file-pdf text-base text-white"></i>
+                    </div>
+                    <div>
+                        <div class="font-bold font-outfit text-white text-[13px] leading-tight">Download Dokumen PDF (Siap Cetak)</div>
+                        <div class="text-[10px] text-red-100/90 leading-tight mt-0.5">Ukuran pas sesuai template cetak (Vektor Tajam)</div>
+                    </div>
+                </div>
+                <div class="shrink-0 ml-2">
+                    <i class="fa-solid text-sm" :class="isGenerating && generatingType === 'pdf' ? 'fa-spin fa-circle-notch text-white' : 'fa-arrow-down group-hover:translate-y-0.5 transition-transform'"></i>
+                </div>
+            </button>
+
+            {{-- 2. Tombol Download Gambar PNG HD --}}
+            <button type="button" @click="downloadPNG()" :disabled="isGenerating" class="group w-full py-3 px-4 bg-slate-800 hover:bg-slate-700/90 text-white font-semibold rounded-2xl text-xs transition-all border border-slate-700/80 shadow-md flex items-center justify-between disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer active:scale-[0.99]">
+                <div class="flex items-center gap-3 text-left">
+                    <div class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-file-image text-sm"></i>
+                    </div>
+                    <div>
+                        <div class="font-bold font-outfit text-slate-100 text-[12px] leading-tight">Download Gambar PNG (Resolusi Tinggi)</div>
+                        <div class="text-[10px] text-slate-400 leading-tight mt-0.5">Bisa langsung kirim via WhatsApp ke percetakan</div>
+                    </div>
+                </div>
+                <div class="shrink-0 ml-2">
+                    <i class="fa-solid text-sm text-slate-300" :class="isGenerating && generatingType === 'png' ? 'fa-spin fa-circle-notch text-blue-400' : 'fa-arrow-down group-hover:translate-y-0.5 transition-transform'"></i>
+                </div>
+            </button>
+
+            {{-- 3. Tombol Download Hanya QR Code --}}
+            <button type="button" @click="downloadQR()" :disabled="isGenerating" class="group w-full py-2.5 px-4 bg-slate-800/60 hover:bg-slate-700/60 text-slate-300 hover:text-white font-medium rounded-2xl text-xs transition-all border border-slate-700/50 flex items-center justify-between disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer">
+                <div class="flex items-center gap-2.5">
+                    <i class="fa-solid fa-qrcode text-amber-400 text-sm"></i>
+                    <span class="text-[11px]">Download Hanya QR Code (PNG Ultra-HD)</span>
+                </div>
+                <i class="fa-solid text-xs text-slate-400" :class="isGenerating && generatingType === 'qr' ? 'fa-spin fa-circle-notch text-amber-400' : 'fa-arrow-down'"></i>
+            </button>
+
+            {{-- 4. Print Langsung ke Printer Fisik / AirPrint --}}
+            <button type="button" @click="window.print()" :disabled="isGenerating" class="w-full py-2 px-4 bg-transparent hover:bg-white/5 text-slate-400 hover:text-slate-200 font-medium rounded-2xl text-[11px] transition-all flex items-center justify-center gap-2 border border-slate-700/40 disabled:opacity-60 cursor-pointer">
+                <i class="fa-solid fa-print text-slate-500 text-xs"></i>
+                <span>Cetak Langsung via Printer Browser (Ctrl / Cmd + P)</span>
             </button>
         </div>
 
-        <p class="text-center text-[11px] text-slate-500 mt-4 leading-relaxed">
-            💡 Serahkan file gambar/PDF ini ke percetakan terdekat untuk dicetak di stiker vinyl, kartu akrilik, kartu PVC NFC, atau standee meja.
-        </p>
+        {{-- Petunjuk Khusus Pengguna HP --}}
+        <div class="glass-panel p-3.5 rounded-2xl mt-4 text-[11px] text-slate-400 space-y-1.5 leading-relaxed">
+            <div class="font-bold text-slate-300 font-outfit flex items-center gap-1.5">
+                <i class="fa-solid fa-mobile-screen text-blue-400"></i>
+                Panduan Download di HP (iPhone & Android):
+            </div>
+            <ul class="space-y-1 list-disc list-inside text-slate-400 pl-1">
+                <li><strong class="text-slate-300">iPhone:</strong> Saat menu bagikan muncul, pilih <span class="text-blue-300">"Simpan ke File" (Save to Files)</span> atau kirim langsung ke WhatsApp tukang cetak.</li>
+                <li><strong class="text-slate-300">Android:</strong> File akan otomatis tersimpan di folder <span class="text-blue-300">"Download"</span> atau galeri HP Anda.</li>
+                <li><strong class="text-slate-300">Kirim ke Percetakan:</strong> Anda cukup mengirimkan file PDF / PNG ini ke percetakan untuk dicetak pada kartu PVC, akrilik, stiker vinyl, atau standee meja.</li>
+            </ul>
+        </div>
 
     </div>
 
