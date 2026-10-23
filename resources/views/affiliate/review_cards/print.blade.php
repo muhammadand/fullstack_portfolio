@@ -168,55 +168,21 @@
             </div>
         </div>
 
-        {{-- ── Download & Print Actions ── --}}
+        {{-- ── Cetak Actions ── --}}
         <div class="glass-panel p-4 rounded-3xl space-y-2.5">
             <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2 font-outfit flex items-center gap-1.5">
-                <i class="fa-solid fa-download text-blue-400"></i>
-                Download Format Cetak
+                <i class="fa-solid fa-print text-blue-400"></i>
+                Cetak Desain
                 (<span x-text="selectedTemplate === 'square_nfc' ? 'Square Card' : 'Standee Portrait'"></span>)
             </h3>
 
-            {{-- Status Banner --}}
-            <div x-show="statusMessage" x-transition x-cloak :class="statusType === 'error'
-                    ? 'bg-red-500/15 border-red-400/30 text-red-200'
-                    : 'bg-blue-500/20 border-blue-400/30 text-blue-200'" class="p-2.5 rounded-xl border flex items-center gap-2 text-xs font-medium">
-                <i class="fa-solid" :class="isGenerating
-                        ? 'fa-spinner fa-spin text-blue-400'
-                        : (statusType === 'error' ? 'fa-circle-exclamation text-red-400' : 'fa-circle-check text-emerald-400')"></i>
-                <span x-text="statusMessage"></span>
-            </div>
-
-            {{-- Download PNG --}}
-            <button type="button" @click="downloadPNG()" :disabled="isGenerating" class="group w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white font-semibold rounded-2xl text-xs transition-all shadow-lg shadow-blue-500/25 flex items-center justify-between disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer">
+            {{-- Print via Browser (Langsung cetak ke printer atau Simpan PDF) --}}
+            <button type="button" @click="window.print()" class="group w-full py-3.5 px-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold rounded-2xl text-xs transition-all shadow-lg shadow-blue-500/25 flex items-center justify-between cursor-pointer">
                 <div class="flex items-center gap-2.5">
-                    <i class="fa-solid fa-file-image text-sm"></i>
-                    <span>Download Gambar (PNG Siap Cetak)</span>
+                    <i class="fa-solid fa-print text-base"></i>
+                    <span>Cetak Desain / Simpan PDF (Ctrl / Cmd + P)</span>
                 </div>
-                <i class="fa-solid" :class="isGenerating && generatingType === 'png' ? 'fa-spin fa-circle-notch' : 'fa-arrow-down group-hover:translate-y-0.5 transition-transform'"></i>
-            </button>
-
-            {{-- Download PDF --}}
-            <button type="button" @click="downloadPDF()" :disabled="isGenerating" class="group w-full py-3 px-4 bg-slate-800 hover:bg-slate-700 text-white font-semibold rounded-2xl text-xs transition-all flex items-center justify-between border border-slate-700 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer">
-                <div class="flex items-center gap-2.5">
-                    <i class="fa-solid fa-file-pdf text-red-400 text-sm"></i>
-                    <span>Download Dokumen PDF (Siap Cetak)</span>
-                </div>
-                <i class="fa-solid" :class="isGenerating && generatingType === 'pdf' ? 'fa-spin fa-circle-notch' : 'fa-arrow-down group-hover:translate-y-0.5 transition-transform'"></i>
-            </button>
-
-            {{-- Download Hanya QR Code (Ultra HD) --}}
-            <button type="button" @click="downloadQR()" :disabled="isGenerating" class="group w-full py-3 px-4 bg-slate-800/80 hover:bg-slate-700/80 text-white font-semibold rounded-2xl text-xs transition-all flex items-center justify-between border border-slate-700/70 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer">
-                <div class="flex items-center gap-2.5">
-                    <i class="fa-solid fa-qrcode text-emerald-400 text-sm"></i>
-                    <span>Download Hanya QR Code (PNG Ultra-HD)</span>
-                </div>
-                <i class="fa-solid" :class="isGenerating && generatingType === 'qr' ? 'fa-spin fa-circle-notch' : 'fa-arrow-down group-hover:translate-y-0.5 transition-transform'"></i>
-            </button>
-
-            {{-- Print via Browser --}}
-            <button type="button" @click="window.print()" :disabled="isGenerating" class="w-full py-2.5 px-4 bg-transparent hover:bg-white/5 text-slate-300 hover:text-white font-medium rounded-2xl text-xs transition-all flex items-center justify-center gap-2 border border-slate-700/60 disabled:opacity-60 cursor-pointer">
-                <i class="fa-solid fa-print text-slate-400 text-xs"></i>
-                <span>Cetak Langsung via Browser (Ctrl / Cmd + P)</span>
+                <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
             </button>
         </div>
 

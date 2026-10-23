@@ -134,6 +134,14 @@ function partnerCardDesigner() {
                 "box-shadow:none;visibility:visible;opacity:1;" +
                 "width:" + w + "px;height:" + h + "px";
 
+            // Bersihkan SEMUA box-shadow dan filter di elemen anak agar html2canvas tidak membuat artefak kotak abu-abu
+            var subEls = clone.querySelectorAll("*");
+            for (var i = 0; i < subEls.length; i++) {
+                subEls[i].style.boxShadow = "none";
+                subEls[i].style.filter = "none";
+                subEls[i].style.webkitFilter = "none";
+            }
+
             wrapper.appendChild(clone);
             document.body.appendChild(wrapper);
 

@@ -6,7 +6,7 @@
 
         <!-- Official Google G Multi-Color SVG -->
         <div class="w-12 h-12 mb-2.5 flex items-center justify-center">
-            <svg class="w-full h-full drop-shadow-sm" viewBox="0 0 24 24">
+            <svg class="w-full h-full" viewBox="0 0 24 24">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
                 <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
                 <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
@@ -33,7 +33,7 @@
 
         <!-- Official Google Full Wordmark SVG -->
         <div class="flex items-center justify-center my-0.5">
-            <svg viewBox="0 0 272 92" class="h-7 w-auto drop-shadow-sm">
+            <svg viewBox="0 0 272 92" class="h-7 w-auto">
                 <path fill="#EA4335" d="M115.75 47.18c0 12.77-9.99 22.18-22.25 22.18s-22.25-9.41-22.25-22.18C71.25 34.32 81.24 25 93.5 25s22.25 9.32 22.25 22.18zm-9.74 0c0-7.98-5.79-13.44-12.51-13.44S80.99 39.2 80.99 47.18c0 7.9 5.79 13.44 12.51 13.44s12.51-5.55 12.51-13.44z" />
                 <path fill="#FBBC05" d="M163.75 47.18c0 12.77-9.99 22.18-22.25 22.18s-22.25-9.41-22.25-22.18c0-12.85 9.99-22.18 22.25-22.18s22.25 9.32 22.25 22.18zm-9.74 0c0-7.98-5.79-13.44-12.51-13.44s-12.51 5.46-12.51 13.44c0 7.9 5.79 13.44 12.51 13.44s12.51-5.55 12.51-13.44z" />
                 <path fill="#4285F4" d="M209.75 26.34v39.82c0 16.38-9.66 23.07-21.08 23.07-10.75 0-17.22-7.19-19.66-13.07l8.48-3.53c1.51 3.61 5.21 8.19 11.17 8.19 7.31 0 11.84-4.53 11.84-13.02v-3.19h-.34c-2.18 2.69-6.38 5.04-11.68 5.04-11.09 0-21.25-9.66-21.25-22.09 0-12.52 10.16-22.26 21.25-22.26 5.29 0 9.49 2.35 11.68 4.96h.34v-3.92h9.45zm-8.82 20.92c0-7.81-5.21-13.44-11.84-13.44-6.72 0-12.35 5.63-12.35 13.44 0 7.72 5.63 13.35 12.35 13.35 6.63 0 11.84-5.63 11.84-13.35z" />
@@ -52,7 +52,7 @@
 
     <!-- Middle: QR Container with Rainbow Gradient Border -->
     <div class="w-full px-5 py-2 flex flex-col items-center">
-        <div class="w-full p-[2px] rounded-[22px] shadow-sm" style="background: linear-gradient(135deg, #4285F4 0%, #34A853 35%, #FBBC05 70%, #EA4335 100%);">
+        <div class="w-full p-[2px] rounded-[22px]" style="background: linear-gradient(135deg, #4285F4 0%, #34A853 35%, #FBBC05 70%, #EA4335 100%);">
             <div class="w-full bg-white rounded-[20px] p-3.5 flex flex-col items-center">
 
                 <p class="text-xs font-semibold text-slate-800 tracking-wide mb-1.5" style="font-family: 'Outfit', sans-serif;">
@@ -77,7 +77,6 @@
     <div class="w-full flex flex-col items-center">
         <div class="text-[9px] text-slate-400 font-mono tracking-wider pb-1.5 flex items-center justify-between w-full px-5">
             <span>SN: {{ $card->serial_number }}</span>
-            <span>PIN: {{ $card->activation_code }}</span>
         </div>
 
         <div class="w-full h-2.5 flex items-center">
