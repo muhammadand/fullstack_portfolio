@@ -2253,10 +2253,10 @@
                 {{-- Header --}}
                 <div class="flex items-start justify-between mb-6">
                     <div>
-                        <h3 class="text-white font-bold text-lg tracking-tight">Sebelum Mencetak</h3>
-                        <p class="text-white/50 text-xs mt-1">Bagikan penilaian Anda untuk membantu kami berkembang.</p>
+                        <h3 class="text-white font-bold text-lg tracking-tight">Beri Penilaian Sebelum Mencetak</h3>
+                        <p class="text-white/50 text-xs mt-1">Beri rating bintang pengalaman Anda untuk dapat mengunduh &amp; mencetak CV.</p>
                     </div>
-                    <button @click="showReviewModal = false" class="text-white/30 hover:text-white/70 transition mt-0.5">
+                    <button @click="showReviewModal = false" class="text-white/30 hover:text-white/70 transition mt-0.5" title="Tutup">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
                     </button>
@@ -2264,12 +2264,15 @@
 
                 {{-- Star Rating --}}
                 <div class="mb-5">
-                    <p class="text-white/60 text-xs mb-3 uppercase tracking-widest font-semibold">Rating Pengalaman</p>
+                    <p class="text-white/60 text-xs mb-3 uppercase tracking-widest font-semibold flex items-center gap-1.5">
+                        Rating Pengalaman <span class="text-rose-400 font-bold normal-case text-[11px]">*Wajib</span>
+                    </p>
                     <div class="flex items-center gap-2">
                         <template x-for="star in [1,2,3,4,5]" :key="star">
                             <button @click="reviewRating = star" @mouseenter="reviewHover = star" @mouseleave="reviewHover = 0" class="text-3xl transition-all duration-150 focus:outline-none" :class="(reviewHover || reviewRating) >= star ? 'text-amber-400 scale-110' : 'text-white/20'">★</button>
                         </template>
-                        <span x-show="reviewRating > 0" x-text="['','Buruk','Cukup','Bagus','Sangat Bagus','Luar Biasa!'][reviewRating]" class="text-xs text-white/50 ml-2"></span>
+                        <span x-show="reviewRating > 0" x-text="['','Buruk','Cukup','Bagus','Sangat Bagus','Luar Biasa!'][reviewRating]" class="text-xs text-white/70 font-semibold ml-2"></span>
+                        <span x-show="reviewRating === 0" class="text-xs text-amber-400/80 ml-2 animate-pulse">Klik bintang untuk memilih</span>
                     </div>
                 </div>
 
@@ -2289,14 +2292,7 @@
                 </div>
 
                 {{-- Actions --}}
-                <div class="flex items-center gap-3">
-                    <button @click="
-                            if (reviewRating === 0) { reviewRating = 3; }
-                            hasReviewed = true;
-                            showReviewModal = false;
-                            executePrint();
-                        " class="flex-1 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white/50 hover:text-white/70 hover:border-white/20 text-xs font-semibold transition">Lewati & Cetak</button>
-
+                <div>
                     <button @click="
                             if (reviewRating === 0) return;
                             isSubmittingReview = true;
@@ -2311,12 +2307,22 @@
                                 showReviewModal = false;
                                 executePrint();
                             });
-                        " :disabled="reviewRating === 0 || isSubmittingReview" class="flex-1 py-2.5 rounded-xl font-bold text-xs transition-all shadow-lg" :class="reviewRating > 0 && !isSubmittingReview
-                            ? 'bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white shadow-cyan-500/30'
-                            : 'bg-white/5 text-white/30 cursor-not-allowed'">
-                        <span x-show="!isSubmittingReview">Kirim & Cetak PDF</span>
-                        <span x-show="isSubmittingReview">Mengirim...</span>
+                        " :disabled="reviewRating === 0 || isSubmittingReview" class="w-full py-3 rounded-xl font-bold text-xs sm:text-sm transition-all shadow-lg flex items-center justify-center gap-2" :class="reviewRating > 0 && !isSubmittingReview
+                            ? 'bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white shadow-cyan-500/30 cursor-pointer'
+                            : 'bg-white/5 text-white/30 border border-white/10 cursor-not-allowed'">
+                        <span x-show="reviewRating === 0" class="flex items-center gap-1.5 text-white/40">
+                            <i class="fa-solid fa-star text-amber-400/50"></i> Pilih Bintang Terlebih Dahulu
+                        </span>
+                        <span x-show="reviewRating > 0 && !isSubmittingReview" class="flex items-center gap-1.5">
+                            <i class="fa-solid fa-check-circle"></i> Kirim Ulasan &amp; Cetak PDF
+                        </span>
+                        <span x-show="isSubmittingReview" class="flex items-center gap-1.5">
+                            <i class="fa-solid fa-circle-notch fa-spin"></i> Menyimpan &amp; Membuka Cetak...
+                        </span>
                     </button>
+                    <p class="text-[11px] text-center text-white/40 mt-2.5">
+                        *Rating wajib diisi sebelum mencetak dokumen CV
+                    </p>
                 </div>
             </div>
 
