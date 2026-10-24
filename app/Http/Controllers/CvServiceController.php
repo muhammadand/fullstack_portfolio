@@ -62,20 +62,52 @@ class CvServiceController extends Controller
         // ---- Visits ----
         $totalVisits   = CvPageVisit::count();
         $uniqueVisits  = CvPageVisit::distinct('ip_address')->count('ip_address');
-        $todayVisits   = CvPageVisit::where('visited_at', today()->toDateString())->count();
+        $todayVisits   = CvPageVisit::whereDate('visited_at', today())->count();
 
-        $visitsByDay   = CvPageVisit::select('visited_at', DB::raw('count(*) as total'))
-                            ->where('visited_at', '>=', now()->subDays(29)->toDateString())
-                            ->groupBy('visited_at')
-                            ->orderBy('visited_at')
-                            ->get();
+        // Susun data tren 30 hari secara presisi di backend
+        $startDate = now()->subDays(29)->startOfDay();
+        $visitsRaw = CvPageVisit::selectRaw("DATE(visited_at) as date_key, count(*) as total")
+            ->where('visited_at', '>=', $startDate->toDateString())
+            ->groupBy('date_key')
+            ->pluck('total', 'date_key');
+
+        $chartLabels = [];
+        $chartData   = [];
+        $peakCount   = 0;
+        $peakDay     = '-';
+        $sum30Days   = 0;
+
+        for ($i = 29; $i >= 0; $i--) {
+            $dt = now()->subDays($i);
+            $key = $dt->toDateString();
+            $count = (int) ($visitsRaw[$key] ?? 0);
+
+            $chartLabels[] = $dt->translatedFormat('d M');
+            $chartData[]   = $count;
+            $sum30Days    += $count;
+
+            if ($count > $peakCount) {
+                $peakCount = $count;
+                $peakDay   = $dt->translatedFormat('d M');
+            }
+        }
+
+        $avgPerDay = round($sum30Days / 30, 1);
+
+        $chartStats = [
+            'peak_count'  => $peakCount,
+            'peak_day'    => $peakDay,
+            'avg_per_day' => $avgPerDay,
+            'total_30'    => $sum30Days,
+        ];
 
         $deviceStats   = CvPageVisit::select('device_type', DB::raw('count(*) as total'))
                             ->groupBy('device_type')->get();
 
         return view('admin.cv-service.index', compact(
             'reviews', 'totalReviews', 'avgRating', 'ratingDist',
-            'totalVisits', 'uniqueVisits', 'todayVisits', 'visitsByDay', 'deviceStats'
+            'totalVisits', 'uniqueVisits', 'todayVisits', 'deviceStats',
+            'chartLabels', 'chartData', 'chartStats'
         ));
     }
 

@@ -74,14 +74,61 @@
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-6">
 
     {{-- Visitors 30 Days Chart --}}
-    <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
-        <div class="flex items-center justify-between mb-4">
-            <div>
-                <p class="font-semibold text-slate-700 text-sm">Pengunjung 30 Hari Terakhir</p>
-                <p class="text-xs text-slate-400">Kunjungan harian per IP unik</p>
+    <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-100 shadow-sm p-5 flex flex-col justify-between">
+        <div>
+            {{-- Header + Filter buttons --}}
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+                <div>
+                    <div class="flex items-center gap-2">
+                        <p class="font-bold text-slate-800 text-sm">Tren Kunjungan Halaman CV</p>
+                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-600 border border-emerald-200/60">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Live Track
+                        </span>
+                    </div>
+                    <p class="text-xs text-slate-400 mt-0.5">Grafik kunjungan harian per IP unik (real-time visitor)</p>
+                </div>
+
+                {{-- Time Range Filter Pills --}}
+                <div class="inline-flex p-1 bg-slate-100/80 rounded-xl border border-slate-200/50 self-start sm:self-auto">
+                    <button type="button" onclick="changeChartRange(7)" id="range-btn-7"
+                        class="range-btn px-2.5 py-1 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition-all">
+                        7 Hari
+                    </button>
+                    <button type="button" onclick="changeChartRange(14)" id="range-btn-14"
+                        class="range-btn px-2.5 py-1 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition-all">
+                        14 Hari
+                    </button>
+                    <button type="button" onclick="changeChartRange(30)" id="range-btn-30"
+                        class="range-btn px-2.5 py-1 text-xs font-semibold rounded-lg bg-white text-blue-600 shadow-sm transition-all">
+                        30 Hari
+                    </button>
+                </div>
+            </div>
+
+            {{-- Metric Insight Badges --}}
+            <div class="grid grid-cols-3 gap-2 sm:gap-3 p-3 bg-slate-50/70 rounded-xl border border-slate-100 mb-4">
+                <div>
+                    <span class="text-[10px] text-slate-400 font-medium block">Total 30 Hari</span>
+                    <span class="text-sm sm:text-base font-bold text-slate-700">{{ number_format($chartStats['total_30']) }}</span>
+                    <span class="text-[10px] text-slate-400 ml-0.5">kunjungan</span>
+                </div>
+                <div class="border-x border-slate-200/60 px-2 sm:px-3">
+                    <span class="text-[10px] text-slate-400 font-medium block">Rata-rata Harian</span>
+                    <span class="text-sm sm:text-base font-bold text-blue-600">{{ $chartStats['avg_per_day'] }}</span>
+                    <span class="text-[10px] text-slate-400 ml-0.5">/hari</span>
+                </div>
+                <div class="text-right sm:text-left">
+                    <span class="text-[10px] text-slate-400 font-medium block">Puncak Tertinggi</span>
+                    <span class="text-sm sm:text-base font-bold text-emerald-600">{{ number_format($chartStats['peak_count']) }}</span>
+                    <span class="text-[10px] text-slate-400 ml-0.5">({{ $chartStats['peak_day'] }})</span>
+                </div>
             </div>
         </div>
-        <canvas id="visitsChart" height="110"></canvas>
+
+        {{-- Canvas --}}
+        <div class="relative w-full h-[220px]">
+            <canvas id="visitsChart"></canvas>
+        </div>
     </div>
 
     {{-- Device Breakdown + Rating Dist --}}
@@ -200,46 +247,111 @@
 {{-- Chart.js --}}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 <script>
-    const visitsByDay = @json($visitsByDay);
+    const fullLabels = @json($chartLabels);
+    const fullData   = @json($chartData);
 
-    // Build 30-day date array
-    const labels = [];
-    const data   = [];
-    const map    = {};
-    visitsByDay.forEach(r => { map[r.visited_at] = r.total; });
+    const canvas = document.getElementById('visitsChart');
+    const ctx = canvas.getContext('2d');
 
-    for (let i = 29; i >= 0; i--) {
-        const d = new Date();
-        d.setDate(d.getDate() - i);
-        const key = d.toISOString().slice(0, 10);
-        const label = d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' });
-        labels.push(label);
-        data.push(map[key] ?? 0);
-    }
+    // Create modern gradient fill
+    const gradient = ctx.createLinearGradient(0, 0, 0, 220);
+    gradient.addColorStop(0, 'rgba(37, 99, 235, 0.25)'); // #2563eb
+    gradient.addColorStop(1, 'rgba(37, 99, 235, 0.00)');
 
-    new Chart(document.getElementById('visitsChart'), {
-        type: 'bar',
+    const chartConfig = {
+        type: 'line',
         data: {
-            labels,
+            labels: [...fullLabels],
             datasets: [{
-                label: 'Kunjungan',
-                data,
-                backgroundColor: 'rgba(59,130,246,0.15)',
-                borderColor: 'rgba(59,130,246,0.7)',
-                borderWidth: 1.5,
-                borderRadius: 6,
-                borderSkipped: false,
+                label: 'Kunjungan Unik',
+                data: [...fullData],
+                borderColor: '#2563eb',
+                borderWidth: 2.5,
+                backgroundColor: gradient,
+                fill: true,
+                tension: 0.38,
+                pointBackgroundColor: '#2563eb',
+                pointBorderColor: '#ffffff',
+                pointBorderWidth: 2,
+                pointRadius: 3,
+                pointHoverRadius: 6,
+                pointHoverBackgroundColor: '#1d4ed8',
+                pointHoverBorderColor: '#ffffff',
+                pointHoverBorderWidth: 2.5,
             }]
         },
         options: {
             responsive: true,
-            plugins: { legend: { display: false } },
+            maintainAspectRatio: false,
+            interaction: {
+                mode: 'index',
+                intersect: false,
+            },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: 'rgba(15, 23, 42, 0.92)',
+                    titleColor: '#ffffff',
+                    bodyColor: '#93c5fd',
+                    titleFont: { size: 12, weight: '600' },
+                    bodyFont: { size: 12, weight: '700' },
+                    padding: 10,
+                    cornerRadius: 8,
+                    displayColors: false,
+                    callbacks: {
+                        label: function(context) {
+                            return ` ${context.parsed.y} Kunjungan Pengunjung`;
+                        }
+                    }
+                }
+            },
             scales: {
-                x: { grid: { display: false }, ticks: { font: { size: 10 }, maxTicksLimit: 10 } },
-                y: { beginAtZero: true, ticks: { stepSize: 1, font: { size: 10 } }, grid: { color: 'rgba(0,0,0,0.04)' } }
+                x: {
+                    grid: { display: false },
+                    ticks: {
+                        font: { size: 11 },
+                        color: '#94a3b8',
+                        maxTicksLimit: 10,
+                        maxRotation: 0,
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(226, 232, 240, 0.6)',
+                    },
+                    ticks: {
+                        precision: 0,
+                        font: { size: 11 },
+                        color: '#94a3b8',
+                        padding: 8,
+                    }
+                }
             }
         }
-    });
+    };
+
+    const visitsChart = new Chart(canvas, chartConfig);
+
+    // Interactive Range switcher
+    function changeChartRange(days) {
+        document.querySelectorAll('.range-btn').forEach(btn => {
+            btn.classList.remove('bg-white', 'text-blue-600', 'shadow-sm');
+            btn.classList.add('text-slate-600');
+        });
+        const activeBtn = document.getElementById(`range-btn-${days}`);
+        if (activeBtn) {
+            activeBtn.classList.add('bg-white', 'text-blue-600', 'shadow-sm');
+            activeBtn.classList.remove('text-slate-600');
+        }
+
+        const slicedLabels = fullLabels.slice(-days);
+        const slicedData   = fullData.slice(-days);
+
+        visitsChart.data.labels = slicedLabels;
+        visitsChart.data.datasets[0].data = slicedData;
+        visitsChart.update('active');
+    }
 </script>
 
 @endsection
