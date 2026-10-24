@@ -1,7 +1,15 @@
 @extends('layouts.admin.app')
 
 @section('content')
-<div class="px-4 lg:px-6 py-6 lg:py-8" x-data="{ batchModal: false }">
+<div class="px-4 lg:px-6 py-6 lg:py-8" x-data="{
+    batchModal: false,
+    soldModal: false,
+    soldCard: { serial_number: '', customer_name: '', actionUrl: '' },
+    openSoldModal(serial, customer, url) {
+        this.soldCard = { serial_number: serial, customer_name: customer || '-', actionUrl: url };
+        this.soldModal = true;
+    }
+}">
 
     <!-- Header -->
     <div class="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -257,12 +265,12 @@
                                 </span>
                                 @else
                                 <!-- Tandai Terjual & Kunci -->
-                                <form action="{{ route('admin.review_cards.mark_sold', $card->id) }}" method="POST" class="inline" onsubmit="return confirm('Tandai kartu {{ $card->serial_number }} sebagai Terjual?\n\nSetelah ditandai Terjual, kartu akan dikunci permanen dan tidak dapat diedit atau dihapus lagi.');">
-                                    @csrf
-                                    <button type="submit" class="p-1.5 text-slate-400 hover:text-emerald-600 rounded-lg hover:bg-emerald-50 transition-colors" title="Tandai Terjual (Kunci Permanen)">
-                                        <i class="fa-solid fa-cart-shopping text-xs"></i>
-                                    </button>
-                                </form>
+                                <button type="button"
+                                    @click="openSoldModal('{{ $card->serial_number }}', '{{ addslashes($card->business_name ?? $card->customer_name ?? '') }}', '{{ route('admin.review_cards.mark_sold', $card->id) }}')"
+                                    class="p-1.5 text-slate-400 hover:text-emerald-600 rounded-lg hover:bg-emerald-50 transition-colors"
+                                    title="Tandai Terjual (Kunci Permanen)">
+                                    <i class="fa-solid fa-cart-shopping text-xs"></i>
+                                </button>
 
                                 <!-- Quick Toggle Status -->
                                 <form action="{{ route('admin.review_cards.toggle_status', $card->id) }}" method="POST" class="inline">
@@ -350,6 +358,63 @@
                             Generate Sekarang
                         </button>
                     </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Konfirmasi Tandai Terjual & Kunci Permanen -->
+    <div x-show="soldModal" x-cloak class="fixed inset-0 z-50 overflow-y-auto" style="background-color: rgba(15, 23, 42, 0.65);">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div @click.away="soldModal = false" class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100 transition-all">
+
+                {{-- Header --}}
+                <div class="flex items-start justify-between pb-3 border-b border-slate-100">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg font-bold shrink-0">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-base leading-tight">Tandai Kartu Terjual</h3>
+                            <p class="text-xs text-slate-400 mt-0.5">Konfirmasi penguncian permanen unit fisik</p>
+                        </div>
+                    </div>
+                    <button @click="soldModal = false" class="text-slate-400 hover:text-slate-600 p-1">
+                        <i class="fa-solid fa-xmark text-base"></i>
+                    </button>
+                </div>
+
+                {{-- Detail Kartu --}}
+                <div class="mt-4 p-4 bg-slate-50/80 rounded-xl border border-slate-200/60 space-y-2">
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="text-slate-500 font-medium">Serial Number</span>
+                        <span class="font-mono font-bold text-slate-800 bg-white px-2 py-0.5 rounded border border-slate-200" x-text="soldCard.serial_number"></span>
+                    </div>
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="text-slate-500 font-medium">Pemilik / Bisnis</span>
+                        <span class="font-semibold text-slate-700 text-right truncate max-w-[200px]" x-text="soldCard.customer_name"></span>
+                    </div>
+                </div>
+
+                {{-- Warning Box --}}
+                <div class="mt-4 p-3.5 bg-amber-50/90 border border-amber-200/80 rounded-xl flex items-start gap-3">
+                    <i class="fa-solid fa-triangle-exclamation text-amber-600 text-sm mt-0.5 shrink-0"></i>
+                    <div class="text-xs text-amber-900 leading-relaxed">
+                        <p class="font-bold text-amber-950 mb-0.5">Peringatan: Kunci Permanen</p>
+                        <p>Setelah ditandai <strong>Terjual</strong>, kartu akan berstatus terkunci dan <strong>tidak dapat diedit atau dihapus lagi</strong> demi menjaga validitas komisi &amp; data kepemilikan.</p>
+                    </div>
+                </div>
+
+                {{-- Form Actions --}}
+                <form :action="soldCard.actionUrl" method="POST" class="mt-6 flex items-center justify-end gap-2.5">
+                    @csrf
+                    <button type="button" @click="soldModal = false" class="px-4 py-2.5 text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-xl transition-colors">
+                        Batal
+                    </button>
+                    <button type="submit" class="px-4 py-2.5 text-xs sm:text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 active:scale-95 rounded-xl shadow-sm shadow-emerald-500/20 transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-lock text-xs"></i>
+                        <span>Ya, Tandai &amp; Kunci</span>
+                    </button>
                 </form>
             </div>
         </div>
