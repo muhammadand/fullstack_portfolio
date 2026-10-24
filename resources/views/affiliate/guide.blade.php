@@ -147,6 +147,15 @@ $sectionMeta = [
 'badge' => 'Hot Cuan',
 'badge_color' => 'bg-sky-500/15 text-sky-400 border-sky-500/30',
 'icon' => 'fa-qrcode text-sky-400',
+'next' => 'referral',
+'next_title' => 'Panduan Referral 3 Tingkat'
+],
+'referral' => [
+'title' => 'Panduan Referral 3 Tingkat',
+'subtitle' => 'Strategi Cuan Pasif Bangun Jaringan Reseller',
+'badge' => 'Cuan Pasif',
+'badge_color' => 'bg-indigo-500/15 text-indigo-400 border-indigo-500/30',
+'icon' => 'fa-network-wired text-indigo-400',
 'next' => 'roadmap',
 'next_title' => 'Roadmap 1 Deal'
 ],
@@ -183,19 +192,23 @@ $sectionMeta = [
     </div>
 
     <!-- Target Benchmark Card -->
-    <div class="glass-card-glow p-4 rounded-2xl mb-6 flex items-center justify-between">
-        <div class="flex items-center gap-3">
+    <div class="glass-card-glow p-3.5 sm:p-4 rounded-2xl mb-6 flex items-center justify-between gap-3 border border-blue-500/20 shadow-lg shadow-blue-900/10">
+        <div class="flex items-center gap-3 min-w-0 flex-1">
             <div class="w-10 h-10 rounded-xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400 text-sm shrink-0">
                 <i class="fa-solid fa-chart-line"></i>
             </div>
-            <div>
-                <span class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Target Partner</span>
-                <p class="text-xs font-bold text-white">Min. 1 Deal / Minggu (10% Komisi)</p>
+            <div class="min-w-0">
+                <span class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold block">Target Partner</span>
+                <p class="text-xs font-bold text-white leading-tight mt-0.5 truncate">Min. 1 Deal / Minggu</p>
+                <span class="text-[10px] text-blue-300 font-medium block mt-0.5">(10% Komisi)</span>
             </div>
         </div>
-        <span class="px-2.5 py-1 rounded-lg text-[10px] font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/25">
-            Rp 100.000 - 200.000/Deal
-        </span>
+        <div class="shrink-0 text-right">
+            <span class="inline-block whitespace-nowrap px-2.5 py-1 rounded-lg text-[11px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/25 font-mono shadow-sm">
+                100rb - 200rb
+            </span>
+            <span class="block text-[9px] text-slate-400 mt-0.5">/ closing deal</span>
+        </div>
     </div>
 
     <!-- Featured Playbook Banner: Google Review Card -->
@@ -222,6 +235,34 @@ $sectionMeta = [
             </span>
             <span class="flex items-center gap-1 font-bold">
                 Buka Playbook <i class="fa-solid fa-arrow-right text-[10px] group-hover:translate-x-1 transition-transform"></i>
+            </span>
+        </div>
+    </a>
+
+    <!-- Featured Playbook Banner 2: Program Referral Reseller 3 Tingkat -->
+    <a href="{{ route('affiliate.guide', ['section' => 'referral']) }}" wire:navigate class="menu-card-hover block p-4 rounded-3xl mb-5 border border-indigo-500/40 relative overflow-hidden group cursor-pointer" style="background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.22) 0%, rgba(15, 23, 42, 0.9) 100%);">
+        <div class="flex items-start justify-between gap-3 mb-2">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-2xl bg-indigo-500/20 border border-indigo-400/40 flex items-center justify-center text-indigo-400 text-xl shadow-[0_0_15px_rgba(99,102,241,0.3)] group-hover:scale-110 transition-transform">
+                    <i class="fa-solid fa-network-wired"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2 mb-0.5">
+                        <h3 class="text-xs sm:text-sm font-extrabold text-white group-hover:text-indigo-300 transition-colors">Panduan Referral 3 Tingkat</h3>
+                        <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-indigo-600 text-white shadow-sm leading-none animate-pulse">
+                            Auto Pasif
+                        </span>
+                    </div>
+                    <p class="text-[10px] sm:text-[11px] text-slate-300">Strategi ajak teman, skema komisi, & script siap copas</p>
+                </div>
+            </div>
+        </div>
+        <div class="pt-2.5 mt-2 border-t border-white/10 flex items-center justify-between text-[10px] sm:text-[11px] font-semibold text-indigo-400 group-hover:text-indigo-300">
+            <span class="flex items-center gap-1.5 text-slate-300 font-normal">
+                <i class="fa-solid fa-gift text-indigo-400 text-[10px]"></i> Skema Rp 500, Rp 250, Rp 125
+            </span>
+            <span class="flex items-center gap-1 font-bold">
+                Buka Panduan <i class="fa-solid fa-arrow-right text-[10px] group-hover:translate-x-1 transition-transform"></i>
             </span>
         </div>
     </a>
@@ -416,6 +457,8 @@ $sectionMeta = [
         @include('affiliate.partials.guide.objection')
         @elseif($currentSection === 'review-card')
         @include('affiliate.partials.guide.review_card_guide')
+        @elseif($currentSection === 'referral')
+        @include('affiliate.partials.guide.referral_guide')
         @endif
     </div>
 

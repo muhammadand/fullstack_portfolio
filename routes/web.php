@@ -343,6 +343,9 @@ Route::middleware(['auth:affiliate'])->group(function () {
     Route::post('/partner/review-cards/{id}/activate-for-client', [\App\Http\Controllers\Affiliate\ReviewCardPartnerController::class, 'activateForClient'])->name('affiliate.review_cards.activate_for_client');
     Route::post('/partner/review-cards/{id}/mark-sold', [\App\Http\Controllers\Affiliate\ReviewCardPartnerController::class, 'markAsSold'])->name('affiliate.review_cards.mark_sold');
 
+    // Program Referral Reseller Multi-Tier
+    Route::get('/partner/referrals', [\App\Http\Controllers\Affiliate\ReferralNetworkController::class, 'index'])->name('affiliate.referrals.index');
+
     // Profile
     Route::get('/partner/profile', [App\Http\Controllers\AffiliateController::class, 'profile'])->name('affiliate.profile');
     Route::post('/partner/profile', [App\Http\Controllers\AffiliateController::class, 'updateProfile'])->name('affiliate.profile.update');
@@ -481,6 +484,11 @@ Route::get('/secret-deploy-trigger-12345', function () {
 
         \Illuminate\Support\Facades\Artisan::call('migrate', [
             '--path' => 'database/migrations/2026_10_23_143647_add_is_sold_to_review_cards_table.php',
+            '--force' => true
+        ]);
+
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_10_24_170000_add_referral_system_to_affiliates_table.php',
             '--force' => true
         ]);
 

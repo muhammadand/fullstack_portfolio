@@ -60,7 +60,7 @@
 
         @if($affiliate->status === 'pending')
         <x-affiliate.header-pending :affiliate="$affiliate" />
-        <x-affiliate.pending-message />
+        <x-affiliate.pending-message :affiliate="$affiliate" />
         @else
         <x-affiliate.header :affiliate="$affiliate" />
 

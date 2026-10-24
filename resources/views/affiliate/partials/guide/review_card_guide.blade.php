@@ -17,26 +17,26 @@
         </p>
 
         <!-- Quick CTA Buttons -->
-        <div class="grid grid-cols-2 gap-2 pt-2 border-t border-white/10">
-            <a href="{{ route('affiliate.review_proposals') }}" wire:navigate class="py-2 px-3 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-md shadow-sky-600/30 transition-all">
-                <i class="fa-solid fa-star-half-stroke text-[11px]"></i>
+        <div class="grid grid-cols-2 gap-2.5 pt-3 border-t border-white/10">
+            <a href="{{ route('affiliate.review_proposals') }}" wire:navigate class="h-11 px-3 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-md shadow-sky-600/30 transition-all active:scale-95 whitespace-nowrap">
+                <i class="fa-solid fa-star-half-stroke text-xs"></i>
                 <span>Tawarkan Leads</span>
             </a>
-            <a href="{{ route('affiliate.review_cards.index') }}" wire:navigate class="py-2 px-3 rounded-xl glass-panel hover:bg-white/10 text-white text-xs font-bold flex items-center justify-center gap-1.5 transition-all border border-white/10">
-                <i class="fa-solid fa-box text-[11px] text-amber-400"></i>
+            <a href="{{ route('affiliate.review_cards.index') }}" wire:navigate class="h-11 px-3 rounded-xl glass-panel hover:bg-white/10 text-slate-200 hover:text-white text-xs font-bold flex items-center justify-center gap-1.5 transition-all border border-white/15 active:scale-95 whitespace-nowrap">
+                <i class="fa-solid fa-box text-xs text-amber-400"></i>
                 <span>Beli Stok Kartu</span>
             </a>
         </div>
     </div>
 
     <!-- 1. Skema Keuntungan & Cuan Reseller -->
-    <div class="glass-panel p-5 rounded-2xl border border-white/10 space-y-4">
-        <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2 text-xs font-bold text-amber-400 uppercase tracking-wider">
-                <i class="fa-solid fa-calculator text-amber-400"></i>
-                <span>1. Kalkulator Cuan & Margin Partner</span>
+    <div class="glass-panel p-4 sm:p-5 rounded-2xl border border-white/10 space-y-4">
+        <div class="flex items-center justify-between gap-2.5 pb-2.5 border-b border-white/5">
+            <div class="flex items-center gap-2 text-xs font-bold text-amber-400 uppercase tracking-wider min-w-0 flex-1">
+                <i class="fa-solid fa-calculator text-amber-400 shrink-0"></i>
+                <span class="truncate">1. Kalkulator Cuan & Margin</span>
             </div>
-            <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+            <span class="shrink-0 whitespace-nowrap px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
                 ROI s/d 800%
             </span>
         </div>

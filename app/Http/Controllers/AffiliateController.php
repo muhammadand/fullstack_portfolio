@@ -18,9 +18,15 @@ use Gemini\Laravel\Facades\Gemini;
 
 class AffiliateController extends Controller
 {
-    public function registerForm()
+    public function registerForm(Request $request)
     {
-        return view('affiliate.register');
+        $refCode = $request->query('ref') ?? $request->cookie('affiliate_ref');
+        $referrer = null;
+        if ($refCode) {
+            $referrer = Affiliate::where('affiliate_code', trim($refCode))->first();
+        }
+
+        return view('affiliate.register', compact('refCode', 'referrer'));
     }
 
     public function registerSubmit(Request $request)
@@ -30,7 +36,19 @@ class AffiliateController extends Controller
             'email' => 'required|email|unique:affiliates,email',
             'password' => 'required|min:6',
             'bank_info' => 'nullable|string',
+            'referral_code' => 'nullable|string|max:50',
         ]);
+
+        $refCode = trim($request->input('referral_code', '')) ?: ($request->query('ref') ?? $request->cookie('affiliate_ref'));
+        $referrerId = null;
+        $referrer = null;
+
+        if ($refCode) {
+            $referrer = Affiliate::where('affiliate_code', trim($refCode))->first();
+            if ($referrer) {
+                $referrerId = $referrer->id;
+            }
+        }
 
         $affiliate = Affiliate::create([
             'name' => $request->name,
@@ -40,7 +58,16 @@ class AffiliateController extends Controller
             'bank_info' => $request->bank_info ?? null,
             'status' => 'pending',
             'balance' => 0,
+            'referred_by_id' => $referrerId,
         ]);
+
+        if ($referrer) {
+            $referrer->notify(new \App\Notifications\AffiliateNotification(
+                'Partner Baru Bergabung!',
+                "{$affiliate->name} telah mendaftar sebagai partner menggunakan link referral Anda.",
+                'info'
+            ));
+        }
 
         $affiliate->notify(new \App\Notifications\AffiliateNotification(
             'Selamat Datang!',

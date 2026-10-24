@@ -112,6 +112,16 @@
                 </div>
                 <span class="text-[10px] text-slate-300 font-medium text-center leading-tight group-hover:text-white transition-colors">Tukar<br>Poin</span>
             </a>
+
+            <!-- 6. Jaringan Referral (Multi-Tier 3 Level) -->
+            <a href="{{ route('affiliate.referrals.index') }}" wire:navigate class="flex flex-col items-center gap-2 group">
+                <div class="w-12 h-12 rounded-2xl glass-panel flex items-center justify-center text-indigo-400 text-lg shadow-inner transition-all duration-200 ease-out active:scale-90 active:opacity-60 group-hover:bg-indigo-500/10 group-hover:border-indigo-500/30 relative">
+                    <i class="fa-solid fa-network-wired"></i>
+                    <!-- Badge 3 Tier -->
+                    <span class="absolute -top-1.5 -right-1.5 bg-gradient-to-r from-indigo-500 to-blue-500 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full shadow-md shadow-indigo-500/40">3 Tier</span>
+                </div>
+                <span class="text-[10px] text-slate-300 font-medium text-center leading-tight group-hover:text-white transition-colors">Jaringan<br>Referral</span>
+            </a>
         </div>
     </div>
 

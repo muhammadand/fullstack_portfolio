@@ -112,16 +112,47 @@
         @endif
 
         @if($affiliate->status === 'pending')
+        @php
+            $partnerName = $affiliate->name ?? 'Partner';
+            $partnerEmail = $affiliate->email ?? '-';
+            $partnerCode = $affiliate->affiliate_code ?? '-';
+            $waMessage = "Halo Admin,\n\nSaya baru saja mendaftar sebagai Partner Affiliate:\n- Nama: {$partnerName}\n- Email: {$partnerEmail}\n- Kode Partner: {$partnerCode}\n\nMohon bantuannya untuk mensegerakan aktivasi akun saya agar bisa mulai beroperasi. Terima kasih!";
+            $waUrl = "https://wa.me/6285221694067?text=" . urlencode($waMessage);
+        @endphp
         <!-- Pending Approval Message -->
         <div class="bg-white rounded-2xl shadow-xl shadow-yellow-900/5 border border-yellow-100 p-6 md:p-8 text-center max-w-2xl mx-auto mt-6">
-            <div class="w-16 h-16 bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-4 shadow-sm">
+            <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-4 shadow-sm">
                 <i class="fa-solid fa-hourglass-half"></i>
             </div>
-            <h2 class="text-xl md:text-2xl font-bold text-slate-800 mb-3">Akun Sedang Direview</h2>
-            <p class="text-slate-600 text-base mb-6 leading-relaxed">Terima kasih telah mendaftar sebagai Partner Sobat Scalify! Saat ini pendaftaran Anda sedang dalam tahap peninjauan oleh tim kami. Kami akan segera menghubungi Anda jika akun sudah disetujui.</p>
-            <div class="inline-flex items-center justify-center px-4 py-2 bg-yellow-50 border border-yellow-200 text-yellow-800 rounded-lg text-sm font-medium">
-                <i class="fa-solid fa-clock mr-2"></i> Status: Menunggu Persetujuan
+            <div class="inline-flex items-center justify-center px-4 py-1.5 bg-amber-50 border border-amber-200 text-amber-800 rounded-full text-xs font-semibold mb-3">
+                <i class="fa-solid fa-clock mr-2"></i> Status: Menunggu Persetujuan Admin
             </div>
+            <h2 class="text-xl md:text-2xl font-bold text-slate-800 mb-2">Akun Sedang Ditinjau</h2>
+            <p class="text-slate-600 text-sm mb-6 leading-relaxed max-w-lg mx-auto">
+                Terima kasih telah mendaftar sebagai Partner! Pendaftaran Anda berhasil tersimpan. Agar akun Anda dapat segera diaktifkan oleh tim admin, silakan klik tombol di bawah untuk konfirmasi via WhatsApp.
+            </p>
+
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-6 text-left text-xs text-slate-600 max-w-md mx-auto space-y-1.5">
+                <div class="flex justify-between">
+                    <span>Nama:</span>
+                    <span class="font-bold text-slate-800">{{ $partnerName }}</span>
+                </div>
+                <div class="flex justify-between border-t border-slate-200 pt-1.5">
+                    <span>Email:</span>
+                    <span class="font-mono text-slate-700">{{ $partnerEmail }}</span>
+                </div>
+                <div class="flex justify-between border-t border-slate-200 pt-1.5">
+                    <span>Kode Partner:</span>
+                    <span class="font-mono font-bold text-indigo-600">{{ $partnerCode }}</span>
+                </div>
+            </div>
+
+            <a href="{{ $waUrl }}" target="_blank"
+               class="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm rounded-xl shadow-lg shadow-emerald-600/25 transition-all transform hover:-translate-y-0.5">
+                <i class="fa-brands fa-whatsapp text-lg"></i>
+                <span>Hubungi Admin via WhatsApp (Percepat Aktivasi)</span>
+            </a>
+            <p class="text-xs text-slate-500 mt-3">Nomor WhatsApp Resmi: <b class="text-slate-700 font-mono">0852-2169-4067</b></p>
         </div>
         @else
 

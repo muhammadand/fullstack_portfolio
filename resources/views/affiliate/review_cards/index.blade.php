@@ -110,11 +110,44 @@
         @endif
 
         <!-- Informasi Reseller -->
-        <div class="glass-card rounded-2xl p-4 mb-5">
+        <div class="glass-card rounded-2xl p-4 mb-4">
             <h2 class="text-xs font-semibold text-white mb-1">Peluang Penjualan Standee QR</h2>
             <p class="text-xs text-slate-300 leading-relaxed">
                 Beli kuota kartu seharga <span class="text-white font-medium">Rp 10.000</span> per unit. Anda dapat mengunduh file desain siap cetak, mencetaknya di percetakan lokal (akrilik/stiker), lalu menjualnya ke kafe atau toko lokal seharga <span class="text-emerald-400 font-medium">Rp 50.000 - Rp 100.000</span>.
             </p>
+        </div>
+
+        <!-- Banner Program Referral Reseller 3 Tingkat -->
+        <div class="glass-card rounded-2xl p-4 mb-5 border-indigo-500/30 bg-gradient-to-r from-indigo-500/10 via-slate-900/60 to-blue-500/10 relative overflow-hidden">
+            <div class="flex items-start justify-between gap-3 mb-2">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-sm shrink-0">
+                        <i class="fa-solid fa-users-viewfinder"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xs font-bold text-white">Program Referral Tim (3 Tingkat)</h2>
+                        <p class="text-[10px] text-indigo-300">Dapatkan Pasif Income dari Penjualan Kartu</p>
+                    </div>
+                </div>
+                <span class="text-[10px] px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 font-semibold border border-indigo-500/30">
+                    Cuan Pasif
+                </span>
+            </div>
+
+            <p class="text-[11px] text-slate-300 leading-relaxed mb-3">
+                Ajak rekan Anda menjadi reseller Review Card. Dapatkan bonus <span class="text-emerald-400 font-bold">Rp 500</span> (Tier 1), <span class="text-emerald-400 font-bold">Rp 250</span> (Tier 2), dan <span class="text-emerald-400 font-bold">Rp 125</span> (Tier 3) setiap kali mereka membeli kuota kartu!
+            </p>
+
+            <div class="grid grid-cols-2 gap-2 pt-1">
+                <button type="button" onclick="navigator.clipboard.writeText('{{ $affiliate->referral_url }}'); alert('Tautan referral Anda berhasil disalin!');" class="h-10 px-3 rounded-xl bg-indigo-600/25 hover:bg-indigo-600 text-indigo-200 hover:text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition border border-indigo-500/30 whitespace-nowrap active:scale-95">
+                    <i class="fa-regular fa-copy text-xs"></i>
+                    <span>Salin Link</span>
+                </button>
+                <a href="{{ route('affiliate.referrals.index') }}" class="h-10 px-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition shadow-sm shadow-indigo-600/30 whitespace-nowrap active:scale-95">
+                    <span>Lihat Tim & Log</span>
+                    <i class="fa-solid fa-arrow-right text-[11px]"></i>
+                </a>
+            </div>
         </div>
 
         <!-- Section 1: Paket Kuota QR -->

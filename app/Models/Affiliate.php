@@ -64,6 +64,31 @@ class Affiliate extends Authenticatable
         return $this->hasMany(LeadOffering::class);
     }
 
+    public function referredBy()
+    {
+        return $this->belongsTo(Affiliate::class, 'referred_by_id');
+    }
+
+    public function directReferrals()
+    {
+        return $this->hasMany(Affiliate::class, 'referred_by_id');
+    }
+
+    public function referralCommissionsReceived()
+    {
+        return $this->hasMany(AffiliateReferralCommission::class, 'upline_id');
+    }
+
+    public function referralCommissionsGenerated()
+    {
+        return $this->hasMany(AffiliateReferralCommission::class, 'downline_id');
+    }
+
+    public function getReferralUrlAttribute(): string
+    {
+        return route('affiliate.register', ['ref' => $this->affiliate_code]);
+    }
+
     /**
      * Generate link Lynk.id spesifik untuk produk digital tertentu
      * 

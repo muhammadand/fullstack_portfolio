@@ -477,6 +477,18 @@ class ReviewCardController extends Controller
      */
     public function verifyOrderPayment(Request $request, string $orderId)
     {
+        $cards = DB::table('review_cards')
+            ->where('payment_status', 'pending')
+            ->where('notes', 'like', "%{$orderId}%")
+            ->get();
+
+        if ($cards->isEmpty()) {
+            return redirect()->back()->with('error', "Pesanan #{$orderId} tidak ditemukan atau sudah diverifikasi.");
+        }
+
+        $partnerId = (int) $cards->first()->affiliate_id;
+        $quantity = $cards->count();
+
         $updated = DB::table('review_cards')
             ->where('payment_status', 'pending')
             ->where('notes', 'like', "%{$orderId}%")
@@ -487,6 +499,9 @@ class ReviewCardController extends Controller
             ]);
 
         if ($updated > 0) {
+            // Distribusikan komisi referral multi-tier (hingga 3 level) jika pembeli memiliki referrer
+            \App\Services\ReviewCardReferralService::distributeCommission($partnerId, $quantity, $orderId);
+
             return redirect()->back()
                 ->with('success', "✅ Pesanan #{$orderId} berhasil diverifikasi! {$updated} unit kartu QR kini telah aktif di akun partner.");
         }

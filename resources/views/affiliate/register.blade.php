@@ -137,6 +137,33 @@
                             </div>
                         </div>
 
+                        <!-- Kode Referral / Undangan -->
+                        @if(!empty($referrer))
+                        <div class="p-2.5 rounded-xl bg-indigo-500/10 border border-indigo-500/25 flex items-center justify-between text-xs text-indigo-200">
+                            <div class="flex items-center gap-2">
+                                <div class="w-6 h-6 rounded-lg bg-indigo-500/20 text-indigo-300 flex items-center justify-center text-[10px]">
+                                    <i class="fa-solid fa-user-check"></i>
+                                </div>
+                                <div>
+                                    <div class="text-[10px] text-indigo-300/70">Diundang oleh Partner:</div>
+                                    <div class="font-bold text-white text-xs">{{ $referrer->name }}</div>
+                                </div>
+                            </div>
+                            <span class="px-2 py-0.5 rounded-md bg-indigo-500/20 text-indigo-300 font-mono text-[11px] font-bold">
+                                {{ $refCode }}
+                            </span>
+                            <input type="hidden" name="referral_code" value="{{ $refCode }}">
+                        </div>
+                        @else
+                        <div>
+                            <label class="block text-indigo-100/80 font-medium mb-1 text-xs flex items-center gap-1.5">
+                                <i class="fa-solid fa-gift text-indigo-400 text-[11px]"></i>
+                                Kode Referral / Undangan <span class="text-indigo-400/60 font-normal">(Opsional)</span>
+                            </label>
+                            <input type="text" name="referral_code" value="{{ old('referral_code', $refCode ?? '') }}" class="w-full glass-input rounded-xl px-3 py-2 text-xs sm:text-sm placeholder-slate-400 text-white border-white/10 focus:border-indigo-400 uppercase font-mono tracking-wider" placeholder="Contoh: BUDI99">
+                        </div>
+                        @endif
+
                         <!-- Submit Button -->
                         <button type="submit" class="w-full bg-gradient-to-r from-indigo-600 via-blue-600 to-indigo-600 hover:from-indigo-500 hover:to-blue-500 text-white py-2.5 rounded-xl font-bold text-xs sm:text-sm shadow-[0_0_20px_rgba(99,102,241,0.4)] hover:shadow-[0_0_25px_rgba(99,102,241,0.6)] transition-all duration-300 transform hover:-translate-y-0.5 flex items-center justify-center gap-2 cursor-pointer mt-1">
                             <i class="fa-solid fa-user-plus text-xs"></i>
