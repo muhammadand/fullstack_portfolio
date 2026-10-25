@@ -199,6 +199,7 @@
             <thead>
                 <tr class="bg-slate-50 border-b border-slate-100">
                     <th class="px-5 py-3 text-left text-[10px] font-semibold text-slate-400 uppercase tracking-wider">#</th>
+                    <th class="px-5 py-3 text-left text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Pengulas</th>
                     <th class="px-5 py-3 text-left text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Waktu</th>
                     <th class="px-5 py-3 text-left text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Rating</th>
                     <th class="px-5 py-3 text-left text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Catatan</th>
@@ -209,6 +210,10 @@
                 @forelse($reviews as $review)
                 <tr class="hover:bg-slate-50 transition-colors">
                     <td class="px-5 py-3.5 text-slate-400">{{ $review->id }}</td>
+                    <td class="px-5 py-3.5">
+                        <div class="font-bold text-slate-800 text-xs">{{ $review->name ?: 'Putri Andiyani Jelita' }}</div>
+                        <div class="text-[10px] text-slate-400">{{ $review->role ?: 'Digital Marketing Specialist' }}</div>
+                    </td>
                     <td class="px-5 py-3.5 text-slate-500 whitespace-nowrap">
                         {{ $review->created_at->format('d M Y, H:i') }}
                     </td>
@@ -227,7 +232,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="5" class="px-5 py-10 text-center text-slate-400">
+                    <td colspan="6" class="px-5 py-10 text-center text-slate-400">
                         <i class="fa-regular fa-comment-dots text-2xl mb-2 block opacity-30"></i>
                         Belum ada ulasan masuk
                     </td>

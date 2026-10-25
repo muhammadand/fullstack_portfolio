@@ -2262,6 +2262,21 @@
                     </button>
                 </div>
 
+                {{-- Reviewer Identity (Auto-filled from CV) --}}
+                <div class="mb-5 p-3 rounded-xl bg-white/5 border border-white/10 flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-full bg-cyan-500/20 text-cyan-300 font-bold text-xs flex items-center justify-center border border-cyan-400/30 shrink-0">
+                        <span x-text="(cvData.full_name && cvData.full_name.trim() ? cvData.full_name.trim() : 'Putri Andiyani Jelita').charAt(0).toUpperCase()"></span>
+                    </div>
+                    <div class="min-w-0 flex-1">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] uppercase tracking-wider text-cyan-400 font-bold">Nama Pengulas</span>
+                            <span class="text-[10px] text-white/40">Diambil otomatis dari CV</span>
+                        </div>
+                        <p class="text-xs font-bold text-white truncate mt-0.5" x-text="cvData.full_name && cvData.full_name.trim() ? cvData.full_name.trim() : 'Putri Andiyani Jelita'"></p>
+                        <p class="text-[11px] text-white/60 truncate" x-text="cvData.target_role && cvData.target_role.trim() ? cvData.target_role.trim() : 'Digital Marketing Specialist'"></p>
+                    </div>
+                </div>
+
                 {{-- Star Rating --}}
                 <div class="mb-5">
                     <p class="text-white/60 text-xs mb-3 uppercase tracking-widest font-semibold flex items-center gap-1.5">
@@ -2299,7 +2314,12 @@
                             fetch('{{ route('layanan.cv.review') }}', {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
-                                body: JSON.stringify({ rating: reviewRating, note: reviewNote })
+                                body: JSON.stringify({
+                                    rating: reviewRating,
+                                    note: reviewNote,
+                                    name: (cvData.full_name && cvData.full_name.trim()) ? cvData.full_name.trim() : 'Putri Andiyani Jelita',
+                                    role: (cvData.target_role && cvData.target_role.trim()) ? cvData.target_role.trim() : 'Digital Marketing Specialist'
+                                })
                             })
                             .finally(() => {
                                 isSubmittingReview = false;
@@ -2330,3 +2350,4 @@
             <div class="h-[1px] bg-gradient-to-r from-transparent via-blue-500/30 to-transparent"></div>
         </div>
     </div>
+</section>

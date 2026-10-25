@@ -144,7 +144,7 @@
                     <h3 class="font-bold text-brand-coffee text-sm mb-1 flex items-center gap-2">
                         <i class="fas fa-cash-register text-brand-caramel"></i> Live Demo: POS Kasir, Scan Meja QRIS & Membership
                     </h3>
-                    <p class="text-[13px] text-gray-700">Kami telah menyiapkan prototipe interaktif untuk {{ $client->brand_name }} lengkap dengan simulasi Self-Order Meja di Smartphone, QRIS Dinamis, dan Kartu Loyalty Member.</p>
+                    <p class="text-[13px] text-gray-700">Kami telah menyiapkan prototipe interaktif untuk {{ $client->brand_name }} lengkap dengan simulasi Self-Order Meja di Smartphone, QRIS, dan Kartu Loyalty Member.</p>
                     <div class="hidden print:block text-[13px] font-medium text-blue-600 break-all mt-2 underline">
                         {{ route("landing.dynamic", $client->slug) }}
                     </div>

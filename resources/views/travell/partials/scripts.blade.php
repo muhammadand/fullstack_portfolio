@@ -1084,7 +1084,7 @@
         var submitBtn = document.getElementById('btnSubmitMobileBooking') || document.getElementById('btnSubmitPassengerForm');
         if (submitBtn) {
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin text-sm mr-2"></i> Menyiapkan QRIS Dinamis...';
+            submitBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin text-sm mr-2"></i> Menyiapkan QRIS...';
         }
 
         try {

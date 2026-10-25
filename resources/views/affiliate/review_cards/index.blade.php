@@ -386,7 +386,7 @@
                 Beli Kuota Kartu QR
             </h3>
             <p class="text-xs text-slate-400 mb-4">
-                Pembayaran otomatis via QRIS Dinamis. Stok kartu akan langsung aktif di akun Anda setelah diverifikasi admin.
+                Pembayaran otomatis via QRIS. Stok kartu akan langsung aktif di akun Anda setelah diverifikasi admin.
             </p>
 
             <div class="bg-slate-800/80 rounded-xl p-3 border border-slate-700 text-xs space-y-2 mb-4">
@@ -401,7 +401,7 @@
                 <div class="flex justify-between border-t border-slate-700/60 pt-2">
                     <span class="text-slate-400">Metode Pembayaran</span>
                     <span class="text-blue-400 font-medium flex items-center gap-1">
-                        <i class="fa-solid fa-qrcode text-[10px]"></i> QRIS Dinamis (DANA/Bank)
+                        <i class="fa-solid fa-qrcode text-[10px]"></i> QRIS
                     </span>
                 </div>
             </div>

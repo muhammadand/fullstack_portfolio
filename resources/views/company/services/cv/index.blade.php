@@ -72,5 +72,8 @@
     {{-- 8. Call To Action WhatsApp --}}
     @include('company.services.cv.partials.cta')
 
+    {{-- 9. Floating Jobseeker Cat Mascot (Si Oyen Minta Donasi) --}}
+    @include('company.services.cv.partials.floating_cat')
+
 </div>
 @endsection

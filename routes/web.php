@@ -261,6 +261,7 @@ Route::get('/layanan/template-cv', [CvServiceController::class, 'index'])->name(
 Route::post('/layanan/template-cv/chat', [CvServiceController::class, 'chat'])->name('layanan.cv.chat');
 Route::post('/layanan/template-cv/generate-ai', [CvServiceController::class, 'generateAi'])->name('layanan.cv.generate_ai');
 Route::post('/layanan/template-cv/review', [CvServiceController::class, 'storeReview'])->name('layanan.cv.review');
+Route::match(['GET', 'POST'], '/layanan/template-cv/donate-qris', [CvServiceController::class, 'generateDonationQris'])->name('layanan.cv.donate_qris');
 Route::get('/admin/cv-service', [CvServiceController::class, 'adminCvService'])->name('admin.cv_service.index');
 Route::get('/partner-program', [HomeController::class, 'partnerProgram'])->name('partner.program');
 //Documentation

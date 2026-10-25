@@ -8,6 +8,17 @@
     openSoldModal(serial, customer, url) {
         this.soldCard = { serial_number: serial, customer_name: customer || '-', actionUrl: url };
         this.soldModal = true;
+    },
+    verifyOrderModal: false,
+    cancelOrderModal: false,
+    selectedOrder: { order_id: '', partner: '', qty: 1, amount: '', actionUrl: '' },
+    openVerifyModal(orderId, partner, qty, amount, url) {
+        this.selectedOrder = { order_id: orderId, partner: partner, qty: qty, amount: amount, actionUrl: url };
+        this.verifyOrderModal = true;
+    },
+    openCancelModal(orderId, partner, qty, amount, url) {
+        this.selectedOrder = { order_id: orderId, partner: partner, qty: qty, amount: amount, actionUrl: url };
+        this.cancelOrderModal = true;
     }
 }">
 
@@ -108,21 +119,15 @@
                 </div>
 
                 <div class="flex items-center gap-2 shrink-0">
-                    <form action="{{ route('admin.review_cards.verify_order', $order['order_id']) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin dana QRIS sebesar Rp {{ number_format($order['total_amount'] ?? 0, 0, ',', '.') }} sudah masuk dan ingin mengaktifkan stok partner?');">
-                        @csrf
-                        <button type="submit" class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold shadow-sm transition-all active:scale-95">
-                            <i class="fa-solid fa-check"></i>
-                            <span>Verifikasi & Aktifkan</span>
-                        </button>
-                    </form>
+                    <button type="button" @click="openVerifyModal('{{ $order['order_id'] }}', '{{ addslashes($order['partner_name'] ?? '-') }}', '{{ $order['quantity'] ?? 1 }}', 'Rp {{ number_format($order['total_amount'] ?? 0, 0, ',', '.') }}', '{{ route('admin.review_cards.verify_order', $order['order_id']) }}')" class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold shadow-sm transition-all active:scale-95 cursor-pointer">
+                        <i class="fa-solid fa-check"></i>
+                        <span>Verifikasi &amp; Aktifkan</span>
+                    </button>
 
-                    <form action="{{ route('admin.review_cards.cancel_order', $order['order_id']) }}" method="POST" onsubmit="return confirm('Batalkan pesanan ini? Kartu yang di-reserve akan dihapus.');">
-                        @csrf
-                        <button type="submit" class="inline-flex items-center gap-1.5 px-3 py-2 bg-white hover:bg-red-50 text-slate-600 hover:text-red-600 border border-slate-200 rounded-lg text-xs font-medium transition-colors">
-                            <i class="fa-solid fa-xmark"></i>
-                            <span>Batalkan</span>
-                        </button>
-                    </form>
+                    <button type="button" @click="openCancelModal('{{ $order['order_id'] }}', '{{ addslashes($order['partner_name'] ?? '-') }}', '{{ $order['quantity'] ?? 1 }}', 'Rp {{ number_format($order['total_amount'] ?? 0, 0, ',', '.') }}', '{{ route('admin.review_cards.cancel_order', $order['order_id']) }}')" class="inline-flex items-center gap-1.5 px-3 py-2 bg-white hover:bg-red-50 text-slate-600 hover:text-red-600 border border-slate-200 rounded-lg text-xs font-medium transition-colors cursor-pointer">
+                        <i class="fa-solid fa-xmark"></i>
+                        <span>Batalkan</span>
+                    </button>
                 </div>
             </div>
             @endforeach
@@ -265,10 +270,7 @@
                                 </span>
                                 @else
                                 <!-- Tandai Terjual & Kunci -->
-                                <button type="button"
-                                    @click="openSoldModal('{{ $card->serial_number }}', '{{ addslashes($card->business_name ?? $card->customer_name ?? '') }}', '{{ route('admin.review_cards.mark_sold', $card->id) }}')"
-                                    class="p-1.5 text-slate-400 hover:text-emerald-600 rounded-lg hover:bg-emerald-50 transition-colors"
-                                    title="Tandai Terjual (Kunci Permanen)">
+                                <button type="button" @click="openSoldModal('{{ $card->serial_number }}', '{{ addslashes($card->business_name ?? $card->customer_name ?? '') }}', '{{ route('admin.review_cards.mark_sold', $card->id) }}')" class="p-1.5 text-slate-400 hover:text-emerald-600 rounded-lg hover:bg-emerald-50 transition-colors" title="Tandai Terjual (Kunci Permanen)">
                                     <i class="fa-solid fa-cart-shopping text-xs"></i>
                                 </button>
 
@@ -414,6 +416,132 @@
                     <button type="submit" class="px-4 py-2.5 text-xs sm:text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 active:scale-95 rounded-xl shadow-sm shadow-emerald-500/20 transition-all flex items-center gap-2">
                         <i class="fa-solid fa-lock text-xs"></i>
                         <span>Ya, Tandai &amp; Kunci</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Konfirmasi Verifikasi Pembayaran QRIS -->
+    <div x-show="verifyOrderModal" x-cloak class="fixed inset-0 z-50 overflow-y-auto" style="background-color: rgba(15, 23, 42, 0.65);">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div @click.away="verifyOrderModal = false" class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100 transition-all text-left">
+
+                {{-- Header --}}
+                <div class="flex items-start justify-between pb-3 border-b border-slate-100">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg font-bold shrink-0">
+                            <i class="fa-solid fa-shield-check"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-base leading-tight">Verifikasi Pembayaran QRIS</h3>
+                            <p class="text-xs text-slate-400 mt-0.5">Aktivasi unit stok kartu partner</p>
+                        </div>
+                    </div>
+                    <button @click="verifyOrderModal = false" class="text-slate-400 hover:text-slate-600 p-1">
+                        <i class="fa-solid fa-xmark text-base"></i>
+                    </button>
+                </div>
+
+                {{-- Detail Pesanan --}}
+                <div class="mt-4 p-4 bg-slate-50/80 rounded-xl border border-slate-200/60 space-y-2">
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="text-slate-500 font-medium">ID Pesanan</span>
+                        <span class="font-mono font-bold text-slate-800 bg-white px-2 py-0.5 rounded border border-slate-200" x-text="'#' + selectedOrder.order_id"></span>
+                    </div>
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="text-slate-500 font-medium">Partner</span>
+                        <span class="font-semibold text-slate-700 truncate max-w-[200px]" x-text="selectedOrder.partner"></span>
+                    </div>
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="text-slate-500 font-medium">Jumlah Unit</span>
+                        <span class="font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200" x-text="selectedOrder.qty + ' Unit Kartu'"></span>
+                    </div>
+                    <div class="flex items-center justify-between text-xs pt-1 border-t border-slate-200/80">
+                        <span class="text-slate-500 font-medium">Total Dana Masuk</span>
+                        <span class="font-mono font-bold text-emerald-600 text-sm" x-text="selectedOrder.amount"></span>
+                    </div>
+                </div>
+
+                {{-- Info Box --}}
+                <div class="mt-4 p-3.5 bg-emerald-50/90 border border-emerald-200/80 rounded-xl flex items-start gap-3">
+                    <i class="fa-solid fa-circle-info text-emerald-600 text-sm mt-0.5 shrink-0"></i>
+                    <div class="text-xs text-emerald-900 leading-relaxed">
+                        <p class="font-bold text-emerald-950 mb-0.5">Konfirmasi Dana</p>
+                        <p>Pastikan dana QRIS sebesar <strong x-text="selectedOrder.amount"></strong> sudah masuk ke mutasi rekening/dashboard Scalify Pay. Setelah diverifikasi, unit kartu akan langsung aktif di dashboard partner.</p>
+                    </div>
+                </div>
+
+                {{-- Form Actions --}}
+                <form :action="selectedOrder.actionUrl" method="POST" class="mt-6 flex items-center justify-end gap-2.5">
+                    @csrf
+                    <button type="button" @click="verifyOrderModal = false" class="px-4 py-2.5 text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-xl transition-colors">
+                        Batal
+                    </button>
+                    <button type="submit" class="px-4 py-2.5 text-xs sm:text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 active:scale-95 rounded-xl shadow-sm shadow-emerald-500/20 transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-check text-xs"></i>
+                        <span>Ya, Verifikasi &amp; Aktifkan</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Konfirmasi Batalkan Pesanan QRIS -->
+    <div x-show="cancelOrderModal" x-cloak class="fixed inset-0 z-50 overflow-y-auto" style="background-color: rgba(15, 23, 42, 0.65);">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div @click.away="cancelOrderModal = false" class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100 transition-all text-left">
+
+                {{-- Header --}}
+                <div class="flex items-start justify-between pb-3 border-b border-slate-100">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-red-50 text-red-600 flex items-center justify-center text-lg font-bold shrink-0">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-base leading-tight">Batalkan Pesanan QRIS</h3>
+                            <p class="text-xs text-slate-400 mt-0.5">Penghapusan reservasi stok partner</p>
+                        </div>
+                    </div>
+                    <button @click="cancelOrderModal = false" class="text-slate-400 hover:text-slate-600 p-1">
+                        <i class="fa-solid fa-xmark text-base"></i>
+                    </button>
+                </div>
+
+                {{-- Detail Pesanan --}}
+                <div class="mt-4 p-4 bg-slate-50/80 rounded-xl border border-slate-200/60 space-y-2">
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="text-slate-500 font-medium">ID Pesanan</span>
+                        <span class="font-mono font-bold text-slate-800 bg-white px-2 py-0.5 rounded border border-slate-200" x-text="'#' + selectedOrder.order_id"></span>
+                    </div>
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="text-slate-500 font-medium">Partner</span>
+                        <span class="font-semibold text-slate-700 truncate max-w-[200px]" x-text="selectedOrder.partner"></span>
+                    </div>
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="text-slate-500 font-medium">Jumlah Unit yang Dihapus</span>
+                        <span class="font-bold text-red-700 bg-red-50 px-2 py-0.5 rounded border border-red-200" x-text="selectedOrder.qty + ' Unit Kartu'"></span>
+                    </div>
+                </div>
+
+                {{-- Warning Box --}}
+                <div class="mt-4 p-3.5 bg-red-50/90 border border-red-200/80 rounded-xl flex items-start gap-3">
+                    <i class="fa-solid fa-triangle-exclamation text-red-600 text-sm mt-0.5 shrink-0"></i>
+                    <div class="text-xs text-red-900 leading-relaxed">
+                        <p class="font-bold text-red-950 mb-0.5">Peringatan Pembatalan</p>
+                        <p>Pesanan QRIS ini akan dibatalkan permanen. Seluruh nomor serial kartu cadangan yang sudah di-reserve akan dihapus dari sistem.</p>
+                    </div>
+                </div>
+
+                {{-- Form Actions --}}
+                <form :action="selectedOrder.actionUrl" method="POST" class="mt-6 flex items-center justify-end gap-2.5">
+                    @csrf
+                    <button type="button" @click="cancelOrderModal = false" class="px-4 py-2.5 text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-xl transition-colors">
+                        Kembali
+                    </button>
+                    <button type="submit" class="px-4 py-2.5 text-xs sm:text-sm font-bold text-white bg-red-600 hover:bg-red-700 active:scale-95 rounded-xl shadow-sm shadow-red-500/20 transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-xmark text-xs"></i>
+                        <span>Ya, Batalkan Pesanan</span>
                     </button>
                 </form>
             </div>

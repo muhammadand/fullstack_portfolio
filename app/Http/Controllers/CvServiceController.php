@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\DB;
 use Gemini\Laravel\Facades\Gemini;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
+use App\Services\QrisPaymentService;
 
 class CvServiceController extends Controller
 {
@@ -57,7 +59,7 @@ class CvServiceController extends Controller
         $totalReviews  = CvReview::count();
         $avgRating     = $totalReviews > 0 ? round(CvReview::avg('rating'), 1) : 0;
         $ratingDist    = CvReview::select('rating', DB::raw('count(*) as total'))
-                            ->groupBy('rating')->orderBy('rating', 'desc')->get();
+            ->groupBy('rating')->orderBy('rating', 'desc')->get();
 
         // ---- Visits ----
         $totalVisits   = CvPageVisit::count();
@@ -102,12 +104,20 @@ class CvServiceController extends Controller
         ];
 
         $deviceStats   = CvPageVisit::select('device_type', DB::raw('count(*) as total'))
-                            ->groupBy('device_type')->get();
+            ->groupBy('device_type')->get();
 
         return view('admin.cv-service.index', compact(
-            'reviews', 'totalReviews', 'avgRating', 'ratingDist',
-            'totalVisits', 'uniqueVisits', 'todayVisits', 'deviceStats',
-            'chartLabels', 'chartData', 'chartStats'
+            'reviews',
+            'totalReviews',
+            'avgRating',
+            'ratingDist',
+            'totalVisits',
+            'uniqueVisits',
+            'todayVisits',
+            'deviceStats',
+            'chartLabels',
+            'chartData',
+            'chartStats'
         ));
     }
 
@@ -119,15 +129,28 @@ class CvServiceController extends Controller
         $validated = $request->validate([
             'rating' => 'required|integer|min:1|max:5',
             'note'   => 'nullable|string|max:500',
+            'name'   => 'nullable|string|max:100',
+            'role'   => 'nullable|string|max:150',
         ]);
 
         try {
+            $name = trim($request->input('name') ?? '');
+            if (empty($name) || $name === 'Pengguna CV Builder') {
+                $name = 'Putri Andiyani Jelita';
+            }
+
+            $role = trim($request->input('role') ?? '');
+            if (empty($role)) {
+                $role = 'Digital Marketing Specialist';
+            }
+
             $review = CvReview::create([
-                'name'       => 'Pengguna CV Builder',
+                'name'       => $name,
+                'role'       => $role,
                 'rating'     => (int)$validated['rating'],
                 'note'       => trim($validated['note'] ?? ''),
                 'ip_address' => $request->ip(),
-                'is_featured'=> true,
+                'is_featured' => true,
             ]);
 
             return response()->json([
@@ -142,6 +165,91 @@ class CvServiceController extends Controller
                 'success' => false,
                 'message' => 'Terjadi kendala saat menyimpan ulasan, namun Anda tetap dapat melanjutkan cetak.'
             ], 500);
+        }
+    }
+
+    /**
+     * Generate Dynamic QRIS Donasi Si Oyen Pejuang Loker
+     * Menggunakan QrisPaymentService (Scalify Pay)
+     */
+    public function generateDonationQris(Request $request)
+    {
+        if ($request->isMethod('GET')) {
+            return redirect()->route('layanan.cv');
+        }
+
+        $validated = $request->validate([
+            'amount' => 'required|numeric|min:1000|max:10000000',
+            'donor_name' => 'nullable|string|max:100',
+            'donor_phone' => 'nullable|string|max:30',
+        ]);
+
+        try {
+            $amount = (int) round($validated['amount']);
+            $donorName = trim($validated['donor_name'] ?? '') ?: 'Sahabat Si Oyen';
+            $orderId = 'OYEN-' . strtoupper(Str::random(4)) . '-' . time();
+
+            $qrisResult = QrisPaymentService::createDynamicQris(
+                $orderId,
+                $amount,
+                [
+                    'name' => $donorName,
+                    'phone' => $validated['donor_phone'] ?? null,
+                ],
+                'DANA'
+            );
+
+            if (!$qrisResult['success']) {
+                if ($request->expectsJson()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => $qrisResult['message'] ?? 'Gagal membuat QRIS donasi. Silakan coba kembali.',
+                    ], 422);
+                }
+                return redirect()->back()->with('error', $qrisResult['message'] ?? 'Gagal membuat QRIS donasi.');
+            }
+
+            $qrisData = $qrisResult['data'] ?? [];
+            $qrisPayload = $qrisData['qris_payload'] ?? '';
+            $qrisImageUrl = !empty($qrisPayload)
+                ? 'https://api.qrserver.com/v1/create-qr-code/?size=360x360&margin=10&data=' . urlencode($qrisPayload)
+                : null;
+
+            $qrisData['qris_image_url'] = $qrisImageUrl;
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'QRIS Donasi berhasil dibuat! Terima kasih orang baik.',
+                    'data' => [
+                        'order_id' => $qrisData['order_id'] ?? $orderId,
+                        'merchant_name' => $qrisData['merchant_name'] ?? 'Scalify / Si Oyen Pejuang Loker',
+                        'base_amount' => (int) ($qrisData['base_amount'] ?? $amount),
+                        'unique_code' => (int) ($qrisData['unique_code'] ?? 0),
+                        'total_amount' => (int) ($qrisData['total_amount'] ?? $amount),
+                        'qris_payload' => $qrisPayload,
+                        'qris_image_url' => $qrisImageUrl,
+                        'expires_at' => $qrisData['expires_at'] ?? now()->addMinutes(30)->toIso8601String(),
+                    ]
+                ]);
+            }
+
+            return view('company.services.cv.qris_donation', [
+                'orderId' => $qrisData['order_id'] ?? $orderId,
+                'qrisData' => $qrisData,
+                'donorName' => $donorName,
+            ]);
+        } catch (\Throwable $e) {
+            Log::error('Donation QRIS error: ' . $e->getMessage());
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Terjadi kendala saat menghubungi server QRIS: ' . $e->getMessage(),
+                ], 500);
+            }
+
+            return redirect()->back()->with('error', 'Terjadi kendala saat menghubungi gateway QRIS.');
         }
     }
 

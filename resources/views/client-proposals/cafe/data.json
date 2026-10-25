@@ -268,7 +268,7 @@
     {
       "step": "03",
       "title": "Bayar Instan via QRIS",
-      "desc": "QRIS dinamis langsung tergenerate di layar HP. Cukup scan dengan GoPay, OVO, Dana, BCA, Mandiri, atau m-banking apa saja.",
+      "desc": "QRIS langsung tergenerate di layar HP. Cukup scan dengan GoPay, OVO, Dana, BCA, Mandiri, atau m-banking apa saja.",
       "icon": "fa-mobile-screen-button"
     },
     {
