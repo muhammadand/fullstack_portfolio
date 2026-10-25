@@ -129,8 +129,6 @@
                 <p class="text-white/60 text-xs mt-1 leading-relaxed">
                     Setiap donasi Anda digunakan untuk pemeliharaan server AI CV Builder dan kuota pelamar kerja. Pembayaran diproses secara instan via <strong class="text-amber-300">QRIS</strong>.
                 </p>
-
-                {{-- Form Kirim AJAX (URL diambil dari atribut form, 0% Blade di Script) --}}
                 <form id="qrisDonationForm" action="{{ route('layanan.cv.donate_qris') }}" @submit.prevent="submitQris($event)" class="mt-4">
                     @csrf
                     <input type="hidden" name="amount" x-model="selectedNominal">
