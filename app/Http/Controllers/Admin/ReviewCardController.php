@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\GoogleCardVisit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -99,6 +100,120 @@ class ReviewCardController extends Controller
         }
 
         return view('admin.review_cards.index', compact('cards', 'stats', 'pendingOrders'));
+    }
+
+    /**
+     * Dashboard Analitik & Sumber Trafik Landing Page Google Review Card.
+     * Mengikuti standar performa tinggi seperti CV Service (Query Builder + Agregasi 30 Hari).
+     */
+    public function analytics(Request $request)
+    {
+        $sourceFilter = $request->query('source'); // 'seo', 'social', 'shared', 'direct', or null
+
+        // 1. Single Ultra-Fast KPI Stats Summary
+        $stats = DB::table('google_card_visits')->selectRaw('
+            COUNT(*) as total_visits,
+            COUNT(DISTINCT ip_address) as unique_visits,
+            SUM(CASE WHEN source_type = "seo" THEN 1 ELSE 0 END) as seo_visits,
+            SUM(CASE WHEN source_type = "social" THEN 1 ELSE 0 END) as social_visits,
+            SUM(CASE WHEN source_type = "shared" THEN 1 ELSE 0 END) as shared_visits,
+            SUM(CASE WHEN source_type = "direct" THEN 1 ELSE 0 END) as direct_visits
+        ')->first();
+
+        $totalVisits  = (int) ($stats->total_visits ?? 0);
+        $uniqueVisits = (int) ($stats->unique_visits ?? 0);
+        $seoVisits    = (int) ($stats->seo_visits ?? 0);
+        $socialVisits = (int) ($stats->social_visits ?? 0);
+        $sharedVisits = (int) ($stats->shared_visits ?? 0);
+        $directVisits = (int) ($stats->direct_visits ?? 0);
+        $todayVisits  = (int) DB::table('google_card_visits')->where('visited_at', now()->toDateString())->count();
+
+        $seoPct    = $totalVisits > 0 ? round(($seoVisits / $totalVisits) * 100, 1) : 0;
+        $socialPct = $totalVisits > 0 ? round(($socialVisits / $totalVisits) * 100, 1) : 0;
+        $sharedPct = $totalVisits > 0 ? round(($sharedVisits / $totalVisits) * 100, 1) : 0;
+        $directPct = $totalVisits > 0 ? round(($directVisits / $totalVisits) * 100, 1) : 0;
+
+        // 2. Data Tren 30 Hari Standar CV Service (Presisi di Backend)
+        $startDate30 = now()->subDays(29)->toDateString();
+        $visitsRaw = DB::table('google_card_visits')
+            ->selectRaw("visited_at as date_key, count(*) as total")
+            ->where('visited_at', '>=', $startDate30)
+            ->groupBy('visited_at')
+            ->pluck('total', 'date_key');
+
+        $chartLabels = [];
+        $chartData   = [];
+        $peakCount   = 0;
+        $peakDay     = '-';
+        $sum30Days   = 0;
+
+        for ($i = 29; $i >= 0; $i--) {
+            $dt = now()->subDays($i);
+            $key = $dt->toDateString();
+            $count = (int) ($visitsRaw[$key] ?? 0);
+
+            $chartLabels[] = $dt->format('d M');
+            $chartData[]   = $count;
+            $sum30Days    += $count;
+
+            if ($count > $peakCount) {
+                $peakCount = $count;
+                $peakDay   = $dt->format('d M');
+            }
+        }
+
+        $avgPerDay = round($sum30Days / 30, 1);
+
+        $chartStats = [
+            'peak_count'  => $peakCount,
+            'peak_day'    => $peakDay,
+            'avg_per_day' => $avgPerDay,
+            'total_30'    => $sum30Days,
+        ];
+
+        // 3. Tipe Perangkat (Standar CV Service)
+        $deviceStats = DB::table('google_card_visits')
+            ->select('device_type', DB::raw('count(*) as total'))
+            ->groupBy('device_type')
+            ->get();
+
+        // 4. Platform Breakdown (Top 10 Rujukan Terpopuler)
+        $platforms = DB::table('google_card_visits')
+            ->select('source_name', 'source_type', DB::raw('count(*) as total'))
+            ->groupBy('source_name', 'source_type')
+            ->orderByDesc('total')
+            ->limit(10)
+            ->get();
+
+        // 5. Recent Logs (Tabel Kunjungan Ringan — hanya select kolom yang ditampilkan)
+        $logsQuery = DB::table('google_card_visits')
+            ->select(['id', 'visited_at', 'source_type', 'source_name', 'device_type', 'referer', 'utm_source', 'ip_address', 'created_at']);
+
+        if ($sourceFilter && in_array($sourceFilter, ['seo', 'social', 'shared', 'direct'])) {
+            $logsQuery->where('source_type', $sourceFilter);
+        }
+        $recentLogs = $logsQuery->latest('id')->paginate(15)->withQueryString();
+
+        return view('admin.review_cards.analytics', compact(
+            'sourceFilter',
+            'totalVisits',
+            'uniqueVisits',
+            'todayVisits',
+            'seoVisits',
+            'socialVisits',
+            'sharedVisits',
+            'directVisits',
+            'seoPct',
+            'socialPct',
+            'sharedPct',
+            'directPct',
+            'chartLabels',
+            'chartData',
+            'chartStats',
+            'deviceStats',
+            'platforms',
+            'recentLogs'
+        ));
     }
 
     /**

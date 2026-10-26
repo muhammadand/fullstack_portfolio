@@ -264,6 +264,11 @@ Route::post('/layanan/template-cv/review', [CvServiceController::class, 'storeRe
 Route::match(['GET', 'POST'], '/layanan/template-cv/donate-qris', [CvServiceController::class, 'generateDonationQris'])->name('layanan.cv.donate_qris');
 Route::get('/admin/cv-service', [CvServiceController::class, 'adminCvService'])->name('admin.cv_service.index');
 Route::get('/partner-program', [HomeController::class, 'partnerProgram'])->name('partner.program');
+
+// Promo Spesial: Beli Google Review Card Siap Cetak (Rp 20.000)
+Route::get('/google-review-card', [HomeController::class, 'googleReviewCard'])->name('landing.google_review_card');
+Route::get('/beli-google-card', [HomeController::class, 'googleReviewCard']);
+Route::post('/api/google-card/qris', [HomeController::class, 'generateGoogleCardQris'])->name('landing.google_card.qris');
 //Documentation
 Route::resource('documentation', DocumentationController::class);
 
@@ -490,6 +495,11 @@ Route::get('/secret-deploy-trigger-12345', function () {
 
         \Illuminate\Support\Facades\Artisan::call('migrate', [
             '--path' => 'database/migrations/2026_10_24_170000_add_referral_system_to_affiliates_table.php',
+            '--force' => true
+        ]);
+
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_10_26_133318_create_google_card_visits_table.php',
             '--force' => true
         ]);
 

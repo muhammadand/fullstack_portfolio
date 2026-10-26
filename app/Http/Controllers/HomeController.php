@@ -8,6 +8,8 @@ use App\Models\Portfolio;
 use App\Models\PortfolioCategory;
 use App\Models\Documentation;
 use App\Models\DailyView;
+use App\Models\GoogleCardVisit;
+use App\Services\QrisPaymentService;
 use Illuminate\Http\Request;
 
 
@@ -226,9 +228,97 @@ class HomeController extends Controller
     /**
      * API for tracking affiliate links clicked from inside a blog
      */
+    /**
+     * Dedicated Landing Page: Beli Google Review Card (Rp 20.000)
+     * Sangat mudah dibagikan di Threads, Facebook, Instagram, WhatsApp.
+     */
+    public function googleReviewCard(Request $request)
+    {
+        // Track kunjungan dengan deteksi sumber (SEO, Media Sosial, Link Dibagikan, Direct)
+        GoogleCardVisit::track($request);
+
+        return view('company.google_card_page');
+    }
+
+    /**
+     * Generate QRIS Pembelian Google Review Card via QrisPaymentService (Scalify Pay)
+     */
+    public function generateGoogleCardQris(Request $request)
+    {
+        $validated = $request->validate([
+            'business_name'   => 'required|string|max:150',
+            'customer_name'   => 'required|string|max:100',
+            'phone'           => 'required|string|max:30',
+            'google_maps_url' => 'nullable|string|max:500',
+            'design_type'     => 'nullable|string|max:50',
+            'theme'           => 'nullable|string|max:50',
+        ]);
+
+        $amount = 20000;
+        $orderId = 'GRC-' . date('ymd') . '-' . strtoupper(\Illuminate\Support\Str::random(4));
+
+        try {
+            $qrisResult = QrisPaymentService::createDynamicQris(
+                $orderId,
+                $amount,
+                [
+                    'name'  => $validated['customer_name'],
+                    'phone' => $validated['phone'],
+                ],
+                'DANA'
+            );
+
+            if (!$qrisResult['success']) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $qrisResult['message'] ?? 'Gagal membuat QRIS pembayaran. Silakan coba kembali.',
+                ], 422);
+            }
+
+            $qrisData = $qrisResult['data'] ?? [];
+            $payload  = $qrisData['qris_payload'] ?? '';
+            $total    = (int) ($qrisData['total_amount'] ?? $amount);
+            $imageUrl = !empty($payload)
+                ? 'https://api.qrserver.com/v1/create-qr-code/?size=320x320&margin=8&data=' . urlencode($payload)
+                : null;
+
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'order_id'       => $qrisData['order_id'] ?? $orderId,
+                    'merchant_name'  => $qrisData['merchant_name'] ?? 'Scalify / Google Review Card',
+                    'base_amount'    => (int) ($qrisData['base_amount'] ?? $amount),
+                    'unique_code'    => (int) ($qrisData['unique_code'] ?? 0),
+                    'amount'         => $total,
+                    'qris_payload'   => $payload,
+                    'qris_image_url' => $imageUrl,
+                    'admin_phone'    => '085221694067',
+                    'business_name'  => $validated['business_name'],
+                    'customer_name'  => $validated['customer_name'],
+                    'phone'          => $validated['phone'],
+                    'google_maps_url'=> $validated['google_maps_url'] ?? '-',
+                    'design_type'    => $validated['design_type'] ?? 'Standee Akrilik Meja & Stiker',
+                    'theme'          => $validated['theme'] ?? 'Classic White',
+                    'expires_at'     => $qrisData['expires_at'] ?? now()->addMinutes(30)->toIso8601String(),
+                ]
+            ]);
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('generateGoogleCardQris error: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi gangguan saat memproses pembayaran: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * API for tracking affiliate links clicked from inside a blog
+     */
     public function trackBlogClick(\App\Models\Blog $blog)
     {
         $blog->increment('link_clicks');
         return response()->json(['status' => 'success']);
     }
 }
+

@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 // Admin Management Routes
 Route::prefix('admin/review-cards')->name('admin.review_cards.')->group(function () {
     Route::get('/', [ReviewCardController::class, 'index'])->name('index');
+    Route::get('/analytics', [ReviewCardController::class, 'analytics'])->name('analytics');
     Route::get('/create', [ReviewCardController::class, 'create'])->name('create');
     Route::post('/', [ReviewCardController::class, 'store'])->name('store');
     Route::post('/batch-generate', [ReviewCardController::class, 'batchGenerate'])->name('batch_generate');

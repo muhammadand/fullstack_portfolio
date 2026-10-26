@@ -62,8 +62,19 @@ $menus = [
 ],
 [
 'label' => 'Review Cards',
-'route' => 'admin.review_cards.index',
 'icon' => 'fa-solid fa-qrcode',
+'submenu' => [
+[
+'label' => 'Daftar Kartu QR',
+'route' => 'admin.review_cards.index',
+'icon' => 'fa-solid fa-id-card-clip',
+],
+[
+'label' => 'Analitik Trafik',
+'route' => 'admin.review_cards.analytics',
+'icon' => 'fa-solid fa-chart-line',
+],
+],
 ],
 [
 'label' => 'Travel & Shuttle',
@@ -162,6 +173,11 @@ $activeRoute = \Illuminate\Support\Facades\Route::currentRouteName();
                                 {{ $pendingTravelCount }}
                             </span>
                             @endif
+                            @if($menu['label'] === 'Review Cards' && ($pendingReviewCount = \Illuminate\Support\Facades\DB::table('review_cards')->where('payment_status', 'pending')->count()) > 0)
+                            <span class="ml-1.5 inline-flex items-center justify-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 animate-pulse">
+                                {{ $pendingReviewCount }}
+                            </span>
+                            @endif
                         </span>
                     </div>
                     <i class="fa-solid fa-chevron-down text-[10px] text-white/40 hidden lg:block transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
@@ -177,6 +193,11 @@ $activeRoute = \Illuminate\Support\Facades\Route::currentRouteName();
                             @if($sub['route'] === 'admin.travel_bookings.index' && ($pendingTravelCount = \App\Models\Booking::where('status', 'pending')->count()) > 0)
                             <span class="ml-1.5 inline-flex items-center justify-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 animate-pulse">
                                 {{ $pendingTravelCount }}
+                            </span>
+                            @endif
+                            @if($sub['route'] === 'admin.review_cards.index' && ($pendingReviewCount = \Illuminate\Support\Facades\DB::table('review_cards')->where('payment_status', 'pending')->count()) > 0)
+                            <span class="ml-1.5 inline-flex items-center justify-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 animate-pulse">
+                                {{ $pendingReviewCount }}
                             </span>
                             @endif
                         </span>

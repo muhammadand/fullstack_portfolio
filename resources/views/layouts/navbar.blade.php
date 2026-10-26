@@ -1,8 +1,8 @@
 {{-- Top Announcement Bar (Promo Banner) --}}
 <div class="bg-gradient-to-r from-blue-700 via-indigo-600 to-blue-600 text-white text-[11px] sm:text-xs font-semibold py-1.5 px-4 text-center relative z-50 overflow-hidden shadow-sm">
-    <a href="https://wa.me/6285221694067?text=Halo%20Scalify,%20saya%20ingin%20konsultasi%20pembuatan%20website" target="_blank" class="inline-flex items-center justify-center gap-1.5 hover:underline transition-all group">
-        <span class="bg-white/20 px-2 py-0.5 rounded-full text-[10px] uppercase tracking-wider font-bold group-hover:bg-white/30 transition-colors">Promo Spesial</span>
-        <span class="truncate max-w-[280px] sm:max-w-none">Jasa Pembuatan Website & Landing Page Profesional No. 1 di Indonesia · Free Domain & Cloud Hosting!</span>
+    <a href="{{ route('landing.google_review_card') }}" class="inline-flex items-center justify-center gap-1.5 hover:underline transition-all group">
+        <span class="bg-white/20 px-2 py-0.5 rounded-full text-[10px] uppercase tracking-wider font-extrabold group-hover:bg-white/30 transition-colors">Promo Spesial</span>
+        <span class="truncate max-w-[280px] sm:max-w-none">Bikin Google Review Card Siap Cetak Cuma Rp 20.000 · Scan QR, Pelanggan Auto Kasih Bintang 5!</span>
         <i class="fa-solid fa-arrow-right text-[10px] ml-1 transition-transform group-hover:translate-x-0.5"></i>
     </a>
 </div>
@@ -29,26 +29,27 @@
             <div class="hidden lg:flex items-center gap-1 xl:gap-2">
 
                 {{-- Home --}}
-                <a href="{{ route('index.company.profile') }}" class="px-3.5 py-2 rounded-xl text-xs xl:text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 transition-all">
+                <a href="{{ route('index.company.profile') }}" class="px-3.5 py-2 rounded-xl text-xs xl:text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 transition-all whitespace-nowrap">
                     Home
                 </a>
 
                 {{-- Dropdown: Layanan & Solusi --}}
                 <div class="relative group py-2">
-                    <button class="px-3.5 py-2 rounded-xl text-xs xl:text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 transition-all flex items-center gap-1.5 focus:outline-none cursor-pointer">
+                    <button class="px-3.5 py-2 rounded-xl text-xs xl:text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 transition-all flex items-center gap-1.5 focus:outline-none cursor-pointer whitespace-nowrap">
                         <span>Layanan & Solusi</span>
                         <i class="fa-solid fa-chevron-down text-[10px] text-white/40 transition-transform duration-300 group-hover:rotate-180 group-hover:text-brand-accent"></i>
                     </button>
 
                     {{-- Mega Dropdown Menu --}}
-                    <div class="absolute top-full left-1/2 -translate-x-1/2 w-[480px] pt-3 hidden group-hover:block transition-all duration-200 z-50">
-                        <div class="bg-[#0B1120]/95 backdrop-blur-2xl border border-white/10 rounded-2xl p-3 shadow-2xl shadow-black/80">
+                    <div class="absolute top-full left-1/2 -translate-x-1/2 w-[520px] pt-3 hidden group-hover:block transition-all duration-200 z-50">
+                        <div class="bg-[#0B1120]/95 backdrop-blur-2xl border border-white/10 rounded-2xl p-3.5 shadow-2xl shadow-black/80">
 
-                            <div class="text-[10px] uppercase font-bold tracking-wider text-white/40 px-3 py-1 mb-1">
-                                Solusi Pengembangan Web
+                            <div class="text-[10px] uppercase font-bold tracking-wider text-white/40 px-3 py-1 mb-1.5 flex items-center justify-between">
+                                <span>Solusi Pembuatan Website & Bisnis</span>
+                                <span class="text-brand-accent font-semibold lowercase">scalify services</span>
                             </div>
 
-                            <div class="grid grid-cols-2 gap-1.5">
+                            <div class="grid grid-cols-2 gap-1.5 mb-2">
                                 {{-- Company Profile --}}
                                 <a href="{{ route('index.company.profile') }}#layanan" class="flex items-start gap-3 p-2.5 rounded-xl hover:bg-white/5 transition-all group/item">
                                     <div class="w-8 h-8 rounded-lg bg-blue-500/15 text-blue-400 flex items-center justify-center shrink-0 mt-0.5 border border-blue-500/20 group-hover/item:scale-105 transition-transform">
@@ -94,6 +95,28 @@
                                 </a>
                             </div>
 
+                            {{-- Featured Promo Card: Google Review Card --}}
+                            <div class="pt-2 border-t border-white/5">
+                                <a href="{{ route('landing.google_review_card') }}" class="flex items-center justify-between p-2.5 rounded-xl bg-gradient-to-r from-blue-600/15 to-indigo-600/15 hover:from-blue-600/25 hover:to-indigo-600/25 border border-blue-500/30 transition-all group/card">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-lg bg-blue-500/20 text-brand-accent flex items-center justify-center shrink-0 border border-blue-400/30 group-hover/card:scale-105 transition-transform">
+                                            <i class="fa-solid fa-qrcode text-xs"></i>
+                                        </div>
+                                        <div>
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-xs font-bold text-white group-hover/card:text-brand-accent transition-colors">Google Review Card Siap Cetak</span>
+                                                <span class="px-2 py-0.5 rounded-full bg-cyan-400/20 text-cyan-300 border border-cyan-400/30 text-[9px] font-extrabold uppercase tracking-wide">Hot Promo</span>
+                                            </div>
+                                            <p class="text-[11px] text-white/50 leading-snug mt-0.5">Tingkatkan bintang 5 Google Maps · File siap cetak kirim WA</p>
+                                        </div>
+                                    </div>
+                                    <div class="text-right shrink-0 ml-3">
+                                        <span class="text-xs font-black text-brand-accent font-mono block">Rp 20.000</span>
+                                        <span class="text-[10px] text-white/40 block line-through">Rp 75.000</span>
+                                    </div>
+                                </a>
+                            </div>
+
                             {{-- Footer Dropdown --}}
                             <div class="mt-2 pt-2 border-t border-white/5 flex items-center justify-between px-2.5 text-[11px]">
                                 <a href="{{ route('index.company.profile') }}#layanan" class="text-brand-accent hover:underline flex items-center gap-1 font-medium">
@@ -107,18 +130,18 @@
                 </div>
 
                 {{-- Portofolio --}}
-                <a href="{{ route('landing.portfolio') }}" class="px-3.5 py-2 rounded-xl text-xs xl:text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 transition-all">
+                <a href="{{ route('landing.portfolio') }}" class="px-3.5 py-2 rounded-xl text-xs xl:text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 transition-all whitespace-nowrap">
                     Portofolio
                 </a>
 
                 {{-- Produk Live --}}
-                <a href="{{ route('index.company.profile') }}#produk-live" class="px-3.5 py-2 rounded-xl text-xs xl:text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 transition-all">
+                <a href="{{ route('index.company.profile') }}#produk-live" class="px-3.5 py-2 rounded-xl text-xs xl:text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 transition-all whitespace-nowrap">
                     Produk Live
                 </a>
 
                 {{-- Dropdown: Program & Karir --}}
                 <div class="relative group py-2">
-                    <button class="px-3.5 py-2 rounded-xl text-xs xl:text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 transition-all flex items-center gap-1.5 focus:outline-none cursor-pointer">
+                    <button class="px-3.5 py-2 rounded-xl text-xs xl:text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 transition-all flex items-center gap-1.5 focus:outline-none cursor-pointer whitespace-nowrap">
                         <span>Program & Karir</span>
                         <i class="fa-solid fa-chevron-down text-[10px] text-white/40 transition-transform duration-300 group-hover:rotate-180 group-hover:text-brand-accent"></i>
                     </button>
@@ -184,7 +207,7 @@
                 </div>
 
                 {{-- Blog --}}
-                <a href="{{ route('landing.blogs') }}" class="px-3.5 py-2 rounded-xl text-xs xl:text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 transition-all">
+                <a href="{{ route('landing.blogs') }}" class="px-3.5 py-2 rounded-xl text-xs xl:text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 transition-all whitespace-nowrap">
                     Blog
                 </a>
 
@@ -271,6 +294,12 @@
                     </a>
                 </div>
             </div>
+
+            {{-- Google Review Card Mobile Banner --}}
+            <a href="{{ route('landing.google_review_card') }}" class="mobile-nav-link flex items-center justify-between text-xs font-semibold text-white/90 bg-white/5 border border-white/10 px-3.5 py-2.5 rounded-xl hover:bg-white/10 transition-all">
+                <span class="flex items-center gap-2.5"><i class="fa-solid fa-qrcode text-brand-accent text-sm"></i> Google Review Card Siap Cetak</span>
+                <span class="px-2 py-0.5 bg-blue-500/20 text-brand-accent border border-blue-400/30 text-[10px] font-bold rounded-full">Rp 20.000</span>
+            </a>
 
             <a href="{{ route('landing.portfolio') }}" class="mobile-nav-link text-sm text-white/90 font-medium px-3.5 py-2.5 rounded-xl hover:bg-white/5 transition-all">Portofolio Klien</a>
             <a href="{{ route('index.company.profile') }}#produk-live" class="mobile-nav-link text-sm text-white/90 font-medium px-3.5 py-2.5 rounded-xl hover:bg-white/5 transition-all">Produk Live</a>

@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
     <url>
-    <loc>https://scalifyintellegence.my.id</loc>
-    <lastmod>2026-06-09T08:59:51+00:00</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
-            </url>
+        <loc>https://scalifyintellegence.my.id</loc>
+        <lastmod>2026-10-26T00:00:00+00:00</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+    </url>
+    <url>
+        <loc>https://scalifyintellegence.my.id/google-review-card</loc>
+        <lastmod>2026-10-26T00:00:00+00:00</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.95</priority>
+    </url>
     <url>
     <loc>https://scalifyintellegence.my.id/service</loc>
     <lastmod>2026-06-09T08:59:51+00:00</lastmod>

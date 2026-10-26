@@ -162,6 +162,9 @@
 {{-- 8. Paket Layanan & Harga --}}
 @include('company.partials.pricing')
 
+{{-- PROMO VIRAL: GOOGLE REVIEW CARD CUMA RP 20.000 --}}
+@include('company.partials.google_card_promo')
+
 {{-- 9. Showcase 4 Produk SaaS Nyata Live & Berjalan --}}
 @include('company.partials.products_live')
 {{-- 6. Katalog Portofolio Video Carousel --}}

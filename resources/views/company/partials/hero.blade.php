@@ -40,6 +40,11 @@
                 <i class="fa-solid fa-eye text-cyan-400 text-xs"></i>
                 <span>Lihat Portofolio</span>
             </a>
+            <a href="#google-review-card" class="inline-flex items-center gap-2 bg-white/5 border border-white/15 hover:border-brand-accent/40 text-white/90 hover:text-white text-xs sm:text-sm font-semibold px-5 sm:px-6 py-3 sm:py-3.5 rounded-full transition-all">
+                <i class="fa-solid fa-qrcode text-brand-accent text-xs"></i>
+                <span>Google Review Card</span>
+                <span class="px-2 py-0.5 bg-blue-500/20 text-brand-accent border border-blue-400/30 text-[10px] font-bold rounded-full">Rp 20.000</span>
+            </a>
         </div>
 
         {{-- ══════════════════════════════════════════════════
