@@ -40,7 +40,7 @@ class AdminController extends Controller
         $topPortfolios = \App\Models\Portfolio::orderBy('view_count', 'desc')
             ->take(5)
             ->get(['id', 'title', 'view_count']);
-        
+
         $totalViews = $totalBlogViews + $totalPortfolioViews;
         $totalAffiliateClicks = \App\Models\AffiliateClick::count();
 
