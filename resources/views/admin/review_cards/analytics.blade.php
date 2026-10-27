@@ -36,9 +36,7 @@
                 <i class="fa-solid fa-id-card-clip"></i> Kelola Kartu
             </a>
 
-            <a href="{{ route('landing.google_review_card') }}" target="_blank"
-                class="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold text-white shadow-sm transition-all hover:shadow-md"
-                style="background: linear-gradient(90deg, #0ea5e9, #2563EB);">
+            <a href="{{ route('landing.google_review_card') }}" target="_blank" class="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold text-white shadow-sm transition-all hover:shadow-md" style="background: linear-gradient(90deg, #0ea5e9, #2563EB);">
                 <i class="fa-solid fa-arrow-up-right-from-square"></i> Buka Halaman Review Card
             </a>
         </div>
@@ -115,16 +113,13 @@
 
                     {{-- Time Range Filter Pills --}}
                     <div class="inline-flex p-1 bg-slate-100/80 rounded-xl border border-slate-200/50 self-start sm:self-auto">
-                        <button type="button" onclick="changeChartRange(7)" id="range-btn-7"
-                            class="range-btn px-2.5 py-1 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition-all cursor-pointer">
+                        <button type="button" onclick="changeChartRange(7)" id="range-btn-7" class="range-btn px-2.5 py-1 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition-all cursor-pointer">
                             7 Hari
                         </button>
-                        <button type="button" onclick="changeChartRange(14)" id="range-btn-14"
-                            class="range-btn px-2.5 py-1 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition-all cursor-pointer">
+                        <button type="button" onclick="changeChartRange(14)" id="range-btn-14" class="range-btn px-2.5 py-1 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition-all cursor-pointer">
                             14 Hari
                         </button>
-                        <button type="button" onclick="changeChartRange(30)" id="range-btn-30"
-                            class="range-btn px-2.5 py-1 text-xs font-semibold rounded-lg bg-white text-blue-600 shadow-sm transition-all cursor-pointer">
+                        <button type="button" onclick="changeChartRange(30)" id="range-btn-30" class="range-btn px-2.5 py-1 text-xs font-semibold rounded-lg bg-white text-blue-600 shadow-sm transition-all cursor-pointer">
                             30 Hari
                         </button>
                     </div>
@@ -163,9 +158,9 @@
             <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
                 <p class="font-semibold text-slate-700 text-sm mb-4">Tipe Perangkat</p>
                 @php
-                    $totalDev = $deviceStats->sum('total') ?: 1;
-                    $devColors = ['desktop' => 'bg-blue-500', 'mobile' => 'bg-emerald-500', 'tablet' => 'bg-amber-500'];
-                    $devIcons  = ['desktop' => 'fa-desktop', 'mobile' => 'fa-mobile-screen', 'tablet' => 'fa-tablet-screen-button'];
+                $totalDev = $deviceStats->sum('total') ?: 1;
+                $devColors = ['desktop' => 'bg-blue-500', 'mobile' => 'bg-emerald-500', 'tablet' => 'bg-amber-500'];
+                $devIcons = ['desktop' => 'fa-desktop', 'mobile' => 'fa-mobile-screen', 'tablet' => 'fa-tablet-screen-button'];
                 @endphp
                 <div class="space-y-3">
                     @forelse($deviceStats as $dev)
@@ -259,37 +254,26 @@
 
             <div class="w-full lg:w-auto flex-1 max-w-xl">
                 <div class="flex flex-wrap items-center gap-1.5 mb-2.5">
-                    <button type="button" @click="sharePlatform = 'threads'"
-                            :class="sharePlatform === 'threads' ? 'bg-purple-600 text-white shadow-sm' : 'bg-white/10 text-slate-300 hover:bg-white/15'"
-                            class="px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer">
+                    <button type="button" @click="sharePlatform = 'threads'" :class="sharePlatform === 'threads' ? 'bg-purple-600 text-white shadow-sm' : 'bg-white/10 text-slate-300 hover:bg-white/15'" class="px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer">
                         <i class="fa-brands fa-threads"></i> Threads
                     </button>
-                    <button type="button" @click="sharePlatform = 'whatsapp'"
-                            :class="sharePlatform === 'whatsapp' ? 'bg-emerald-600 text-white shadow-sm' : 'bg-white/10 text-slate-300 hover:bg-white/15'"
-                            class="px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer">
+                    <button type="button" @click="sharePlatform = 'whatsapp'" :class="sharePlatform === 'whatsapp' ? 'bg-emerald-600 text-white shadow-sm' : 'bg-white/10 text-slate-300 hover:bg-white/15'" class="px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer">
                         <i class="fa-brands fa-whatsapp"></i> WhatsApp
                     </button>
-                    <button type="button" @click="sharePlatform = 'instagram'"
-                            :class="sharePlatform === 'instagram' ? 'bg-rose-600 text-white shadow-sm' : 'bg-white/10 text-slate-300 hover:bg-white/15'"
-                            class="px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer">
+                    <button type="button" @click="sharePlatform = 'instagram'" :class="sharePlatform === 'instagram' ? 'bg-rose-600 text-white shadow-sm' : 'bg-white/10 text-slate-300 hover:bg-white/15'" class="px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer">
                         <i class="fa-brands fa-instagram"></i> Instagram
                     </button>
-                    <button type="button" @click="sharePlatform = 'facebook'"
-                            :class="sharePlatform === 'facebook' ? 'bg-blue-600 text-white shadow-sm' : 'bg-white/10 text-slate-300 hover:bg-white/15'"
-                            class="px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer">
+                    <button type="button" @click="sharePlatform = 'facebook'" :class="sharePlatform === 'facebook' ? 'bg-blue-600 text-white shadow-sm' : 'bg-white/10 text-slate-300 hover:bg-white/15'" class="px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer">
                         <i class="fa-brands fa-facebook"></i> Facebook
                     </button>
-                    <button type="button" @click="sharePlatform = 'tiktok'"
-                            :class="sharePlatform === 'tiktok' ? 'bg-slate-700 text-white shadow-sm' : 'bg-white/10 text-slate-300 hover:bg-white/15'"
-                            class="px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer">
+                    <button type="button" @click="sharePlatform = 'tiktok'" :class="sharePlatform === 'tiktok' ? 'bg-slate-700 text-white shadow-sm' : 'bg-white/10 text-slate-300 hover:bg-white/15'" class="px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer">
                         <i class="fa-brands fa-tiktok"></i> TikTok
                     </button>
                 </div>
 
                 <div class="flex items-center gap-2">
                     <div class="flex-1 bg-black/40 border border-white/15 rounded-xl px-3 py-2 text-xs font-mono text-cyan-300 truncate select-all" x-text="generatedUrl"></div>
-                    <button type="button" @click="copyGeneratedLink()"
-                            class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold rounded-xl flex items-center gap-1.5 transition-all shrink-0 shadow-sm active:scale-95 cursor-pointer">
+                    <button type="button" @click="copyGeneratedLink()" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold rounded-xl flex items-center gap-1.5 transition-all shrink-0 shadow-sm active:scale-95 cursor-pointer">
                         <i class="fa-regular fa-copy"></i>
                         <span>Salin Link</span>
                     </button>
@@ -313,24 +297,19 @@
 
             {{-- Filter by Source Category --}}
             <div class="flex flex-wrap items-center gap-1.5">
-                <a href="{{ route('admin.review_cards.analytics') }}"
-                   class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all {{ empty($sourceFilter) ? 'bg-slate-800 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">
+                <a href="{{ route('admin.review_cards.analytics') }}" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all {{ empty($sourceFilter) ? 'bg-slate-800 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">
                     Semua
                 </a>
-                <a href="{{ route('admin.review_cards.analytics', ['source' => 'seo']) }}"
-                   class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all {{ $sourceFilter === 'seo' ? 'bg-emerald-600 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">
+                <a href="{{ route('admin.review_cards.analytics', ['source' => 'seo']) }}" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all {{ $sourceFilter === 'seo' ? 'bg-emerald-600 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">
                     <i class="fa-brands fa-google mr-1"></i> SEO
                 </a>
-                <a href="{{ route('admin.review_cards.analytics', ['source' => 'social']) }}"
-                   class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all {{ $sourceFilter === 'social' ? 'bg-purple-600 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">
+                <a href="{{ route('admin.review_cards.analytics', ['source' => 'social']) }}" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all {{ $sourceFilter === 'social' ? 'bg-purple-600 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">
                     <i class="fa-brands fa-threads mr-1"></i> Medsos
                 </a>
-                <a href="{{ route('admin.review_cards.analytics', ['source' => 'shared']) }}"
-                   class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all {{ $sourceFilter === 'shared' ? 'bg-teal-600 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">
+                <a href="{{ route('admin.review_cards.analytics', ['source' => 'shared']) }}" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all {{ $sourceFilter === 'shared' ? 'bg-teal-600 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">
                     <i class="fa-brands fa-whatsapp mr-1"></i> Dibagikan
                 </a>
-                <a href="{{ route('admin.review_cards.analytics', ['source' => 'direct']) }}"
-                   class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all {{ $sourceFilter === 'direct' ? 'bg-amber-600 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">
+                <a href="{{ route('admin.review_cards.analytics', ['source' => 'direct']) }}" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all {{ $sourceFilter === 'direct' ? 'bg-amber-600 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">
                     Direct
                 </a>
             </div>
@@ -345,20 +324,19 @@
                         <th class="px-5 py-3 text-left text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Sumber / Platform</th>
                         <th class="px-5 py-3 text-left text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Perangkat</th>
                         <th class="px-5 py-3 text-left text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Referer Asli</th>
-                        <th class="px-5 py-3 text-left text-[10px] font-semibold text-slate-400 uppercase tracking-wider">IP (Masked)</th>
+                        <th class="px-5 py-3 text-left text-[10px] font-semibold text-slate-400 uppercase tracking-wider">IP Address</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-50">
                     @forelse($recentLogs as $log)
                     @php
-                        $badgeClass = match($log->source_type) {
-                            'seo' => 'bg-emerald-50 text-emerald-700 border-emerald-200',
-                            'social' => 'bg-purple-50 text-purple-700 border-purple-200',
-                            'shared' => 'bg-teal-50 text-teal-700 border-teal-200',
-                            default => 'bg-amber-50 text-amber-700 border-amber-200',
-                        };
-                        $maskedIp = $log->ip_address ? preg_replace('/(\d+)\.(\d+)\.(\d+)\.(\d+)/', '$1.$2.***.***', $log->ip_address) : '—';
-                        $createdAt = \Carbon\Carbon::parse($log->created_at);
+                    $badgeClass = match($log->source_type) {
+                    'seo' => 'bg-emerald-50 text-emerald-700 border-emerald-200',
+                    'social' => 'bg-purple-50 text-purple-700 border-purple-200',
+                    'shared' => 'bg-teal-50 text-teal-700 border-teal-200',
+                    default => 'bg-amber-50 text-amber-700 border-amber-200',
+                    };
+                    $createdAt = \Carbon\Carbon::parse($log->created_at);
                     @endphp
                     <tr class="hover:bg-slate-50 transition-colors">
                         <td class="px-5 py-3.5 text-slate-500 whitespace-nowrap">
@@ -379,25 +357,25 @@
                         <td class="px-5 py-3.5 whitespace-nowrap font-semibold text-slate-800">
                             {{ $log->source_name }}
                             @if($log->utm_source)
-                                <span class="text-[10px] text-blue-600 font-normal block font-mono">?src={{ $log->utm_source }}</span>
+                            <span class="text-[10px] text-blue-600 font-normal block font-mono">?src={{ $log->utm_source }}</span>
                             @endif
                         </td>
                         <td class="px-5 py-3.5 whitespace-nowrap">
                             <span class="inline-flex items-center gap-1.5 text-slate-600 capitalize">
                                 @if($log->device_type === 'mobile')
-                                    <i class="fa-solid fa-mobile-screen text-blue-500"></i> HP / Mobile
+                                <i class="fa-solid fa-mobile-screen text-blue-500"></i> HP / Mobile
                                 @elseif($log->device_type === 'tablet')
-                                    <i class="fa-solid fa-tablet-screen-button text-purple-500"></i> Tablet
+                                <i class="fa-solid fa-tablet-screen-button text-purple-500"></i> Tablet
                                 @else
-                                    <i class="fa-solid fa-desktop text-indigo-500"></i> Desktop
+                                <i class="fa-solid fa-desktop text-indigo-500"></i> Desktop
                                 @endif
                             </span>
                         </td>
                         <td class="px-5 py-3.5 max-w-xs truncate text-slate-500" title="{{ $log->referer ?? 'Tidak ada referer' }}">
                             {{ $log->referer ?? '—' }}
                         </td>
-                        <td class="px-5 py-3.5 text-slate-400 font-mono text-[11px] whitespace-nowrap">
-                            {{ $maskedIp }}
+                        <td class="px-5 py-3.5 text-slate-600 font-mono text-[11px] whitespace-nowrap">
+                            {{ $log->ip_address ?? '—' }}
                         </td>
                     </tr>
                     @empty
@@ -425,7 +403,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 <script>
     const fullLabels = @json($chartLabels);
-    const fullData   = @json($chartData);
+    const fullData = @json($chartData);
 
     const canvas = document.getElementById('visitsChart');
     const ctx = canvas.getContext('2d');
@@ -436,73 +414,87 @@
     gradient.addColorStop(1, 'rgba(37, 99, 235, 0.00)');
 
     const chartConfig = {
-        type: 'line',
-        data: {
-            labels: [...fullLabels],
-            datasets: [{
-                label: 'Kunjungan Unik',
-                data: [...fullData],
-                borderColor: '#2563eb',
-                borderWidth: 2.5,
-                backgroundColor: gradient,
-                fill: true,
-                tension: 0.38,
-                pointBackgroundColor: '#2563eb',
-                pointBorderColor: '#ffffff',
-                pointBorderWidth: 2,
-                pointRadius: 3,
-                pointHoverRadius: 6,
-                pointHoverBackgroundColor: '#1d4ed8',
-                pointHoverBorderColor: '#ffffff',
-                pointHoverBorderWidth: 2.5,
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            interaction: {
-                mode: 'index',
-                intersect: false,
-            },
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    backgroundColor: 'rgba(15, 23, 42, 0.92)',
-                    titleColor: '#ffffff',
-                    bodyColor: '#93c5fd',
-                    titleFont: { size: 12, weight: '600' },
-                    bodyFont: { size: 12, weight: '700' },
-                    padding: 10,
-                    cornerRadius: 8,
-                    displayColors: false,
-                    callbacks: {
+        type: 'line'
+        , data: {
+            labels: [...fullLabels]
+            , datasets: [{
+                label: 'Kunjungan Unik'
+                , data: [...fullData]
+                , borderColor: '#2563eb'
+                , borderWidth: 2.5
+                , backgroundColor: gradient
+                , fill: true
+                , tension: 0.38
+                , pointBackgroundColor: '#2563eb'
+                , pointBorderColor: '#ffffff'
+                , pointBorderWidth: 2
+                , pointRadius: 3
+                , pointHoverRadius: 6
+                , pointHoverBackgroundColor: '#1d4ed8'
+                , pointHoverBorderColor: '#ffffff'
+                , pointHoverBorderWidth: 2.5
+            , }]
+        }
+        , options: {
+            responsive: true
+            , maintainAspectRatio: false
+            , interaction: {
+                mode: 'index'
+                , intersect: false
+            , }
+            , plugins: {
+                legend: {
+                    display: false
+                }
+                , tooltip: {
+                    backgroundColor: 'rgba(15, 23, 42, 0.92)'
+                    , titleColor: '#ffffff'
+                    , bodyColor: '#93c5fd'
+                    , titleFont: {
+                        size: 12
+                        , weight: '600'
+                    }
+                    , bodyFont: {
+                        size: 12
+                        , weight: '700'
+                    }
+                    , padding: 10
+                    , cornerRadius: 8
+                    , displayColors: false
+                    , callbacks: {
                         label: function(context) {
                             return ` ${context.parsed.y} Kunjungan Pengunjung`;
                         }
                     }
                 }
-            },
-            scales: {
+            }
+            , scales: {
                 x: {
-                    grid: { display: false },
-                    ticks: {
-                        font: { size: 11 },
-                        color: '#94a3b8',
-                        maxTicksLimit: 10,
-                        maxRotation: 0,
-                    }
-                },
-                y: {
-                    beginAtZero: true,
                     grid: {
-                        color: 'rgba(226, 232, 240, 0.6)',
-                    },
-                    ticks: {
-                        precision: 0,
-                        font: { size: 11 },
-                        color: '#94a3b8',
-                        padding: 8,
+                        display: false
                     }
+                    , ticks: {
+                        font: {
+                            size: 11
+                        }
+                        , color: '#94a3b8'
+                        , maxTicksLimit: 10
+                        , maxRotation: 0
+                    , }
+                }
+                , y: {
+                    beginAtZero: true
+                    , grid: {
+                        color: 'rgba(226, 232, 240, 0.6)'
+                    , }
+                    , ticks: {
+                        precision: 0
+                        , font: {
+                            size: 11
+                        }
+                        , color: '#94a3b8'
+                        , padding: 8
+                    , }
                 }
             }
         }
@@ -523,11 +515,12 @@
         }
 
         const slicedLabels = fullLabels.slice(-days);
-        const slicedData   = fullData.slice(-days);
+        const slicedData = fullData.slice(-days);
 
         visitsChart.data.labels = slicedLabels;
         visitsChart.data.datasets[0].data = slicedData;
         visitsChart.update('active');
     }
+
 </script>
 @endsection
