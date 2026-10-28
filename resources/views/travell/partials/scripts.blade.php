@@ -141,7 +141,10 @@
 
     function openCustomerAuthModal() {
         var modal = document.getElementById('customerAuthModal');
-        if (modal) modal.classList.add('open');
+        if (modal) {
+            modal.classList.add('open');
+            modal.style.display = 'flex';
+        }
         var cust = getStoredCustomer();
         var phoneIn = document.getElementById('authCustomerPhone');
         var nameIn = document.getElementById('authCustomerName');
@@ -156,7 +159,10 @@
 
     function closeCustomerAuthModal() {
         var modal = document.getElementById('customerAuthModal');
-        if (modal) modal.classList.remove('open');
+        if (modal) {
+            modal.classList.remove('open');
+            modal.style.display = 'none';
+        }
     }
 
     async function handleCustomerAuthSubmit(e) {
@@ -322,12 +328,18 @@
         if (!order) return;
         renderPaymentScreen(order);
         var modal = document.getElementById('qrisModalBackdrop');
-        if (modal) modal.classList.add('open');
+        if (modal) {
+            modal.classList.add('open');
+            modal.style.display = 'flex';
+        }
     }
 
     function closeQrisModal() {
         var modal = document.getElementById('qrisModalBackdrop');
-        if (modal) modal.classList.remove('open');
+        if (modal) {
+            modal.classList.remove('open');
+            modal.style.display = 'none';
+        }
     }
 
     // 2. Route Search & Swap (Pool & Door-to-Door Aware)
@@ -741,10 +753,10 @@
         }
 
         if (filtered.length === 0) {
-            container.innerHTML = '<div class="text-center py-10 bg-white rounded-2xl border border-dashed border-slate-200 p-6">' +
-                '<i class="fa-solid fa-calendar-xmark text-3xl text-slate-300 mb-2"></i>' +
-                '<p class="text-xs font-bold text-slate-700">Jadwal Tidak Ditemukan</p>' +
-                '<p class="text-[11px] text-slate-500 mt-1">Silakan pilih waktu shift lain atau ubah rute kota tujuan.</p>' +
+            container.innerHTML = '<div class="text-center py-10 glass-panel rounded-2xl border border-dashed border-white/15 p-6">' +
+                '<i class="fa-solid fa-calendar-xmark text-3xl text-slate-500 mb-2"></i>' +
+                '<p class="text-xs font-bold text-white">Jadwal Tidak Ditemukan</p>' +
+                '<p class="text-[11px] text-slate-400 mt-1">Silakan pilih waktu shift lain atau ubah rute kota tujuan.</p>' +
                 '</div>';
             return;
         }
@@ -752,39 +764,39 @@
         container.innerHTML = filtered.map(function(s) {
             var bookedCount = (s.booked_seats && s.booked_seats.length) ? s.booked_seats.length : 0;
             var remaining = Math.max(0, 5 - bookedCount);
-            return '<div class="bg-white rounded-2xl p-3.5 border border-slate-200/90 shadow-xs hover:border-sky-300 transition">' +
-                '<div class="flex items-center justify-between pb-2 border-b border-slate-100 mb-2">' +
+            return '<div class="glass-card rounded-2xl p-4 border border-white/15 shadow-lg transition hover:border-blue-400/50">' +
+                '<div class="flex items-center justify-between pb-2 border-b border-white/10 mb-2">' +
                 '<div class="flex items-center gap-1.5">' +
-                '<span class="w-2 h-2 rounded-full bg-emerald-500"></span>' +
-                '<span class="text-xs font-black text-slate-900">' + (s.fleet_name || 'Daihatsu All New Xenia') + '</span>' +
+                '<span class="w-2 h-2 rounded-full bg-emerald-400"></span>' +
+                '<span class="text-xs font-black text-white">' + (s.fleet_name || 'Daihatsu All New Xenia') + '</span>' +
                 '</div>' +
-                '<span class="text-[10px] font-bold text-sky-700 bg-sky-50 px-2 py-0.5 rounded-full border border-sky-100">Min. 4 Kursi Rombongan</span>' +
+                '<span class="text-[10px] font-bold text-blue-300 bg-blue-500/20 px-2.5 py-0.5 rounded-full border border-blue-400/30">Min. 4 Kursi Rombongan</span>' +
                 '</div>' +
-                '<div class="flex items-center justify-between my-2">' +
+                '<div class="flex items-center justify-between my-2.5">' +
                 '<div>' +
-                '<p class="text-sm font-black text-slate-900">' + s.departure_time + '</p>' +
-                '<p class="text-[10px] text-slate-500 font-medium">' + s.origin + '</p>' +
+                '<p class="text-sm font-black text-white">' + s.departure_time + '</p>' +
+                '<p class="text-[10px] text-slate-400 font-medium">' + s.origin + '</p>' +
                 '</div>' +
                 '<div class="flex flex-col items-center px-3">' +
                 '<span class="text-[9px] text-slate-400 font-semibold">3.5 jam</span>' +
-                '<div class="w-16 h-0.5 bg-slate-200 relative my-1">' +
-                '<i class="fa-solid fa-car text-[9px] text-sky-500 absolute -top-1.5 left-1/2 -translate-x-1/2"></i>' +
+                '<div class="w-16 h-0.5 bg-white/20 relative my-1">' +
+                '<i class="fa-solid fa-car text-[9px] text-blue-400 absolute -top-1.5 left-1/2 -translate-x-1/2"></i>' +
                 '</div>' +
-                '<span class="text-[9px] text-emerald-600 font-bold">Via Tol Door-to-Door</span>' +
+                '<span class="text-[9px] text-emerald-400 font-bold">Via Tol Door-to-Door</span>' +
                 '</div>' +
                 '<div class="text-right">' +
-                '<p class="text-sm font-black text-slate-900">' + s.arrival_est + '</p>' +
-                '<p class="text-[10px] text-slate-500 font-medium truncate max-w-[100px]">' + s.destination + '</p>' +
+                '<p class="text-sm font-black text-white">' + s.arrival_est + '</p>' +
+                '<p class="text-[10px] text-slate-400 font-medium truncate max-w-[100px]">' + s.destination + '</p>' +
                 '</div>' +
                 '</div>' +
-                '<div class="flex items-center justify-between pt-2.5 border-t border-slate-100">' +
+                '<div class="flex items-center justify-between pt-2.5 border-t border-white/10">' +
                 '<div>' +
                 '<p class="text-[10px] text-slate-400">Harga per kursi</p>' +
-                '<p class="text-sm font-black text-sky-600">' + (s.price_formatted || 'Rp 190.000') + '</p>' +
+                '<p class="text-sm font-black text-blue-400">' + (s.price_formatted || 'Rp 190.000') + '</p>' +
                 '</div>' +
-                '<button type="button" onclick="selectSchedule(' + s.id + ')" class="bg-sky-500 hover:bg-sky-600 active:scale-95 text-white px-3.5 py-1.5 rounded-xl font-bold text-xs shadow-xs transition flex items-center gap-1.5 cursor-pointer">' +
+                '<button type="button" onclick="selectSchedule(' + s.id + ')" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 active:scale-95 text-white px-3.5 py-2 rounded-xl font-extrabold text-xs shadow-md shadow-blue-500/25 transition flex items-center gap-1.5 cursor-pointer">' +
                 '<span>Pilih Kursi</span>' +
-                '<span class="text-[10px] bg-white/20 px-1.5 py-0.2 rounded-full">Sisa ' + remaining + '</span>' +
+                '<span class="text-[10px] bg-white/20 px-1.5 py-0.5 rounded-full">Sisa ' + remaining + '</span>' +
                 '</button>' +
                 '</div>' +
                 '</div>';
@@ -820,7 +832,7 @@
 
         container.innerHTML = '<!-- Baris 1: Sopir + K-01 (Depan) -->' +
             '<div class="grid grid-cols-2 gap-3 mb-2.5">' +
-            '<div class="p-3 rounded-xl border border-slate-200 bg-slate-100 flex flex-col items-center justify-center text-slate-400">' +
+            '<div class="p-3.5 rounded-2xl border border-white/10 bg-white/5 flex flex-col items-center justify-center text-slate-500">' +
             '<i class="fa-solid fa-id-badge text-lg mb-1"></i>' +
             '<span class="text-[10px] font-bold">SOPIR</span>' +
             '</div>' +
@@ -841,19 +853,19 @@
     function renderSingleSeat(num, isBooked, label) {
         var isSelected = state.selectedSeats.indexOf(num) !== -1;
         if (isBooked) {
-            return '<div class="p-3 rounded-xl border border-rose-200 bg-rose-50 flex flex-col items-center justify-center text-rose-300 cursor-not-allowed">' +
+            return '<div class="p-3.5 rounded-2xl border border-rose-500/30 bg-rose-500/10 flex flex-col items-center justify-center text-rose-400/60 cursor-not-allowed">' +
                 '<i class="fa-solid fa-couch text-lg mb-1"></i>' +
                 '<span class="text-[10px] font-bold">K-0' + num + ' (Terisi)</span>' +
                 '</div>';
         }
 
         var borderBg = isSelected ?
-            'border-2 border-sky-500 bg-sky-500 text-white shadow-sm' :
-            'border border-slate-200 bg-white text-slate-700 hover:border-sky-300';
+            'border-2 border-blue-400 bg-blue-600 text-white shadow-lg shadow-blue-500/40' :
+            'border border-white/10 bg-white/5 text-slate-300 hover:border-blue-400/40 hover:bg-white/10';
 
-        var iconColor = isSelected ? 'text-white' : 'text-sky-500';
+        var iconColor = isSelected ? 'text-white' : 'text-blue-400';
 
-        return '<button type="button" onclick="toggleSeat(' + num + ')" class="p-3 rounded-xl ' + borderBg + ' flex flex-col items-center justify-center transition active:scale-95 cursor-pointer">' +
+        return '<button type="button" onclick="toggleSeat(' + num + ')" class="p-3.5 rounded-2xl ' + borderBg + ' flex flex-col items-center justify-center transition active:scale-95 cursor-pointer">' +
             '<i class="fa-solid fa-couch text-lg mb-1 ' + iconColor + '"></i>' +
             '<span class="text-[10px] font-bold">K-0' + num + '</span>' +
             '</button>';
@@ -891,11 +903,11 @@
             if (count < minRequired) {
                 var missing = minRequired - count;
                 nextBtn.disabled = true;
-                nextBtn.className = 'w-full py-3 rounded-xl bg-slate-200 text-slate-400 font-bold text-xs transition flex items-center justify-center gap-2 whitespace-nowrap cursor-not-allowed';
+                nextBtn.className = 'w-full h-11 rounded-xl bg-white/5 border border-white/10 text-slate-500 font-bold text-xs transition flex items-center justify-center gap-2 whitespace-nowrap cursor-not-allowed';
                 btnLabel.textContent = 'Pilih minimal ' + minRequired + ' kursi (Kurang ' + missing + ' lagi)';
             } else {
                 nextBtn.disabled = false;
-                nextBtn.className = 'w-full py-3 rounded-xl bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-700 text-white font-bold text-xs shadow-md shadow-sky-500/20 transition flex items-center justify-center gap-2 whitespace-nowrap cursor-pointer active:scale-95';
+                nextBtn.className = 'w-full h-11 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold text-xs shadow-lg shadow-blue-500/25 transition flex items-center justify-center gap-2 whitespace-nowrap cursor-pointer active:scale-95';
                 btnLabel.textContent = 'Lanjut Isi Data Penumpang (' + count + ' Kursi)';
             }
         }
@@ -915,20 +927,20 @@
 
         if (type === 'pool') {
             if (btnPool) {
-                btnPool.className = 'py-1.5 px-2 rounded-lg text-[10px] font-bold transition flex items-center justify-center gap-1.5 bg-white text-sky-700 shadow-xs cursor-pointer';
+                btnPool.className = 'py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 bg-blue-600 text-white shadow-md shadow-blue-500/25 cursor-pointer';
             }
             if (btnDoor) {
-                btnDoor.className = 'py-1.5 px-2 rounded-lg text-[10px] font-bold transition flex items-center justify-center gap-1.5 text-slate-600 hover:text-slate-900 cursor-pointer';
+                btnDoor.className = 'py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 text-slate-400 hover:text-white cursor-pointer';
             }
             if (poolContainer) poolContainer.classList.remove('hidden');
             if (customContainer) customContainer.classList.add('hidden');
             syncPickupAddress();
         } else {
             if (btnPool) {
-                btnPool.className = 'py-1.5 px-2 rounded-lg text-[10px] font-bold transition flex items-center justify-center gap-1.5 text-slate-600 hover:text-slate-900 cursor-pointer';
+                btnPool.className = 'py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 text-slate-400 hover:text-white cursor-pointer';
             }
             if (btnDoor) {
-                btnDoor.className = 'py-1.5 px-2 rounded-lg text-[10px] font-bold transition flex items-center justify-center gap-1.5 bg-white text-sky-700 shadow-xs cursor-pointer';
+                btnDoor.className = 'py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 bg-blue-600 text-white shadow-md shadow-blue-500/25 cursor-pointer';
             }
             if (poolContainer) poolContainer.classList.add('hidden');
             if (customContainer) customContainer.classList.remove('hidden');
@@ -957,20 +969,20 @@
 
         if (type === 'pool') {
             if (btnPool) {
-                btnPool.className = 'py-1.5 px-2 rounded-lg text-[10px] font-bold transition flex items-center justify-center gap-1.5 bg-white text-rose-700 shadow-xs cursor-pointer';
+                btnPool.className = 'py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 bg-rose-600 text-white shadow-md shadow-rose-500/25 cursor-pointer';
             }
             if (btnDoor) {
-                btnDoor.className = 'py-1.5 px-2 rounded-lg text-[10px] font-bold transition flex items-center justify-center gap-1.5 text-slate-600 hover:text-slate-900 cursor-pointer';
+                btnDoor.className = 'py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 text-slate-400 hover:text-white cursor-pointer';
             }
             if (poolContainer) poolContainer.classList.remove('hidden');
             if (customContainer) customContainer.classList.add('hidden');
             syncDropoffAddress();
         } else {
             if (btnPool) {
-                btnPool.className = 'py-1.5 px-2 rounded-lg text-[10px] font-bold transition flex items-center justify-center gap-1.5 text-slate-600 hover:text-slate-900 cursor-pointer';
+                btnPool.className = 'py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 text-slate-400 hover:text-white cursor-pointer';
             }
             if (btnDoor) {
-                btnDoor.className = 'py-1.5 px-2 rounded-lg text-[10px] font-bold transition flex items-center justify-center gap-1.5 bg-white text-rose-700 shadow-xs cursor-pointer';
+                btnDoor.className = 'py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 bg-rose-600 text-white shadow-md shadow-rose-500/25 cursor-pointer';
             }
             if (poolContainer) poolContainer.classList.add('hidden');
             if (customContainer) customContainer.classList.remove('hidden');
@@ -1471,6 +1483,7 @@
         var modal = document.getElementById('historyPhonePromptModal');
         if (modal) {
             modal.classList.add('open');
+            modal.style.display = 'flex';
             var input = document.getElementById('historyModalPhoneInput');
             var savedPhone = localStorage.getItem('rivian_customer_phone');
             if (input) {
@@ -1486,7 +1499,10 @@
 
     function closeHistoryPhoneModal() {
         var modal = document.getElementById('historyPhonePromptModal');
-        if (modal) modal.classList.remove('open');
+        if (modal) {
+            modal.classList.remove('open');
+            modal.style.display = 'none';
+        }
     }
 
     async function handleHistoryPhoneSubmit(e) {
@@ -1803,43 +1819,43 @@
             var bStatus = (item.bookingStatus || 'pending').toLowerCase();
             var statusPill = '';
             if (bStatus === 'confirmed' || item.paymentStatus === 'LUNAS') {
-                statusPill = '<span class="status-badge paid"><i class="fas fa-circle-check"></i> LUNAS (PAID)</span>';
+                statusPill = '<span class="inline-flex items-center gap-1 text-[9px] font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 uppercase"><i class="fas fa-circle-check text-[9px]"></i> Lunas</span>';
             } else if (bStatus === 'completed') {
-                statusPill = '<span class="status-badge completed"><i class="fas fa-flag-checkered"></i> SELESAI</span>';
+                statusPill = '<span class="inline-flex items-center gap-1 text-[9px] font-extrabold px-2.5 py-0.5 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-300 uppercase"><i class="fas fa-flag-checkered text-[9px]"></i> Selesai</span>';
             } else if (bStatus === 'cancelled') {
-                statusPill = '<span class="status-badge cancelled"><i class="fas fa-ban"></i> BATAL</span>';
+                statusPill = '<span class="inline-flex items-center gap-1 text-[9px] font-extrabold px-2.5 py-0.5 rounded-full bg-rose-500/20 border border-rose-400/30 text-rose-300 uppercase"><i class="fas fa-ban text-[9px]"></i> Batal</span>';
             } else {
-                statusPill = '<span class="status-badge pending"><i class="fas fa-clock"></i> VERIFIKASI PEMBAYARAN</span>';
+                statusPill = '<span class="inline-flex items-center gap-1 text-[9px] font-extrabold px-2.5 py-0.5 rounded-full bg-amber-500/20 border border-amber-400/30 text-amber-300 uppercase"><i class="fas fa-clock text-[9px]"></i> Verifikasi</span>';
             }
 
-            return '<div class="history-order-card">' +
-                '<div class="history-card-header">' +
+            return '<div class="glass-card rounded-2xl p-4 border border-white/15 space-y-3 shadow-xl">' +
+                '<div class="flex items-center justify-between pb-2 border-b border-white/10">' +
                 '<div>' +
-                '<div class="history-booking-code">#' + item.bookingCode + '</div>' +
-                '<div class="history-booking-date"><i class="far fa-calendar-alt"></i> ' + (item.createdAt || 'Hari ini') + '</div>' +
+                '<div class="text-xs font-black text-blue-400 font-mono tracking-wider">#' + item.bookingCode + '</div>' +
+                '<div class="text-[10px] text-slate-400 mt-0.5"><i class="far fa-calendar-alt text-[9px] mr-1"></i>' + (item.createdAt || 'Hari ini') + '</div>' +
                 '</div>' +
                 statusPill +
                 '</div>' +
 
-                '<div class="history-route-box">' +
-                '<div class="history-route-cities">' +
+                '<div class="glass-panel rounded-xl p-3 border border-white/10 space-y-2">' +
+                '<div class="flex items-center justify-between text-xs font-black text-white">' +
                 '<span>' + item.origin + '</span>' +
-                '<i class="fas fa-arrow-right"></i>' +
+                '<i class="fas fa-arrow-right text-[10px] text-blue-400"></i>' +
                 '<span>' + item.destination + '</span>' +
                 '</div>' +
-                '<div class="history-route-meta">' +
-                '<span><i class="far fa-clock"></i> ' + (item.departureDate || '-') + ' (' + item.departureTime + ')</span>' +
-                '<span class="history-seats-tag"><i class="fas fa-chair"></i> ' + (item.seats || '4 Kursi') + '</span>' +
+                '<div class="flex items-center justify-between text-[10px] text-slate-400 pt-1.5 border-t border-white/10">' +
+                '<span><i class="far fa-clock text-[9px] mr-1"></i>' + (item.departureDate || '-') + ' (' + item.departureTime + ')</span>' +
+                '<span class="text-blue-300 bg-blue-500/20 border border-blue-400/30 px-2 py-0.5 rounded-md font-bold"><i class="fas fa-chair text-[9px] mr-1"></i>' + (item.seats || '4 Kursi') + '</span>' +
                 '</div>' +
                 '</div>' +
 
-                '<div class="history-card-footer">' +
+                '<div class="flex items-center justify-between pt-1">' +
                 '<div>' +
-                '<div class="history-total-label">Total Tagihan</div>' +
-                '<div class="history-total-price">' + item.totalFormatted + '</div>' +
+                '<div class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Total Tagihan</div>' +
+                '<div class="text-base font-black text-white font-mono">' + item.totalFormatted + '</div>' +
                 '</div>' +
-                '<button type="button" onclick="viewHistoryDetail(\'' + item.bookingCode + '\')" class="history-open-ticket-btn">' +
-                '<i class="fas fa-ticket"></i>' +
+                '<button type="button" onclick="viewHistoryDetail(\'' + item.bookingCode + '\')" class="px-3.5 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold text-xs rounded-xl shadow-md shadow-blue-500/25 flex items-center gap-1.5 active:scale-95 transition cursor-pointer">' +
+                '<i class="fas fa-ticket text-xs"></i>' +
                 '<span>Buka E-Ticket</span>' +
                 '</button>' +
                 '</div>' +
@@ -2096,5 +2112,14 @@
             'Mohon jemput paket saya untuk jadwal shuttle berikutnya.';
         window.open('https://wa.me/' + WA_PHONE + '?text=' + encodeURIComponent(msg), '_blank');
     }
+
+    // Dismiss modals when clicking the backdrop
+    window.addEventListener('click', function(e) {
+        if (e.target && e.target.classList.contains('qris-modal-backdrop')) {
+            if (e.target.id === 'customerAuthModal') closeCustomerAuthModal();
+            if (e.target.id === 'qrisModalBackdrop') closeQrisModal();
+            if (e.target.id === 'historyPhonePromptModal') closeHistoryPhoneModal();
+        }
+    });
 
 </script>

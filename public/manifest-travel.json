@@ -1,0 +1,32 @@
+{
+  "name": "Rivian Travel - Shuttle Ciamis Bandung PP",
+  "short_name": "Rivian Travel",
+  "description": "Pesan shuttle eksekutif Daihatsu All New Xenia Ciamis - Bandung PP door to door via Tol Cipularang.",
+  "start_url": "/travell",
+  "scope": "/travell",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0B1120",
+  "theme_color": "#0B1120",
+  "categories": ["travel", "transportation", "lifestyle"],
+  "icons": [
+    {
+      "src": "/images/travel/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/travel/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/travel/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

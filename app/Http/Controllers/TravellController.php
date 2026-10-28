@@ -20,55 +20,7 @@ class TravellController extends Controller
      */
     public function index(Request $request)
     {
-        $routes = Route::all();
-
-        $selectedOrigin = $request->query('origin', 'Ciamis');
-        $selectedDestination = $request->query('destination', 'Bandung');
-        $selectedDate = $request->query('date', Carbon::today()->toDateString());
-        $serviceType = $request->query('service_type');
-
-        // Query active schedules matching filters
-        $schedulesQuery = Schedule::with('route')
-            ->whereHas('route', function ($q) use ($selectedOrigin, $selectedDestination) {
-                if ($selectedOrigin) {
-                    $q->where('origin', 'like', "%{$selectedOrigin}%");
-                }
-                if ($selectedDestination) {
-                    $q->where('destination', 'like', "%{$selectedDestination}%");
-                }
-            })
-            ->whereDate('departure_date', '>=', Carbon::today())
-            ->orderBy('departure_date', 'asc')
-            ->orderBy('departure_time', 'asc');
-
-        if ($selectedDate) {
-            $schedulesQuery->whereDate('departure_date', $selectedDate);
-        }
-
-        if ($serviceType && in_array($serviceType, [Schedule::SERVICE_TYPE_REGULER, Schedule::SERVICE_TYPE_PREMIUM_SOPIR])) {
-            $schedulesQuery->where('service_type', $serviceType);
-        }
-
-        $schedules = $schedulesQuery->get();
-
-        // If today has no schedules in query, fallback to next upcoming schedules
-        if ($schedules->isEmpty()) {
-            $schedules = Schedule::with('route')
-                ->whereDate('departure_date', '>=', Carbon::today())
-                ->orderBy('departure_date', 'asc')
-                ->orderBy('departure_time', 'asc')
-                ->limit(8)
-                ->get();
-        }
-
-        return view('travell.index', compact(
-            'routes',
-            'schedules',
-            'selectedOrigin',
-            'selectedDestination',
-            'selectedDate',
-            'serviceType'
-        ));
+        return view('travell.index');
     }
 
     /**

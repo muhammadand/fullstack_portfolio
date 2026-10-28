@@ -1,22 +1,21 @@
-<!-- ================= APP BOTTOM NAVIGATION BAR (TRAVELOKA STYLE) ================= -->
-<nav class="bg-white border-t border-slate-200 px-6 py-2 flex items-center justify-between absolute bottom-0 inset-x-0 z-40 text-slate-400">
-    <button type="button" onclick="switchView('viewHome')" class="nav-tab-btn flex flex-col items-center gap-0.5 text-sky-500 cursor-pointer" id="tabNavHome">
-        <i class="fas fa-house text-sm"></i>
-        <span class="text-[9px] font-bold">Beranda</span>
-    </button>
-
-    <button type="button" onclick="executeScheduleSearch()" class="nav-tab-btn flex flex-col items-center gap-0.5 hover:text-sky-500 cursor-pointer" id="tabNavSchedules">
-        <i class="fas fa-car-side text-sm"></i>
-        <span class="text-[9px] font-bold">Jadwal</span>
-    </button>
-
-    <button type="button" onclick="switchView('viewHistory')" class="nav-tab-btn flex flex-col items-center gap-0.5 hover:text-sky-500 cursor-pointer" id="tabNavHistory">
-        <i class="fas fa-receipt text-sm"></i>
-        <span class="text-[9px] font-bold">Pesanan</span>
-    </button>
-
-    <a href="https://wa.me/{{ $waNumber ?? '6281234567890' }}?text={{ urlencode('Halo CS ' . ($brandName ?? 'Rivian Travel') . ', saya ingin tanya jadwal travel shuttle Daihatsu Xenia.') }}" target="_blank" class="nav-tab-btn flex flex-col items-center gap-0.5 hover:text-emerald-600 cursor-pointer">
-        <i class="fab fa-whatsapp text-sm text-emerald-600"></i>
-        <span class="text-[9px] font-bold text-emerald-600">Bantuan</span>
-    </a>
+<!-- ================= APP BOTTOM NAVIGATION BAR (SCALIFY PARTNER GLASS STYLE) ================= -->
+<nav class="fixed bottom-0 left-0 w-full glass-panel border-t border-white/10 z-50 shadow-[0_-8px_32px_rgba(0,0,0,0.5)]">
+    <div class="max-w-md mx-auto flex justify-around items-center px-4 py-2.5">
+        <button type="button" onclick="switchView('viewHome')" id="navTabHome" class="nav-tab-link active flex flex-col items-center gap-1 text-blue-400 hover:text-blue-300 transition-colors cursor-pointer py-1">
+            <i class="fas fa-house text-lg"></i>
+            <span class="text-[10px] font-bold">Home</span>
+        </button>
+        <button type="button" onclick="switchView('viewHistory')" id="navTabTickets" class="nav-tab-link flex flex-col items-center gap-1 text-slate-400 hover:text-blue-300 transition-colors cursor-pointer py-1">
+            <i class="fas fa-receipt text-lg"></i>
+            <span class="text-[10px] font-bold">Tiket Saya</span>
+        </button>
+        <a href="https://wa.me/{{ $waNumber ?? '6281234567890' }}" target="_blank" class="nav-tab-link flex flex-col items-center gap-1 text-slate-400 hover:text-emerald-400 transition-colors cursor-pointer py-1">
+            <i class="fab fa-whatsapp text-lg text-emerald-400"></i>
+            <span class="text-[10px] font-bold">WhatsApp</span>
+        </a>
+        <button type="button" onclick="openCustomerAuthModal()" id="navTabAccount" class="nav-tab-link flex flex-col items-center gap-1 text-slate-400 hover:text-blue-300 transition-colors cursor-pointer py-1">
+            <i class="fas fa-user text-lg"></i>
+            <span class="text-[10px] font-bold">Akun</span>
+        </button>
+    </div>
 </nav>
