@@ -14,10 +14,11 @@ function partnerCardDesigner() {
     var cfg = document.getElementById("cardConfig");
     var ds = cfg ? cfg.dataset : {};
 
-    // Support parameter URL ?template=portrait_standee
+    // Support parameter URL ?template=...
     var urlParams = new URLSearchParams(window.location.search);
     var urlTpl = urlParams.get("template");
-    var defaultTpl = (urlTpl === "portrait_standee" || urlTpl === "standee_portrait") ? "portrait_standee" : "square_nfc";
+    var validTemplates = ["square", "square_nfc", "portrait_standee"];
+    var defaultTpl = validTemplates.indexOf(urlTpl) !== -1 ? urlTpl : "square";
 
     return {
         // ── State ──
@@ -26,6 +27,7 @@ function partnerCardDesigner() {
         statusMessage: "",
         statusType: "info",
         selectedTemplate: defaultTpl,
+        templatesList: validTemplates,
 
         // ── Config dari data-* ──
         scanUrl: ds.scanUrl || "",
@@ -34,7 +36,7 @@ function partnerCardDesigner() {
         csrfToken: ds.csrf || "",
 
         // Ukuran PDF (mm)
-        pdfWidthMm: { square_nfc: 110, portrait_standee: 100 },
+        pdfWidthMm: { square: 110, square_nfc: 110, portrait_standee: 100 },
 
         // ── Init ──
         init: function () {
@@ -48,6 +50,18 @@ function partnerCardDesigner() {
             setTimeout(function () {
                 self.generateQR();
             }, 60);
+        },
+
+        // ── Swap Template (Next & Prev for Card Carousel) ──
+        nextTemplate: function () {
+            var idx = this.templatesList.indexOf(this.selectedTemplate);
+            var nextIdx = (idx + 1) % this.templatesList.length;
+            this.setTemplate(this.templatesList[nextIdx]);
+        },
+        prevTemplate: function () {
+            var idx = this.templatesList.indexOf(this.selectedTemplate);
+            var prevIdx = (idx - 1 + this.templatesList.length) % this.templatesList.length;
+            this.setTemplate(this.templatesList[prevIdx]);
         },
 
         // ── Status Banner ──
@@ -67,15 +81,15 @@ function partnerCardDesigner() {
             return String(this.serialNumber).replace(/[^a-zA-Z0-9_\-]+/g, "-");
         },
         get templateLabel() {
-            return this.selectedTemplate === "square_nfc"
-                ? "Square-Google"
-                : "Standee-Portrait";
+            if (this.selectedTemplate === "square") return "Square-QR";
+            if (this.selectedTemplate === "square_nfc") return "Square-NFC";
+            return "Standee-Portrait";
         },
 
         // ── Generate QR Codes (client-side, high-res) ──
         generateQR: function () {
             var url = this.scanUrl;
-            ["localQrSquare", "localQrPortrait"].forEach(function (id) {
+            ["localQrSquare", "localQrSquareNfc", "localQrPortrait"].forEach(function (id) {
                 var container = document.getElementById(id);
                 if (!container) return;
                 container.innerHTML = "";
@@ -104,9 +118,13 @@ function partnerCardDesigner() {
 
         // ── Ambil elemen kartu aktif ──
         getCard: function () {
-            return this.selectedTemplate === "square_nfc"
-                ? document.getElementById("cardSquareNfc")
-                : document.getElementById("cardPortraitStandee");
+            if (this.selectedTemplate === "square") {
+                return document.getElementById("cardSquare");
+            }
+            if (this.selectedTemplate === "square_nfc") {
+                return document.getElementById("cardSquareNfc");
+            }
+            return document.getElementById("cardPortraitStandee");
         },
 
 

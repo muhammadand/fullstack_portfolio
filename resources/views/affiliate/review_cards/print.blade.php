@@ -82,6 +82,7 @@
                 transform: none !important;
             }
 
+            #cardSquare,
             #cardSquareNfc,
             #cardPortraitStandee {
                 box-shadow: none !important;
@@ -121,51 +122,109 @@
             <div class="w-10"></div>
         </div>
 
-        {{-- ── Template Selector ── --}}
+        {{-- ── Template Selector (3 Pilihan Desain) ── --}}
         <div class="glass-panel p-1.5 rounded-2xl mb-5">
             <div class="text-[11px] font-semibold text-slate-400 px-2 py-1 mb-1 flex items-center justify-between">
                 <span>Pilih Gaya Template:</span>
-                <span class="text-[10px] text-blue-400 font-normal">2 Pilihan Desain</span>
+                <span class="text-[10px] text-blue-400 font-normal">3 Pilihan Desain</span>
             </div>
-            <div class="grid grid-cols-2 gap-1.5">
-                {{-- Square Card --}}
-                <button type="button" @click="setTemplate('square_nfc')" :disabled="isGenerating" :class="selectedTemplate === 'square_nfc'
+            <div class="grid grid-cols-3 gap-1.5">
+                {{-- 1. Square QR (Standard) --}}
+                <button type="button" @click="setTemplate('square')" :disabled="isGenerating" :class="selectedTemplate === 'square'
                         ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20 border-transparent'
-                        : 'text-slate-400 hover:text-white hover:bg-white/5 border-white/5'" class="p-2.5 rounded-xl border transition-all text-left flex items-start gap-2.5 cursor-pointer disabled:cursor-not-allowed">
-                    <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" :class="selectedTemplate === 'square_nfc' ? 'bg-white/20 text-white' : 'bg-slate-800 text-slate-400'">
+                        : 'text-slate-400 hover:text-white hover:bg-white/5 border-white/5'" class="p-2 sm:p-2.5 rounded-xl border transition-all text-left flex flex-col sm:flex-row items-center sm:items-start gap-1.5 sm:gap-2 cursor-pointer disabled:cursor-not-allowed">
+                    <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center shrink-0" :class="selectedTemplate === 'square' ? 'bg-white/20 text-white' : 'bg-slate-800 text-slate-400'">
                         <i class="fa-solid fa-qrcode text-xs"></i>
                     </div>
-                    <div class="flex-1 min-w-0">
-                        <div class="flex items-center gap-1.5">
-                            <span class="text-xs font-bold font-outfit truncate">Square Card</span>
-                            <span class="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-semibold shrink-0">Sesuai Foto</span>
-                        </div>
-                        <p class="text-[10px] opacity-80 leading-snug truncate">Desain Kotak Google (QR)</p>
+                    <div class="flex-1 min-w-0 text-center sm:text-left">
+                        <span class="text-[11px] sm:text-xs font-bold font-outfit truncate block">Square QR</span>
+                        <p class="text-[9px] sm:text-[10px] opacity-80 leading-snug truncate">Kotak (QR Saja)</p>
                     </div>
                 </button>
 
-                {{-- Standee Portrait --}}
+                {{-- 2. Square NFC (Smart Tap) --}}
+                <button type="button" @click="setTemplate('square_nfc')" :disabled="isGenerating" :class="selectedTemplate === 'square_nfc'
+                        ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20 border-transparent'
+                        : 'text-slate-400 hover:text-white hover:bg-white/5 border-white/5'" class="p-2 sm:p-2.5 rounded-xl border transition-all text-left flex flex-col sm:flex-row items-center sm:items-start gap-1.5 sm:gap-2 cursor-pointer disabled:cursor-not-allowed">
+                    <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center shrink-0" :class="selectedTemplate === 'square_nfc' ? 'bg-white/20 text-white' : 'bg-slate-800 text-slate-400'">
+                        <i class="fa-solid fa-wifi rotate-90 text-xs"></i>
+                    </div>
+                    <div class="flex-1 min-w-0 text-center sm:text-left">
+                        <div class="flex items-center justify-center sm:justify-start gap-1">
+                            <span class="text-[11px] sm:text-xs font-bold font-outfit truncate">Square NFC</span>
+                            <span class="text-[8px] px-1 py-0.2 rounded bg-amber-500/20 text-amber-300 font-semibold shrink-0 hidden sm:inline">Pintar</span>
+                        </div>
+                        <p class="text-[9px] sm:text-[10px] opacity-80 leading-snug truncate">NFC + QR Code</p>
+                    </div>
+                </button>
+
+                {{-- 3. Standee Portrait --}}
                 <button type="button" @click="setTemplate('portrait_standee')" :disabled="isGenerating" :class="selectedTemplate === 'portrait_standee'
                         ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20 border-transparent'
-                        : 'text-slate-400 hover:text-white hover:bg-white/5 border-white/5'" class="p-2.5 rounded-xl border transition-all text-left flex items-start gap-2.5 cursor-pointer disabled:cursor-not-allowed">
-                    <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" :class="selectedTemplate === 'portrait_standee' ? 'bg-white/20 text-white' : 'bg-slate-800 text-slate-400'">
+                        : 'text-slate-400 hover:text-white hover:bg-white/5 border-white/5'" class="p-2 sm:p-2.5 rounded-xl border transition-all text-left flex flex-col sm:flex-row items-center sm:items-start gap-1.5 sm:gap-2 cursor-pointer disabled:cursor-not-allowed">
+                    <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center shrink-0" :class="selectedTemplate === 'portrait_standee' ? 'bg-white/20 text-white' : 'bg-slate-800 text-slate-400'">
                         <i class="fa-solid fa-id-card text-xs"></i>
                     </div>
-                    <div class="flex-1 min-w-0">
-                        <span class="text-xs font-bold font-outfit truncate block">Standee Portrait</span>
-                        <p class="text-[10px] opacity-80 leading-snug truncate">Meja / Akrilik Berdiri</p>
+                    <div class="flex-1 min-w-0 text-center sm:text-left">
+                        <span class="text-[11px] sm:text-xs font-bold font-outfit truncate block">Standee Meja</span>
+                        <p class="text-[9px] sm:text-[10px] opacity-80 leading-snug truncate">Akrilik Berdiri</p>
                     </div>
                 </button>
             </div>
         </div>
 
-        {{-- ── Card Preview ── --}}
-        <div class="flex justify-center mb-6 min-h-[390px]">
-            <div x-show="selectedTemplate === 'square_nfc'" :class="{ 'printable-active': selectedTemplate === 'square_nfc' }">
+        {{-- ── Card Preview (Interactive Swap / Swipe Deck) ── --}}
+        <div 
+            x-data="{ touchStartX: 0, touchEndX: 0 }"
+            @touchstart="touchStartX = $event.changedTouches[0].screenX"
+            @touchend="touchEndX = $event.changedTouches[0].screenX; if (touchStartX - touchEndX > 50) { nextTemplate(); } else if (touchEndX - touchStartX > 50) { prevTemplate(); }"
+            class="relative flex flex-col items-center justify-center mb-6 min-h-[410px] w-full"
+        >
+            {{-- Floating Left / Right Swap Arrows --}}
+            <button 
+                type="button" 
+                @click="prevTemplate()" 
+                class="absolute -left-2 sm:-left-4 top-1/2 -translate-y-1/2 z-30 w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white flex items-center justify-center border border-white/10 shadow-xl backdrop-blur-md active:scale-90 transition-all cursor-pointer"
+                title="Desain Sebelumnya"
+            >
+                <i class="fa-solid fa-chevron-left text-xs sm:text-sm"></i>
+            </button>
+
+            <button 
+                type="button" 
+                @click="nextTemplate()" 
+                class="absolute -right-2 sm:-right-4 top-1/2 -translate-y-1/2 z-30 w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white flex items-center justify-center border border-white/10 shadow-xl backdrop-blur-md active:scale-90 transition-all cursor-pointer"
+                title="Desain Berikutnya"
+            >
+                <i class="fa-solid fa-chevron-right text-xs sm:text-sm"></i>
+            </button>
+
+            {{-- 1. Square QR Card --}}
+            <div x-show="selectedTemplate === 'square'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" :class="{ 'printable-active': selectedTemplate === 'square' }">
+                @include('affiliate.review_cards.partials.template_square')
+            </div>
+
+            {{-- 2. Square NFC Card --}}
+            <div x-show="selectedTemplate === 'square_nfc'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" :class="{ 'printable-active': selectedTemplate === 'square_nfc' }">
                 @include('affiliate.review_cards.partials.template_square_nfc')
             </div>
-            <div x-show="selectedTemplate === 'portrait_standee'" :class="{ 'printable-active': selectedTemplate === 'portrait_standee' }">
+
+            {{-- 3. Standee Portrait Card --}}
+            <div x-show="selectedTemplate === 'portrait_standee'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" :class="{ 'printable-active': selectedTemplate === 'portrait_standee' }">
                 @include('affiliate.review_cards.partials.template_portrait_standee')
+            </div>
+
+            {{-- Interactive Swap Dots & Swipe Hint --}}
+            <div class="flex items-center justify-center gap-3 mt-4 select-none">
+                <span class="text-[11px] text-slate-400 flex items-center gap-1.5">
+                    <i class="fa-solid fa-arrows-left-right text-blue-400 text-xs"></i>
+                    <span>Geser / Swap</span>
+                </span>
+                <div class="flex items-center gap-1.5">
+                    <button type="button" @click="setTemplate('square')" class="h-2 rounded-full transition-all cursor-pointer" :class="selectedTemplate === 'square' ? 'bg-blue-500 w-6' : 'bg-slate-700 hover:bg-slate-600 w-2'"></button>
+                    <button type="button" @click="setTemplate('square_nfc')" class="h-2 rounded-full transition-all cursor-pointer" :class="selectedTemplate === 'square_nfc' ? 'bg-blue-500 w-6' : 'bg-slate-700 hover:bg-slate-600 w-2'"></button>
+                    <button type="button" @click="setTemplate('portrait_standee')" class="h-2 rounded-full transition-all cursor-pointer" :class="selectedTemplate === 'portrait_standee' ? 'bg-blue-500 w-6' : 'bg-slate-700 hover:bg-slate-600 w-2'"></button>
+                </div>
             </div>
         </div>
 
@@ -177,7 +236,7 @@
                     Download & Cetak
                 </span>
                 <span class="text-[10px] text-slate-400 font-normal">
-                    Format: <span class="text-blue-400 font-semibold" x-text="selectedTemplate === 'square_nfc' ? 'Square (110mm)' : 'Standee (100mm)'"></span>
+                    Format: <span class="text-blue-400 font-semibold" x-text="selectedTemplate === 'portrait_standee' ? 'Standee (100mm)' : 'Square (110mm)'"></span>
                 </span>
             </h3>
 
