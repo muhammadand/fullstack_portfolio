@@ -18,6 +18,8 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->validateCsrfTokens(except: [
             'travell/*',
+            'payment/*',
+            'webhook/*',
         ]);
 
         // Fix: Intercept 403 responses caused by hosting WAF and force 200

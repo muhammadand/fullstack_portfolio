@@ -7,6 +7,11 @@ use App\Http\Controllers\Admin\ClientProposalController;
 // Endpoint Webhook untuk menerima data dari Scraper WhatsApp
 Route::post('/webhook/scraper-client', [ClientProposalController::class, 'handleWebhook']);
 
+// Endpoint Webhook / Callback Pembayaran (Midtrans & Gateways)
+use App\Http\Controllers\PaymentCallbackController;
+
+Route::post('/webhook/payment', [PaymentCallbackController::class, 'handleWebhook']);
+
 // Endpoint API untuk Bulk Insert Student Leads
 use App\Http\Controllers\Api\StudentLeadApiController;
 

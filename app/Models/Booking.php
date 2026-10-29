@@ -93,5 +93,13 @@ class Booking extends Model
     {
         return $this->hasMany(BookingDetail::class);
     }
+
+    /**
+     * Get the payment callbacks received for this booking.
+     */
+    public function paymentCallbacks()
+    {
+        return $this->hasMany(PaymentCallback::class, 'order_number', 'booking_code');
+    }
 }
 

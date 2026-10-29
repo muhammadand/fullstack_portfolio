@@ -508,6 +508,11 @@ Route::get('/secret-deploy-trigger-12345', function () {
             '--force' => true
         ]);
 
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_10_29_083526_create_payment_callbacks_table.php',
+            '--force' => true
+        ]);
+
         // Jalankan Seeder yang diperlukan
         \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'BusinessCategorySeeder', '--force' => true]);
         \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'ClientProposalSeeder', '--force' => true]);
@@ -552,6 +557,8 @@ Route::get('/secret-trigger-reminders-999', function (\Illuminate\Http\Request $
 });
 
 // Route webhook scraper sudah dipindahkan ke routes/api.php
+Route::post('/webhook/payment', [\App\Http\Controllers\PaymentCallbackController::class, 'handleWebhook']);
+Route::post('/payment/callback', [\App\Http\Controllers\PaymentCallbackController::class, 'handleWebhook']);
 
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
