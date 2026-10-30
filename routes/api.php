@@ -19,6 +19,12 @@ Route::post('/student-leads/bulk', [StudentLeadApiController::class, 'bulkStore'
 
 // Endpoint API untuk Digital Products
 use App\Http\Controllers\Api\DigitalProductApiController;
+use App\Http\Controllers\ProdukDigital\DigiflazzController;
+
+// Digiflazz API Routes (Produk Digital)
+Route::match(['get', 'post'], '/digiflazz/test-transaction', [DigiflazzController::class, 'testTransaction']);
+Route::post('/digiflazz/transaction', [DigiflazzController::class, 'transaction']);
+Route::match(['get', 'post'], '/digiflazz/cek-saldo', [DigiflazzController::class, 'checkBalance']);
 
 Route::get('/digital-products', [DigitalProductApiController::class, 'index']);
 Route::post('/digital-products', [DigitalProductApiController::class, 'store']);
