@@ -90,6 +90,9 @@
         <!-- Hidden input for copy -->
         <input type="text" readonly value="{{ url('/sobat-scalify?ref=' . $affiliate->affiliate_code) }}" class="absolute -left-[9999px] opacity-0" id="affiliate-link">
 
+        <!-- Banner Wajib Gabung Grup Komunitas Scalify -->
+        <x-affiliate.community-banner :affiliate="$affiliate" />
+
         <x-affiliate.grid-menu :totalProjects="$totalProjects" :totalClicks="$totalClicks" />
 
         <x-affiliate.promo-banner />

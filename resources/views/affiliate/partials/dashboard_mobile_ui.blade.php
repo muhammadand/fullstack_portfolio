@@ -60,6 +60,9 @@
     </div>
     @endif
 
+    <!-- Banner Wajib Gabung Grup Komunitas Scalify -->
+    <x-affiliate.community-banner :affiliate="$affiliate" />
+
     <x-affiliate.grid-menu :totalProjects="$totalProjects" :totalClicks="$totalClicks" />
 
     <x-affiliate.promo-banner />
