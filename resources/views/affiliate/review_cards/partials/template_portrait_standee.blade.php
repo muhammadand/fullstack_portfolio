@@ -64,8 +64,8 @@
 
                 <!-- Sharp QR Code Container -->
                 <div class="bg-white p-1 flex items-center justify-center">
-                    <div id="localQrPortrait" class="w-28 h-28 flex items-center justify-center overflow-hidden" style="width: 114px; height: 114px;">
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=450x450&data={{ urlencode(url('/r/' . $card->slug)) }}&margin=0" alt="QR Code Google Review" crossorigin="anonymous" class="w-full h-full object-contain">
+                    <div id="localQrPortrait" class="w-28 h-28 flex items-center justify-center overflow-hidden qr-code-sharp bg-white" style="width: 114px; height: 114px;">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={{ urlencode(url('/r/' . $card->slug)) }}&margin=1&format=svg" alt="QR Code Google Review" crossorigin="anonymous" class="w-full h-full object-contain block" style="image-rendering: -webkit-optimize-contrast; image-rendering: pixelated; shape-rendering: crispEdges;">
                     </div>
                 </div>
 

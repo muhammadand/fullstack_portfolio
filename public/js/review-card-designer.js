@@ -47,9 +47,20 @@ function partnerCardDesigner() {
         setTemplate: function (tpl) {
             this.selectedTemplate = tpl;
             var self = this;
-            setTimeout(function () {
-                self.generateQR();
-            }, 60);
+            var idMap = {
+                square: "localQrSquare",
+                square_nfc: "localQrSquareNfc",
+                portrait_standee: "localQrPortrait",
+            };
+            var targetId = idMap[tpl];
+            if (targetId) {
+                setTimeout(function () {
+                    self.renderSingleQR(targetId, self.scanUrl);
+                }, 100);
+                setTimeout(function () {
+                    self.renderSingleQR(targetId, self.scanUrl);
+                }, 350);
+            }
         },
 
         // ── Swap Template (Next & Prev for Card Carousel) ──
@@ -86,33 +97,83 @@ function partnerCardDesigner() {
             return "Standee-Portrait";
         },
 
+        // ── Render QR Code tajam & stabil (Android / iOS / Desktop) ──
+        renderSingleQR: function (containerId, url) {
+            var container = document.getElementById(containerId);
+            if (!container || !url) return;
+
+            if (typeof QRCode !== "undefined") {
+                try {
+                    // Hindari render berulang jika sudah ada QR image yang sempurna
+                    var existingImg = container.querySelector("img");
+                    if (existingImg && existingImg.getAttribute("data-sharp-rendered") === "true") {
+                        return;
+                    }
+
+                    // Render dengan level M (crisp & rasio modul proporsional, ideal untuk scan cepat)
+                    container.innerHTML = "";
+                    new QRCode(container, {
+                        text: url,
+                        width: 360,
+                        height: 360,
+                        colorDark: "#000000",
+                        colorLight: "#ffffff",
+                        correctLevel: QRCode.CorrectLevel.M,
+                    });
+
+                    setTimeout(function () {
+                        var canvas = container.querySelector("canvas");
+                        var img = container.querySelector("img");
+
+                        // Jika img berhasil dibuat (toDataURL berhasil)
+                        if (img && img.src && img.src.indexOf("data:image") === 0) {
+                            if (canvas) canvas.remove(); // Hapus canvas agar tidak duplikat saat diclone html2canvas
+                            img.style.width = "100%";
+                            img.style.height = "100%";
+                            img.style.objectFit = "contain";
+                            img.style.display = "block";
+                            img.style.imageRendering = "-webkit-optimize-contrast";
+                            img.style.imageRendering = "pixelated";
+                            img.setAttribute("data-sharp-rendered", "true");
+                        } else if (canvas) {
+                            canvas.style.width = "100%";
+                            canvas.style.height = "100%";
+                            canvas.style.objectFit = "contain";
+                            canvas.style.display = "block";
+                            canvas.style.imageRendering = "-webkit-optimize-contrast";
+                            canvas.style.imageRendering = "pixelated";
+                        }
+                    }, 80);
+                } catch (e) {
+                    console.warn("QRCode local render fallback on " + containerId + ":", e);
+                    container.innerHTML = '<img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=' + encodeURIComponent(url) + '&margin=1&format=svg" alt="QR Code Google Review" crossorigin="anonymous" class="w-full h-full object-contain block" style="image-rendering: -webkit-optimize-contrast; image-rendering: pixelated; shape-rendering: crispEdges;">';
+                }
+            }
+        },
+
         // ── Generate QR Codes (client-side, high-res) ──
         generateQR: function () {
             var url = this.scanUrl;
+            if (!url) return;
+
+            var idMap = {
+                square: "localQrSquare",
+                square_nfc: "localQrSquareNfc",
+                portrait_standee: "localQrPortrait",
+            };
+
+            // 1. Render template aktif terlebih dahulu (terlihat di layar)
+            var activeId = idMap[this.selectedTemplate] || "localQrSquare";
+            this.renderSingleQR(activeId, url);
+
+            // 2. Render template lain dengan jeda aman
+            var self = this;
             ["localQrSquare", "localQrSquareNfc", "localQrPortrait"].forEach(function (id) {
-                var container = document.getElementById(id);
-                if (!container) return;
-                container.innerHTML = "";
-                new QRCode(container, {
-                    text: url,
-                    width: 600,
-                    height: 600,
-                    colorDark: "#000000",
-                    colorLight: "#ffffff",
-                    correctLevel: QRCode.CorrectLevel.H,
-                });
-                // Stretch QR ke full container
-                setTimeout(function () {
-                    var el =
-                        container.querySelector("img") ||
-                        container.querySelector("canvas");
-                    if (el) {
-                        el.style.width = "100%";
-                        el.style.height = "100%";
-                        el.style.objectFit = "contain";
-                        el.style.display = "block";
-                    }
-                }, 100);
+                if (id !== activeId) {
+                    setTimeout(function () {
+                        self.renderSingleQR(id, url);
+                    }, 200);
+                }
             });
         },
 
@@ -452,7 +513,7 @@ function partnerCardDesigner() {
             var self = this;
             try {
                 var tempDiv = document.createElement("div");
-                tempDiv.style.cssText = "position:fixed;left:-9999px;top:-9999px;width:0;height:0;overflow:hidden;opacity:0;pointer-events:none;";
+                tempDiv.style.cssText = "position:fixed;left:-9999px;top:-9999px;width:1024px;height:1024px;overflow:hidden;opacity:0;pointer-events:none;";
                 document.body.appendChild(tempDiv);
 
                 new QRCode(tempDiv, {
@@ -461,7 +522,7 @@ function partnerCardDesigner() {
                     height: 1024,
                     colorDark: "#000000",
                     colorLight: "#ffffff",
-                    correctLevel: QRCode.CorrectLevel.H,
+                    correctLevel: QRCode.CorrectLevel.M,
                 });
 
                 setTimeout(function () {

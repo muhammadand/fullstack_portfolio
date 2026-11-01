@@ -48,6 +48,17 @@
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
+        /* Crisp QR Code Rendering for Android & High-DPI Screens */
+        .qr-code-sharp,
+        .qr-code-sharp img,
+        .qr-code-sharp canvas,
+        .qr-code-sharp svg {
+            image-rendering: -webkit-optimize-contrast !important;
+            image-rendering: crisp-edges !important;
+            image-rendering: pixelated !important;
+            shape-rendering: crispEdges !important;
+        }
+
         /* Print: hanya tampilkan kartu aktif, centered di A4 */
         @media print {
 

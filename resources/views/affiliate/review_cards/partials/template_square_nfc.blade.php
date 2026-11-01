@@ -65,8 +65,8 @@
             <!-- Center: High-Precision QR Container with Contactless NFC Visual Indicator -->
             <div class="flex flex-col items-center justify-center my-auto w-full">
                 <div class="bg-white p-2 rounded-2xl border border-slate-200/90 shadow-xs flex items-center justify-center mb-1.5">
-                    <div id="localQrSquareNfc" class="w-[104px] h-[104px] flex items-center justify-center overflow-hidden">
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=450x450&data={{ urlencode(url('/r/' . $card->slug)) }}&margin=0" alt="QR Code Google Review" crossorigin="anonymous" class="w-full h-full object-contain">
+                    <div id="localQrSquareNfc" class="w-[104px] h-[104px] flex items-center justify-center overflow-hidden qr-code-sharp bg-white">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={{ urlencode(url('/r/' . $card->slug)) }}&margin=1&format=svg" alt="QR Code Google Review" crossorigin="anonymous" class="w-full h-full object-contain block" style="image-rendering: -webkit-optimize-contrast; image-rendering: pixelated; shape-rendering: crispEdges;">
                     </div>
                 </div>
 
