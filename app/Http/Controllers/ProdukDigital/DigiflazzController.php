@@ -12,29 +12,23 @@ class DigiflazzController extends Controller
 {
     /**
      * Endpoint API Cek Saldo Akun Digiflazz
-     * Endpoint lokal: POST /api/digiflazz/cek-saldo
+     * Endpoint lokal: GET / POST /api/digiflazz/cek-saldo
      * Target: https://api.digiflazz.com/v1/cek-saldo
-     *
-     * Format Request Payload ke Digiflazz:
-     * {
-     *     "cmd": "deposit",
-     *     "username": "tuwumiWXAdqg",
-     *     "sign": "740b00a1b8784e028cc8078edf66d12b"
-     * }
      */
     public function checkBalance(Request $request): JsonResponse
     {
-        $cmd = $request->input('cmd', 'deposit');
-        $username = $request->input('username') ?: config('services.digiflazz.username');
-        $apiKey = $request->input('api_key') ?: config('services.digiflazz.api_key');
-        $sign = $request->input('sign');
-        if (empty($sign) && !empty($apiKey)) {
-            $sign = md5($username . $apiKey . 'depo');
-        }
+        // Ambil credentials langsung dari config (tanpa perlu input parameter)
+        $username = config('services.digiflazz.username');
+        $apiKey = config('services.digiflazz.api_key');
+
+        // Formula resmi signature Digiflazz: md5(username + apiKey + "depo")
+        $sign = md5($username . $apiKey . 'depo');
+
+        // Susun payload otomatis ke Digiflazz
         $payload = [
-            'cmd'      => $cmd,
+            'cmd'      => 'deposit',
             'username' => $username,
-            'sign'     => $sign ?? '',
+            'sign'     => $sign,
         ];
 
         $apiUrl = rtrim(config('services.digiflazz.url'), '/') . '/cek-saldo';
