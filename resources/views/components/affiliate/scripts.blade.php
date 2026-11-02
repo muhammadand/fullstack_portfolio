@@ -156,6 +156,39 @@
         }
     }
 
+    function handleTopUpSubmit(e, form) {
+        const input = document.getElementById('deposit_amount_input');
+        const amount = input ? parseFloat(input.value) : 0;
+
+        if (isNaN(amount) || amount < 50000) {
+            e.preventDefault();
+            if (typeof showToast === 'function') {
+                showToast('Nominal minimal top up adalah Rp 50.000', 'error');
+            } else {
+                alert('Nominal minimal top up adalah Rp 50.000');
+            }
+            if (input) input.focus();
+            return false;
+        }
+
+        const btn = document.getElementById('btnSubmitTopUp');
+        const icon = document.getElementById('btnSubmitTopUpIcon');
+        const text = document.getElementById('btnSubmitTopUpText');
+
+        if (btn) {
+            btn.disabled = true;
+            btn.classList.add('opacity-85', 'cursor-wait');
+            if (icon) icon.className = 'fa-solid fa-circle-notch fa-spin text-xs';
+            if (text) text.textContent = 'Menyiapkan QRIS...';
+        }
+
+        if (typeof window.showPageLoader === 'function') {
+            window.showPageLoader('Menyiapkan Kode QRIS Scalify...');
+        }
+
+        return true;
+    }
+
     function openWalletMutationsModal() {
         const modal = document.getElementById('walletMutationsModal');
         const content = document.getElementById('walletMutationsModalContent');

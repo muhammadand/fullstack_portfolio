@@ -40,6 +40,8 @@
 </head>
 <body class="pb-20 overflow-x-hidden min-h-screen flex flex-col relative">
 
+    <x-affiliate.page-loader />
+
     <!-- Ambient Glow Background -->
     <div class="fixed top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-blue-600/15 rounded-full blur-[120px] pointer-events-none z-0"></div>
 

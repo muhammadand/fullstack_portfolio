@@ -49,6 +49,8 @@
 @endpush
 
 @section('content')
+<x-affiliate.page-loader />
+
 <!-- Background Decoration -->
 <div class="fixed top-0 left-0 w-full h-64 bg-blue-600/20 rounded-full blur-[100px] -translate-y-1/2 pointer-events-none z-0"></div>
 <div class="fixed bottom-0 right-0 w-64 h-64 bg-indigo-600/20 rounded-full blur-[100px] translate-y-1/2 translate-x-1/3 pointer-events-none z-0"></div>

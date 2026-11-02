@@ -25,6 +25,8 @@
     </style>
 </head>
 <body class="pb-10 overflow-x-hidden min-h-screen relative flex flex-col">
+    <x-affiliate.page-loader />
+
     <!-- Header -->
     <div class="fixed top-0 left-0 w-full z-50 glass-panel border-b border-white/10 px-5 py-4 flex items-center gap-4">
         <a href="{{ route('affiliate.streak') }}" class="w-10 h-10 rounded-full bg-slate-800/80 flex items-center justify-center text-slate-300 hover:text-white transition-colors">

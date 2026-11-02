@@ -25,6 +25,8 @@
 @endpush
 
 @section('content')
+<x-affiliate.page-loader />
+
 <!-- Hero Image -->
 <div class="relative w-full h-64 sm:h-80">
     <img src="{{ $idea['image'] }}" alt="{{ $idea['title'] }}" class="w-full h-full object-cover">

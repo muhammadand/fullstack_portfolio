@@ -186,7 +186,7 @@ $modalMutations = $modalWallet->mutations()->take(30)->get();
                 </button>
             </div>
 
-            <form action="{{ route('affiliate.wallet.deposit') }}" method="POST">
+            <form id="topUpDepositForm" action="{{ route('affiliate.wallet.deposit') }}" method="POST" onsubmit="handleTopUpSubmit(event, this)">
                 @csrf
 
                 <!-- Quick Amount Chips (Interactive Active State + Hover) -->
@@ -267,8 +267,15 @@ $modalMutations = $modalWallet->mutations()->take(30)->get();
                     <input type="text" name="notes" placeholder="Catatan transaksi (opsional)" class="w-full bg-slate-900/40 border border-white/10 text-white text-[11px] rounded-xl py-2 px-3 focus:outline-none focus:border-emerald-500 placeholder:text-slate-500">
                 </div>
 
-                <button type="submit" class="w-full py-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold rounded-xl shadow-lg shadow-emerald-500/25 transition-all flex items-center justify-center gap-1.5 text-xs active:scale-98">
-                    <i class="fa-solid fa-qrcode text-xs"></i> Bayar Sekarang
+                <!-- Tombol Bayar Sekarang (Ultra Satisfying Hover & Tactile Press) -->
+                <button type="submit" id="btnSubmitTopUp" class="group relative w-full py-3 px-4 bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:via-teal-400 hover:to-emerald-500 text-white font-extrabold rounded-2xl shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:shadow-xl hover:scale-[1.01] transition-all duration-200 flex items-center justify-center gap-2 text-xs active:scale-[0.97] active:brightness-95 cursor-pointer overflow-hidden border border-emerald-400/30">
+                    <!-- Top Edge Reflection Sheen -->
+                    <div class="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/50 to-transparent"></div>
+                    <!-- Hover Dynamic Light Sweep -->
+                    <div class="absolute inset-0 -translate-x-full group-hover:translate-x-full duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform ease-out pointer-events-none"></div>
+
+                    <i class="fa-solid fa-qrcode text-xs transition-transform duration-200 group-hover:scale-110 group-active:scale-95" id="btnSubmitTopUpIcon"></i>
+                    <span id="btnSubmitTopUpText" class="tracking-wide text-xs">Bayar Sekarang</span>
                 </button>
             </form>
         </div>

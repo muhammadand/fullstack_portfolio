@@ -38,6 +38,8 @@
 </head>
 <body class="pb-24 overflow-x-hidden min-h-screen flex flex-col relative" x-data="{ buyModal: false, activateModal: false, markSoldModal: false, isActivating: false, selectedQty: 1, selectedCost: 10000, activeCard: null, soldCard: null }">
 
+    <x-affiliate.page-loader />
+
     <!-- Subtle Background Glow -->
     <div class="fixed top-0 left-0 w-full h-56 bg-blue-600/10 rounded-full blur-[100px] -translate-y-1/2 pointer-events-none z-0"></div>
 

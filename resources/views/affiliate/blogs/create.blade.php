@@ -62,6 +62,8 @@
 </head>
 <body class="pb-24 overflow-x-hidden min-h-screen flex flex-col relative">
 
+    <x-affiliate.page-loader />
+
     <!-- Background Decoration -->
     <div class="fixed top-0 left-0 w-full h-64 bg-orange-600/20 rounded-full blur-[100px] -translate-y-1/2 pointer-events-none z-0"></div>
 

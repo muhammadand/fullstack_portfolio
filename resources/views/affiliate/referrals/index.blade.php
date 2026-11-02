@@ -37,6 +37,8 @@
 </head>
 <body class="pb-24 overflow-x-hidden min-h-screen flex flex-col relative" x-data="{ activeTab: 'logs', copyToast: false, toastMsg: '' }">
 
+    <x-affiliate.page-loader />
+
     <!-- Ambient Glow Background -->
     <div class="fixed top-0 left-0 w-full h-64 bg-indigo-600/15 rounded-full blur-[110px] -translate-y-1/2 pointer-events-none z-0"></div>
     <div class="fixed bottom-0 right-0 w-72 h-72 bg-blue-600/10 rounded-full blur-[120px] translate-y-1/3 pointer-events-none z-0"></div>

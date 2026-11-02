@@ -37,6 +37,8 @@
 </head>
 <body class="min-h-screen bg-[#0B1120] text-white flex flex-col justify-between overflow-x-hidden relative px-4 py-4 sm:py-6">
 
+    <x-affiliate.page-loader />
+
     <!-- Ambient Glow Backgrounds -->
     <div class="fixed top-0 left-1/2 -translate-x-1/2 w-96 h-80 bg-emerald-600/15 rounded-full blur-[120px] pointer-events-none z-0"></div>
     <div class="fixed bottom-0 right-0 w-80 h-80 bg-blue-600/10 rounded-full blur-[100px] pointer-events-none z-0"></div>
