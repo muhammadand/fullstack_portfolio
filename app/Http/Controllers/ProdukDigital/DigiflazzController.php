@@ -73,26 +73,40 @@ class DigiflazzController extends Controller
      *
      * Format Request Payload ke Digiflazz:
      * {
-     *   "cmd": "prepaid", // 'prepaid' atau 'pasca'
-     *   "username": "...",
-     *   "sign": "md5(username + apiKey + 'pricelist')",
-     *   "code": "xld10" // opsional: jika ingin cek 1 produk saja
+     *   "cmd": "prepaid",          // (Wajib) 'prepaid' atau 'pasca'
+     *   "username": "...",         // (Otomatis dari config jika tidak dikirim)
+     *   "sign": "...",             // (Otomatis md5(username + apiKey + 'pricelist'))
+     *   "code": "xld10",           // (Opsional) Kode produk Anda sebagai Buyer
+     *   "category": "Pulsa",       // (Opsional) Kategori produk pada Digiflazz
+     *   "brand": "AXIS"            // (Opsional) Merek produk pada Digiflazz
      * }
      */
     public function getPrice(Request $request): JsonResponse
     {
-        $cmd = $request->input('cmd');
-        $username = config('services.digiflazz.username');
-        $apiKey = config('services.digiflazz.api_key');
-        $sign = md5($username . $apiKey . 'pricelist');
+        $cmd = $request->input('cmd', 'prepaid');
+        $username = $request->input('username') ?: config('services.digiflazz.username');
+        $apiKey = $request->input('api_key') ?: config('services.digiflazz.api_key');
+        $sign = $request->input('sign') ?: md5($username . $apiKey . 'pricelist');
+
         $payload = [
-            'cmd'      => $cmd,
+            'cmd'      => in_array(strtolower((string) $cmd), ['pasca', 'postpaid']) ? 'pasca' : 'prepaid',
             'username' => $username,
             'sign'     => $sign,
         ];
+
+        // Parameter Opsional Filter Digiflazz
         if ($request->filled('code')) {
-            $payload['code'] = $request->input('code');
+            $payload['code'] = (string) $request->input('code');
         }
+
+        if ($request->filled('category')) {
+            $payload['category'] = (string) $request->input('category');
+        }
+
+        if ($request->filled('brand')) {
+            $payload['brand'] = (string) $request->input('brand');
+        }
+
         $apiUrl = rtrim(config('services.digiflazz.url'), '/') . '/price-list';
 
         Log::info('Digiflazz Get Price List Request', [

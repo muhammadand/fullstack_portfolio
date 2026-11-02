@@ -96,9 +96,15 @@ class DigiflazzService
      *
      * @param string $cmd 'prepaid' atau 'pasca'
      * @param string|null $codeFilter Filter buyer_sku_code tertentu (opsional)
+     * @param string|null $category Filter kategori produk (opsional)
+     * @param string|null $brand Filter merek/provider produk (opsional)
      */
-    public static function getPriceList(string $cmd = 'prepaid', ?string $codeFilter = null): array
-    {
+    public static function getPriceList(
+        string $cmd = 'prepaid',
+        ?string $codeFilter = null,
+        ?string $category = null,
+        ?string $brand = null
+    ): array {
         $url = self::getBaseUrl() . '/price-list';
         $username = self::getUsername();
         $sign = self::generateSign('pricelist');
@@ -111,6 +117,14 @@ class DigiflazzService
 
         if (!empty($codeFilter)) {
             $payload['code'] = $codeFilter;
+        }
+
+        if (!empty($category)) {
+            $payload['category'] = $category;
+        }
+
+        if (!empty($brand)) {
+            $payload['brand'] = $brand;
         }
 
         try {
