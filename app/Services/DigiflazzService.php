@@ -206,4 +206,53 @@ class DigiflazzService
 
         return self::post('/transaction', $payload, 45);
     }
+
+    /**
+     * Simpan incoming Webhook / Callback dari Digiflazz ke database.
+     * Merekam seluruh headers khusus (X-Digiflazz-Event, X-Hub-Signature, User-Agent)
+     * dan full body JSON payload sebelum dieksekusi bisnis logiknya.
+     */
+    public static function saveWebhook(\Illuminate\Http\Request $request): \App\Models\DigiflazzWebhook
+    {
+        $payload = $request->json()->all() ?: $request->all();
+        if (empty($payload)) {
+            $rawContent = $request->getContent();
+            $decoded = json_decode($rawContent, true);
+            $payload = is_array($decoded) ? $decoded : ['raw' => $rawContent];
+        }
+
+        $data = $payload['data'] ?? $payload;
+
+        $event = $request->header('X-Digiflazz-Event') ?? $request->header('x-digiflazz-event');
+        $signature = $request->header('X-Hub-Signature') ?? $request->header('x-hub-signature');
+        $userAgent = $request->header('User-Agent') ?? $request->header('user-agent');
+
+        Log::info('Digiflazz Webhook Received', [
+            'event'     => $event,
+            'signature' => $signature,
+            'user_agent' => $userAgent,
+            'ref_id'    => $data['ref_id'] ?? null,
+            'status'    => $data['status'] ?? null,
+            'rc'        => $data['rc'] ?? null,
+            'sn'        => $data['sn'] ?? null,
+            'payload'   => $payload,
+        ]);
+
+        return \App\Models\DigiflazzWebhook::create([
+            'event'          => $event,
+            'signature'      => $signature,
+            'user_agent'     => $userAgent,
+            'ip_address'     => $request->ip(),
+            'ref_id'         => $data['ref_id'] ?? null,
+            'customer_no'    => $data['customer_no'] ?? null,
+            'buyer_sku_code' => $data['buyer_sku_code'] ?? null,
+            'status'         => $data['status'] ?? null,
+            'rc'             => isset($data['rc']) ? (string) $data['rc'] : null,
+            'sn'             => $data['sn'] ?? null,
+            'price'          => isset($data['price']) ? (float) $data['price'] : null,
+            'payload'        => $payload,
+            'headers'        => $request->headers->all(),
+            'is_processed'   => false,
+        ]);
+    }
 }

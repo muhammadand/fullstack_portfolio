@@ -129,4 +129,26 @@ class DigiflazzController extends Controller
 
         return response()->json($result, $result['http_status'] ?? 200);
     }
+
+    /**
+     * Endpoint Webhook Callback Digiflazz
+     * POST /api/digiflazz/webhook
+     *
+     * Menerima dan menyimpan seluruh data webhook beserta special headers:
+     * - X-Digiflazz-Event
+     * - X-Hub-Signature
+     * - User-Agent
+     */
+    public function handleWebhook(Request $request): JsonResponse
+    {
+        $webhook = DigiflazzService::saveWebhook($request);
+
+        return response()->json([
+            'success'    => true,
+            'message'    => 'Digiflazz webhook received and saved successfully.',
+            'webhook_id' => $webhook->id,
+            'ref_id'     => $webhook->ref_id,
+            'status'     => $webhook->status,
+        ], 200);
+    }
 }
