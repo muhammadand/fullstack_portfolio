@@ -13,7 +13,7 @@ class DigiflazzService
      */
     public static function getBaseUrl(): string
     {
-        return rtrim(config('services.digiflazz.url', env('DIGIFLAZZ_URL', 'https://api.digiflazz.com/v1')), '/');
+        return rtrim(config('services.digiflazz.url', 'https://api.digiflazz.com/v1'), '/');
     }
 
     /**
@@ -21,7 +21,7 @@ class DigiflazzService
      */
     public static function getUsername(): string
     {
-        return config('services.digiflazz.username', env('DIGIFLAZZ_USERNAME', 'tuwumiWXAdqg'));
+        return (string) config('services.digiflazz.username', 'tuwumiWXAdqg');
     }
 
     /**
@@ -29,7 +29,7 @@ class DigiflazzService
      */
     public static function getApiKey(): string
     {
-        return config('services.digiflazz.api_key', env('DIGIFLAZZ_API_KEY', ''));
+        return (string) config('services.digiflazz.api_key', '');
     }
 
     /**

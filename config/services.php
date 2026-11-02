@@ -42,9 +42,9 @@ return [
     ],
 
     'digiflazz' => [
-        'url' => env('DIGIFLAZZ_URL', 'https://api.digiflazz.com/v1'),
-        'username' => env('DIGIFLAZZ_USERNAME', 'tuwumiWXAdqg'),
-        'api_key' => env('DIGIFLAZZ_API_KEY', ''),
+        'url' => env('DIGIFLAZZ_URL') ?: 'https://api.digiflazz.com/v1',
+        'username' => env('DIGIFLAZZ_USERNAME') ?: 'tuwumiWXAdqg',
+        'api_key' => env('DIGIFLAZZ_API_KEY') ?: '',
     ],
 
     'scalify_pay' => [
