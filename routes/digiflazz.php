@@ -1,0 +1,19 @@
+<?php
+
+use App\Http\Controllers\ProdukDigital\DigiflazzController;
+use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| Digiflazz API Routes
+|--------------------------------------------------------------------------
+|
+| Rute khusus modul integrasi API Digiflazz (PPOB, Cek Saldo, Topup, Webhook).
+| Terdaftar via routes/api.php dengan prefix /api/digiflazz.
+|
+*/
+
+Route::prefix('digiflazz')->name('digiflazz.')->group(function () {
+    Route::post('/cek-saldo', [DigiflazzController::class, 'checkBalance'])->name('cek_saldo');
+});
+
