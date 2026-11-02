@@ -13,7 +13,7 @@ class DigiflazzService
      */
     public static function getBaseUrl(): string
     {
-        return rtrim(config('services.digiflazz.url', 'https://api.digiflazz.com/v1'), '/');
+        return rtrim(config('services.digiflazz.url'), '/');
     }
 
     /**
@@ -21,7 +21,7 @@ class DigiflazzService
      */
     public static function getUsername(): string
     {
-        return (string) config('services.digiflazz.username', 'tuwumiWXAdqg');
+        return (string) config('services.digiflazz.username');
     }
 
     /**
