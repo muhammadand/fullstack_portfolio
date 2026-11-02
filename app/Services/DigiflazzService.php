@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 class DigiflazzService
 {
     /**
-     * Get Base API URL.
+     * Get Base API URL dari Config.
      */
     public static function getBaseUrl(): string
     {
@@ -17,7 +17,7 @@ class DigiflazzService
     }
 
     /**
-     * Get Username Digiflazz.
+     * Get Username Digiflazz dari Config.
      */
     public static function getUsername(): string
     {
@@ -25,7 +25,7 @@ class DigiflazzService
     }
 
     /**
-     * Get Production / Development API Key.
+     * Get API Key Digiflazz dari Config.
      */
     public static function getApiKey(): string
     {
@@ -38,10 +38,54 @@ class DigiflazzService
      */
     public static function generateSign(string $suffix): string
     {
-        $username = self::getUsername();
-        $apiKey = self::getApiKey();
+        return md5(self::getUsername() . self::getApiKey() . $suffix);
+    }
 
-        return md5($username . $apiKey . $suffix);
+    /**
+     * Helper terpusat untuk kirim HTTP POST ke server Digiflazz.
+     */
+    protected static function post(string $endpoint, array $payload, int $timeout = 30): array
+    {
+        $apiUrl = self::getBaseUrl() . '/' . ltrim($endpoint, '/');
+
+        Log::info("Digiflazz {$endpoint} Request", [
+            'url'     => $apiUrl,
+            'payload' => $payload,
+        ]);
+
+        try {
+            $response = Http::timeout($timeout)
+                ->withHeaders([
+                    'Content-Type' => 'application/json',
+                    'Accept'       => 'application/json',
+                ])
+                ->post($apiUrl, $payload);
+
+            $responseBody = $response->json() ?? $response->body();
+
+            Log::info("Digiflazz {$endpoint} Response", [
+                'status_code' => $response->status(),
+                'response'    => $responseBody,
+            ]);
+
+            return [
+                'success'            => $response->successful(),
+                'http_status'        => $response->status(),
+                'request_payload'    => $payload,
+                'digiflazz_response' => $responseBody,
+            ];
+        } catch (\Throwable $e) {
+            Log::error("Digiflazz {$endpoint} Error: " . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return [
+                'success'         => false,
+                'http_status'     => 500,
+                'message'         => 'Gagal menghubungi server Digiflazz: ' . $e->getMessage(),
+                'request_payload' => $payload,
+            ];
+        }
     }
 
     /**
@@ -50,44 +94,30 @@ class DigiflazzService
      */
     public static function checkBalance(): array
     {
-        $url = self::getBaseUrl() . '/cek-saldo';
-        $username = self::getUsername();
-        $sign = self::generateSign('depo');
-
-        $payload = [
+        return self::post('/cek-saldo', [
             'cmd'      => 'deposit',
-            'username' => $username,
-            'sign'     => $sign,
-        ];
+            'username' => self::getUsername(),
+            'sign'     => self::generateSign('depo'),
+        ], 25);
+    }
 
-        try {
-            $response = Http::timeout(20)
-                ->withHeaders([
-                    'Content-Type' => 'application/json',
-                    'Accept'       => 'application/json',
-                ])
-                ->post($url, $payload);
-
-            $body = $response->json() ?? [];
-
-            Log::info('Digiflazz Check Balance Response', [
-                'status' => $response->status(),
-                'body'   => $body,
-            ]);
-
-            return [
-                'success'     => $response->successful(),
-                'http_status' => $response->status(),
-                'data'        => $body['data'] ?? $body,
-            ];
-        } catch (\Throwable $e) {
-            Log::error('Digiflazz checkBalance error: ' . $e->getMessage());
-
-            return [
-                'success' => false,
-                'message' => 'Gagal menghubungi server Digiflazz: ' . $e->getMessage(),
-            ];
-        }
+    /**
+     * Request Tiket Deposit Digiflazz.
+     * Endpoint: POST /deposit
+     *
+     * @param int $amount Nominal deposit
+     * @param string $bank Nama bank tujuan (BCA, MANDIRI, BRI, BNI, Flip, ShopeePay)
+     * @param string $ownerName Nama pemilik rekening pengirim
+     */
+    public static function requestDeposit(int $amount, string $bank, string $ownerName): array
+    {
+        return self::post('/deposit', [
+            'username'   => self::getUsername(),
+            'amount'     => $amount,
+            'Bank'       => $bank,
+            'owner_name' => $ownerName,
+            'sign'       => self::generateSign('deposit'),
+        ], 30);
     }
 
     /**
@@ -97,7 +127,7 @@ class DigiflazzService
      * @param string $cmd 'prepaid' atau 'pasca'
      * @param string|null $codeFilter Filter buyer_sku_code tertentu (opsional)
      * @param string|null $category Filter kategori produk (opsional)
-     * @param string|null $brand Filter merek/provider produk (opsional)
+     * @param string|null $brand Filter merek produk (opsional)
      */
     public static function getPriceList(
         string $cmd = 'prepaid',
@@ -105,51 +135,25 @@ class DigiflazzService
         ?string $category = null,
         ?string $brand = null
     ): array {
-        $url = self::getBaseUrl() . '/price-list';
-        $username = self::getUsername();
-        $sign = self::generateSign('pricelist');
-
         $payload = [
-            'cmd'      => in_array($cmd, ['pasca', 'postpaid']) ? 'pasca' : 'prepaid',
-            'username' => $username,
-            'sign'     => $sign,
+            'cmd'      => in_array(strtolower($cmd), ['pasca', 'postpaid']) ? 'pasca' : 'prepaid',
+            'username' => self::getUsername(),
+            'sign'     => self::generateSign('pricelist'),
         ];
 
         if (!empty($codeFilter)) {
-            $payload['code'] = $codeFilter;
+            $payload['code'] = (string) $codeFilter;
         }
 
         if (!empty($category)) {
-            $payload['category'] = $category;
+            $payload['category'] = (string) $category;
         }
 
         if (!empty($brand)) {
-            $payload['brand'] = $brand;
+            $payload['brand'] = (string) $brand;
         }
 
-        try {
-            $response = Http::timeout(30)
-                ->withHeaders([
-                    'Content-Type' => 'application/json',
-                    'Accept'       => 'application/json',
-                ])
-                ->post($url, $payload);
-
-            $body = $response->json() ?? [];
-
-            return [
-                'success'     => $response->successful(),
-                'http_status' => $response->status(),
-                'data'        => $body['data'] ?? $body,
-            ];
-        } catch (\Throwable $e) {
-            Log::error('Digiflazz getPriceList error: ' . $e->getMessage());
-
-            return [
-                'success' => false,
-                'message' => 'Gagal mengambil daftar harga: ' . $e->getMessage(),
-            ];
-        }
+        return self::post('/price-list', $payload, 60);
     }
 
     /**
@@ -164,17 +168,14 @@ class DigiflazzService
         ?int $maxPrice = null,
         ?string $cbUrl = null
     ): array {
-        $url = self::getBaseUrl() . '/transaction';
-        $username = self::getUsername();
         $refId = $refId ?: ('TRX-' . date('YmdHis') . '-' . strtoupper(Str::random(5)));
-        $sign = self::generateSign($refId);
 
         $payload = [
-            'username'       => $username,
+            'username'       => self::getUsername(),
             'buyer_sku_code' => $buyerSkuCode,
             'customer_no'    => $customerNo,
             'ref_id'         => $refId,
-            'sign'           => $sign,
+            'sign'           => self::generateSign($refId),
         ];
 
         if ($testing || $buyerSkuCode === 'test') {
@@ -189,41 +190,6 @@ class DigiflazzService
             $payload['cb_url'] = $cbUrl;
         }
 
-        Log::info('Digiflazz Transaction Request', [
-            'url'     => $url,
-            'payload' => $payload,
-        ]);
-
-        try {
-            $response = Http::timeout(30)
-                ->withHeaders([
-                    'Content-Type' => 'application/json',
-                    'Accept'       => 'application/json',
-                ])
-                ->post($url, $payload);
-
-            $body = $response->json() ?? [];
-
-            Log::info('Digiflazz Transaction Response', [
-                'http_status' => $response->status(),
-                'response'    => $body,
-            ]);
-
-            return [
-                'success'         => $response->successful(),
-                'http_status'     => $response->status(),
-                'request_payload' => $payload,
-                'data'            => $body['data'] ?? $body,
-            ];
-        } catch (\Throwable $e) {
-            Log::error('Digiflazz transaction error: ' . $e->getMessage());
-
-            return [
-                'success'         => false,
-                'message'         => 'Gangguan transaksi Digiflazz: ' . $e->getMessage(),
-                'request_payload' => $payload,
-            ];
-        }
+        return self::post('/transaction', $payload, 30);
     }
 }
-

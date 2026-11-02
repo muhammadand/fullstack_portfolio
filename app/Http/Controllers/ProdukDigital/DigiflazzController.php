@@ -3,142 +3,62 @@
 namespace App\Http\Controllers\ProdukDigital;
 
 use App\Http\Controllers\Controller;
+use App\Services\DigiflazzService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 
 class DigiflazzController extends Controller
 {
     /**
      * Endpoint API Cek Saldo Akun Digiflazz
-     * Endpoint lokal: GET / POST /api/digiflazz/cek-saldo
-     * Target: https://api.digiflazz.com/v1/cek-saldo
+     * GET / POST /api/digiflazz/cek-saldo
      */
-    public function checkBalance(Request $request): JsonResponse
+    public function checkBalance(): JsonResponse
     {
-        $username = config('services.digiflazz.username');
-        $apiKey = config('services.digiflazz.api_key');
-        $sign = md5($username . $apiKey . 'depo');
-        $payload = [
-            'cmd'      => 'deposit',
-            'username' => $username,
-            'sign'     => $sign,
-        ];
+        $result = DigiflazzService::checkBalance();
 
-        $apiUrl = rtrim(config('services.digiflazz.url'), '/') . '/cek-saldo';
-
-        Log::info('Digiflazz Cek Saldo Request', [
-            'url'     => $apiUrl,
-            'payload' => $payload,
-        ]);
-
-        try {
-            $response = Http::timeout(25)
-                ->withHeaders([
-                    'Content-Type' => 'application/json',
-                    'Accept'       => 'application/json',
-                ])
-                ->post($apiUrl, $payload);
-
-            $responseBody = $response->json() ?? $response->body();
-
-            Log::info('Digiflazz Cek Saldo Response', [
-                'status_code' => $response->status(),
-                'response'    => $responseBody,
-            ]);
-            return response()->json([
-                'success'            => $response->successful(),
-                'http_status'        => $response->status(),
-                'request_payload'    => $payload,
-                'digiflazz_response' => $responseBody,
-            ], $response->status());
-        } catch (\Throwable $e) {
-            Log::error('Digiflazz Cek Saldo Error: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString(),
-            ]);
-
-            return response()->json([
-                'success'         => false,
-                'message'         => 'Gagal menghubungi server Digiflazz: ' . $e->getMessage(),
-                'request_payload' => $payload,
-            ], 500);
-        }
+        return response()->json($result, $result['http_status'] ?? 200);
     }
 
     /**
-     * Endpoint API Get Price List Digiflazz (Daftar Harga Produk)
-     * Endpoint lokal: POST /api/digiflazz/price-list
-     * Target: https://api.digiflazz.com/v1/price-list
-     *
-     * Format Request Payload ke Digiflazz:
-     * {
-     *   "cmd": "prepaid",          // (Wajib) 'prepaid' atau 'pasca'
-     *   "username": "...",         // (Otomatis dari config jika tidak dikirim)
-     *   "sign": "...",             // (Otomatis md5(username + apiKey + 'pricelist'))
-     *   "code": "xld10",           // (Opsional) Kode produk Anda sebagai Buyer
-     *   "category": "Pulsa",       // (Opsional) Kategori produk pada Digiflazz
-     *   "brand": "AXIS"            // (Opsional) Merek produk pada Digiflazz
-     * }
+     * Endpoint API Get Price List Digiflazz
+     * POST /api/digiflazz/price-list
      */
     public function getPrice(Request $request): JsonResponse
     {
-        $cmd = $request->input('cmd', 'prepaid');
-        $username = $request->input('username') ?: config('services.digiflazz.username');
-        $apiKey = $request->input('api_key') ?: config('services.digiflazz.api_key');
-        $sign = $request->input('sign') ?: md5($username . $apiKey . 'pricelist');
+        $result = DigiflazzService::getPriceList(
+            cmd: $request->input('cmd', 'prepaid'),
+            codeFilter: $request->input('code'),
+            category: $request->input('category'),
+            brand: $request->input('brand')
+        );
 
-        $payload = [
-            'cmd'      => in_array(strtolower((string) $cmd), ['pasca', 'postpaid']) ? 'pasca' : 'prepaid',
-            'username' => $username,
-            'sign'     => $sign,
-        ];
+        return response()->json($result, $result['http_status'] ?? 200);
+    }
 
-        // Parameter Opsional Filter Digiflazz
-        if ($request->filled('code')) {
-            $payload['code'] = (string) $request->input('code');
-        }
+    /**
+     * Endpoint API Request Tiket Deposit Digiflazz
+     * POST /api/digiflazz/deposit
+     */
+    public function deposit(Request $request): JsonResponse
+    {
+        $amount = $request->input('amount');
+        $bank = $request->input('Bank', $request->input('bank'));
+        $ownerName = $request->input('owner_name');
 
-        if ($request->filled('category')) {
-            $payload['category'] = (string) $request->input('category');
-        }
-
-        if ($request->filled('brand')) {
-            $payload['brand'] = (string) $request->input('brand');
-        }
-
-        $apiUrl = rtrim(config('services.digiflazz.url'), '/') . '/price-list';
-
-        Log::info('Digiflazz Get Price List Request', [
-            'url'     => $apiUrl,
-            'payload' => $payload,
-        ]);
-        try {
-            $response = Http::timeout(60)
-                ->withHeaders([
-                    'Content-Type' => 'application/json',
-                    'Accept'       => 'application/json',
-                ])
-                ->post($apiUrl, $payload);
-
-            $responseBody = $response->json() ?? $response->body();
-
+        if (empty($amount) || empty($bank) || empty($ownerName)) {
             return response()->json([
-                'success'            => $response->successful(),
-                'http_status'        => $response->status(),
-                'request_payload'    => $payload,
-                'digiflazz_response' => $responseBody,
-            ], $response->status());
-        } catch (\Throwable $e) {
-            Log::error('Digiflazz Get Price List Error: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString(),
-            ]);
-
-            return response()->json([
-                'success'         => false,
-                'message'         => 'Gagal menghubungi server Digiflazz: ' . $e->getMessage(),
-                'request_payload' => $payload,
-            ], 500);
+                'success' => false,
+                'message' => 'Parameter amount, Bank, dan owner_name wajib diisi.',
+            ], 422);
         }
+
+        $result = DigiflazzService::requestDeposit(
+            amount: (int) $amount,
+            bank: (string) $bank,
+            ownerName: (string) $ownerName
+        );
+
+        return response()->json($result, $result['http_status'] ?? 200);
     }
 }
