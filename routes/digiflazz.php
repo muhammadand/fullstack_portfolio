@@ -18,7 +18,6 @@ Route::prefix('digiflazz')->name('digiflazz.')->group(function () {
     Route::post('/price-list', [DigiflazzController::class, 'getPrice'])->name('price_list');
     Route::post('/deposit', [DigiflazzController::class, 'deposit'])->name('deposit');
     Route::post('/transaction', [DigiflazzController::class, 'transaction'])->name('transaction');
-    Route::post('/topup', [DigiflazzController::class, 'transaction'])->name('topup');
     Route::post('/webhook', [DigiflazzController::class, 'handleWebhook'])->name('webhook');
     Route::post('/webhook/ping/{hook_id?}', [DigiflazzController::class, 'pingWebhook'])->name('webhook.ping');
 });
