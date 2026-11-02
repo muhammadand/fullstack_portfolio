@@ -56,9 +56,15 @@ $menus = [
 'icon' => 'fa-solid fa-cubes-stacked',
 ],
 [
-'label' => 'PPOB & Saldo',
-'route' => 'admin.ppob.index',
+'label' => 'PPOB Digiflazz',
 'icon' => 'fa-solid fa-bolt',
+'submenu' => [
+[
+'label' => 'Cek Saldo & Akun',
+'route' => 'admin.ppob.index',
+'icon' => 'fa-solid fa-wallet',
+],
+],
 ],
 [
 'label' => 'CV Service',

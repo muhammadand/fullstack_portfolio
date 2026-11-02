@@ -28,6 +28,24 @@
         </div>
     </div>
 
+    <!-- Sub-navigation Tabs -->
+    <div class="flex items-center gap-2 border-b border-slate-200 pb-4 mb-6 overflow-x-auto" style="scrollbar-width: none;">
+        <a href="{{ route('admin.ppob.index') }}" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold bg-blue-600 text-white shadow-sm shadow-blue-500/20">
+            <i class="fa-solid fa-wallet text-xs"></i>
+            <span>Cek Saldo & Akun</span>
+        </a>
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-slate-400 bg-slate-100 cursor-not-allowed opacity-80" title="Akan datang">
+            <i class="fa-solid fa-tags text-xs"></i>
+            <span>Daftar Harga Produk</span>
+            <span class="text-[9px] px-1.5 py-0.5 rounded bg-slate-200 text-slate-600 font-bold uppercase tracking-wider">Segera</span>
+        </div>
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-slate-400 bg-slate-100 cursor-not-allowed opacity-80" title="Akan datang">
+            <i class="fa-solid fa-satellite-dish text-xs"></i>
+            <span>Log Webhook</span>
+            <span class="text-[9px] px-1.5 py-0.5 rounded bg-slate-200 text-slate-600 font-bold uppercase tracking-wider">Segera</span>
+        </div>
+    </div>
+
     <!-- Alert / Status Banner -->
     <template x-if="statusMessage">
         <div class="p-4 rounded-xl mb-6 text-sm flex items-center gap-3 border shadow-sm transition-all" :class="isSuccess ? 'bg-emerald-50 border-emerald-200 text-emerald-800' : 'bg-rose-50 border-rose-200 text-rose-800'">

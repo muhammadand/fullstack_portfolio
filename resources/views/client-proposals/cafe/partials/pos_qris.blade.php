@@ -1,8 +1,8 @@
 <section id="fitur-pos" class="py-16 md:py-24 px-4 sm:px-8 bg-[#120E0C] relative">
     <div class="max-w-6xl mx-auto">
-        
+
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-            
+
             <!-- Left Info (6 Cols) -->
             <div class="lg:col-span-6 space-y-6">
                 <div>
@@ -25,8 +25,8 @@
                             <i class="fas fa-qrcode"></i>
                         </div>
                         <div>
-                            <h4 class="font-bold text-xs sm:text-sm text-white">QRIS Dinamis Otomatis</h4>
-                            <p class="text-xs text-white/60 mt-0.5 font-light">Kode QR terbuat seketika sesuai total belanjaan. Pelanggan bisa bayar pakai BCA, Mandiri, GoPay, OVO, Dana tanpa salah nominal transfer.</p>
+                            <h4 class="font-bold text-xs sm:text-sm text-white">QRIS</h4>
+                            <p class="text-xs text-white/60 mt-0.5 font-light">Pelanggan bisa bayar pakai BCA, Mandiri, GoPay, dan OVO.</p>
                         </div>
                     </div>
 
@@ -35,8 +35,8 @@
                             <i class="fas fa-receipt"></i>
                         </div>
                         <div>
-                            <h4 class="font-bold text-xs sm:text-sm text-white">Struk Kasir Digital & Thermal</h4>
-                            <p class="text-xs text-white/60 mt-0.5 font-light">Dukung cetak struk thermal kasir bluetooth atau kirim nota pesanan langsung ke WhatsApp pelanggan.</p>
+                            <h4 class="font-bold text-xs sm:text-sm text-white">Struk</h4>
+                            <p class="text-xs text-white/60 mt-0.5 font-light">Bisa cetak struk atau kirim nota pesanan langsung ke WhatsApp pelanggan.</p>
                         </div>
                     </div>
 
@@ -45,7 +45,7 @@
                             <i class="fas fa-bell-concierge"></i>
                         </div>
                         <div>
-                            <h4 class="font-bold text-xs sm:text-sm text-white">Order Routing Meja ke Barista</h4>
+                            <h4 class="font-bold text-xs sm:text-sm text-white">Order</h4>
                             <p class="text-xs text-white/60 mt-0.5 font-light">Pesanan dari meja 01 s/d meja 12 langsung tampil di layar barista dengan nomor meja dan catatan kustom.</p>
                         </div>
                     </div>
@@ -63,7 +63,7 @@
             <!-- Right Visual (6 Cols): Clean POS Mockup Card -->
             <div class="lg:col-span-6">
                 <div class="bg-[#1A1410] border border-[#3A2C22] rounded-2xl p-6 shadow-xl relative">
-                    
+
                     <!-- Header of POS Mock -->
                     <div class="flex items-center justify-between pb-3 border-b border-white/10">
                         <div>

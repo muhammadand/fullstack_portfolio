@@ -307,6 +307,12 @@ Route::middleware(['auth:affiliate'])->group(function () {
     Route::post('/partner/logout', [App\Http\Controllers\AffiliateController::class, 'logout'])->name('affiliate.logout');
     Route::post('/partner/withdraw', [App\Http\Controllers\AffiliateController::class, 'withdraw'])->name('affiliate.withdraw');
 
+    // Partner Wallet & Deposit (PPOB / Digital Products)
+    Route::get('/partner/wallet/mutations', [\App\Http\Controllers\Affiliate\WalletController::class, 'mutations'])->name('affiliate.wallet.mutations');
+    Route::post('/partner/wallet/deposit', [\App\Http\Controllers\Affiliate\WalletController::class, 'depositStore'])->name('affiliate.wallet.deposit');
+    Route::get('/partner/wallet/deposits/{depositNo}/pay', [\App\Http\Controllers\Affiliate\WalletController::class, 'payQris'])->name('affiliate.wallet.pay_qris');
+    Route::get('/partner/wallet/deposits/{depositNo}/check', [\App\Http\Controllers\Affiliate\WalletController::class, 'checkDepositStatus'])->name('affiliate.wallet.deposit_check');
+
     // Push Subscriptions
     Route::post('/partner/push/subscribe', [\App\Http\Controllers\PushSubscriptionController::class, 'update'])->name('affiliate.push.subscribe');
 
@@ -535,6 +541,21 @@ Route::get('/secret-deploy-trigger-12345', function () {
 
         \Illuminate\Support\Facades\Artisan::call('migrate', [
             '--path' => 'database/migrations/2026_11_02_144200_add_fields_to_digiflazz_webhooks_table.php',
+            '--force' => true
+        ]);
+
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_11_02_221000_create_wallets_table.php',
+            '--force' => true
+        ]);
+
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_11_02_221100_create_wallet_deposits_table.php',
+            '--force' => true
+        ]);
+
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_11_02_221200_create_wallet_mutations_table.php',
             '--force' => true
         ]);
 

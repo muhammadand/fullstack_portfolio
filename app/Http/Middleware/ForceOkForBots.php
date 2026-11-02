@@ -43,6 +43,11 @@ class ForceOkForBots
     {
         $response = $next($request);
 
+        // Jangan ubah status code untuk API dan webhook payment gateway
+        if ($request->is('payment/*', 'webhook/*', 'api/*') || $request->expectsJson()) {
+            return $response;
+        }
+
         // If response is 403 but has HTML content, it's likely WAF interference
         // Add debug header to verify middleware is active
         $response->headers->set('X-ForceOk', 'active');

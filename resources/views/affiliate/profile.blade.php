@@ -64,6 +64,26 @@
     </div>
     @endif
 
+    <!-- Ringkasan Saldo Partner (Komisi & Wallet) -->
+    <div class="grid grid-cols-2 gap-3 mb-6">
+        <div class="glass-card p-4 rounded-2xl border border-blue-500/20">
+            <p class="text-[11px] text-blue-200/70 font-medium flex items-center gap-1.5 mb-1">
+                <i class="fa-solid fa-coins text-blue-400"></i> Saldo Komisi
+            </p>
+            <p class="text-base font-extrabold text-white">
+                <span class="text-xs text-blue-300 font-medium">Rp</span> {{ number_format($affiliate->balance, 0, ',', '.') }}
+            </p>
+        </div>
+        <div class="glass-card p-4 rounded-2xl border border-emerald-500/20">
+            <p class="text-[11px] text-emerald-200/70 font-medium flex items-center gap-1.5 mb-1">
+                <i class="fa-solid fa-wallet text-emerald-400"></i> Saldo Wallet
+            </p>
+            <p class="text-base font-extrabold text-white">
+                <span class="text-xs text-emerald-300 font-medium">Rp</span> {{ number_format($affiliate->wallet_balance, 0, ',', '.') }}
+            </p>
+        </div>
+    </div>
+
     <!-- Form Edit Profile -->
     <form action="{{ route('affiliate.profile.update') }}" method="POST" enctype="multipart/form-data" class="space-y-5">
         @csrf

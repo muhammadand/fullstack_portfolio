@@ -107,4 +107,51 @@ class Affiliate extends Authenticatable
 
         return rtrim($this->lynk_id_link, '/') . '/' . ltrim($slug, '/');
     }
+
+    /**
+     * Relasi ke Wallet saldo transaksi PPOB
+     */
+    public function wallet()
+    {
+        return $this->hasOne(Wallet::class);
+    }
+
+    /**
+     * Riwayat seluruh mutasi wallet affiliate
+     */
+    public function walletMutations()
+    {
+        return $this->hasMany(WalletMutation::class)->latest();
+    }
+
+    /**
+     * Riwayat seluruh deposit saldo wallet affiliate
+     */
+    public function walletDeposits()
+    {
+        return $this->hasMany(WalletDeposit::class)->latest();
+    }
+
+    /**
+     * Mengambil wallet atau otomatis membuatnya jika belum ada
+     */
+    public function getOrCreateWallet(): Wallet
+    {
+        return $this->wallet()->firstOrCreate(
+            ['affiliate_id' => $this->id],
+            [
+                'balance' => 0.00,
+                'hold_balance' => 0.00,
+                'status' => 'active',
+            ]
+        );
+    }
+
+    /**
+     * Accessor untuk mendapatkan saldo wallet saat ini
+     */
+    public function getWalletBalanceAttribute(): float
+    {
+        return (float) ($this->wallet?->balance ?? 0.00);
+    }
 }

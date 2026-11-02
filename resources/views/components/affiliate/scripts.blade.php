@@ -85,6 +85,99 @@
         }, 300);
     }
 
+    function openWalletDepositModal() {
+        const modal = document.getElementById('walletDepositModal');
+        const content = document.getElementById('walletDepositModalContent');
+        if (!modal || !content) return;
+
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+        setTimeout(() => {
+            content.classList.remove('translate-y-full');
+        }, 10);
+
+        // Pastikan chip yang sesuai dengan input aktif secara visual saat modal dibuka
+        const input = document.getElementById('deposit_amount_input');
+        const initialAmount = input ? (parseFloat(input.value) || 50000) : 50000;
+        updateDepositChipState(initialAmount);
+    }
+
+    function closeWalletDepositModal() {
+        const modal = document.getElementById('walletDepositModal');
+        const content = document.getElementById('walletDepositModalContent');
+        if (!modal || !content) return;
+
+        content.classList.add('translate-y-full');
+        setTimeout(() => {
+            modal.classList.add('opacity-0', 'pointer-events-none');
+        }, 300);
+    }
+
+    function setDepositAmount(amount, btn = null) {
+        const input = document.getElementById('deposit_amount_input');
+        if (input) {
+            input.value = amount;
+            updateDepositChipState(amount, btn);
+            calculateDepositLive(false);
+        }
+    }
+
+    function updateDepositChipState(amount, selectedBtn = null) {
+        const chips = document.querySelectorAll('.deposit-chip');
+        chips.forEach(chip => {
+            const chipAmount = parseFloat(chip.getAttribute('data-amount')) || 0;
+            const isMatch = (selectedBtn && chip === selectedBtn) || (!selectedBtn && chipAmount === parseFloat(amount));
+
+            if (isMatch) {
+                chip.className = 'deposit-chip py-2 px-1.5 rounded-xl border border-emerald-500 bg-emerald-500/20 text-emerald-300 ring-1 ring-emerald-500/50 shadow-[0_0_12px_rgba(16,185,129,0.25)] text-xs font-extrabold transition-all duration-150 text-center active:scale-95 cursor-pointer';
+            } else {
+                chip.className = 'deposit-chip py-2 px-1.5 rounded-xl border border-white/10 glass-panel hover:border-emerald-500/40 hover:bg-emerald-500/10 text-xs font-bold text-slate-200 transition-all duration-150 text-center active:scale-95 cursor-pointer';
+            }
+        });
+    }
+
+    function calculateDepositLive(syncChips = true) {
+        const input = document.getElementById('deposit_amount_input');
+        if (!input) return;
+
+        let amount = parseFloat(input.value) || 0;
+        let fee = Math.round(amount * 0.02);
+        let total = amount + fee;
+
+        const liveAmount = document.getElementById('live_deposit_amount');
+        const liveFee = document.getElementById('live_deposit_fee');
+        const liveTotal = document.getElementById('live_deposit_total');
+
+        if (liveAmount) liveAmount.textContent = 'Rp ' + amount.toLocaleString('id-ID');
+        if (liveFee) liveFee.textContent = 'Rp ' + fee.toLocaleString('id-ID');
+        if (liveTotal) liveTotal.textContent = 'Rp ' + total.toLocaleString('id-ID');
+
+        if (syncChips) {
+            updateDepositChipState(amount);
+        }
+    }
+
+    function openWalletMutationsModal() {
+        const modal = document.getElementById('walletMutationsModal');
+        const content = document.getElementById('walletMutationsModalContent');
+        if (!modal || !content) return;
+
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+        setTimeout(() => {
+            content.classList.remove('translate-y-full');
+        }, 10);
+    }
+
+    function closeWalletMutationsModal() {
+        const modal = document.getElementById('walletMutationsModal');
+        const content = document.getElementById('walletMutationsModalContent');
+        if (!modal || !content) return;
+
+        content.classList.add('translate-y-full');
+        setTimeout(() => {
+            modal.classList.add('opacity-0', 'pointer-events-none');
+        }, 300);
+    }
+
     function openShareModal() {
         const modal = document.getElementById('shareModal');
         const content = document.getElementById('shareModalContent');
