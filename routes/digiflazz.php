@@ -20,4 +20,5 @@ Route::prefix('digiflazz')->name('digiflazz.')->group(function () {
     Route::post('/transaction', [DigiflazzController::class, 'transaction'])->name('transaction');
     Route::post('/topup', [DigiflazzController::class, 'transaction'])->name('topup');
     Route::post('/webhook', [DigiflazzController::class, 'handleWebhook'])->name('webhook');
+    Route::post('/webhook/ping/{hook_id?}', [DigiflazzController::class, 'pingWebhook'])->name('webhook.ping');
 });

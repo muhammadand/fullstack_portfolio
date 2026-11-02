@@ -208,18 +208,26 @@ class DigiflazzService
     }
 
     /**
+     * Trigger tes kirim webhook (Ping Event) ke Digiflazz.
+     * Endpoint: POST /report/hooks/{hook_id}/pings
+     * Target: https://api.digiflazz.com/v1/report/hooks/{hook_id}/pings
+     *
+     * @param string $hookId ID webhook yang ingin ditest
+     */
+    public static function pingWebhook(string $hookId): array
+    {
+        return self::post("/report/hooks/{$hookId}/pings", [], 30);
+    }
+
+    /**
      * Simpan incoming Webhook / Callback dari Digiflazz ke database.
      * Merekam seluruh headers khusus (X-Digiflazz-Event, X-Hub-Signature, User-Agent)
      * dan full body JSON payload sebelum dieksekusi bisnis logiknya.
      */
     public static function saveWebhook(\Illuminate\Http\Request $request): \App\Models\DigiflazzWebhook
     {
-        $payload = $request->json()->all() ?: $request->all();
-        if (empty($payload)) {
-            $rawContent = $request->getContent();
-            $decoded = json_decode($rawContent, true);
-            $payload = is_array($decoded) ? $decoded : ['raw' => $rawContent];
-        }
+        $rawPostData = $request->getContent();
+        $payload = json_decode($rawPostData, true) ?: ($request->json()->all() ?: $request->all());
 
         $data = $payload['data'] ?? $payload;
 
@@ -227,32 +235,50 @@ class DigiflazzService
         $signature = $request->header('X-Hub-Signature') ?? $request->header('x-hub-signature');
         $userAgent = $request->header('User-Agent') ?? $request->header('user-agent');
 
+        // Verifikasi HMAC sha1 jika secret diisi di config (.env DIGIFLAZZ_WEBHOOK_SECRET)
+        $secret = config('services.digiflazz.webhook_secret');
+        $isValidSignature = null;
+        if (!empty($secret) && !empty($signature)) {
+            $expectedSignature = 'sha1=' . hash_hmac('sha1', $rawPostData, $secret);
+            $isValidSignature = hash_equals($expectedSignature, $signature);
+        }
+
+        // Tangani identifier jika callback berupa ping/test hook
+        $refId = $data['ref_id'] ?? (isset($data['hook_id']) ? ('HOOK-' . $data['hook_id']) : null);
+        $status = $data['status'] ?? (isset($data['hook_id']) ? 'ping' : null);
+        $message = $data['message'] ?? (isset($data['hook_id']) ? 'Webhook ping test event' : null);
+
         Log::info('Digiflazz Webhook Received', [
-            'event'     => $event,
-            'signature' => $signature,
-            'user_agent' => $userAgent,
-            'ref_id'    => $data['ref_id'] ?? null,
-            'status'    => $data['status'] ?? null,
-            'rc'        => $data['rc'] ?? null,
-            'sn'        => $data['sn'] ?? null,
-            'payload'   => $payload,
+            'event'              => $event,
+            'signature'          => $signature,
+            'is_valid_signature' => $isValidSignature,
+            'user_agent'         => $userAgent,
+            'ref_id'             => $refId,
+            'status'             => $status,
+            'rc'                 => $data['rc'] ?? null,
+            'sn'                 => $data['sn'] ?? null,
+            'payload'            => $payload,
         ]);
 
         return \App\Models\DigiflazzWebhook::create([
-            'event'          => $event,
-            'signature'      => $signature,
-            'user_agent'     => $userAgent,
-            'ip_address'     => $request->ip(),
-            'ref_id'         => $data['ref_id'] ?? null,
-            'customer_no'    => $data['customer_no'] ?? null,
-            'buyer_sku_code' => $data['buyer_sku_code'] ?? null,
-            'status'         => $data['status'] ?? null,
-            'rc'             => isset($data['rc']) ? (string) $data['rc'] : null,
-            'sn'             => $data['sn'] ?? null,
-            'price'          => isset($data['price']) ? (float) $data['price'] : null,
-            'payload'        => $payload,
-            'headers'        => $request->headers->all(),
-            'is_processed'   => false,
+            'event'              => $event,
+            'signature'          => $signature,
+            'is_valid_signature' => $isValidSignature,
+            'user_agent'         => $userAgent,
+            'ip_address'         => $request->ip(),
+            'ref_id'             => $refId,
+            'customer_no'        => $data['customer_no'] ?? null,
+            'customer_name'      => $data['customer_name'] ?? null,
+            'buyer_sku_code'     => $data['buyer_sku_code'] ?? null,
+            'status'             => $status,
+            'message'            => $message,
+            'rc'                 => isset($data['rc']) ? (string) $data['rc'] : null,
+            'sn'                 => $data['sn'] ?? null,
+            'price'              => isset($data['price']) ? (float) $data['price'] : null,
+            'buyer_last_saldo'   => isset($data['buyer_last_saldo']) ? (float) $data['buyer_last_saldo'] : null,
+            'payload'            => $payload,
+            'headers'            => $request->headers->all(),
+            'is_processed'       => false,
         ]);
     }
 }

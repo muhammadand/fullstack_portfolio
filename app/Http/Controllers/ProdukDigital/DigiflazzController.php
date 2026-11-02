@@ -151,4 +151,25 @@ class DigiflazzController extends Controller
             'status'     => $webhook->status,
         ], 200);
     }
+
+    /**
+     * Endpoint API Trigger Tes Ping Webhook ke Digiflazz
+     * POST /api/digiflazz/webhook/ping/{hook_id?}
+     * Target: https://api.digiflazz.com/v1/report/hooks/{hook_id}/pings
+     */
+    public function pingWebhook(Request $request, ?string $hookId = null): JsonResponse
+    {
+        $hookId = $hookId ?: $request->input('hook_id');
+
+        if (empty($hookId)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Parameter hook_id wajib diisi (misal: 11aaabbb).',
+            ], 422);
+        }
+
+        $result = DigiflazzService::pingWebhook((string) $hookId);
+
+        return response()->json($result, $result['http_status'] ?? 200);
+    }
 }
