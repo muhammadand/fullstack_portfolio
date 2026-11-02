@@ -15,5 +15,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('digiflazz')->name('digiflazz.')->group(function () {
     Route::match(['get', 'post'], '/cek-saldo', [DigiflazzController::class, 'checkBalance'])->name('cek_saldo');
+    Route::post('/price-list', [DigiflazzController::class, 'getPrice'])->name('price_list');
 });
-

@@ -17,14 +17,9 @@ class DigiflazzController extends Controller
      */
     public function checkBalance(Request $request): JsonResponse
     {
-        // Ambil credentials langsung dari config (tanpa perlu input parameter)
         $username = config('services.digiflazz.username');
         $apiKey = config('services.digiflazz.api_key');
-
-        // Formula resmi signature Digiflazz: md5(username + apiKey + "depo")
         $sign = md5($username . $apiKey . 'depo');
-
-        // Susun payload otomatis ke Digiflazz
         $payload = [
             'cmd'      => 'deposit',
             'username' => $username,
@@ -52,7 +47,6 @@ class DigiflazzController extends Controller
                 'status_code' => $response->status(),
                 'response'    => $responseBody,
             ]);
-
             return response()->json([
                 'success'            => $response->successful(),
                 'http_status'        => $response->status(),
@@ -61,6 +55,68 @@ class DigiflazzController extends Controller
             ], $response->status());
         } catch (\Throwable $e) {
             Log::error('Digiflazz Cek Saldo Error: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return response()->json([
+                'success'         => false,
+                'message'         => 'Gagal menghubungi server Digiflazz: ' . $e->getMessage(),
+                'request_payload' => $payload,
+            ], 500);
+        }
+    }
+
+    /**
+     * Endpoint API Get Price List Digiflazz (Daftar Harga Produk)
+     * Endpoint lokal: POST /api/digiflazz/price-list
+     * Target: https://api.digiflazz.com/v1/price-list
+     *
+     * Format Request Payload ke Digiflazz:
+     * {
+     *   "cmd": "prepaid", // 'prepaid' atau 'pasca'
+     *   "username": "...",
+     *   "sign": "md5(username + apiKey + 'pricelist')",
+     *   "code": "xld10" // opsional: jika ingin cek 1 produk saja
+     * }
+     */
+    public function getPrice(Request $request): JsonResponse
+    {
+        $cmd = $request->input('cmd');
+        $username = config('services.digiflazz.username');
+        $apiKey = config('services.digiflazz.api_key');
+        $sign = md5($username . $apiKey . 'pricelist');
+        $payload = [
+            'cmd'      => $cmd,
+            'username' => $username,
+            'sign'     => $sign,
+        ];
+        if ($request->filled('code')) {
+            $payload['code'] = $request->input('code');
+        }
+        $apiUrl = rtrim(config('services.digiflazz.url'), '/') . '/price-list';
+
+        Log::info('Digiflazz Get Price List Request', [
+            'url'     => $apiUrl,
+            'payload' => $payload,
+        ]);
+        try {
+            $response = Http::timeout(60)
+                ->withHeaders([
+                    'Content-Type' => 'application/json',
+                    'Accept'       => 'application/json',
+                ])
+                ->post($apiUrl, $payload);
+
+            $responseBody = $response->json() ?? $response->body();
+
+            return response()->json([
+                'success'            => $response->successful(),
+                'http_status'        => $response->status(),
+                'request_payload'    => $payload,
+                'digiflazz_response' => $responseBody,
+            ], $response->status());
+        } catch (\Throwable $e) {
+            Log::error('Digiflazz Get Price List Error: ' . $e->getMessage(), [
                 'trace' => $e->getTraceAsString(),
             ]);
 
