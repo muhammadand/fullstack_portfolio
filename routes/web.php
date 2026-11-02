@@ -169,6 +169,9 @@ Route::resource('admin/digital-products', App\Http\Controllers\Admin\DigitalProd
     'destroy' => 'admin.digital_products.destroy',
 ]);
 
+// Manajemen PPOB & Saldo Digiflazz
+Route::get('admin/ppob', [App\Http\Controllers\Admin\PpobAdminController::class, 'index'])->name('admin.ppob.index')->middleware('auth');
+
 Route::resource('admin/client-proposals', App\Http\Controllers\Admin\ClientProposalController::class)->names([
     'index' => 'admin.client_proposals.index',
     'create' => 'admin.client_proposals.create',

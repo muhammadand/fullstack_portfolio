@@ -56,6 +56,11 @@ $menus = [
 'icon' => 'fa-solid fa-cubes-stacked',
 ],
 [
+'label' => 'PPOB & Saldo',
+'route' => 'admin.ppob.index',
+'icon' => 'fa-solid fa-bolt',
+],
+[
 'label' => 'CV Service',
 'route' => 'admin.cv_service.index',
 'icon' => 'fa-solid fa-id-card',
