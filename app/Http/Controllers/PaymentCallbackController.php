@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\GoogleCardOrder;
 use App\Models\PaymentCallback;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -61,6 +62,24 @@ class PaymentCallbackController extends Controller
                 'raw_response' => $payload,
             ]);
 
+            // Sinkronisasi status Google Review Card Order jika order_number cocok (bisa order_id internal, midtrans_order_id, atau transaction_id)
+            $cardOrder = GoogleCardOrder::where('order_id', $orderNumber)
+                ->orWhere(function ($q) use ($orderNumber, $transactionId) {
+                    if (!empty($transactionId)) {
+                        $q->where('transaction_id', $transactionId);
+                    }
+                    if (!empty($orderNumber)) {
+                        $q->orWhere('raw_response->midtrans_order_id', $orderNumber)
+                          ->orWhere('raw_response->payment_details->order_id', $orderNumber);
+                    }
+                })
+                ->first();
+            $createdCard = null;
+            if ($cardOrder && in_array(strtolower((string) $transactionStatus), ['settlement', 'capture', 'success', 'paid'])) {
+                $createdCard = $cardOrder->markAsPaid($transactionId, $payload);
+                Log::info("GoogleCardOrder #{$orderNumber} paid! Created & activated ReviewCard: {$createdCard->serial_number} with Google Review URL: {$createdCard->google_review_url}");
+            }
+
             return response()->json([
                 'success' => true,
                 'message' => 'Payment callback stored successfully.',
@@ -69,6 +88,14 @@ class PaymentCallbackController extends Controller
                     'order_number' => $orderNumber,
                     'transaction_id' => $transactionId,
                     'transaction_status' => $transactionStatus,
+                    'order_updated' => (bool) $cardOrder,
+                    'review_card' => $createdCard ? [
+                        'id' => $createdCard->id,
+                        'serial_number' => $createdCard->serial_number,
+                        'slug' => $createdCard->slug,
+                        'scan_url' => $createdCard->scan_url,
+                        'google_review_url' => $createdCard->google_review_url,
+                    ] : null,
                 ],
             ], 200);
         } catch (\Throwable $e) {

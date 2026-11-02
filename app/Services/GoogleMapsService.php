@@ -32,6 +32,18 @@ class GoogleMapsService
             ];
         }
 
+        // Jika URL berupa direct g.page review link
+        if (str_contains($url, 'g.page') && str_contains($url, '/review')) {
+            return [
+                'place_id'         => null,
+                'write_review_url' => $url,
+                'latitude'         => null,
+                'longitude'        => null,
+                'cid'              => null,
+                'resolved_url'     => $url,
+            ];
+        }
+
         $resolvedUrl = $this->resolveUrl($url);
 
         // 1. Ekstrak Lat & Long jika ada di URL

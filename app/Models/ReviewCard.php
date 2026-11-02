@@ -17,6 +17,7 @@ class ReviewCard extends Model
         'business_name',
         'google_review_url',
         'status',
+        'is_sold',
         'buy_price',
         'payment_status',
         'purchased_at',
@@ -30,6 +31,7 @@ class ReviewCard extends Model
     protected $casts = [
         'total_scans' => 'integer',
         'buy_price' => 'integer',
+        'is_sold' => 'boolean',
         'activated_at' => 'datetime',
         'purchased_at' => 'datetime',
     ];
@@ -37,6 +39,11 @@ class ReviewCard extends Model
     public function affiliate()
     {
         return $this->belongsTo(Affiliate::class);
+    }
+
+    public function googleCardOrder()
+    {
+        return $this->hasOne(GoogleCardOrder::class);
     }
 
     /**

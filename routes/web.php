@@ -269,6 +269,8 @@ Route::get('/partner-program', [HomeController::class, 'partnerProgram'])->name(
 Route::get('/google-review-card', [HomeController::class, 'googleReviewCard'])->name('landing.google_review_card');
 Route::get('/beli-google-card', [HomeController::class, 'googleReviewCard']);
 Route::post('/api/google-card/qris', [HomeController::class, 'generateGoogleCardQris'])->name('landing.google_card.qris');
+Route::get('/api/google-card/orders/{orderId}/status', [HomeController::class, 'checkGoogleCardOrderStatus'])->name('landing.google_card.status');
+Route::post('/api/google-card/orders/{orderId}/simulate-paid', [HomeController::class, 'simulateGoogleCardPayment'])->name('landing.google_card.simulate_paid');
 //Documentation
 Route::resource('documentation', DocumentationController::class);
 
@@ -510,6 +512,16 @@ Route::get('/secret-deploy-trigger-12345', function () {
 
         \Illuminate\Support\Facades\Artisan::call('migrate', [
             '--path' => 'database/migrations/2026_10_29_083526_create_payment_callbacks_table.php',
+            '--force' => true
+        ]);
+
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_11_01_111500_create_google_card_orders_table.php',
+            '--force' => true
+        ]);
+
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_11_01_114500_add_review_card_id_to_google_card_orders_table.php',
             '--force' => true
         ]);
 

@@ -47,4 +47,9 @@ return [
         'api_key' => env('DIGIFLAZZ_API_KEY', ''),
     ],
 
+    'scalify_pay' => [
+        'base_url' => env('SCALIFY_PAY_URL', 'http://pay.scalifyintellegence.my.id/api/v1'),
+        'api_key' => env('SCALIFY_PAY_API_KEY', env('SCALIFY_QRIS_API_KEY', 'pk_live_demo1234_sk_live_demo_store_secret_99887766')),
+    ],
+
 ];

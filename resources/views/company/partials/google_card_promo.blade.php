@@ -96,40 +96,27 @@
                 </div>
 
                 {{-- Mockup Canvas Container with 3D Stacked Deck & Swipe Support --}}
-                <div class="w-full max-w-[340px] relative select-none touch-pan-y"
-                     @touchstart="handleTouchStart($event)"
-                     @touchmove="handleTouchMove($event)"
-                     @touchend="handleTouchEnd($event)"
-                     @mousedown="handleMouseDown($event)"
-                     @mousemove="handleMouseMove($event)"
-                     @mouseup="handleMouseUp($event)"
-                     @mouseleave="handleMouseLeave($event)">
+                <div class="w-full max-w-[340px] relative select-none touch-pan-y" @touchstart="handleTouchStart($event)" @touchmove="handleTouchMove($event)" @touchend="handleTouchEnd($event)" @mousedown="handleMouseDown($event)" @mousemove="handleMouseMove($event)" @mouseup="handleMouseUp($event)" @mouseleave="handleMouseLeave($event)">
 
                     {{-- Dynamic Ambient Glow behind deck --}}
                     <div class="absolute -inset-3 rounded-[36px] blur-xl opacity-75 transition-all duration-500 pointer-events-none" :class="currentTheme.glowClass"></div>
 
                     {{-- ── DECK LAYER 3 (Paling Belakang) ── --}}
-                    <div class="absolute inset-0 rounded-[28px] transform scale-[0.88] translate-y-5 opacity-25 border border-white/10 shadow-lg pointer-events-none transition-all duration-300"
-                         :class="deckThemes[2].cardClass">
+                    <div class="absolute inset-0 rounded-[28px] transform scale-[0.88] translate-y-5 opacity-25 border border-white/10 shadow-lg pointer-events-none transition-all duration-300" :class="deckThemes[2].cardClass">
                     </div>
 
                     {{-- ── DECK LAYER 2 (Di Tengah Tumpukan) ── --}}
-                    <div class="absolute inset-0 rounded-[28px] transform scale-[0.94] translate-y-2.5 opacity-50 border border-white/15 shadow-xl pointer-events-none transition-all duration-300"
-                         :class="deckThemes[1].cardClass">
+                    <div class="absolute inset-0 rounded-[28px] transform scale-[0.94] translate-y-2.5 opacity-50 border border-white/15 shadow-xl pointer-events-none transition-all duration-300" :class="deckThemes[1].cardClass">
                     </div>
 
                     {{-- ── DECK LAYER 1 (KARTU UTAMA AKTIF - BISA DI-SWIPE / GESER) ── --}}
-                    <div class="relative rounded-[28px] p-6 shadow-2xl flex flex-col items-center text-center transition-all select-none"
-                         :class="[currentTheme.cardClass, isDragging ? 'cursor-grabbing scale-[1.02]' : 'cursor-grab']"
-                         :style="{
+                    <div class="relative rounded-[28px] p-6 shadow-2xl flex flex-col items-center text-center transition-all select-none" :class="[currentTheme.cardClass, isDragging ? 'cursor-grabbing scale-[1.02]' : 'cursor-grab']" :style="{
                              transform: 'translateX(' + dragOffset + 'px) rotate(' + (dragOffset * 0.04) + 'deg)',
                              transition: isDragging ? 'none' : 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease'
-                         }"
-                         style="box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.65); font-family: 'Outfit', sans-serif;">
+                         }" style="box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.65); font-family: 'Outfit', sans-serif;">
 
                         {{-- Floating Swipe Direction Hint Badge on Card Drag --}}
-                        <div x-show="Math.abs(dragOffset) > 20" x-cloak class="absolute top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider backdrop-blur-md transition-all shadow-md z-30"
-                             :class="dragOffset < 0 ? 'bg-cyan-500 text-white' : 'bg-amber-500 text-slate-950'">
+                        <div x-show="Math.abs(dragOffset) > 20" x-cloak class="absolute top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider backdrop-blur-md transition-all shadow-md z-30" :class="dragOffset < 0 ? 'bg-cyan-500 text-white' : 'bg-amber-500 text-slate-950'">
                             <span x-text="dragOffset < 0 ? 'Berikutnya ›' : '‹ Sebelumnya'"></span>
                         </div>
 
@@ -182,7 +169,14 @@
 
                                 {{-- Demo QR image --}}
                                 <div class="w-36 h-36 relative flex items-center justify-center p-1 rounded-xl transition-all" :class="currentTheme.qrWrapperClass">
-                                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://maps.google.com" alt="QR Code Mockup" class="w-full h-full object-contain pointer-events-none">
+                                    <template x-if="customerQrDataUrl">
+                                        <img :src="customerQrDataUrl" alt="QR Code Mockup" class="w-full h-full object-contain pointer-events-none">
+                                    </template>
+                                    <template x-if="!customerQrDataUrl">
+                                        <div class="w-full h-full flex items-center justify-center text-slate-300">
+                                            <i class="fa-solid fa-qrcode text-5xl"></i>
+                                        </div>
+                                    </template>
                                     <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
                                         <div class="w-8 h-8 rounded-full bg-white shadow-md flex items-center justify-center p-1 border border-slate-100">
                                             <svg class="w-5 h-5" viewBox="0 0 24 24">
@@ -361,11 +355,26 @@
 
                     {{-- Header Step 2 --}}
                     <div class="flex items-center justify-between pb-3 border-b border-white/10">
-                        <button type="button" @click="step = 'form'" class="text-xs text-white/60 hover:text-white flex items-center gap-1.5 transition cursor-pointer">
+                        <button type="button" @click="step = 'form'; stopPolling();" class="text-xs text-white/60 hover:text-white flex items-center gap-1.5 transition cursor-pointer">
                             <i class="fa-solid fa-arrow-left text-[11px]"></i> Ubah Data
                         </button>
                         <span class="text-xs font-mono font-bold text-brand-accent" x-text="orderData.order_id"></span>
                     </div>
+
+                    {{-- Status Banner Realtime (Jika Terdeteksi Lunas) --}}
+                    <template x-if="isPaid">
+                        <div class="p-4 rounded-2xl bg-emerald-500/20 border border-emerald-400/50 text-emerald-200 text-center space-y-2 shadow-lg shadow-emerald-950/40">
+                            <div class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-emerald-500 text-white text-lg shadow-md mb-1 animate-bounce">
+                                <i class="fa-solid fa-check"></i>
+                            </div>
+                            <h4 class="text-white font-bold text-sm sm:text-base">Pembayaran Berhasil Dikonfirmasi Lunas!</h4>
+                            <p class="text-xs text-emerald-300">File master Google Review Card siap cetak Anda sudah tersedia untuk diunduh.</p>
+                            <button type="button" @click="openSuccessModal()" class="mt-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-slate-950 font-black text-xs uppercase tracking-wider inline-flex items-center gap-2 shadow-lg shadow-emerald-500/30 transition-all hover:scale-[1.02] cursor-pointer">
+                                <i class="fa-solid fa-download"></i>
+                                <span>Buka Pop-up Unduh File (PDF &amp; PNG)</span>
+                            </button>
+                        </div>
+                    </template>
 
                     {{-- QRIS Official Card Container --}}
                     <div class="bg-white rounded-2xl p-4 sm:p-5 text-slate-900 shadow-xl border border-slate-100">
@@ -381,7 +390,7 @@
                                     Quick Response Code<br>Indonesian Standard
                                 </span>
                             </div>
-                            <span class="text-[9px] font-bold text-red-600 bg-red-50 border border-red-200 px-2 py-0.5 rounded">GPN &bull; DANA</span>
+                            <span class="text-[9px] font-bold text-red-600 bg-red-50 border border-red-200 px-2 py-0.5 rounded">GPN &bull; SCALIFY PAY</span>
                         </div>
 
                         {{-- Total Nominal Highlight --}}
@@ -398,19 +407,41 @@
 
                         {{-- QR Code Image --}}
                         <div class="flex flex-col items-center justify-center p-2">
-                            <div class="p-2 bg-white rounded-xl border-2 border-slate-900/10 shadow-sm">
-                                <img :src="orderData.qris_image_url" alt="QRIS Rp 20.000" class="w-48 h-48 sm:w-56 sm:h-56 object-contain">
+                            <div class="p-2 bg-white rounded-xl border-2 border-slate-900/10 shadow-sm flex items-center justify-center min-h-[200px]">
+                                <template x-if="effectiveQrisImageUrl">
+                                    <img :src="effectiveQrisImageUrl" alt="QRIS Rp 20.000" class="w-48 h-48 sm:w-56 sm:h-56 object-contain block" style="image-rendering: -webkit-optimize-contrast; shape-rendering: crispEdges;">
+                                </template>
+                                <template x-if="!effectiveQrisImageUrl">
+                                    <div class="w-48 h-48 flex flex-col items-center justify-center text-slate-400 gap-2">
+                                        <i class="fa-solid fa-circle-notch fa-spin text-2xl text-blue-500"></i>
+                                        <span class="text-[11px] font-medium">Memuat QRIS...</span>
+                                    </div>
+                                </template>
                             </div>
-                            <p class="text-[11px] text-slate-500 mt-2 font-medium text-center">
-                                Scan QR di atas dengan <strong>BCA, Livin, BRImo, Dana, GoPay, OVO, atau ShopeePay</strong>
-                            </p>
+                            <div class="mt-2 text-center space-y-1">
+                                <div class="flex items-center justify-center gap-1.5 text-[11px] font-semibold" :class="isPaid ? 'text-emerald-600' : 'text-slate-600'">
+                                    <span class="w-2 h-2 rounded-full" :class="isPaid ? 'bg-emerald-500' : 'bg-amber-400 animate-ping'"></span>
+                                    <span x-text="isPaid ? 'Pembayaran Lunas (Terverifikasi)' : 'Menunggu pembayaran otomatis via QRIS...'"></span>
+                                </div>
+                                <p class="text-[10px] text-slate-400 font-medium">
+                                    Buka aplikasi <strong>BCA, Livin, BRImo, Dana, GoPay, OVO, atau ShopeePay</strong> lalu scan QR di atas
+                                </p>
+                            </div>
                         </div>
 
                         {{-- Download QRIS button --}}
                         <div class="mt-2 text-center">
-                            <a :href="orderData.qris_image_url" target="_blank" download="qris-google-card-20k.png" class="inline-flex items-center gap-1.5 text-xs text-blue-600 hover:text-blue-800 font-semibold underline">
+                            <a :href="effectiveQrisImageUrl" target="_blank" download="qris-google-card-20k.png" class="inline-flex items-center gap-1.5 text-xs text-blue-600 hover:text-blue-800 font-semibold underline">
                                 <i class="fa-solid fa-arrow-down-to-bracket text-[10px]"></i> Unduh QRIS / Tampilkan Besar
                             </a>
+                        </div>
+
+                        {{-- Manual Check Status --}}
+                        <div class="mt-3 pt-3 border-t border-slate-100 flex items-center justify-center">
+                            <button type="button" @click="checkStatusManual()" :disabled="isCheckingStatus" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center gap-2 transition cursor-pointer disabled:opacity-50">
+                                <i :class="isCheckingStatus ? 'fa-solid fa-circle-notch fa-spin text-blue-600' : 'fa-solid fa-rotate text-blue-600'"></i>
+                                <span x-text="isCheckingStatus ? 'Mengecek Pembayaran...' : 'Cek Status Pembayaran'"></span>
+                            </button>
                         </div>
                     </div>
 
@@ -505,95 +536,405 @@
 
     </div>
 
+    {{-- ══════════════════════════════════════════════════════════
+         POP-UP MODAL: SUDAH BAYAR / LUNAS — WAJIB DOWNLOAD FILE
+         ══════════════════════════════════════════════════════════ --}}
+    <div x-show="showSuccessModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto" role="dialog" aria-modal="true" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+
+        {{-- Dark Backdrop Blur --}}
+        <div class="fixed inset-0 bg-slate-950/85 backdrop-blur-md transition-opacity" @click="showSuccessModal = false"></div>
+
+        {{-- Modal Box Container (2-Column Professional Layout) --}}
+        <div class="relative w-full max-w-4xl lg:max-w-5xl bg-[#0B0F19] border border-white/10 rounded-3xl p-5 sm:p-7 shadow-[0_25px_70px_rgba(0,0,0,0.6)] my-auto z-10 text-white max-h-[92vh] overflow-y-auto" x-transition:enter="transition ease-out duration-300 transform" x-transition:enter-start="opacity-0 scale-95 translate-y-4" x-transition:enter-end="opacity-100 scale-100 translate-y-0" x-transition:leave="transition ease-in duration-200 transform" x-transition:leave-start="opacity-100 scale-100 translate-y-0" x-transition:leave-end="opacity-0 scale-95 translate-y-4">
+
+            {{-- Ambient Top Glow --}}
+            <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-72 h-72 bg-emerald-500/15 blur-[100px] rounded-full pointer-events-none"></div>
+
+            {{-- Header Bar --}}
+            <div class="flex items-start justify-between pb-4 border-b border-white/10 relative">
+                <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-circle-check text-xl"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-lg sm:text-xl font-bold text-white tracking-tight">Pembayaran Berhasil</h3>
+                            <span class="px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-[10px] font-semibold tracking-wide">
+                                Lunas
+                            </span>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-0.5">
+                            Terima kasih, <strong class="text-white" x-text="customerName || 'Kak'"></strong>! Desain Google Review Card untuk <strong class="text-cyan-300" x-text="businessName || 'Usaha Anda'"></strong> sudah siap diunduh.
+                        </p>
+                    </div>
+                </div>
+
+                {{-- Close Button --}}
+                <button type="button" @click="showSuccessModal = false" class="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition cursor-pointer" title="Tutup Jendela">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+
+            {{-- 2-Column Side-by-Side Content Grid --}}
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start mt-5">
+
+                {{-- ── LEFT: CARD & QR CODE PREVIEW (5 Cols) ── --}}
+                <div class="lg:col-span-5 flex flex-col items-center">
+                    <div class="w-full bg-slate-950/50 border border-white/5 rounded-2xl p-4 flex flex-col items-center">
+                        <span class="text-[11px] font-semibold text-slate-400 tracking-wider uppercase mb-3 flex items-center gap-1.5">
+                            <i class="fa-solid fa-eye text-cyan-400 text-xs"></i> Preview Desain Kartu
+                        </span>
+
+                        {{-- THE PRINTABLE CARD NODE (Rendered by html2canvas & jsPDF) --}}
+                        <div id="printableCardNode" class="w-[260px] sm:w-[280px] rounded-[22px] p-4 sm:p-5 shadow-2xl flex flex-col items-center text-center relative select-none box-border border" :class="currentTheme.cardClass" style="font-family: 'Outfit', sans-serif;">
+
+                            {{-- Acrylic Top Slot --}}
+                            <div class="w-9 h-1.5 rounded-full mb-2.5" :class="currentTheme.acrylicSlot"></div>
+
+                            {{-- Official Google Emblem --}}
+                            <div class="w-9 h-9 mb-1 flex items-center justify-center">
+                                <svg class="w-full h-full" viewBox="0 0 24 24">
+                                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
+                                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
+                                </svg>
+                            </div>
+
+                            {{-- Business Name Badge --}}
+                            <div class="my-1 px-3 py-0.5 rounded-full text-xs font-bold max-w-[230px] truncate border" :class="currentTheme.badgeClass">
+                                <span x-text="businessName || 'Nama Toko Anda'"></span>
+                            </div>
+
+                            {{-- Bantu Ulas Kami di Google --}}
+                            <p class="font-medium text-[11px] leading-tight mb-0.5" :class="currentTheme.headlineClass">Bantu Ulas Kami di</p>
+                            <div class="flex items-center justify-center my-0.5 mb-1.5">
+                                <svg viewBox="0 0 272 92" class="h-4 sm:h-5 w-auto">
+                                    <path fill="#EA4335" d="M115.75 47.18c0 12.77-9.99 22.18-22.25 22.18s-22.25-9.41-22.25-22.18C71.25 34.32 81.24 25 93.5 25s22.25 9.32 22.25 22.18zm-9.74 0c0-7.98-5.79-13.44-12.51-13.44S80.99 39.2 80.99 47.18c0 7.9 5.79 13.44 12.51 13.44s12.51-5.55 12.51-13.44z" />
+                                    <path fill="#FBBC05" d="M163.75 47.18c0 12.77-9.99 22.18-22.25 22.18s-22.25-9.41-22.25-22.18c0-12.85 9.99-22.18 22.25-22.18s22.25 9.32 22.25 22.18zm-9.74 0c0-7.98-5.79-13.44-12.51-13.44s-12.51 5.46-12.51 13.44c0 7.9 5.79 13.44 12.51 13.44s12.51-5.55 12.51-13.44z" />
+                                    <path fill="#4285F4" d="M209.75 26.34v39.82c0 16.38-9.66 23.07-21.08 23.07-10.75 0-17.22-7.19-19.66-13.07l8.48-3.53c1.51 3.61 5.21 8.19 11.17 8.19 7.31 0 11.84-4.53 11.84-13.02v-3.19h-.34c-2.18 2.69-6.38 5.04-11.68 5.04-11.09 0-21.25-9.66-21.25-22.09 0-12.52 10.16-22.26 21.25-22.26 5.29 0 9.49 2.35 11.68 4.96h.34v-3.92h9.45zm-8.82 20.92c0-7.81-5.21-13.44-11.84-13.44-6.72 0-12.35 5.63-12.35 13.44 0 7.72 5.63 13.35 12.35 13.35 6.63 0 11.84-5.63 11.84-13.35z" />
+                                    <path fill="#34A853" d="M225 3v65h-9.5V3h9.5z" />
+                                    <path fill="#EA4335" d="M262.02 54.48l7.56 5.04c-2.44 3.61-8.32 9.83-18.48 9.83-12.6 0-22.01-9.74-22.01-22.18 0-13.19 9.49-22.18 20.92-22.18 11.51 0 17.14 9.16 18.98 14.11l1.01 2.52-29.65 12.28c2.27 4.45 5.8 6.72 10.75 6.72 4.96 0 8.4-2.44 10.92-6.14zm-13.78-8.15l19.82-8.23c-1.09-2.77-4.37-4.7-8.23-4.7-4.95 0-11.84 4.37-11.59 12.93z" />
+                                    <path fill="#4285F4" d="M35.29 41.41V32H67c.31 1.64.47 3.58.47 5.68 0 7.06-1.93 15.79-8.15 22.01-6.05 6.3-13.78 9.66-24.02 9.66C16.32 69.35.36 53.89.36 34.91.36 15.93 16.32.47 35.3.47c10.5 0 17.98 4.12 23.6 9.49l-6.64 6.64c-4.03-3.78-9.49-6.72-16.97-6.72-13.86 0-24.7 11.17-24.7 25.03 0 13.86 10.84 25.03 24.7 25.03 8.99 0 14.11-3.61 17.39-6.89 2.69-2.69 4.45-6.55 5.12-11.64H35.29z" />
+                                </svg>
+                            </div>
+
+                            {{-- 5 Gold Stars Rating --}}
+                            <div class="flex items-center justify-center gap-1 mb-1.5">
+                                <template x-for="i in 5">
+                                    <i class="fa-solid fa-star text-xs" :class="currentTheme.starClass"></i>
+                                </template>
+                            </div>
+
+                            {{-- QR Container with dynamic gradient border --}}
+                            <div class="w-full p-[2px] rounded-2xl my-1 shadow-sm" :style="'background: ' + currentTheme.qrBorderGradient">
+                                <div class="w-full rounded-[14px] p-2 flex flex-col items-center" :class="currentTheme.qrContainerClass">
+                                    <p class="text-[9px] font-bold tracking-wide mb-1" :class="currentTheme.qrLabelClass">SCAN QR REVIEW</p>
+
+                                    {{-- QR Code Image for customer review --}}
+                                    <div class="w-28 h-28 relative flex items-center justify-center p-1 rounded-xl" :class="currentTheme.qrWrapperClass">
+                                        <img :src="customerQrDataUrl" alt="QR Code Google Review" class="w-full h-full object-contain block" style="image-rendering: -webkit-optimize-contrast; shape-rendering: crispEdges;">
+                                        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                            <div class="w-6 h-6 rounded-full bg-white shadow-md flex items-center justify-center p-0.5 border border-slate-100">
+                                                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24">
+                                                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                                                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                                                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
+                                                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <p class="text-[8px] mt-1 font-medium" :class="currentTheme.qrSubClass">Arahkan kamera HP ke QR</p>
+                                </div>
+                            </div>
+
+                            {{-- Footer --}}
+                            <div class="w-full pt-1.5 mt-1 flex items-center justify-between text-[8px] border-t" :class="currentTheme.footerBorderClass">
+                                <span class="font-semibold flex items-center gap-1" :class="currentTheme.footerBadgeClass">
+                                    <i class="fa-solid fa-certificate"></i> <span x-text="currentTheme.tag"></span>
+                                </span>
+                                <span class="font-mono opacity-75">Scalify &bull; 300 DPI</span>
+                            </div>
+                        </div>
+
+                        <p class="text-[10px] text-slate-400 mt-2.5 text-center flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-circle-info text-slate-400"></i> Standee Akrilik Meja A6 (10.5 &times; 14.8 cm)
+                        </p>
+                    </div>
+                </div>
+
+                {{-- ── RIGHT: INFORMATION & DOWNLOAD ACTIONS (7 Cols) ── --}}
+                <div class="lg:col-span-7 flex flex-col gap-3">
+
+                    {{-- Metadata Info Bar --}}
+                    <div class="p-3.5 rounded-2xl bg-white/[0.03] border border-white/10 flex flex-wrap items-center justify-between gap-2">
+                        <div class="flex flex-wrap items-center gap-2 text-xs">
+                            <span class="text-slate-400 font-mono text-[11px]">Order: <strong class="text-white" x-text="orderData.order_id"></strong></span>
+                            <span class="text-white/20">&bull;</span>
+                            <span class="text-slate-400 text-[11px]">Format: <strong class="text-slate-200" x-text="designType"></strong></span>
+                            <span class="text-white/20">&bull;</span>
+                            <span class="text-slate-400 text-[11px]">Tema: <strong class="text-cyan-300" x-text="currentTheme.name"></strong></span>
+                        </div>
+                        <template x-if="reviewCard">
+                            <a :href="reviewCard.scan_url || reviewCard.google_review_url" target="_blank" class="text-cyan-400 hover:text-cyan-300 text-[11px] font-medium underline flex items-center gap-1">
+                                <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+                                <span>Tes Link Ulasan Google</span>
+                            </a>
+                        </template>
+                    </div>
+
+                    {{-- Soft Information Callout --}}
+                    <div class="p-3.5 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-xs flex items-start gap-3">
+                        <div class="w-8 h-8 rounded-xl bg-blue-500/20 text-cyan-300 flex items-center justify-center shrink-0 mt-0.5">
+                            <i class="fa-solid fa-download text-xs"></i>
+                        </div>
+                        <div>
+                            <p class="font-bold text-white text-xs mb-0.5">Simpan Berkas Master Cetak</p>
+                            <p class="text-slate-300 text-[11px] leading-relaxed">
+                                Unduh file siap cetak beresolusi tinggi di bawah ini untuk disimpan di perangkat Anda dan dibawa ke percetakan terdekat.
+                            </p>
+                        </div>
+                    </div>
+
+                    {{-- Download Buttons List --}}
+                    <div class="space-y-2.5 mt-1">
+                        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Pilih Berkas yang Ingin Diunduh:</span>
+
+                        {{-- Button 1: PDF Siap Cetak --}}
+                        <button type="button" @click="downloadPdf()" :disabled="isDownloadingPdf" class="w-full p-3.5 rounded-2xl bg-slate-900/80 hover:bg-slate-800/90 border border-slate-700/60 hover:border-blue-500/50 text-white transition-all flex items-center justify-between group cursor-pointer disabled:opacity-50">
+                            <div class="flex items-center gap-3 text-left">
+                                <div class="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                                    <template x-if="!isDownloadingPdf">
+                                        <i class="fa-solid fa-file-pdf text-lg"></i>
+                                    </template>
+                                    <template x-if="isDownloadingPdf">
+                                        <i class="fa-solid fa-circle-notch fa-spin text-white text-lg"></i>
+                                    </template>
+                                </div>
+                                <div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="font-bold text-xs sm:text-sm text-white group-hover:text-cyan-300 transition-colors">1. PDF Siap Cetak (A6)</span>
+                                        <span x-show="pdfDownloaded" x-cloak class="px-2 py-0.5 rounded-md bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-[10px] font-semibold flex items-center gap-1">
+                                            <i class="fa-solid fa-check text-[9px]"></i> Tersimpan
+                                        </span>
+                                    </div>
+                                    <p class="text-[11px] text-slate-400">Standar percetakan akrilik meja &bull; 300 DPI</p>
+                                </div>
+                            </div>
+                            <div class="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs font-semibold text-slate-300 group-hover:bg-blue-600 group-hover:text-white transition-all flex items-center gap-1.5 shrink-0">
+                                <span x-text="isDownloadingPdf ? 'Membuat...' : 'Unduh PDF'"></span>
+                                <i class="fa-solid fa-arrow-down text-[10px]"></i>
+                            </div>
+                        </button>
+
+                        {{-- Button 2: Desain Kartu (PNG HD) --}}
+                        <button type="button" @click="downloadCardPng()" :disabled="isDownloadingPng" class="w-full p-3.5 rounded-2xl bg-slate-900/80 hover:bg-slate-800/90 border border-slate-700/60 hover:border-cyan-500/50 text-white transition-all flex items-center justify-between group cursor-pointer disabled:opacity-50">
+                            <div class="flex items-center gap-3 text-left">
+                                <div class="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                                    <template x-if="!isDownloadingPng">
+                                        <i class="fa-solid fa-image text-lg"></i>
+                                    </template>
+                                    <template x-if="isDownloadingPng">
+                                        <i class="fa-solid fa-circle-notch fa-spin text-white text-lg"></i>
+                                    </template>
+                                </div>
+                                <div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="font-bold text-xs sm:text-sm text-white group-hover:text-cyan-300 transition-colors">2. Desain Kartu (PNG HD)</span>
+                                        <span x-show="pngDownloaded" x-cloak class="px-2 py-0.5 rounded-md bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-[10px] font-semibold flex items-center gap-1">
+                                            <i class="fa-solid fa-check text-[9px]"></i> Tersimpan
+                                        </span>
+                                    </div>
+                                    <p class="text-[11px] text-slate-400">Gambar jernih untuk sosmed &amp; cetak foto</p>
+                                </div>
+                            </div>
+                            <div class="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs font-semibold text-slate-300 group-hover:bg-cyan-600 group-hover:text-white transition-all flex items-center gap-1.5 shrink-0">
+                                <span x-text="isDownloadingPng ? 'Memproses...' : 'Unduh PNG'"></span>
+                                <i class="fa-solid fa-arrow-down text-[10px]"></i>
+                            </div>
+                        </button>
+
+                        {{-- Button 3: QR Code Saja (PNG) --}}
+                        <button type="button" @click="downloadQrPng()" :disabled="isDownloadingQr" class="w-full p-3.5 rounded-2xl bg-slate-900/80 hover:bg-slate-800/90 border border-slate-700/60 hover:border-amber-500/50 text-white transition-all flex items-center justify-between group cursor-pointer disabled:opacity-50">
+                            <div class="flex items-center gap-3 text-left">
+                                <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                                    <template x-if="!isDownloadingQr">
+                                        <i class="fa-solid fa-qrcode text-lg"></i>
+                                    </template>
+                                    <template x-if="isDownloadingQr">
+                                        <i class="fa-solid fa-circle-notch fa-spin text-white text-lg"></i>
+                                    </template>
+                                </div>
+                                <div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="font-bold text-xs sm:text-sm text-white group-hover:text-amber-300 transition-colors">3. QR Code Khusus (PNG)</span>
+                                        <span x-show="qrDownloaded" x-cloak class="px-2 py-0.5 rounded-md bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-[10px] font-semibold flex items-center gap-1">
+                                            <i class="fa-solid fa-check text-[9px]"></i> Tersimpan
+                                        </span>
+                                    </div>
+                                    <p class="text-[11px] text-slate-400">File QR murni untuk nota, kemasan, atau stiker kasir</p>
+                                </div>
+                            </div>
+                            <div class="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs font-semibold text-slate-300 group-hover:bg-amber-600 group-hover:text-white transition-all flex items-center gap-1.5 shrink-0">
+                                <span x-text="isDownloadingQr ? 'Menyiapkan...' : 'Unduh QR'"></span>
+                                <i class="fa-solid fa-arrow-down text-[10px]"></i>
+                            </div>
+                        </button>
+                    </div>
+
+                    {{-- WhatsApp Backup Option --}}
+                    <div class="mt-2 p-3 rounded-2xl bg-white/[0.02] border border-white/5 flex items-center justify-between gap-3 text-xs">
+                        <div class="flex items-center gap-2.5">
+                            <i class="fa-brands fa-whatsapp text-emerald-400 text-base shrink-0"></i>
+                            <span class="text-slate-300 text-[11px]">Butuh bantuan cetak atau file dikirim via WA?</span>
+                        </div>
+                        <a :href="generateWhatsAppUrl()" target="_blank" class="px-3 py-1.5 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/40 text-emerald-300 text-[11px] font-semibold flex items-center gap-1.5 transition shrink-0">
+                            <span>Chat Admin</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+                        </a>
+                    </div>
+
+                </div>
+
+            </div>
+
+            {{-- Modal Footer --}}
+            <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-xs">
+                <span class="text-[11px] text-slate-400 flex items-center gap-1.5">
+                    <i class="fa-solid fa-circle-check text-emerald-400"></i> Berkas tersimpan &bull; Siap dicetak
+                </span>
+                <button type="button" @click="showSuccessModal = false" class="px-5 py-2 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs font-semibold transition cursor-pointer">
+                    Selesai &amp; Tutup
+                </button>
+            </div>
+
+        </div>
+    </div>
+
 </section>
+
+{{-- Client-Side PDF, Canvas, QRCode & Confetti Libraries --}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
 
 {{-- Alpine.js Logic for Google Card Promo Component --}}
 <script>
     function googleCardPromoApp() {
         return {
             step: 'form', // 'form' | 'payment'
-            businessName: '',
-            mapsUrl: '',
-            customerName: '',
-            customerPhone: '',
-            designType: 'Standee Meja Akrilik',
-            isLoading: false,
-            copiedLink: false,
-            copiedCaption: false,
-            shareUrl: '{{ url("/google-review-card") }}',
-            themeIndex: 0,
-            isDragging: false,
-            startX: 0,
-            dragOffset: 0,
-            themes: [
-                {
-                    id: 'white',
-                    name: 'Classic White',
-                    shortName: 'White',
-                    subtitle: 'Clean Minimalist',
-                    tag: 'Classic Clean Standee',
-                    dotColor: 'bg-white border border-slate-300',
-                    glowClass: 'bg-gradient-to-b from-blue-600/20 via-indigo-600/10 to-transparent',
-                    cardClass: 'bg-white text-slate-900 border border-slate-100',
-                    acrylicSlot: 'bg-slate-200',
-                    starClass: 'fill-[#FBBC05]',
-                    headlineClass: 'text-slate-800',
-                    badgeClass: 'bg-slate-100 text-slate-800 border-slate-200',
-                    qrBorderGradient: 'linear-gradient(135deg, #4285F4 0%, #34A853 35%, #FBBC05 70%, #EA4335 100%)',
-                    qrContainerClass: 'bg-white',
-                    qrLabelClass: 'text-slate-700',
-                    qrWrapperClass: 'bg-white border border-slate-200',
-                    qrSubClass: 'text-slate-500',
-                    footerBorderClass: 'border-slate-100 text-slate-400',
-                    footerBadgeClass: 'text-slate-600'
-                },
-                {
-                    id: 'dark_gold',
-                    name: 'Obsidian Gold',
-                    shortName: 'Dark Gold',
-                    subtitle: 'Luxury & Fancy Cafe',
-                    tag: 'Obsidian Gold Edition',
-                    dotColor: 'bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.8)]',
-                    glowClass: 'bg-gradient-to-b from-amber-500/25 via-yellow-600/15 to-transparent',
-                    cardClass: 'bg-[#0B0F19] text-white border border-amber-500/35 shadow-[0_20px_50px_rgba(245,158,11,0.2)]',
-                    acrylicSlot: 'bg-amber-400/40',
-                    starClass: 'fill-[#F59E0B] drop-shadow-[0_0_4px_rgba(245,158,11,0.6)]',
-                    headlineClass: 'text-amber-200',
-                    badgeClass: 'bg-amber-500/15 text-amber-300 border-amber-500/40 shadow-sm',
-                    qrBorderGradient: 'linear-gradient(135deg, #F59E0B 0%, #FDE68A 50%, #D97706 100%)',
-                    qrContainerClass: 'bg-[#111827]',
-                    qrLabelClass: 'text-amber-200',
-                    qrWrapperClass: 'bg-white border border-amber-500/30 p-1',
-                    qrSubClass: 'text-amber-300/60',
-                    footerBorderClass: 'border-amber-500/20 text-amber-400/60',
-                    footerBadgeClass: 'text-amber-300'
-                },
-                {
-                    id: 'cyber_blue',
-                    name: 'Cyber Modern Blue',
-                    shortName: 'Cyber Blue',
-                    subtitle: 'Retail & Modern Brand',
-                    tag: 'Modern Agency Edition',
-                    dotColor: 'bg-cyan-400 shadow-[0_0_8px_rgba(6,182,212,0.8)]',
-                    glowClass: 'bg-gradient-to-b from-cyan-500/25 via-blue-600/15 to-transparent',
-                    cardClass: 'bg-gradient-to-b from-[#0F172A] via-[#1E293B] to-[#0B1120] text-white border border-cyan-400/40 shadow-[0_20px_50px_rgba(6,182,212,0.25)]',
-                    acrylicSlot: 'bg-cyan-400/40',
-                    starClass: 'fill-[#FBBC05] drop-shadow-[0_0_4px_rgba(251,191,36,0.6)]',
-                    headlineClass: 'text-cyan-200',
-                    badgeClass: 'bg-cyan-500/15 text-cyan-300 border-cyan-400/40 shadow-sm',
-                    qrBorderGradient: 'linear-gradient(135deg, #06B6D4 0%, #3B82F6 50%, #8B5CF6 100%)',
-                    qrContainerClass: 'bg-[#0E172A]',
-                    qrLabelClass: 'text-cyan-200',
-                    qrWrapperClass: 'bg-white border border-cyan-400/30 p-1',
-                    qrSubClass: 'text-cyan-300/60',
-                    footerBorderClass: 'border-cyan-500/20 text-cyan-400/60',
-                    footerBadgeClass: 'text-cyan-300'
+            businessName: ''
+            , mapsUrl: ''
+            , customerName: ''
+            , customerPhone: ''
+            , designType: 'Standee Meja Akrilik'
+            , isLoading: false
+            , isPaid: false
+            , showSuccessModal: false
+            , reviewCard: null
+            , customerQrDataUrl: ''
+            , isCheckingStatus: false
+            , isDownloadingPdf: false
+            , isDownloadingPng: false
+            , isDownloadingQr: false
+            , pdfDownloaded: false
+            , pngDownloaded: false
+            , qrDownloaded: false
+            , pollTimer: null
+            , copiedLink: false
+            , copiedCaption: false
+            , shareUrl: '{{ url("/google-review-card") }}'
+            , themeIndex: 0
+            , isDragging: false
+            , startX: 0
+            , dragOffset: 0
+            , themes: [{
+                    id: 'white'
+                    , name: 'Classic White'
+                    , shortName: 'White'
+                    , subtitle: 'Clean Minimalist'
+                    , tag: 'Classic Clean Standee'
+                    , dotColor: 'bg-white border border-slate-300'
+                    , glowClass: 'bg-gradient-to-b from-blue-600/20 via-indigo-600/10 to-transparent'
+                    , cardClass: 'bg-white text-slate-900 border border-slate-100'
+                    , acrylicSlot: 'bg-slate-200'
+                    , starClass: 'fill-[#FBBC05]'
+                    , headlineClass: 'text-slate-800'
+                    , badgeClass: 'bg-slate-100 text-slate-800 border-slate-200'
+                    , qrBorderGradient: 'linear-gradient(135deg, #4285F4 0%, #34A853 35%, #FBBC05 70%, #EA4335 100%)'
+                    , qrContainerClass: 'bg-white'
+                    , qrLabelClass: 'text-slate-700'
+                    , qrWrapperClass: 'bg-white border border-slate-200'
+                    , qrSubClass: 'text-slate-500'
+                    , footerBorderClass: 'border-slate-100 text-slate-400'
+                    , footerBadgeClass: 'text-slate-600'
                 }
-            ],
-            orderData: {
-                order_id: 'GRC-2026-DEMO',
-                qris_image_url: 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=00020101021126670016ID.DANA.WWW011893600915302105877702150000000000000000303UMI51440014ID.LINKAJA.WWW02150000000000000000303UMI5204581253033605405200005802ID5919SCALIFY%20INDONESIA6007BANDUNG61054011562070703A016304',
-                amount: 20000,
+                , {
+                    id: 'dark_gold'
+                    , name: 'Obsidian Gold'
+                    , shortName: 'Dark Gold'
+                    , subtitle: 'Luxury & Fancy Cafe'
+                    , tag: 'Obsidian Gold Edition'
+                    , dotColor: 'bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.8)]'
+                    , glowClass: 'bg-gradient-to-b from-amber-500/25 via-yellow-600/15 to-transparent'
+                    , cardClass: 'bg-[#0B0F19] text-white border border-amber-500/35 shadow-[0_20px_50px_rgba(245,158,11,0.2)]'
+                    , acrylicSlot: 'bg-amber-400/40'
+                    , starClass: 'fill-[#F59E0B] drop-shadow-[0_0_4px_rgba(245,158,11,0.6)]'
+                    , headlineClass: 'text-amber-200'
+                    , badgeClass: 'bg-amber-500/15 text-amber-300 border-amber-500/40 shadow-sm'
+                    , qrBorderGradient: 'linear-gradient(135deg, #F59E0B 0%, #FDE68A 50%, #D97706 100%)'
+                    , qrContainerClass: 'bg-[#111827]'
+                    , qrLabelClass: 'text-amber-200'
+                    , qrWrapperClass: 'bg-white border border-amber-500/30 p-1'
+                    , qrSubClass: 'text-amber-300/60'
+                    , footerBorderClass: 'border-amber-500/20 text-amber-400/60'
+                    , footerBadgeClass: 'text-amber-300'
+                }
+                , {
+                    id: 'cyber_blue'
+                    , name: 'Cyber Modern Blue'
+                    , shortName: 'Cyber Blue'
+                    , subtitle: 'Retail & Modern Brand'
+                    , tag: 'Modern Agency Edition'
+                    , dotColor: 'bg-cyan-400 shadow-[0_0_8px_rgba(6,182,212,0.8)]'
+                    , glowClass: 'bg-gradient-to-b from-cyan-500/25 via-blue-600/15 to-transparent'
+                    , cardClass: 'bg-gradient-to-b from-[#0F172A] via-[#1E293B] to-[#0B1120] text-white border border-cyan-400/40 shadow-[0_20px_50px_rgba(6,182,212,0.25)]'
+                    , acrylicSlot: 'bg-cyan-400/40'
+                    , starClass: 'fill-[#FBBC05] drop-shadow-[0_0_4px_rgba(251,191,36,0.6)]'
+                    , headlineClass: 'text-cyan-200'
+                    , badgeClass: 'bg-cyan-500/15 text-cyan-300 border-cyan-400/40 shadow-sm'
+                    , qrBorderGradient: 'linear-gradient(135deg, #06B6D4 0%, #3B82F6 50%, #8B5CF6 100%)'
+                    , qrContainerClass: 'bg-[#0E172A]'
+                    , qrLabelClass: 'text-cyan-200'
+                    , qrWrapperClass: 'bg-white border border-cyan-400/30 p-1'
+                    , qrSubClass: 'text-cyan-300/60'
+                    , footerBorderClass: 'border-cyan-500/20 text-cyan-400/60'
+                    , footerBadgeClass: 'text-cyan-300'
+                }
+            ]
+            , orderData: {
+                order_id: 'GRC-2026-DEMO'
+                , qris_image_url: ''
+                , midtrans_qr_url: ''
+                , qris_payload: ''
+                , amount: 20000
+            , },
+
+            init() {
+                this.updateCustomerQr();
+
+                // Support testing mode via URL: ?test_popup=1
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.get('test_popup') === '1' || urlParams.get('test_popup') === 'true') {
+                    this.step = 'payment';
+                    this.isPaid = true;
+                    if (!this.businessName) this.businessName = 'Kopi Kenangan Senopati';
+                    if (!this.customerName) this.customerName = 'Budi Santoso';
+                    this.triggerSuccess();
+                }
             },
 
             get currentTheme() {
@@ -603,10 +944,36 @@
             get deckThemes() {
                 const len = this.themes.length;
                 return [
-                    this.themes[this.themeIndex],
-                    this.themes[(this.themeIndex + 1) % len],
-                    this.themes[(this.themeIndex + 2) % len],
-                ];
+                    this.themes[this.themeIndex]
+                    , this.themes[(this.themeIndex + 1) % len]
+                    , this.themes[(this.themeIndex + 2) % len]
+                , ];
+            },
+
+            get effectiveQrisImageUrl() {
+                if (this.orderData && this.orderData.midtrans_qr_url) {
+                    return this.orderData.midtrans_qr_url;
+                }
+                if (this.orderData && this.orderData.qris_image_url) {
+                    return this.orderData.qris_image_url;
+                }
+                return '';
+            },
+
+            get reviewTargetUrl() {
+                if (this.reviewCard && this.reviewCard.scan_url) {
+                    return this.reviewCard.scan_url;
+                }
+                if (this.reviewCard && this.reviewCard.google_review_url) {
+                    return this.reviewCard.google_review_url;
+                }
+                if (this.mapsUrl && (this.mapsUrl.startsWith('http://') || this.mapsUrl.startsWith('https://'))) {
+                    return this.mapsUrl.trim();
+                }
+                if (this.businessName && this.businessName.trim()) {
+                    return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(this.businessName.trim());
+                }
+                return 'https://maps.google.com';
             },
 
             nextTheme() {
@@ -676,6 +1043,84 @@
                 }
             },
 
+            async updateCustomerQr() {
+                const url = this.reviewTargetUrl;
+                if (!url) return;
+
+                if (typeof QRCode !== 'undefined') {
+                    try {
+                        const tempDiv = document.createElement('div');
+                        new QRCode(tempDiv, {
+                            text: url
+                            , width: 600
+                            , height: 600
+                            , colorDark: '#000000'
+                            , colorLight: '#ffffff'
+                            , correctLevel: QRCode.CorrectLevel.H
+                        });
+
+                        setTimeout(() => {
+                            const canvas = tempDiv.querySelector('canvas');
+                            if (canvas) {
+                                this.customerQrDataUrl = canvas.toDataURL('image/png');
+                            }
+                        }, 50);
+                    } catch (e) {
+                        console.error('QRCode render error:', e);
+                    }
+                }
+            },
+
+            openSuccessModal() {
+                this.showSuccessModal = true;
+                this.updateCustomerQr();
+            },
+
+            triggerSuccess(orderInfo = {}) {
+                this.isPaid = true;
+                this.stopPolling();
+
+                if (orderInfo.business_name && !this.businessName) this.businessName = orderInfo.business_name;
+                if (orderInfo.google_maps_url && !this.mapsUrl) this.mapsUrl = orderInfo.google_maps_url;
+                if (orderInfo.customer_name && !this.customerName) this.customerName = orderInfo.customer_name;
+                if (orderInfo.design_type && !this.designType) this.designType = orderInfo.design_type;
+                if (orderInfo.review_card) this.reviewCard = orderInfo.review_card;
+
+                this.updateCustomerQr();
+                this.showSuccessModal = true;
+
+                // Fire celebration confetti!
+                if (typeof confetti === 'function') {
+                    try {
+                        confetti({
+                            particleCount: 120
+                            , spread: 80
+                            , origin: {
+                                y: 0.6
+                            }
+                        });
+                        setTimeout(() => {
+                            confetti({
+                                particleCount: 60
+                                , angle: 60
+                                , spread: 55
+                                , origin: {
+                                    x: 0
+                                }
+                            });
+                            confetti({
+                                particleCount: 60
+                                , angle: 120
+                                , spread: 55
+                                , origin: {
+                                    x: 1
+                                }
+                            });
+                        }, 250);
+                    } catch (e) {}
+                }
+            },
+
             async proceedToPayment() {
                 if (!this.businessName.trim() || !this.customerName.trim() || !this.customerPhone.trim()) {
                     alert('Silakan lengkapi nama usaha, nama pemesan, dan no WhatsApp Anda.');
@@ -683,21 +1128,23 @@
                 }
 
                 this.isLoading = true;
+                this.updateCustomerQr();
+
                 try {
                     const response = await fetch('{{ route("landing.google_card.qris") }}', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                        body: JSON.stringify({
-                            business_name: this.businessName,
-                            google_maps_url: this.mapsUrl,
-                            customer_name: this.customerName,
-                            phone: this.customerPhone,
-                            design_type: this.designType,
-                            theme: this.currentTheme.name
+                        method: 'POST'
+                        , headers: {
+                            'Content-Type': 'application/json'
+                            , 'Accept': 'application/json'
+                            , 'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        }
+                        , body: JSON.stringify({
+                            business_name: this.businessName
+                            , google_maps_url: this.mapsUrl
+                            , customer_name: this.customerName
+                            , phone: this.customerPhone
+                            , design_type: this.designType
+                            , theme: this.currentTheme.name
                         })
                     });
 
@@ -705,16 +1152,240 @@
                     if (res.success && res.data) {
                         this.orderData = res.data;
                         this.step = 'payment';
+                        this.isPaid = false;
+                        this.startPolling();
                     } else {
-                        this.orderData.order_id = 'GRC-' + Math.floor(1000 + Math.random() * 9000);
-                        this.step = 'payment';
+                        alert(res.message || 'Gagal menyiapkan QRIS pembayaran. Silakan coba kembali.');
                     }
                 } catch (e) {
                     console.error('QRIS error:', e);
-                    this.orderData.order_id = 'GRC-' + Math.floor(1000 + Math.random() * 9000);
-                    this.step = 'payment';
+                    alert('Terjadi kendala saat menghubungi server pembayaran. Silakan coba lagi.');
                 } finally {
                     this.isLoading = false;
+                }
+            },
+
+            startPolling() {
+                this.stopPolling();
+                if (!this.orderData || !this.orderData.order_id) return;
+
+                this.pollTimer = setInterval(async () => {
+                    if (this.isPaid || this.step !== 'payment') {
+                        this.stopPolling();
+                        return;
+                    }
+
+                    try {
+                        const statusUrl = `{{ url('/api/google-card/orders') }}/${encodeURIComponent(this.orderData.order_id)}/status`;
+                        const res = await fetch(statusUrl, {
+                            headers: {
+                                'Accept': 'application/json'
+                            }
+                        });
+                        const data = await res.json();
+                        if (data.success && data.data && data.data.is_paid) {
+                            this.triggerSuccess(data.data);
+                        }
+                    } catch (err) {
+                        // Polling background silent fail
+                    }
+                }, 3500);
+            },
+
+            stopPolling() {
+                if (this.pollTimer) {
+                    clearInterval(this.pollTimer);
+                    this.pollTimer = null;
+                }
+            },
+
+            async checkStatusManual() {
+                if (!this.orderData || !this.orderData.order_id) return;
+                this.isCheckingStatus = true;
+                try {
+                    const statusUrl = `{{ url('/api/google-card/orders') }}/${encodeURIComponent(this.orderData.order_id)}/status`;
+                    const res = await fetch(statusUrl, {
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    });
+                    const data = await res.json();
+                    if (data.success && data.data && data.data.is_paid) {
+                        this.triggerSuccess(data.data);
+                    } else {
+                        alert('Pembayaran belum terverifikasi lunas. Jika Anda baru saja transfer, mohon tunggu sekitar 5-10 detik lalu coba klik kembali.');
+                    }
+                } catch (e) {
+                    alert('Gagal mengecek status pembayaran. Silakan pastikan koneksi internet Anda aktif.');
+                } finally {
+                    this.isCheckingStatus = false;
+                }
+            },
+
+            async downloadPdf() {
+                this.isDownloadingPdf = true;
+                try {
+                    await this.updateCustomerQr();
+                    const node = document.getElementById('printableCardNode');
+                    if (!node) throw new Error('Preview card element tidak ditemukan.');
+
+                    if (document.fonts && document.fonts.ready) {
+                        await document.fonts.ready;
+                    }
+
+                    if (typeof html2canvas === 'undefined') {
+                        throw new Error('Library html2canvas belum termuat.');
+                    }
+
+                    const canvas = await html2canvas(node, {
+                        scale: 3, // 3x scale ultra-sharp (300 DPI)
+                        useCORS: true
+                        , allowTaint: true
+                        , backgroundColor: null
+                        , logging: false
+                    });
+
+                    const imgData = canvas.toDataURL('image/png');
+                    const jsPDFClass = (window.jspdf && window.jspdf.jsPDF) ? window.jspdf.jsPDF : window.jsPDF;
+                    if (!jsPDFClass) {
+                        throw new Error('Library jsPDF belum termuat.');
+                    }
+
+                    // Format A6 Standee: 105mm x 148mm (Ukuran Standar Akrilik Meja)
+                    const pdf = new jsPDFClass({
+                        orientation: 'portrait'
+                        , unit: 'mm'
+                        , format: [105, 148]
+                    });
+
+                    pdf.addImage(imgData, 'PNG', 0, 0, 105, 148, undefined, 'FAST');
+
+                    const safeName = (this.businessName || 'Review-Card').replace(/[^a-zA-Z0-9_\-]+/g, '_');
+                    pdf.save(`Google-Review-Card-${safeName}.pdf`);
+                    this.pdfDownloaded = true;
+                } catch (err) {
+                    console.error('PDF generation error:', err);
+                    alert('Gagal membuat PDF: ' + err.message);
+                } finally {
+                    this.isDownloadingPdf = false;
+                }
+            },
+
+            async downloadCardPng() {
+                this.isDownloadingPng = true;
+                try {
+                    await this.updateCustomerQr();
+                    const node = document.getElementById('printableCardNode');
+                    if (!node) throw new Error('Preview card element tidak ditemukan.');
+
+                    if (document.fonts && document.fonts.ready) {
+                        await document.fonts.ready;
+                    }
+
+                    if (typeof html2canvas === 'undefined') {
+                        throw new Error('Library html2canvas belum termuat.');
+                    }
+
+                    const canvas = await html2canvas(node, {
+                        scale: 3
+                        , useCORS: true
+                        , allowTaint: true
+                        , backgroundColor: null
+                        , logging: false
+                    });
+
+                    const safeName = (this.businessName || 'Review-Card').replace(/[^a-zA-Z0-9_\-]+/g, '_');
+                    const filename = `Google-Review-Card-${safeName}.png`;
+
+                    canvas.toBlob((blob) => {
+                        if (!blob) {
+                            this.isDownloadingPng = false;
+                            return;
+                        }
+
+                        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+                        if (isMobile && navigator.canShare) {
+                            try {
+                                const file = new File([blob], filename, {
+                                    type: 'image/png'
+                                });
+                                if (navigator.canShare({
+                                        files: [file]
+                                    })) {
+                                    navigator.share({
+                                        files: [file]
+                                        , title: 'Google Review Card ' + (this.businessName || '')
+                                    }).catch(() => {});
+                                    this.pngDownloaded = true;
+                                    this.isDownloadingPng = false;
+                                    return;
+                                }
+                            } catch (e) {}
+                        }
+
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = filename;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        setTimeout(() => URL.revokeObjectURL(url), 1000);
+                        this.pngDownloaded = true;
+                        this.isDownloadingPng = false;
+                    }, 'image/png');
+                } catch (err) {
+                    console.error('PNG download error:', err);
+                    alert('Gagal mengunduh gambar: ' + err.message);
+                    this.isDownloadingPng = false;
+                }
+            },
+
+            async downloadQrPng() {
+                this.isDownloadingQr = true;
+                try {
+                    const safeName = (this.businessName || 'Google-Review').replace(/[^a-zA-Z0-9_\-]+/g, '_');
+                    const filename = `QR-Google-Review-${safeName}.png`;
+
+                    if (typeof QRCode !== 'undefined') {
+                        const tempDiv = document.createElement('div');
+                        new QRCode(tempDiv, {
+                            text: this.reviewTargetUrl
+                            , width: 1024
+                            , height: 1024
+                            , colorDark: '#000000'
+                            , colorLight: '#ffffff'
+                            , correctLevel: QRCode.CorrectLevel.H
+                        });
+
+                        setTimeout(() => {
+                            const canvas = tempDiv.querySelector('canvas');
+                            if (canvas) {
+                                const dataUrl = canvas.toDataURL('image/png');
+                                const a = document.createElement('a');
+                                a.href = dataUrl;
+                                a.download = filename;
+                                document.body.appendChild(a);
+                                a.click();
+                                document.body.removeChild(a);
+                                this.qrDownloaded = true;
+                            }
+                            this.isDownloadingQr = false;
+                        }, 50);
+                        return;
+                    } else if (this.customerQrDataUrl) {
+                        const a = document.createElement('a');
+                        a.href = this.customerQrDataUrl;
+                        a.download = filename;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        this.qrDownloaded = true;
+                    }
+                } catch (err) {
+                    console.error('QR download error:', err);
+                } finally {
+                    this.isDownloadingQr = false;
                 }
             },
 
@@ -732,7 +1403,7 @@ Saya sudah transfer Rp 20.000 via QRIS untuk pembuatan Google Review Card.
 • Nama Pemesan: ${this.customerName}
 • No WhatsApp: ${this.customerPhone}
 
-Berikut saya lampirkan bukti transfer pembayarannya. Mohon bantu proses dan kirimkan file Google QR Code serta desain siap cetaknya ya mas. Terima kasih banyak!`;
+Berikut saya lampirkan bukti transfer pembayarannya. Mohon bantu konfirmasi dan kirimkan file Google QR Code serta desain siap cetaknya ya mas. Terima kasih banyak!`;
 
                 return 'https://wa.me/' + adminPhone + '?text=' + encodeURIComponent(text);
             },
@@ -761,4 +1432,5 @@ ${trackedUrl}`;
             }
         };
     }
+
 </script>

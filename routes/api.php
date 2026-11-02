@@ -9,8 +9,18 @@ Route::post('/webhook/scraper-client', [ClientProposalController::class, 'handle
 
 // Endpoint Webhook / Callback Pembayaran (Midtrans & Gateways)
 use App\Http\Controllers\PaymentCallbackController;
+use App\Services\ScalifyPayService;
 
 Route::post('/webhook/payment', [PaymentCallbackController::class, 'handleWebhook']);
+Route::match(['get', 'post'], '/v1/payments/webhook', [PaymentCallbackController::class, 'handleWebhook']);
+Route::match(['get', 'post'], '/payments/webhook', [PaymentCallbackController::class, 'handleWebhook']);
+
+// Endpoint API Baru Pembayaran Scalify Pay (charge via pay.scalifyintellegence.my.id)
+Route::post('/payments/charge', function (Request $request) {
+    $result = ScalifyPayService::charge($request->all());
+    $status = !empty($result['success']) ? 200 : ($result['http_status'] ?? 422);
+    return response()->json($result, $status);
+});
 
 // Endpoint API untuk Bulk Insert Student Leads
 use App\Http\Controllers\Api\StudentLeadApiController;

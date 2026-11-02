@@ -9,7 +9,9 @@ use App\Models\PortfolioCategory;
 use App\Models\Documentation;
 use App\Models\DailyView;
 use App\Models\GoogleCardVisit;
-use App\Services\QrisPaymentService;
+use App\Models\GoogleCardOrder;
+use App\Models\PaymentCallback;
+use App\Services\ScalifyPayService;
 use Illuminate\Http\Request;
 
 
@@ -241,7 +243,7 @@ class HomeController extends Controller
     }
 
     /**
-     * Generate QRIS Pembelian Google Review Card via QrisPaymentService (Scalify Pay)
+     * Generate QRIS Pembelian Google Review Card via ScalifyPayService (pay.scalifyintellegence.my.id)
      */
     public function generateGoogleCardQris(Request $request)
     {
@@ -258,50 +260,77 @@ class HomeController extends Controller
         $orderId = 'GRC-' . date('ymd') . '-' . strtoupper(\Illuminate\Support\Str::random(4));
 
         try {
-            $qrisResult = QrisPaymentService::createDynamicQris(
+            // 1. Simpan order ke database (Best Practice)
+            $order = GoogleCardOrder::create([
+                'order_id'        => $orderId,
+                'business_name'   => $validated['business_name'],
+                'customer_name'   => $validated['customer_name'],
+                'phone'           => $validated['phone'],
+                'google_maps_url' => $validated['google_maps_url'] ?? null,
+                'design_type'     => $validated['design_type'] ?? 'Standee Meja Akrilik',
+                'theme'           => $validated['theme'] ?? 'Classic White',
+                'amount'          => $amount,
+                'payment_method'  => 'qris',
+                'payment_status'  => GoogleCardOrder::STATUS_PENDING,
+                'affiliate_id'    => session('affiliate_id') ?? request()->cookie('scalify_affiliate_id'),
+            ]);
+
+            // 2. Request Charge QRIS via ScalifyPayService (pay.scalifyintellegence.my.id/api/v1/payments/charge)
+            $chargeResult = ScalifyPayService::chargeQris(
                 $orderId,
                 $amount,
                 [
                     'name'  => $validated['customer_name'],
                     'phone' => $validated['phone'],
                 ],
-                'DANA'
+                [
+                    [
+                        'id'       => 'GRC-PROMO-20K',
+                        'name'     => 'Google Review Card (' . ($validated['design_type'] ?? 'Standee') . ')',
+                        'price'    => $amount,
+                        'quantity' => 1,
+                    ]
+                ],
+                'gopay',
+                30
             );
 
-            if (!$qrisResult['success']) {
+            // Jika ScalifyPay charge berhasil
+            if (!empty($chargeResult['success'])) {
+                $chargeData = $chargeResult['data'] ?? [];
+                // Ambil URL QR Code langsung dari actions Midtrans
+                $qrisImageUrl = $chargeData['qr_image_url'] ?? '';
+
+                $order->update([
+                    'transaction_id' => $chargeData['transaction_id'] ?? null,
+                    'qris_image_url' => $qrisImageUrl,
+                    'expires_at'     => now()->addMinutes(30),
+                ]);
+
                 return response()->json([
-                    'success' => false,
-                    'message' => $qrisResult['message'] ?? 'Gagal membuat QRIS pembayaran. Silakan coba kembali.',
-                ], 422);
+                    'success' => true,
+                    'data' => [
+                        'order_id'        => $order->order_id,
+                        'merchant_name'   => 'Scalify / Google Review Card',
+                        'base_amount'     => $amount,
+                        'amount'          => $amount,
+                        'qris_image_url'  => $qrisImageUrl,
+                        'admin_phone'     => '085221694067',
+                        'business_name'   => $order->business_name,
+                        'customer_name'   => $order->customer_name,
+                        'phone'           => $order->phone,
+                        'google_maps_url' => $order->google_maps_url ?? '-',
+                        'design_type'     => $order->design_type,
+                        'theme'           => $order->theme,
+                        'expires_at'      => now()->addMinutes(30)->toIso8601String(),
+                    ]
+                ]);
             }
 
-            $qrisData = $qrisResult['data'] ?? [];
-            $payload  = $qrisData['qris_payload'] ?? '';
-            $total    = (int) ($qrisData['total_amount'] ?? $amount);
-            $imageUrl = !empty($payload)
-                ? 'https://api.qrserver.com/v1/create-qr-code/?size=320x320&margin=8&data=' . urlencode($payload)
-                : null;
-
             return response()->json([
-                'success' => true,
-                'data' => [
-                    'order_id'       => $qrisData['order_id'] ?? $orderId,
-                    'merchant_name'  => $qrisData['merchant_name'] ?? 'Scalify / Google Review Card',
-                    'base_amount'    => (int) ($qrisData['base_amount'] ?? $amount),
-                    'unique_code'    => (int) ($qrisData['unique_code'] ?? 0),
-                    'amount'         => $total,
-                    'qris_payload'   => $payload,
-                    'qris_image_url' => $imageUrl,
-                    'admin_phone'    => '085221694067',
-                    'business_name'  => $validated['business_name'],
-                    'customer_name'  => $validated['customer_name'],
-                    'phone'          => $validated['phone'],
-                    'google_maps_url'=> $validated['google_maps_url'] ?? '-',
-                    'design_type'    => $validated['design_type'] ?? 'Standee Akrilik Meja & Stiker',
-                    'theme'          => $validated['theme'] ?? 'Classic White',
-                    'expires_at'     => $qrisData['expires_at'] ?? now()->addMinutes(30)->toIso8601String(),
-                ]
-            ]);
+                'success' => false,
+                'message' => $chargeResult['message'] ?? 'Gagal memproses QRIS dari server payment gateway.',
+            ], 422);
         } catch (\Throwable $e) {
             \Illuminate\Support\Facades\Log::error('generateGoogleCardQris error: ' . $e->getMessage());
 
@@ -313,6 +342,103 @@ class HomeController extends Controller
     }
 
     /**
+     * Check Payment Status for Google Review Card Order
+     */
+    public function checkGoogleCardOrderStatus($orderId)
+    {
+        $order = GoogleCardOrder::where('order_id', $orderId)->first();
+
+        if (!$order) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Pesanan tidak ditemukan.',
+            ], 404);
+        }
+
+        // Cek sinkronisasi callback terbaru di tabel payment_callbacks
+        if (!$order->isPaid()) {
+            $callback = PaymentCallback::where(function ($q) use ($order, $orderId) {
+                $q->where('order_number', $orderId);
+                if (!empty($order->transaction_id)) {
+                    $q->orWhere('order_number', $order->transaction_id)
+                      ->orWhere('transaction_id', $order->transaction_id);
+                }
+            })->latest()->first();
+
+            if ($callback && in_array(strtolower((string) $callback->transaction_status), ['settlement', 'capture', 'success', 'paid'])) {
+                $order->markAsPaid($callback->transaction_id, $callback->raw_response);
+            }
+        } elseif (!$order->review_card_id) {
+            $order->createOrActivateReviewCard();
+        }
+
+        $order->refresh();
+        $card = $order->reviewCard;
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'order_id'        => $order->order_id,
+                'payment_status'  => $order->payment_status,
+                'is_paid'         => $order->isPaid(),
+                'paid_at'         => $order->paid_at ? $order->paid_at->toIso8601String() : null,
+                'amount'          => (int) $order->amount,
+                'business_name'   => $order->business_name,
+                'customer_name'   => $order->customer_name,
+                'phone'           => $order->phone,
+                'google_maps_url' => $order->google_maps_url,
+                'design_type'     => $order->design_type,
+                'theme'           => $order->theme,
+                'review_card'     => $card ? [
+                    'id'                => $card->id,
+                    'serial_number'     => $card->serial_number,
+                    'slug'              => $card->slug,
+                    'scan_url'          => $card->scan_url,
+                    'google_review_url' => $card->google_review_url,
+                    'status'            => $card->status,
+                ] : null,
+            ],
+        ]);
+    }
+
+    /**
+     * Simulate Payment for Testing / Verification
+     */
+    public function simulateGoogleCardPayment(Request $request, $orderId)
+    {
+        $order = GoogleCardOrder::where('order_id', $orderId)->first();
+
+        if (!$order) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Pesanan tidak ditemukan.',
+            ], 404);
+        }
+
+        $card = $order->markAsPaid('SIM-' . strtoupper(\Illuminate\Support\Str::random(6)), [
+            'mode' => 'simulation_test',
+            'simulated_at' => now()->toIso8601String(),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Simulasi pembayaran lunas berhasil!',
+            'data' => [
+                'order_id'    => $order->order_id,
+                'is_paid'     => true,
+                'review_card' => [
+                    'id'                => $card->id,
+                    'serial_number'     => $card->serial_number,
+                    'slug'              => $card->slug,
+                    'scan_url'          => $card->scan_url,
+                    'google_review_url' => $card->google_review_url,
+                    'status'            => $card->status,
+                ],
+            ],
+        ]);
+    }
+
+    /**
      * API for tracking affiliate links clicked from inside a blog
      */
     public function trackBlogClick(\App\Models\Blog $blog)
@@ -321,4 +447,3 @@ class HomeController extends Controller
         return response()->json(['status' => 'success']);
     }
 }
-
