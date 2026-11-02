@@ -157,8 +157,16 @@ class DigiflazzService
     }
 
     /**
-     * Kirim Transaksi Prabayar (Pulsa, Data, PLN, Game, E-Money, dll).
+     * Kirim Transaksi Prabayar / Top Up (Pulsa, Data, PLN, Game, E-Money, dll).
      * Endpoint: POST /transaction
+     *
+     * @param string $buyerSkuCode Kode produk buyer (contoh: xld25)
+     * @param string $customerNo Nomor pelanggan / HP / ID Game / No Meter
+     * @param string|null $refId Ref ID unik transaksi Anda (opsional, auto-generate jika null)
+     * @param bool $testing True jika ingin mode sandbox/testing
+     * @param int|null $maxPrice Limit harga maksimal (opsional)
+     * @param string|null $cbUrl Callback webhook URL khusus transaksi ini (opsional)
+     * @param bool $allowDot True jika customer_no boleh berisi titik (opsional)
      */
     public static function transaction(
         string $buyerSkuCode,
@@ -166,16 +174,18 @@ class DigiflazzService
         ?string $refId = null,
         bool $testing = false,
         ?int $maxPrice = null,
-        ?string $cbUrl = null
+        ?string $cbUrl = null,
+        bool $allowDot = false
     ): array {
-        $refId = $refId ?: ('TRX-' . date('YmdHis') . '-' . strtoupper(Str::random(5)));
+        $refId = $refId ?: ('TRX-' . date('YmdHis') . '-' . strtoupper(Str::random(6)));
+        $sign = self::generateSign($refId);
 
         $payload = [
             'username'       => self::getUsername(),
             'buyer_sku_code' => $buyerSkuCode,
             'customer_no'    => $customerNo,
             'ref_id'         => $refId,
-            'sign'           => self::generateSign($refId),
+            'sign'           => $sign,
         ];
 
         if ($testing || $buyerSkuCode === 'test') {
@@ -183,13 +193,17 @@ class DigiflazzService
         }
 
         if (!is_null($maxPrice)) {
-            $payload['max_price'] = $maxPrice;
+            $payload['max_price'] = (int) $maxPrice;
         }
 
         if (!empty($cbUrl)) {
             $payload['cb_url'] = $cbUrl;
         }
 
-        return self::post('/transaction', $payload, 30);
+        if ($allowDot) {
+            $payload['allow_dot'] = true;
+        }
+
+        return self::post('/transaction', $payload, 45);
     }
 }
