@@ -4,7 +4,7 @@
 $wallet = $affiliate->getOrCreateWallet();
 @endphp
 
-<!-- UNIFIED DUAL-FINANCE HUB CARD (KOMISI & WALLET PPOB) -->
+<!-- UNIFIED DUAL-FINANCE HUB CARD (KOMISI & WALLET) -->
 <div class="glass-card rounded-3xl p-4 mb-4 relative overflow-hidden border border-white/10 shadow-xl bg-gradient-to-br from-slate-900/90 via-[#0E172A]/90 to-slate-900/95">
     <!-- Ambient Glow Circles -->
     <div class="absolute -left-10 -top-10 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl pointer-events-none"></div>

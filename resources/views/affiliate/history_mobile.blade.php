@@ -51,10 +51,12 @@
         .hide-scrollbar::-webkit-scrollbar {
             display: none;
         }
+
         .hide-scrollbar {
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
+
     </style>
 </head>
 <body class="pb-24 overflow-x-hidden min-h-screen flex flex-col relative bg-[#0B1120]">
@@ -77,7 +79,7 @@
                     <h1 class="text-base font-extrabold text-white tracking-tight flex items-center gap-1.5">
                         <i class="fa-solid fa-clock-rotate-left text-blue-400 text-sm"></i> Riwayat Transaksi
                     </h1>
-                    <p class="text-[10px] text-slate-400 mt-0.5">Komisi Afiliasi & Mutasi Wallet PPOB</p>
+                    <p class="text-[10px] text-slate-400 mt-0.5">Komisi Afiliasi & Mutasi Wallet</p>
                 </div>
             </div>
 
@@ -107,7 +109,7 @@
             </div>
         </div>
 
-        <!-- 1. Primary Pocket Switcher (Komisi Afiliasi vs Wallet PPOB) -->
+        <!-- 1. Primary Pocket Switcher (Komisi Afiliasi vs Wallet) -->
         <div class="p-1 rounded-2xl bg-white/[0.03] border border-white/10 grid grid-cols-2 gap-1 mb-3 text-xs font-bold" id="pocketContainer">
             <button type="button" onclick="switchPocket('komisi')" id="btnPocketKomisi" class="py-2.5 rounded-xl transition-all duration-200 text-center flex items-center justify-center gap-1.5 bg-blue-500/20 text-blue-300 border border-blue-500/40 shadow-sm cursor-pointer">
                 <i class="fa-solid fa-coins text-xs"></i>
@@ -115,7 +117,7 @@
             </button>
             <button type="button" onclick="switchPocket('wallet')" id="btnPocketWallet" class="py-2.5 rounded-xl transition-all duration-200 text-center flex items-center justify-center gap-1.5 text-slate-400 hover:text-slate-200 cursor-pointer">
                 <i class="fa-solid fa-wallet text-xs"></i>
-                <span>Wallet PPOB</span>
+                <span>Wallet</span>
             </button>
         </div>
 
@@ -303,7 +305,7 @@
                         <i class="fa-solid fa-wallet"></i>
                     </div>
                     <h4 class="text-xs font-bold text-slate-200 mb-0.5">Belum Ada Dana Wallet Masuk</h4>
-                    <p class="text-[11px] text-slate-500 max-w-[220px] mb-3">Isi saldo wallet PPOB Anda secara instan menggunakan QRIS.</p>
+                    <p class="text-[11px] text-slate-500 max-w-[220px] mb-3">Isi saldo wallet Anda secara instan menggunakan QRIS.</p>
                     <a href="{{ route('affiliate.dashboard') }}" class="px-3.5 py-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-bold text-[11px] rounded-xl shadow-md shadow-emerald-500/25 transition-all inline-flex items-center gap-1.5 active:scale-95">
                         <i class="fa-solid fa-plus text-[10px]"></i> Top Up Saldo Sekarang
                     </a>
@@ -470,6 +472,7 @@
                 switchSubTab('komisi_masuk');
             }
         });
+
     </script>
 </body>
 </html>
