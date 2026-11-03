@@ -169,104 +169,74 @@
         @yield('content')
     </main>
     <div class="@hasSection('hide_footer_mobile') hidden md:block @endif">
-        <footer class="bg-brand-navy border-t border-white/5 pt-12 pb-8 px-6 text-white/60 text-xs">
-            <div class="max-w-5xl mx-auto flex flex-col md:flex-row items-center md:items-start justify-between gap-10 mb-8">
+        @php $footerProposals = \App\Models\ClientProposal::take(3)->get(['slug', 'brand_name']); @endphp
+        <footer class="bg-brand-navy border-t border-white/5 pt-10 pb-6 px-5 sm:px-6 text-white/60 text-xs">
+            <div class="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-[1.3fr_1fr_1fr_1.3fr] gap-x-6 gap-y-8 md:gap-x-10 mb-8">
 
-                {{-- Brand Section --}}
-                <div class="flex flex-col items-center md:items-start gap-4">
-                    <div class="flex items-center gap-2">
+                {{-- Brand --}}
+                <div class="col-span-2 md:col-span-1 flex flex-col gap-3">
+                    <div class="flex items-center gap-2.5">
                         <div class="w-8 h-8 rounded-lg bg-btn-gradient flex items-center justify-center shadow-glow-sm">
                             <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                             </svg>
                         </div>
-                        <span class="font-display font-bold text-lg text-white/80 tracking-wide">Scalify<span class="text-brand-accent"> Intelligence</span></span>
+                        <span class="font-display font-bold text-base text-white/85 tracking-wide">Scalify<span class="text-brand-accent"> Intelligence</span></span>
                     </div>
-                    <p class="text-center md:text-left max-w-xs leading-relaxed text-white/50">
+                    <p class="max-w-xs leading-relaxed text-white/50">
                         Solusi cerdas automasi AI. Tingkatkan efisiensi dan performa bisnis Anda ke level berikutnya.
                     </p>
                 </div>
 
                 {{-- Program & Karir --}}
-                <div class="flex flex-col items-center md:items-start gap-3">
-                    <h3 class="text-white/80 font-bold mb-1 text-sm tracking-wider uppercase">Program & Karir</h3>
-
-                    <a href="{{ route('sobat-scalify') }}" class="flex items-center gap-3 text-white/60 hover:text-amber-400 transition-colors">
-                        <div class="w-6 h-6 rounded-full bg-amber-500/10 flex items-center justify-center shrink-0">
-                            <i class="fa-solid fa-handshake text-amber-400 text-[10px]"></i>
-                        </div>
-                        <span>Sobat Scalify (Partner)</span>
+                <nav aria-label="Program dan karir" class="flex flex-col gap-2.5">
+                    <h3 class="text-white/80 font-bold text-[11px] tracking-wider uppercase mb-0.5">Program</h3>
+                    <a href="{{ route('sobat-scalify') }}" class="flex items-center gap-2 text-white/60 hover:text-amber-400 transition-colors">
+                        <i class="fa-solid fa-handshake text-amber-400 text-[11px] w-4 text-center"></i><span>Sobat Scalify</span>
                     </a>
-
-                    <a href="{{ route('landing.careers') }}" class="flex items-center gap-3 text-white/60 hover:text-emerald-400 transition-colors">
-                        <div class="w-6 h-6 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0">
-                            <i class="fa-solid fa-briefcase text-emerald-400 text-[10px]"></i>
-                        </div>
-                        <span>Karir & Lowongan</span>
+                    <a href="{{ route('landing.careers') }}" class="flex items-center gap-2 text-white/60 hover:text-emerald-400 transition-colors">
+                        <i class="fa-solid fa-briefcase text-emerald-400 text-[11px] w-4 text-center"></i><span>Karir</span>
                     </a>
-
-                    <a href="{{ route('landing.portfolio') }}" class="flex items-center gap-3 text-white/60 hover:text-brand-accent transition-colors">
-                        <div class="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center shrink-0">
-                            <i class="fa-solid fa-laptop-code text-brand-accent/80 text-[10px]"></i>
-                        </div>
-                        <span>Portofolio Klien</span>
+                    <a href="{{ route('landing.portfolio') }}" class="flex items-center gap-2 text-white/60 hover:text-brand-accent transition-colors">
+                        <i class="fa-solid fa-laptop-code text-brand-accent/80 text-[11px] w-4 text-center"></i><span>Portofolio</span>
                     </a>
-                </div>
+                </nav>
 
-                {{-- Tautan Khusus (Dinamis dari Database) --}}
-                <div class="flex flex-col items-center md:items-start gap-3">
-                    <h3 class="text-white/80 font-bold mb-1 text-sm tracking-wider uppercase">Project Khusus</h3>
-
-                    @foreach(\App\Models\ClientProposal::take(3)->get() as $proposal)
-                    <a href="{{ route('landing.dynamic', $proposal->slug) }}" class="flex items-center gap-3 text-white/60 hover:text-white transition-colors">
-                        <div class="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center shrink-0">
-                            <i class="fa-solid fa-globe text-brand-accent/80 text-[10px]"></i>
-                        </div>
-                        <span>{{ $proposal->brand_name }}</span>
+                {{-- Project Khusus (dinamis dari database) --}}
+                @if($footerProposals->isNotEmpty())
+                <nav aria-label="Project khusus" class="flex flex-col gap-2.5">
+                    <h3 class="text-white/80 font-bold text-[11px] tracking-wider uppercase mb-0.5">Project Khusus</h3>
+                    @foreach($footerProposals as $proposal)
+                    <a href="{{ route('landing.dynamic', $proposal->slug) }}" class="flex items-center gap-2 text-white/60 hover:text-white transition-colors min-w-0">
+                        <i class="fa-solid fa-globe text-brand-accent/80 text-[11px] w-4 text-center"></i><span class="truncate">{{ $proposal->brand_name }}</span>
                     </a>
                     @endforeach
-                </div>
+                </nav>
+                @endif
 
-                {{-- Contact Information --}}
-                <div class="flex flex-col items-center md:items-start gap-3">
-                    <h3 class="text-white/80 font-bold mb-1 text-sm tracking-wider uppercase">Hubungi Kami</h3>
-
-                    <div class="flex items-center gap-3 text-white/60 hover:text-white transition-colors cursor-default">
-                        <div class="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center">
-                            <i class="fa-solid fa-map-pin text-brand-accent/80 text-[10px]"></i>
-                        </div>
-                        <span>Jakarta, Kuningan</span>
-                    </div>
-
-                    <a href="mailto:sales@scalifyintellegence.my.id" class="flex items-center gap-3 text-white/60 hover:text-white transition-colors">
-                        <div class="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center">
-                            <i class="fa-solid fa-envelope text-brand-accent/80 text-[10px]"></i>
-                        </div>
-                        <span>sales@scalifyintellegence.my.id</span>
-                    </a>
-
-                    <div class="flex flex-col gap-2 mt-1">
-                        <a href="https://wa.me/6287761036385" target="_blank" class="flex items-center gap-3 text-white/60 hover:text-white transition-colors">
-                            <div class="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center">
-                                <i class="fa-solid fa-phone text-brand-accent/80 text-[10px]"></i>
-                            </div>
-                            <span><span class="text-white/70 mr-1">Bisnis:</span> +62 877 6103 6385</span>
+                {{-- Kontak: tombol ringkas, 2 kolom di mobile --}}
+                <div class="col-span-2 md:col-span-1 flex flex-col gap-3">
+                    <h3 class="text-white/80 font-bold text-[11px] tracking-wider uppercase">Hubungi Kami</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-1 gap-2">
+                        <a href="https://wa.me/6287761036385" target="_blank" rel="noopener" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 hover:bg-white/[0.08] hover:text-white transition-colors">
+                            <i class="fa-brands fa-whatsapp text-green-400 text-base"></i>
+                            <span class="leading-tight"><span class="block text-[10px] text-white/45">Bisnis</span>+62 877 6103 6385</span>
                         </a>
-
-                        <a href="https://wa.me/6285221694067" target="_blank" class="flex items-center gap-3 text-white/60 hover:text-white transition-colors">
-                            <div class="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center">
-                                <i class="fa-brands fa-whatsapp text-green-400/80 text-[11px]"></i>
-                            </div>
-                            <span><span class="text-white/70 mr-1">Owner:</span> 0852 2169 4067</span>
+                        <a href="https://wa.me/6285221694067" target="_blank" rel="noopener" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 hover:bg-white/[0.08] hover:text-white transition-colors">
+                            <i class="fa-brands fa-whatsapp text-green-400 text-base"></i>
+                            <span class="leading-tight"><span class="block text-[10px] text-white/45">Owner</span>0852 2169 4067</span>
+                        </a>
+                        <a href="mailto:sales@scalifyintellegence.my.id" class="col-span-2 md:col-span-1 flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 hover:bg-white/[0.08] hover:text-white transition-colors min-w-0">
+                            <i class="fa-solid fa-envelope text-brand-accent text-sm"></i>
+                            <span class="truncate">sales@scalifyintellegence.my.id</span>
                         </a>
                     </div>
+                    <p class="flex items-center gap-2 text-white/45"><i class="fa-solid fa-map-pin text-brand-accent/70 text-[11px]"></i>Jakarta, Kuningan</p>
                 </div>
-
             </div>
 
-            {{-- Copyright --}}
-            <div class="border-t border-white/5 pt-6 text-center text-white/50">
-                <p>© 2026 Scalify Intelligence · All rights reserved</p>
+            <div class="border-t border-white/5 pt-5 text-center text-white/40 text-[11px]">
+                <p>&copy; 2026 Scalify Intelligence · All rights reserved</p>
             </div>
         </footer>
     </div>
