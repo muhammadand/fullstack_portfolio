@@ -136,6 +136,7 @@ Hindari penggunaan `SELECT *` yang membengkak di memori server dan berisiko memb
 Setiap modifikasi logika finansial wajib diuji dengan PHPUnit/Pest:
 - `tests/Unit/WalletFinancialLogicTest.php`: Menguji integritas atomik `credit()`, `debit()`, pencegahan saldo minus, dan idempotensi `markAsPaid()`.
 - `tests/Feature/WalletControllerTest.php`: Menguji proteksi otorisasi, validasi nominal minimal (>= 50k), *idempotency guard*, dan struktur response UI.
+- `tests/Feature/AffiliateHistoryTest.php`: Menguji halaman riwayat transaksi mobile, pemisahan dual-pocket (Komisi vs Wallet PPOB), dan proyeksi kolom lean UI.
 - `tests/Unit/PaymentWebhookServiceTest.php`: Menguji normalisasi payload multi-gateway, validasi SHA-512 signature, settlement atomik, idempotensi retry, dan penanganan expired/failed.
 - `tests/Feature/PaymentCallbackControllerTest.php`: Menguji endpoint HTTP webhook (`/payment/callback`, `/webhook/payment`, dll.), penolakan 422 untuk missing ID, 403 untuk invalid signature, dan persistensi audit log.
 

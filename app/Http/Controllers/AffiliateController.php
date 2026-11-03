@@ -150,16 +150,46 @@ class AffiliateController extends Controller
     {
         /** @var \App\Models\Affiliate $affiliate */
         $affiliate = Auth::guard('affiliate')->user();
+        $wallet = $affiliate->getOrCreateWallet();
 
-        $commissions = \App\Models\Commission::where('affiliate_id', $affiliate->id)
-            ->latest()
-            ->paginate(10, ['*'], 'komisi_page');
+        // 1. Komisi Masuk (Lean UI-Only Projection)
+        $commissions = \App\Models\Commission::select(['id', 'amount', 'description', 'created_at'])
+            ->where('affiliate_id', $affiliate->id)
+            ->latest('id')
+            ->paginate(15, ['*'], 'komisi_page');
 
-        $withdrawals = \App\Models\Withdrawal::where('affiliate_id', $affiliate->id)
-            ->latest()
-            ->paginate(10, ['*'], 'tarik_page');
+        // 2. Penarikan Saldo Komisi (Lean UI-Only Projection)
+        $withdrawals = \App\Models\Withdrawal::select(['id', 'amount', 'bank_info', 'status', 'proof_of_payment', 'created_at'])
+            ->where('affiliate_id', $affiliate->id)
+            ->latest('id')
+            ->paginate(15, ['*'], 'tarik_page');
 
-        return view('affiliate.history_mobile', compact('affiliate', 'commissions', 'withdrawals'));
+        // 3. Dana Wallet Masuk (CREDIT: Top Up QRIS, Refund, dll)
+        $walletMasuk = \App\Models\WalletMutation::select([
+            'id', 'mutation_no', 'type', 'amount', 'balance_after', 'category', 'description', 'created_at'
+        ])
+        ->where('wallet_id', $wallet->id)
+        ->where('type', 'CREDIT')
+        ->latest('id')
+        ->paginate(15, ['*'], 'wallet_masuk_page');
+
+        // 4. Dana Wallet Keluar (DEBIT: Transaksi PPOB, Pembayaran, dll)
+        $walletKeluar = \App\Models\WalletMutation::select([
+            'id', 'mutation_no', 'type', 'amount', 'balance_after', 'category', 'description', 'created_at'
+        ])
+        ->where('wallet_id', $wallet->id)
+        ->where('type', 'DEBIT')
+        ->latest('id')
+        ->paginate(15, ['*'], 'wallet_keluar_page');
+
+        return view('affiliate.history_mobile', compact(
+            'affiliate',
+            'wallet',
+            'commissions',
+            'withdrawals',
+            'walletMasuk',
+            'walletKeluar'
+        ));
     }
 
     public function withdraw(Request $request)
