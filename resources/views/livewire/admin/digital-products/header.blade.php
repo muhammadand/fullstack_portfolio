@@ -2,6 +2,7 @@
     title="Produk Digital"
     :subtitle="$isDigiflazz ? 'Katalog hasil sinkronisasi Digiflazz. Produk baru belum dijual sampai diaktifkan.' : 'Kelola katalog produk digital Lynk.id yang dapat dipromosikan oleh Affiliate.'">
     @if($isDigiflazz)
+    <x-admin.button wire:click="openBrandImages" variant="secondary" icon="fa-solid fa-image">Gambar Game</x-admin.button>
     <x-admin.button wire:click="openPricing" variant="secondary" icon="fa-solid fa-tags">Pengaturan Harga</x-admin.button>
     <x-admin.button wire:click="clearAll"
         wire:confirm="Hapus SEMUA data katalog Digiflazz (produk, brand, kategori, override harga, riwayat modal, dan riwayat sync)? Produk Lynk.id tidak terpengaruh. Tindakan ini tidak bisa dibatalkan."

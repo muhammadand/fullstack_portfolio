@@ -24,19 +24,23 @@
         </div>
 
         @if(count($brands) > 0)
-        <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 sm:gap-4">
+        <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2.5 sm:gap-4">
             @foreach($brands as $brand)
             <div x-show="visible.includes(@js($brand['slug']))"
-                class="group flex flex-col items-center gap-2 p-2.5 sm:p-3 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-brand-accent/40 backdrop-blur-md transition-all active:scale-95">
-                <div class="w-full aspect-square rounded-xl overflow-hidden bg-gradient-to-br from-blue-600/30 to-indigo-600/30 border border-white/10 flex items-center justify-center">
-                    @if($brand['logo'])
-                    <img src="{{ asset('storage/' . $brand['logo']) }}" alt="Top up {{ $brand['name'] }}" width="120" height="120"
-                        loading="lazy" decoding="async" class="w-full h-full object-cover">
+                class="group flex flex-col rounded-2xl overflow-hidden bg-brand-mid border border-white/10 hover:border-brand-accent/50 hover:-translate-y-1 transition-all duration-200 active:scale-95">
+                {{-- Poster game: rasio potret, tepi bawah bergelombang --}}
+                <div class="relative aspect-[3/4] bg-gradient-to-br from-blue-600/30 to-indigo-600/30">
+                    @if($brand['image'])
+                    <img src="{{ asset('storage/' . $brand['image']) }}" alt="Top up {{ $brand['name'] }}" width="300" height="400"
+                        loading="lazy" decoding="async" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                     @else
-                    <span class="font-sans font-black text-2xl sm:text-3xl text-white/80 select-none">{{ mb_strtoupper(mb_substr($brand['name'], 0, 1)) }}</span>
+                    <span class="absolute inset-0 flex items-center justify-center font-sans font-black text-4xl text-white/70 select-none">{{ mb_strtoupper(mb_substr($brand['name'], 0, 1)) }}</span>
                     @endif
+                    <svg class="absolute -bottom-px left-0 w-full h-2.5 sm:h-3 fill-brand-mid" viewBox="0 0 100 10" preserveAspectRatio="none" aria-hidden="true">
+                        <path d="M0 10V6l6-3 6 3 7-4 7 4 6-3 8 4 7-3 8 3 7-4 8 4 8-3 10 3v6z"/>
+                    </svg>
                 </div>
-                <span class="w-full text-center text-[11px] sm:text-xs font-semibold text-white/85 leading-tight line-clamp-2 min-h-[2.2em]">{{ $brand['name'] }}</span>
+                <span class="flex items-center justify-center text-center px-1.5 pb-3 pt-1 min-h-[3.25rem] sm:min-h-[3.75rem] text-[11px] sm:text-sm font-bold text-white leading-tight line-clamp-2">{{ $brand['name'] }}</span>
             </div>
             @endforeach
         </div>

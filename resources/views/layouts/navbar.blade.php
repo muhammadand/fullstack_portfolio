@@ -133,10 +133,8 @@
                 <a href="{{ route('landing.portfolio') }}" class="px-3.5 py-2 rounded-xl text-xs xl:text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 transition-all whitespace-nowrap">
                     Portofolio
                 </a>
-
-                {{-- Produk Live --}}
-                <a href="{{ route('index.company.profile') }}#produk-live" class="px-3.5 py-2 rounded-xl text-xs xl:text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 transition-all whitespace-nowrap">
-                    Produk Live
+                <a href="{{ route('topup.index') }}" class="px-3.5 py-2 rounded-xl text-xs xl:text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 transition-all whitespace-nowrap">
+                    Top-Up Game
                 </a>
 
                 {{-- Dropdown: Program & Karir --}}

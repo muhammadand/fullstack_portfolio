@@ -13,12 +13,12 @@ use Illuminate\Support\Facades\Cache;
  */
 class TopupCatalogService
 {
-    public const CACHE_KEY = 'topup.catalog.games.v1';
+    public const CACHE_KEY = 'topup.catalog.games.v2';
     public const CACHE_TTL = 300; // detik
     public const CATEGORY_SLUG = 'games';
 
     /**
-     * @return array{category: array{name: string, slug: string}, brands: array<int, array{name: string, slug: string, logo: ?string}>}|null
+     * @return array{category: array{name: string, slug: string}, brands: array<int, array{name: string, slug: string, image: ?string}>}|null
      */
     public static function games(): ?array
     {
@@ -44,8 +44,8 @@ class TopupCatalogService
                     ->where('digital_products.seller_product_status', true))
                 ->orderBy('display_order')
                 ->orderBy('name')
-                ->get(['name', 'slug', 'logo'])
-                ->map(fn ($b) => ['name' => $b->name, 'slug' => $b->slug, 'logo' => $b->logo])
+                ->get(['name', 'slug', 'image'])
+                ->map(fn ($b) => ['name' => $b->name, 'slug' => $b->slug, 'image' => $b->image])
                 ->all();
 
             return [

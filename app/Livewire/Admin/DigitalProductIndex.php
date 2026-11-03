@@ -15,12 +15,14 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Url;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 use Livewire\WithPagination;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 
 class DigitalProductIndex extends Component
 {
-    use WithPagination;
+    use WithPagination, WithFileUploads;
 
     /** digiflazz | lynk */
     #[Url(as: 'provider')]
@@ -56,6 +58,11 @@ class DigitalProductIndex extends Component
     /** @var array<int|string, array{name: string, margin_type: string, margin_value: string}> */
     public array $levelForms = [];
 
+    // Modal gambar brand (tampil di landing page top up)
+    public bool $brandImagesOpen = false;
+    /** @var array<int|string, mixed> brand_id => file upload sementara */
+    public array $brandUploads = [];
+
     public function mount(): void
     {
         if (!in_array($this->provider, ['digiflazz', 'lynk'], true)) {
@@ -65,6 +72,12 @@ class DigitalProductIndex extends Component
 
     public function updated(string $property): void
     {
+        if (str_starts_with($property, 'brandUploads.')) {
+            $this->saveBrandImage((int) substr($property, strlen('brandUploads.')));
+
+            return;
+        }
+
         if (in_array($property, ['provider', 'search', 'category', 'brand', 'status'], true)) {
             $this->resetPage();
         }
@@ -203,8 +216,58 @@ class DigitalProductIndex extends Component
         $this->notice = 'Pengaturan harga berhasil disimpan. Harga jual otomatis mengikuti margin baru, kecuali produk dengan harga manual.';
     }
 
+    public function openBrandImages(): void
+    {
+        $this->reset('detailId', 'editId', 'pricingOpen', 'brandUploads');
+        $this->resetValidation();
+        $this->brandImagesOpen = true;
+    }
+
+    protected function saveBrandImage(int $brandId): void
+    {
+        $file = $this->brandUploads[$brandId] ?? null;
+
+        $this->validateOnly("brandUploads.$brandId", [
+            "brandUploads.$brandId" => ['image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+        ], [], ["brandUploads.$brandId" => 'gambar']);
+
+        $brand = DigitalProductBrand::findOrFail($brandId, ['id', 'image']);
+        $path = $file->store('topup/brands', 'public');
+
+        if ($brand->image) {
+            Storage::disk('public')->delete($brand->image);
+        }
+
+        $brand->update(['image' => $path]);
+        unset($this->brandUploads[$brandId], $this->brandList);
+        TopupCatalogService::flush();
+    }
+
+    public function removeBrandImage(int $brandId): void
+    {
+        $brand = DigitalProductBrand::findOrFail($brandId, ['id', 'image']);
+
+        if ($brand->image) {
+            Storage::disk('public')->delete($brand->image);
+            $brand->update(['image' => null]);
+        }
+
+        unset($this->brandList);
+        TopupCatalogService::flush();
+    }
+
+    /** Brand kategori Games untuk modal gambar brand. */
+    #[Computed]
+    public function brandList()
+    {
+        return DigitalProductBrand::whereHas('category', fn ($q) => $q->where('slug', TopupCatalogService::CATEGORY_SLUG))
+            ->orderBy('display_order')->orderBy('name')
+            ->get(['id', 'name', 'image']);
+    }
+
     public function closeModal(): void
     {
+        $this->reset('brandImagesOpen', 'brandUploads');
         $this->reset('detailId', 'editId', 'pricingOpen', 'levelForms');
         $this->resetValidation();
     }

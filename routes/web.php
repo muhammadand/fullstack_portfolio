@@ -227,8 +227,8 @@ Route::put('profile', [UserController::class, 'updateProfile'])->name('profile.u
 //Public Routes
 Route::get('/', [HomeController::class, 'indexCompanyProfile'])->name('index.company.profile');
 
-// Landing page top up untuk customer (kategori Games + daftar brand)
-Route::get('/top-up', [App\Http\Controllers\TopupController::class, 'index'])->name('topup.index');
+// Landing page top up game (lihat routes/topup.php)
+require __DIR__ . '/topup.php';
 
 // Redirect 301 dari route lama (landing/*) ke route baru (s/*) untuk menjaga SEO
 Route::redirect('landing/blogs', '/s/blogs', 301);
@@ -585,6 +585,11 @@ Route::get('/secret-deploy-trigger-12345', function () {
 
         \Illuminate\Support\Facades\Artisan::call('migrate', [
             '--path' => 'database/migrations/2026_11_03_110400_create_digital_product_categories_table.php',
+            '--force' => true
+        ]);
+
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_11_03_120000_add_image_to_digital_product_brands_table.php',
             '--force' => true
         ]);
 

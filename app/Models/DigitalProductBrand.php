@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $name
  * @property string $slug
  * @property string|null $logo
+ * @property string|null $image
  * @property bool $is_active
  * @property int $display_order
  */

@@ -24,5 +24,6 @@
     @include('livewire.admin.digital-products.modal-detail')
     @include('livewire.admin.digital-products.modal-edit')
     @include('livewire.admin.digital-products.modal-pricing')
+    @include('livewire.admin.digital-products.modal-brand-images')
     @endif
 </div>
