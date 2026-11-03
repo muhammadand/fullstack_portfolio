@@ -40,9 +40,10 @@ class AdminDigitalProductModernizationTest extends TestCase
             'is_active' => true,
         ]);
 
-        $response = $this->actingAs($this->admin)->get(route('admin.digital_products.index'));
+        $response = $this->actingAs($this->admin)->get(route('admin.digital_products.index', ['provider' => 'lynk']));
         $response->assertOk();
-        $response->assertSee('Produk Digital (Lynk.id)');
+        $response->assertSee('Produk Digital');
+        $response->assertSee('Kode Lynk.id');
         $response->assertSee('Source Code Marketplace Scalify');
         $response->assertSee($product->lynk_slug);
     }
@@ -68,13 +69,13 @@ class AdminDigitalProductModernizationTest extends TestCase
         ]);
 
         // Search by query q
-        $resQ = $this->actingAs($this->admin)->get(route('admin.digital_products.index', ['q' => 'Alpha']));
+        $resQ = $this->actingAs($this->admin)->get(route('admin.digital_products.index', ['provider' => 'lynk', 'q' => 'Alpha']));
         $resQ->assertOk();
         $resQ->assertSee('Alpha Laravel Project');
         $resQ->assertDontSee('Beta Trading Script');
 
         // Filter by category
-        $resCat = $this->actingAs($this->admin)->get(route('admin.digital_products.index', ['category' => 'Trading & Finansial']));
+        $resCat = $this->actingAs($this->admin)->get(route('admin.digital_products.index', ['provider' => 'lynk', 'category' => 'Trading & Finansial']));
         $resCat->assertOk();
         $resCat->assertSee('Beta Trading Script');
         $resCat->assertDontSee('Alpha Laravel Project');

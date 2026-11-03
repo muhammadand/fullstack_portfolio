@@ -39,6 +39,11 @@ class Affiliate extends Authenticatable
         'balance' => 'decimal:2',
     ];
 
+    public function priceLevel()
+    {
+        return $this->belongsTo(PriceLevel::class);
+    }
+
     public function clicks()
     {
         return $this->hasMany(AffiliateClick::class);

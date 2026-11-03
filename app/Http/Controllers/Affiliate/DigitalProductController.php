@@ -13,7 +13,7 @@ class DigitalProductController extends Controller
     {
         $affiliate = Auth::guard('affiliate')->user();
 
-        $query = DigitalProduct::active()->ordered();
+        $query = DigitalProduct::lynk()->active()->ordered();
 
         if ($request->filled('category')) {
             $query->where('category', $request->category);
@@ -28,7 +28,7 @@ class DigitalProductController extends Controller
         }
 
         $products = $query->get();
-        $categories = DigitalProduct::active()->distinct()->pluck('category')->filter()->values();
+        $categories = DigitalProduct::lynk()->active()->distinct()->pluck('category')->filter()->values();
 
         return view('affiliate.digital_products.index', compact('affiliate', 'products', 'categories'));
     }

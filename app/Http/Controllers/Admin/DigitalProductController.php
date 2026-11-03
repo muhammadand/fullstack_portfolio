@@ -10,28 +10,10 @@ use Illuminate\Support\Facades\Storage;
 
 class DigitalProductController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $query = DigitalProduct::query();
-
-        $search = trim((string) ($request->query('q') ?? $request->query('search') ?? ''));
-
-        if ($search !== '') {
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('category', 'like', "%{$search}%")
-                    ->orWhere('lynk_slug', 'like', "%{$search}%");
-            });
-        }
-
-        if ($request->filled('category')) {
-            $query->where('category', $request->category);
-        }
-
-        $products = $query->orderBy('display_order', 'asc')->latest()->paginate(10)->withQueryString();
-        $categories = DigitalProduct::distinct()->pluck('category')->filter()->values();
-
-        return view('admin.digital_products.index', compact('products', 'categories'));
+        // Daftar, filter, dan sync ditangani komponen Livewire Admin\DigitalProductIndex.
+        return view('admin.digital_products.index');
     }
 
     public function create()

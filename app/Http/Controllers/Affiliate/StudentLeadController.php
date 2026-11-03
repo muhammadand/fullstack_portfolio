@@ -49,7 +49,7 @@ class StudentLeadController extends Controller
             ->orWhere('affiliate_id', $affiliate->id)
             ->get();
 
-        $digitalProducts = \App\Models\DigitalProduct::active()->ordered()->get();
+        $digitalProducts = \App\Models\DigitalProduct::lynk()->active()->ordered()->get();
 
         return view('affiliate.student_leads.index', compact('affiliate', 'leads', 'tab', 'chatTemplates', 'digitalProducts'));
     }

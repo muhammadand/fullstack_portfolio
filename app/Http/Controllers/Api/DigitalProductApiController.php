@@ -43,7 +43,7 @@ class DigitalProductApiController extends Controller
      */
     public function index(Request $request)
     {
-        $query = DigitalProduct::query();
+        $query = DigitalProduct::lynk();
 
         if ($request->filled('category')) {
             $query->where('category', $request->category);
