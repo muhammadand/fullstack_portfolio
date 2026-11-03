@@ -1,7 +1,7 @@
 @extends('layouts.admin.app')
 
 @section('content')
-<div class="px-4 lg:px-6 py-6 lg:py-8" x-data="{
+<div x-data="{
     batchModal: false,
     soldModal: false,
     soldCard: { serial_number: '', customer_name: '', actionUrl: '' },
@@ -19,73 +19,92 @@
     openCancelModal(orderId, partner, qty, amount, url) {
         this.selectedOrder = { order_id: orderId, partner: partner, qty: qty, amount: amount, actionUrl: url };
         this.cancelOrderModal = true;
+    },
+    toastMessage: '',
+    showToast: false,
+    toast(msg) {
+        this.toastMessage = msg;
+        this.showToast = true;
+        setTimeout(() => { this.showToast = false; }, 3000);
+    },
+    copyText(text) {
+        navigator.clipboard.writeText(text).then(() => {
+            this.toast('Link scan berhasil disalin!');
+        });
     }
 }">
 
-    <!-- Header -->
-    <div class="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-            <h1 class="text-2xl font-bold text-slate-800 flex items-center gap-2.5">
-                <i class="fa-solid fa-qrcode text-blue-600"></i>
-                Google Review Cards
-            </h1>
-            <p class="text-slate-500 text-sm mt-1">Kelola unit fisik stiker & kartu QR tap review untuk pelanggan Scalify.</p>
-        </div>
-        <div class="flex items-center gap-2 w-full sm:w-auto">
-            <button @click="batchModal = true" type="button" class="inline-flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-900 text-white px-4 py-2.5 rounded-xl shadow-sm text-sm font-semibold transition-colors flex-1 sm:flex-none">
-                <i class="fa-solid fa-layer-group"></i>
-                <span>Generate Batch (Cetak)</span>
-            </button>
-            <a href="{{ route('admin.review_cards.create') }}" class="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl shadow-sm text-sm font-semibold transition-colors flex-1 sm:flex-none">
-                <i class="fa-solid fa-plus"></i>
-                <span>Tambah Kartu</span>
-            </a>
-        </div>
-    </div>
+    {{-- Page Header --}}
+    <x-admin.page-header title="Google Review Cards" subtitle="Kelola unit fisik stiker & kartu QR tap review untuk pelanggan Scalify.">
+        <x-admin.button type="button" variant="secondary" icon="fa-solid fa-layer-group" @click="batchModal = true">
+            Generate Batch (Cetak)
+        </x-admin.button>
+        <x-admin.button variant="secondary" icon="fa-solid fa-chart-line" :href="route('admin.review_cards.analytics')">
+            Analitik
+        </x-admin.button>
+        <x-admin.button icon="fa-solid fa-plus" :href="route('admin.review_cards.create')">
+            Tambah Kartu
+        </x-admin.button>
+    </x-admin.page-header>
 
-    <!-- Alert Messages -->
+    {{-- Alert Messages --}}
     @if(session('success'))
-    <div class="bg-emerald-50 border-l-4 border-emerald-500 text-emerald-700 p-4 rounded-r-xl mb-6 text-sm flex items-center gap-3" role="alert">
-        <i class="fa-solid fa-circle-check text-emerald-500 text-base"></i>
-        <span>{{ session('success') }}</span>
-    </div>
+    <x-admin.alert type="success">{{ session('success') }}</x-admin.alert>
     @endif
 
     @if(session('error'))
-    <div class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-r-xl mb-6 text-sm flex items-center gap-3" role="alert">
-        <i class="fa-solid fa-circle-exclamation text-red-500 text-base"></i>
-        <span>{{ session('error') }}</span>
-    </div>
+    <x-admin.alert type="error">{{ session('error') }}</x-admin.alert>
     @endif
 
-    <!-- Quick Stats (Agregat Ringan) -->
+    {{-- 4 Quick Stats Grid --}}
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-            <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Total Kartu</p>
-            <p class="text-2xl font-bold text-slate-800 mt-1">{{ number_format($stats->total ?? 0) }}</p>
+        <div class="bg-white rounded-xl p-4 border border-slate-200/80 shadow-xs flex items-center gap-3.5">
+            <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center shrink-0 text-sm">
+                <i class="fa-solid fa-qrcode"></i>
+            </div>
+            <div>
+                <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Total Kartu</p>
+                <p class="text-lg font-bold text-slate-900 mt-0.5">{{ number_format($stats->total ?? 0, 0, ',', '.') }}</p>
+            </div>
         </div>
-        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-            <p class="text-xs font-medium text-emerald-600 uppercase tracking-wider">Terjual</p>
-            <p class="text-2xl font-bold text-emerald-600 mt-1">{{ number_format($stats->sold ?? 0) }}</p>
+
+        <div class="bg-white rounded-xl p-4 border border-slate-200/80 shadow-xs flex items-center gap-3.5">
+            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center shrink-0 text-sm">
+                <i class="fa-solid fa-lock"></i>
+            </div>
+            <div>
+                <p class="text-xs font-medium text-emerald-700 uppercase tracking-wider">Terjual</p>
+                <p class="text-lg font-bold text-emerald-600 mt-0.5">{{ number_format($stats->sold ?? 0, 0, ',', '.') }}</p>
+            </div>
         </div>
-        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-            <p class="text-xs font-medium text-amber-500 uppercase tracking-wider">Belum Terjual</p>
-            <p class="text-2xl font-bold text-amber-500 mt-1">{{ number_format($stats->unsold ?? 0) }}</p>
+
+        <div class="bg-white rounded-xl p-4 border border-slate-200/80 shadow-xs flex items-center gap-3.5">
+            <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 border border-amber-100 flex items-center justify-center shrink-0 text-sm">
+                <i class="fa-solid fa-box-open"></i>
+            </div>
+            <div>
+                <p class="text-xs font-medium text-amber-700 uppercase tracking-wider">Belum Terjual</p>
+                <p class="text-lg font-bold text-amber-600 mt-0.5">{{ number_format($stats->unsold ?? 0, 0, ',', '.') }}</p>
+            </div>
         </div>
-        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-            <p class="text-xs font-medium text-blue-600 uppercase tracking-wider">Total Scan Review</p>
-            <p class="text-2xl font-bold text-blue-600 mt-1">{{ number_format($stats->total_scans ?? 0) }}</p>
+
+        <div class="bg-white rounded-xl p-4 border border-slate-200/80 shadow-xs flex items-center gap-3.5">
+            <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 border border-purple-100 flex items-center justify-center shrink-0 text-sm">
+                <i class="fa-solid fa-chart-simple"></i>
+            </div>
+            <div>
+                <p class="text-xs font-medium text-purple-700 uppercase tracking-wider">Total Scan Review</p>
+                <p class="text-lg font-bold text-purple-600 mt-0.5">{{ number_format($stats->total_scans ?? 0, 0, ',', '.') }}</p>
+            </div>
         </div>
     </div>
 
-    <!-- Pesanan QRIS Partner Menunggu Verifikasi (Full Width) -->
+    {{-- Pesanan QRIS Partner Menunggu Verifikasi --}}
     @if(!empty($pendingOrders))
-    <div class="bg-white border border-amber-200 rounded-2xl p-5 mb-6 shadow-sm overflow-hidden relative">
-        <div class="absolute top-0 left-0 bottom-0 w-1.5 bg-amber-500"></div>
-
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 pl-1">
+    <div class="bg-amber-50/70 border border-amber-200 rounded-2xl p-5 mb-6 shadow-xs overflow-hidden relative">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
             <div class="flex items-center gap-2.5">
-                <div class="w-8 h-8 rounded-lg bg-amber-50 border border-amber-200 text-amber-600 flex items-center justify-center text-sm">
+                <div class="w-8 h-8 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center text-sm shrink-0">
                     <i class="fa-solid fa-clock-rotate-left"></i>
                 </div>
                 <div>
@@ -93,18 +112,18 @@
                     <p class="text-xs text-slate-500">Partner telah melakukan transfer QRIS. Klik verifikasi jika dana sudah masuk untuk menyerahkan kuota kartu.</p>
                 </div>
             </div>
-            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-200 w-fit">
+            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-amber-100 text-amber-800 border border-amber-200/80 w-fit">
                 Perlu Tindakan
             </span>
         </div>
 
-        <div class="space-y-2.5 pl-1">
+        <div class="space-y-2.5">
             @foreach($pendingOrders as $order)
-            <div class="bg-slate-50 hover:bg-slate-100/80 transition-colors rounded-xl p-3.5 border border-slate-200/80 flex flex-col md:flex-row md:items-center justify-between gap-3">
+            <div class="bg-white rounded-xl p-3.5 border border-slate-200/80 flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-xs">
                 <div class="space-y-1">
                     <div class="flex items-center gap-2">
-                        <span class="font-bold text-sm text-slate-800 font-mono">#{{ $order['order_id'] ?? '' }}</span>
-                        <span class="text-xs font-semibold px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 border border-blue-200/80">
+                        <span class="font-bold text-sm text-slate-900 font-mono">#{{ $order['order_id'] ?? '' }}</span>
+                        <span class="text-xs font-semibold px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 border border-blue-200/70">
                             {{ $order['quantity'] ?? 1 }} Unit Kartu
                         </span>
                         <span class="text-[11px] text-slate-400">
@@ -119,15 +138,13 @@
                 </div>
 
                 <div class="flex items-center gap-2 shrink-0">
-                    <button type="button" @click="openVerifyModal('{{ $order['order_id'] }}', '{{ addslashes($order['partner_name'] ?? '-') }}', '{{ $order['quantity'] ?? 1 }}', 'Rp {{ number_format($order['total_amount'] ?? 0, 0, ',', '.') }}', '{{ route('admin.review_cards.verify_order', $order['order_id']) }}')" class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold shadow-sm transition-all active:scale-95 cursor-pointer">
-                        <i class="fa-solid fa-check"></i>
-                        <span>Verifikasi &amp; Aktifkan</span>
-                    </button>
+                    <x-admin.button type="button" size="sm" icon="fa-solid fa-check" @click="openVerifyModal('{{ $order['order_id'] }}', '{{ addslashes($order['partner_name'] ?? '-') }}', '{{ $order['quantity'] ?? 1 }}', 'Rp {{ number_format($order['total_amount'] ?? 0, 0, ',', '.') }}', '{{ route('admin.review_cards.verify_order', $order['order_id']) }}')">
+                        Verifikasi & Aktifkan
+                    </x-admin.button>
 
-                    <button type="button" @click="openCancelModal('{{ $order['order_id'] }}', '{{ addslashes($order['partner_name'] ?? '-') }}', '{{ $order['quantity'] ?? 1 }}', 'Rp {{ number_format($order['total_amount'] ?? 0, 0, ',', '.') }}', '{{ route('admin.review_cards.cancel_order', $order['order_id']) }}')" class="inline-flex items-center gap-1.5 px-3 py-2 bg-white hover:bg-red-50 text-slate-600 hover:text-red-600 border border-slate-200 rounded-lg text-xs font-medium transition-colors cursor-pointer">
-                        <i class="fa-solid fa-xmark"></i>
-                        <span>Batalkan</span>
-                    </button>
+                    <x-admin.button type="button" variant="secondary" size="sm" icon="fa-solid fa-xmark" @click="openCancelModal('{{ $order['order_id'] }}', '{{ addslashes($order['partner_name'] ?? '-') }}', '{{ $order['quantity'] ?? 1 }}', 'Rp {{ number_format($order['total_amount'] ?? 0, 0, ',', '.') }}', '{{ route('admin.review_cards.cancel_order', $order['order_id']) }}')">
+                        Batalkan
+                    </x-admin.button>
                 </div>
             </div>
             @endforeach
@@ -135,98 +152,94 @@
     </div>
     @endif
 
-    <!-- Filters & Search -->
-    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 mb-6">
-        <form method="GET" action="{{ route('admin.review_cards.index') }}" class="flex flex-col sm:flex-row gap-3">
-            <div class="flex-1 relative">
-                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 text-sm">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                </span>
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nomor serial, nama usaha, atau URL slug..." class="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all">
+    {{-- Main Table Card --}}
+    <x-admin.card :padding="false">
+        {{-- Toolbar Filter & Pencarian --}}
+        <form method="GET" action="{{ route('admin.review_cards.index') }}" class="flex flex-col sm:flex-row gap-2.5 p-4 border-b border-slate-200">
+            <div class="relative flex-1 sm:max-w-sm">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-sm text-slate-400"></i>
+                <x-admin.input name="q" :value="request('q') ?? request('search')" placeholder="Cari serial, nama usaha, atau slug..." class="pl-9" />
             </div>
 
             <div class="sm:w-48">
-                <select name="status" onchange="this.form.submit()" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white">
+                <x-admin.select name="status" onchange="this.form.submit()">
                     <option value="">Semua Status</option>
                     <option value="sold" {{ request('status') === 'sold' ? 'selected' : '' }}>Terjual</option>
                     <option value="unsold" {{ request('status') === 'unsold' ? 'selected' : '' }}>Belum Terjual</option>
                     <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Pending (Gudang)</option>
-                    <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Aktif</option>
+                    <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Aktif (Toko)</option>
                     <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Nonaktif</option>
-                </select>
+                </x-admin.select>
             </div>
 
-            <button type="submit" class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-lg text-sm font-medium transition-colors">
-                Filter
-            </button>
-            @if(request('search') || request('status'))
-            <a href="{{ route('admin.review_cards.index') }}" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-medium transition-colors text-center">
-                Reset
-            </a>
-            @endif
+            <div class="flex gap-2">
+                <x-admin.button type="submit" variant="secondary">Filter</x-admin.button>
+                @if(request('q') || request('search') || request('status'))
+                <x-admin.button variant="secondary" icon="fa-solid fa-xmark" :href="route('admin.review_cards.index')">Reset</x-admin.button>
+                @endif
+            </div>
         </form>
-    </div>
 
-    <!-- Table List -->
-    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+        {{-- Table List --}}
         <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm text-slate-600">
-                <thead class="bg-slate-50 text-slate-700 text-xs uppercase font-semibold border-b border-slate-200">
+            <table class="min-w-full text-sm">
+                <thead class="bg-slate-50 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">
                     <tr>
-                        <th class="py-3.5 px-4">Serial & PIN</th>
-                        <th class="py-3.5 px-4">Status</th>
-                        <th class="py-3.5 px-4">Bisnis / Pemilik</th>
-                        <th class="py-3.5 px-4">URL Scan (QR / NFC)</th>
-                        <th class="py-3.5 px-4 text-center">Scan</th>
-                        <th class="py-3.5 px-4 text-right">Aksi</th>
+                        <th class="px-4 py-3 w-12">#</th>
+                        <th class="px-4 py-3">Serial & PIN</th>
+                        <th class="px-4 py-3">Status</th>
+                        <th class="px-4 py-3">Bisnis & Google Review</th>
+                        <th class="px-4 py-3">URL Scan (QR / NFC)</th>
+                        <th class="px-4 py-3 text-center">Scan</th>
+                        <th class="px-4 py-3 text-right">Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-200">
+                <tbody class="divide-y divide-slate-100 text-slate-600">
                     @forelse($cards as $card)
-                    <tr class="hover:bg-slate-50/80 transition-colors">
-                        <!-- Serial & PIN -->
-                        <td class="py-3.5 px-4">
+                    <tr class="hover:bg-slate-50/70 transition-colors">
+                        <td class="px-4 py-3 text-slate-400">{{ $cards->firstItem() + $loop->index }}</td>
+
+                        {{-- Serial & PIN --}}
+                        <td class="px-4 py-3 whitespace-nowrap">
                             <div class="font-mono font-bold text-slate-900 text-xs tracking-wide">
                                 {{ $card->serial_number }}
                             </div>
                             <div class="text-[11px] text-slate-400 mt-0.5">
-                                PIN: <span class="font-mono text-slate-600 font-semibold">{{ $card->activation_code }}</span>
+                                PIN: <span class="font-mono text-slate-700 font-semibold">{{ $card->activation_code }}</span>
                             </div>
                         </td>
 
-                        <!-- Status Badge -->
-                        <td class="py-3.5 px-4">
+                        {{-- Status Badge --}}
+                        <td class="px-4 py-3 whitespace-nowrap">
                             @if($card->is_sold)
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
-                                <i class="fa-solid fa-lock text-[10px] text-emerald-600"></i>
-                                Terjual
-                            </span>
+                            <x-admin.badge color="green">
+                                <i class="fa-solid fa-lock text-[10px]"></i> Terjual
+                            </x-admin.badge>
                             @elseif($card->status === 'active')
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
-                                <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
-                                Aktif (Toko)
-                            </span>
+                            <x-admin.badge color="blue">
+                                <i class="fa-solid fa-circle-check text-[10px]"></i> Aktif
+                            </x-admin.badge>
                             @elseif($card->status === 'pending')
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">
-                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-                                Belum Aktif
-                            </span>
+                            <x-admin.badge color="yellow">
+                                <i class="fa-solid fa-clock text-[10px]"></i> Belum Aktif
+                            </x-admin.badge>
                             @else
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-600 border border-slate-200">
-                                <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
-                                Nonaktif
-                            </span>
+                            <x-admin.badge color="slate">
+                                <i class="fa-solid fa-circle-xmark text-[10px]"></i> Nonaktif
+                            </x-admin.badge>
                             @endif
                         </td>
 
-                        <!-- Bisnis & Link Google Review -->
-                        <td class="py-3.5 px-4">
+                        {{-- Bisnis & Google Review --}}
+                        <td class="px-4 py-3 max-w-xs">
                             @if($card->business_name)
-                            <div class="font-semibold text-slate-900">{{ $card->business_name }}</div>
+                            <span class="font-medium text-slate-900 block truncate" title="{{ $card->business_name }}">
+                                {{ $card->business_name }}
+                            </span>
                             @if($card->google_review_url)
-                            <a href="{{ $card->google_review_url }}" target="_blank" rel="noopener noreferrer" class="text-xs text-blue-600 hover:underline inline-flex items-center gap-1 mt-0.5 truncate max-w-xs block">
+                            <a href="{{ $card->google_review_url }}" target="_blank" rel="noopener noreferrer" class="text-xs text-blue-600 hover:underline inline-flex items-center gap-1 mt-0.5 truncate max-w-xs">
                                 <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-                                <span>Lihat Link Google Review</span>
+                                <span>Lihat Review Maps</span>
                             </a>
                             @endif
                             @else
@@ -234,66 +247,54 @@
                             @endif
                         </td>
 
-                        <!-- URL Scan / Slug -->
-                        <td class="py-3.5 px-4">
+                        {{-- URL Scan --}}
+                        <td class="px-4 py-3 whitespace-nowrap">
                             @php $scanUrl = url('/r/' . $card->slug); @endphp
-                            <div class="flex items-center gap-2">
-                                <a href="{{ $scanUrl }}" target="_blank" class="font-mono text-xs text-blue-600 hover:text-blue-800 bg-blue-50 px-2 py-1 rounded border border-blue-200">
+                            <div class="flex items-center gap-1.5">
+                                <a href="{{ $scanUrl }}" target="_blank" class="font-mono text-xs text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200/70 hover:bg-blue-100 transition">
                                     /r/{{ $card->slug }}
                                 </a>
-                                <button type="button" onclick="navigator.clipboard.writeText('{{ $scanUrl }}'); alert('Link scan berhasil disalin!');" class="text-slate-400 hover:text-slate-600 p-1" title="Salin URL">
+                                <button type="button" @click="copyText('{{ $scanUrl }}')" class="text-slate-400 hover:text-slate-600 p-1" title="Salin URL Scan">
                                     <i class="fa-regular fa-copy text-xs"></i>
                                 </button>
                             </div>
                         </td>
 
-                        <!-- Counter Scan -->
-                        <td class="py-3.5 px-4 text-center">
+                        {{-- Counter Scan --}}
+                        <td class="px-4 py-3 text-center whitespace-nowrap">
                             <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-slate-100 text-slate-700">
                                 {{ number_format($card->total_scans) }}
                             </span>
                         </td>
 
-                        <!-- Actions -->
-                        <td class="py-3.5 px-4 text-right">
+                        {{-- Aksi --}}
+                        <td class="px-4 py-3 whitespace-nowrap text-right">
                             <div class="flex items-center justify-end gap-1.5">
-                                <!-- Detail & Template Cetak -->
-                                <a href="{{ route('admin.review_cards.show', $card->id) }}" class="p-1.5 text-blue-600 hover:text-blue-800 rounded-lg hover:bg-blue-50 transition-colors" title="Lihat Desain & Cetak Kartu">
-                                    <i class="fa-solid fa-eye text-xs"></i>
-                                </a>
+                                {{-- Lihat Desain & Template Cetak --}}
+                                <x-admin.button variant="secondary" size="sm" icon="fa-solid fa-eye" :href="route('admin.review_cards.show', $card->id)" title="Desain & Cetak" />
 
                                 @if($card->is_sold)
-                                <!-- Terkunci Permanen karena Sudah Terjual -->
-                                <span class="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-slate-100 text-slate-400 text-xs font-medium cursor-not-allowed select-none" title="Kartu sudah berstatus Terjual & terkunci permanen">
-                                    <i class="fa-solid fa-lock text-[10px]"></i>
-                                    <span>Terkunci</span>
+                                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-100 text-slate-400 text-xs font-medium cursor-not-allowed select-none" title="Kartu sudah terjual & terkunci">
+                                    <i class="fa-solid fa-lock text-[10px]"></i> Terkunci
                                 </span>
                                 @else
-                                <!-- Tandai Terjual & Kunci -->
-                                <button type="button" @click="openSoldModal('{{ $card->serial_number }}', '{{ addslashes($card->business_name ?? $card->customer_name ?? '') }}', '{{ route('admin.review_cards.mark_sold', $card->id) }}')" class="p-1.5 text-slate-400 hover:text-emerald-600 rounded-lg hover:bg-emerald-50 transition-colors" title="Tandai Terjual (Kunci Permanen)">
-                                    <i class="fa-solid fa-cart-shopping text-xs"></i>
-                                </button>
+                                {{-- Tandai Terjual & Kunci --}}
+                                <x-admin.button type="button" variant="secondary" size="sm" icon="fa-solid fa-cart-shopping" @click="openSoldModal('{{ $card->serial_number }}', '{{ addslashes($card->business_name ?? $card->owner_name ?? '') }}', '{{ route('admin.review_cards.mark_sold', $card->id) }}')" title="Tandai Terjual" />
 
-                                <!-- Quick Toggle Status -->
+                                {{-- Quick Toggle Status --}}
                                 <form action="{{ route('admin.review_cards.toggle_status', $card->id) }}" method="POST" class="inline">
                                     @csrf
-                                    <button type="submit" class="p-1.5 text-slate-400 hover:text-amber-600 rounded-lg hover:bg-slate-100 transition-colors" title="Ubah Status Aktif/Nonaktif">
-                                        <i class="fa-solid fa-power-off text-xs"></i>
-                                    </button>
+                                    <x-admin.button type="submit" variant="secondary" size="sm" icon="fa-solid fa-power-off" title="Ubah Status Aktif/Nonaktif" />
                                 </form>
 
-                                <!-- Edit -->
-                                <a href="{{ route('admin.review_cards.edit', $card->id) }}" class="p-1.5 text-slate-400 hover:text-blue-600 rounded-lg hover:bg-slate-100 transition-colors" title="Edit Kartu">
-                                    <i class="fa-regular fa-pen-to-square text-xs"></i>
-                                </a>
+                                {{-- Edit --}}
+                                <x-admin.button variant="secondary" size="sm" icon="fa-solid fa-pen" :href="route('admin.review_cards.edit', $card->id)" title="Edit Kartu" />
 
-                                <!-- Delete -->
+                                {{-- Delete --}}
                                 <form action="{{ route('admin.review_cards.destroy', $card->id) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus kartu {{ $card->serial_number }}?');">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="p-1.5 text-slate-400 hover:text-red-600 rounded-lg hover:bg-slate-100 transition-colors" title="Hapus">
-                                        <i class="fa-regular fa-trash-can text-xs"></i>
-                                    </button>
+                                    <x-admin.button type="submit" variant="danger" size="sm" icon="fa-solid fa-trash-can" title="Hapus" aria-label="Hapus" />
                                 </form>
                                 @endif
                             </div>
@@ -301,10 +302,16 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="text-center py-12 text-slate-400">
-                            <i class="fa-solid fa-qrcode text-4xl mb-3 text-slate-300 block"></i>
-                            <p class="font-medium">Belum ada Review Card yang terdaftar.</p>
-                            <p class="text-xs text-slate-400 mt-1">Gunakan tombol "Generate Batch" untuk membuat unit siap cetak massal.</p>
+                        <td colspan="7" class="px-4 py-12 text-center">
+                            <div class="w-12 h-12 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-3">
+                                <i class="fa-solid fa-qrcode text-xl"></i>
+                            </div>
+                            <p class="text-sm font-medium text-slate-700">
+                                {{ request('q') || request('search') || request('status') ? 'Tidak ada kartu yang cocok dengan filter.' : 'Belum ada Review Card yang terdaftar.' }}
+                            </p>
+                            <p class="text-xs text-slate-400 mt-1">
+                                {{ request('q') || request('search') || request('status') ? 'Coba ganti kata kunci pencarian atau reset filter.' : 'Gunakan tombol Generate Batch untuk membuat unit siap cetak massal.' }}
+                            </p>
                         </td>
                     </tr>
                     @endforelse
@@ -312,240 +319,266 @@
             </table>
         </div>
 
+        {{-- Pagination --}}
         @if($cards->hasPages())
-        <div class="p-4 border-t border-slate-200">
-            {{ $cards->links() }}
+        <div class="px-4 py-3 border-t border-slate-200">
+            {{ $cards->links('pagination::tailwind') }}
         </div>
         @endif
-    </div>
+    </x-admin.card>
 
-    <!-- Modal Generate Batch Massal (Cepat & Ringan) -->
-    <div x-show="batchModal" x-cloak class="fixed inset-0 z-50 overflow-y-auto" style="background-color: rgba(15, 23, 42, 0.6);">
-        <div class="flex items-center justify-center min-h-screen p-4">
-            <div @click.away="batchModal = false" class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-100">
-                <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-                    <h3 class="font-bold text-slate-800 text-lg flex items-center gap-2">
-                        <i class="fa-solid fa-layer-group text-blue-600"></i>
-                        Generate Batch Cetak
-                    </h3>
-                    <button @click="batchModal = false" class="text-slate-400 hover:text-slate-600">
-                        <i class="fa-solid fa-xmark"></i>
+    {{-- Modal Generate Batch Cetak Massal --}}
+    <div x-show="batchModal" x-cloak class="fixed inset-0 z-50 overflow-y-auto" role="dialog" aria-modal="true">
+        <div x-show="batchModal" x-transition.opacity class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs"></div>
+
+        <div class="min-h-full p-4 flex items-center justify-center">
+            <div x-show="batchModal"
+                x-transition:enter="transition ease-out duration-200"
+                x-transition:enter-start="opacity-0 scale-95"
+                x-transition:enter-end="opacity-100 scale-100"
+                x-transition:leave="transition ease-in duration-150"
+                x-transition:leave-start="opacity-100 scale-100"
+                x-transition:leave-end="opacity-0 scale-95"
+                @click.away="batchModal = false"
+                class="relative w-full max-w-md bg-white rounded-2xl shadow-xl border border-slate-200 p-6 z-10">
+
+                <div class="flex items-center justify-between pb-4 mb-4 border-b border-slate-100">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                            <i class="fa-solid fa-layer-group text-sm"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-base font-semibold text-slate-900">Generate Batch Cetak</h3>
+                            <p class="text-xs text-slate-400">Buat serial kartu massal siap cetak.</p>
+                        </div>
+                    </div>
+                    <button type="button" @click="batchModal = false" class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 flex items-center justify-center transition">
+                        <i class="fa-solid fa-xmark text-sm"></i>
                     </button>
                 </div>
 
-                <form action="{{ route('admin.review_cards.batch_generate') }}" method="POST" class="mt-4 space-y-4">
+                <form action="{{ route('admin.review_cards.batch_generate') }}" method="POST" class="space-y-4">
                     @csrf
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Jumlah Unit Kartu/Stiker</label>
-                        <input type="number" name="quantity" min="1" max="100" value="10" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
-                        <p class="text-[11px] text-slate-400 mt-1">Maksimal 100 unit per sekali generate untuk performa kilat.</p>
+                        <x-admin.label for="batchQty" required>Jumlah Unit Kartu/Stiker</x-admin.label>
+                        <x-admin.input type="number" name="quantity" id="batchQty" min="1" max="100" value="10" required />
+                        <x-admin.hint for="quantity">Maksimal 100 unit per sekali generate.</x-admin.hint>
                     </div>
 
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Prefix Serial Number</label>
-                        <input type="text" name="prefix" value="SCL" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
-                        <p class="text-[11px] text-slate-400 mt-1">Format: SCL-2610-XXXX (Tercetak di kartu/box).</p>
+                        <x-admin.label for="batchPrefix">Prefix Serial Number</x-admin.label>
+                        <x-admin.input name="prefix" id="batchPrefix" value="SCL" class="font-mono uppercase" />
+                        <x-admin.hint for="prefix">Format: SCL-YYMM-XXXX</x-admin.hint>
                     </div>
 
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Catatan Batch (Opsional)</label>
-                        <input type="text" name="notes" placeholder="Contoh: Batch Cetak Vendor A 100 Pcs" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                        <x-admin.label for="batchNotes">Catatan Batch (Opsional)</x-admin.label>
+                        <x-admin.input name="notes" id="batchNotes" placeholder="Contoh: Batch Cetak Vendor A 100 Pcs" />
                     </div>
 
-                    <div class="pt-2 flex items-center justify-end gap-2">
-                        <button type="button" @click="batchModal = false" class="px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-lg">
-                            Batal
-                        </button>
-                        <button type="submit" class="px-4 py-2 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm">
-                            Generate Sekarang
-                        </button>
+                    <div class="pt-4 border-t border-slate-100 flex items-center justify-end gap-2">
+                        <x-admin.button type="button" variant="secondary" @click="batchModal = false">Batal</x-admin.button>
+                        <x-admin.button type="submit" icon="fa-solid fa-bolt">Generate Sekarang</x-admin.button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- Modal Konfirmasi Tandai Terjual & Kunci Permanen -->
-    <div x-show="soldModal" x-cloak class="fixed inset-0 z-50 overflow-y-auto" style="background-color: rgba(15, 23, 42, 0.65);">
-        <div class="flex items-center justify-center min-h-screen p-4">
-            <div @click.away="soldModal = false" class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100 transition-all">
+    {{-- Modal Konfirmasi Tandai Terjual & Kunci Permanen --}}
+    <div x-show="soldModal" x-cloak class="fixed inset-0 z-50 overflow-y-auto" role="dialog" aria-modal="true">
+        <div x-show="soldModal" x-transition.opacity class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs"></div>
 
-                {{-- Header --}}
-                <div class="flex items-start justify-between pb-3 border-b border-slate-100">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg font-bold shrink-0">
-                            <i class="fa-solid fa-cart-shopping"></i>
+        <div class="min-h-full p-4 flex items-center justify-center">
+            <div x-show="soldModal"
+                x-transition:enter="transition ease-out duration-200"
+                x-transition:enter-start="opacity-0 scale-95"
+                x-transition:enter-end="opacity-100 scale-100"
+                x-transition:leave="transition ease-in duration-150"
+                x-transition:leave-start="opacity-100 scale-100"
+                x-transition:leave-end="opacity-0 scale-95"
+                @click.away="soldModal = false"
+                class="relative w-full max-w-md bg-white rounded-2xl shadow-xl border border-slate-200 p-6 z-10">
+
+                <div class="flex items-center justify-between pb-4 mb-4 border-b border-slate-100">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                            <i class="fa-solid fa-cart-shopping text-sm"></i>
                         </div>
                         <div>
-                            <h3 class="font-bold text-slate-800 text-base leading-tight">Tandai Kartu Terjual</h3>
-                            <p class="text-xs text-slate-400 mt-0.5">Konfirmasi penguncian permanen unit fisik</p>
+                            <h3 class="text-base font-semibold text-slate-900">Tandai Kartu Terjual</h3>
+                            <p class="text-xs text-slate-400">Konfirmasi penguncian permanen unit fisik.</p>
                         </div>
                     </div>
-                    <button @click="soldModal = false" class="text-slate-400 hover:text-slate-600 p-1">
-                        <i class="fa-solid fa-xmark text-base"></i>
+                    <button type="button" @click="soldModal = false" class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 flex items-center justify-center transition">
+                        <i class="fa-solid fa-xmark text-sm"></i>
                     </button>
                 </div>
 
-                {{-- Detail Kartu --}}
-                <div class="mt-4 p-4 bg-slate-50/80 rounded-xl border border-slate-200/60 space-y-2">
-                    <div class="flex items-center justify-between text-xs">
-                        <span class="text-slate-500 font-medium">Serial Number</span>
-                        <span class="font-mono font-bold text-slate-800 bg-white px-2 py-0.5 rounded border border-slate-200" x-text="soldCard.serial_number"></span>
+                <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200/80 space-y-2 mb-4 text-xs">
+                    <div class="flex items-center justify-between">
+                        <span class="text-slate-500">Serial Number:</span>
+                        <span class="font-mono font-bold text-slate-900" x-text="soldCard.serial_number"></span>
                     </div>
-                    <div class="flex items-center justify-between text-xs">
-                        <span class="text-slate-500 font-medium">Pemilik / Bisnis</span>
-                        <span class="font-semibold text-slate-700 text-right truncate max-w-[200px]" x-text="soldCard.customer_name"></span>
-                    </div>
-                </div>
-
-                {{-- Warning Box --}}
-                <div class="mt-4 p-3.5 bg-amber-50/90 border border-amber-200/80 rounded-xl flex items-start gap-3">
-                    <i class="fa-solid fa-triangle-exclamation text-amber-600 text-sm mt-0.5 shrink-0"></i>
-                    <div class="text-xs text-amber-900 leading-relaxed">
-                        <p class="font-bold text-amber-950 mb-0.5">Peringatan: Kunci Permanen</p>
-                        <p>Setelah ditandai <strong>Terjual</strong>, kartu akan berstatus terkunci dan <strong>tidak dapat diedit atau dihapus lagi</strong> demi menjaga validitas komisi &amp; data kepemilikan.</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-slate-500">Pemilik / Bisnis:</span>
+                        <span class="font-semibold text-slate-700 truncate max-w-[200px]" x-text="soldCard.customer_name"></span>
                     </div>
                 </div>
 
-                {{-- Form Actions --}}
-                <form :action="soldCard.actionUrl" method="POST" class="mt-6 flex items-center justify-end gap-2.5">
+                <div class="p-3.5 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-800 leading-relaxed mb-4">
+                    <div class="flex items-start gap-2">
+                        <i class="fa-solid fa-triangle-exclamation text-amber-600 mt-0.5"></i>
+                        <div>
+                            <p class="font-bold text-amber-900">Peringatan Kunci Permanen</p>
+                            <p class="mt-0.5 text-amber-700">Setelah ditandai <b>Terjual</b>, kartu akan berstatus terkunci dan tidak dapat diedit atau dihapus lagi demi menjaga integritas data.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <form :action="soldCard.actionUrl" method="POST" class="flex items-center justify-end gap-2 pt-2">
                     @csrf
-                    <button type="button" @click="soldModal = false" class="px-4 py-2.5 text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-xl transition-colors">
-                        Batal
-                    </button>
-                    <button type="submit" class="px-4 py-2.5 text-xs sm:text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 active:scale-95 rounded-xl shadow-sm shadow-emerald-500/20 transition-all flex items-center gap-2">
-                        <i class="fa-solid fa-lock text-xs"></i>
-                        <span>Ya, Tandai &amp; Kunci</span>
-                    </button>
+                    <x-admin.button type="button" variant="secondary" @click="soldModal = false">Batal</x-admin.button>
+                    <x-admin.button type="submit" icon="fa-solid fa-lock">Ya, Tandai & Kunci</x-admin.button>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- Modal Konfirmasi Verifikasi Pembayaran QRIS -->
-    <div x-show="verifyOrderModal" x-cloak class="fixed inset-0 z-50 overflow-y-auto" style="background-color: rgba(15, 23, 42, 0.65);">
-        <div class="flex items-center justify-center min-h-screen p-4">
-            <div @click.away="verifyOrderModal = false" class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100 transition-all text-left">
+    {{-- Modal Konfirmasi Verifikasi Pembayaran QRIS --}}
+    <div x-show="verifyOrderModal" x-cloak class="fixed inset-0 z-50 overflow-y-auto" role="dialog" aria-modal="true">
+        <div x-show="verifyOrderModal" x-transition.opacity class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs"></div>
 
-                {{-- Header --}}
-                <div class="flex items-start justify-between pb-3 border-b border-slate-100">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg font-bold shrink-0">
-                            <i class="fa-solid fa-shield-check"></i>
+        <div class="min-h-full p-4 flex items-center justify-center">
+            <div x-show="verifyOrderModal"
+                x-transition:enter="transition ease-out duration-200"
+                x-transition:enter-start="opacity-0 scale-95"
+                x-transition:enter-end="opacity-100 scale-100"
+                x-transition:leave="transition ease-in duration-150"
+                x-transition:leave-start="opacity-100 scale-100"
+                x-transition:leave-end="opacity-0 scale-95"
+                @click.away="verifyOrderModal = false"
+                class="relative w-full max-w-md bg-white rounded-2xl shadow-xl border border-slate-200 p-6 z-10">
+
+                <div class="flex items-center justify-between pb-4 mb-4 border-b border-slate-100">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                            <i class="fa-solid fa-shield-check text-sm"></i>
                         </div>
                         <div>
-                            <h3 class="font-bold text-slate-800 text-base leading-tight">Verifikasi Pembayaran QRIS</h3>
-                            <p class="text-xs text-slate-400 mt-0.5">Aktivasi unit stok kartu partner</p>
+                            <h3 class="text-base font-semibold text-slate-900">Verifikasi Pembayaran QRIS</h3>
+                            <p class="text-xs text-slate-400">Aktivasi unit stok kartu partner.</p>
                         </div>
                     </div>
-                    <button @click="verifyOrderModal = false" class="text-slate-400 hover:text-slate-600 p-1">
-                        <i class="fa-solid fa-xmark text-base"></i>
+                    <button type="button" @click="verifyOrderModal = false" class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 flex items-center justify-center transition">
+                        <i class="fa-solid fa-xmark text-sm"></i>
                     </button>
                 </div>
 
-                {{-- Detail Pesanan --}}
-                <div class="mt-4 p-4 bg-slate-50/80 rounded-xl border border-slate-200/60 space-y-2">
-                    <div class="flex items-center justify-between text-xs">
-                        <span class="text-slate-500 font-medium">ID Pesanan</span>
-                        <span class="font-mono font-bold text-slate-800 bg-white px-2 py-0.5 rounded border border-slate-200" x-text="'#' + selectedOrder.order_id"></span>
+                <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200/80 space-y-2 mb-4 text-xs">
+                    <div class="flex items-center justify-between">
+                        <span class="text-slate-500">ID Pesanan:</span>
+                        <span class="font-mono font-bold text-slate-900" x-text="'#' + selectedOrder.order_id"></span>
                     </div>
-                    <div class="flex items-center justify-between text-xs">
-                        <span class="text-slate-500 font-medium">Partner</span>
+                    <div class="flex items-center justify-between">
+                        <span class="text-slate-500">Partner:</span>
                         <span class="font-semibold text-slate-700 truncate max-w-[200px]" x-text="selectedOrder.partner"></span>
                     </div>
-                    <div class="flex items-center justify-between text-xs">
-                        <span class="text-slate-500 font-medium">Jumlah Unit</span>
+                    <div class="flex items-center justify-between">
+                        <span class="text-slate-500">Jumlah Unit:</span>
                         <span class="font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200" x-text="selectedOrder.qty + ' Unit Kartu'"></span>
                     </div>
-                    <div class="flex items-center justify-between text-xs pt-1 border-t border-slate-200/80">
-                        <span class="text-slate-500 font-medium">Total Dana Masuk</span>
+                    <div class="flex items-center justify-between pt-1 border-t border-slate-200">
+                        <span class="text-slate-500">Total Dana Masuk:</span>
                         <span class="font-mono font-bold text-emerald-600 text-sm" x-text="selectedOrder.amount"></span>
                     </div>
                 </div>
 
-                {{-- Info Box --}}
-                <div class="mt-4 p-3.5 bg-emerald-50/90 border border-emerald-200/80 rounded-xl flex items-start gap-3">
-                    <i class="fa-solid fa-circle-info text-emerald-600 text-sm mt-0.5 shrink-0"></i>
-                    <div class="text-xs text-emerald-900 leading-relaxed">
-                        <p class="font-bold text-emerald-950 mb-0.5">Konfirmasi Dana</p>
-                        <p>Pastikan dana QRIS sebesar <strong x-text="selectedOrder.amount"></strong> sudah masuk ke mutasi rekening/dashboard Scalify Pay. Setelah diverifikasi, unit kartu akan langsung aktif di dashboard partner.</p>
-                    </div>
+                <div class="p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-800 leading-relaxed mb-4">
+                    <p class="font-bold text-emerald-950 mb-0.5">Konfirmasi Dana</p>
+                    <p class="text-emerald-700">Pastikan dana QRIS sebesar <strong x-text="selectedOrder.amount"></strong> sudah masuk ke mutasi rekening/dashboard Scalify Pay. Unit kartu akan langsung aktif di dashboard partner.</p>
                 </div>
 
-                {{-- Form Actions --}}
-                <form :action="selectedOrder.actionUrl" method="POST" class="mt-6 flex items-center justify-end gap-2.5">
+                <form :action="selectedOrder.actionUrl" method="POST" class="flex items-center justify-end gap-2 pt-2">
                     @csrf
-                    <button type="button" @click="verifyOrderModal = false" class="px-4 py-2.5 text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-xl transition-colors">
-                        Batal
-                    </button>
-                    <button type="submit" class="px-4 py-2.5 text-xs sm:text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 active:scale-95 rounded-xl shadow-sm shadow-emerald-500/20 transition-all flex items-center gap-2">
-                        <i class="fa-solid fa-check text-xs"></i>
-                        <span>Ya, Verifikasi &amp; Aktifkan</span>
-                    </button>
+                    <x-admin.button type="button" variant="secondary" @click="verifyOrderModal = false">Batal</x-admin.button>
+                    <x-admin.button type="submit" icon="fa-solid fa-check">Ya, Verifikasi & Aktifkan</x-admin.button>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- Modal Konfirmasi Batalkan Pesanan QRIS -->
-    <div x-show="cancelOrderModal" x-cloak class="fixed inset-0 z-50 overflow-y-auto" style="background-color: rgba(15, 23, 42, 0.65);">
-        <div class="flex items-center justify-center min-h-screen p-4">
-            <div @click.away="cancelOrderModal = false" class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100 transition-all text-left">
+    {{-- Modal Konfirmasi Batalkan Pesanan QRIS --}}
+    <div x-show="cancelOrderModal" x-cloak class="fixed inset-0 z-50 overflow-y-auto" role="dialog" aria-modal="true">
+        <div x-show="cancelOrderModal" x-transition.opacity class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs"></div>
 
-                {{-- Header --}}
-                <div class="flex items-start justify-between pb-3 border-b border-slate-100">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-red-50 text-red-600 flex items-center justify-center text-lg font-bold shrink-0">
-                            <i class="fa-solid fa-trash-can"></i>
+        <div class="min-h-full p-4 flex items-center justify-center">
+            <div x-show="cancelOrderModal"
+                x-transition:enter="transition ease-out duration-200"
+                x-transition:enter-start="opacity-0 scale-95"
+                x-transition:enter-end="opacity-100 scale-100"
+                x-transition:leave="transition ease-in duration-150"
+                x-transition:leave-start="opacity-100 scale-100"
+                x-transition:leave-end="opacity-0 scale-95"
+                @click.away="cancelOrderModal = false"
+                class="relative w-full max-w-md bg-white rounded-2xl shadow-xl border border-slate-200 p-6 z-10">
+
+                <div class="flex items-center justify-between pb-4 mb-4 border-b border-slate-100">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-9 h-9 rounded-xl bg-red-50 text-red-600 flex items-center justify-center">
+                            <i class="fa-solid fa-trash-can text-sm"></i>
                         </div>
                         <div>
-                            <h3 class="font-bold text-slate-800 text-base leading-tight">Batalkan Pesanan QRIS</h3>
-                            <p class="text-xs text-slate-400 mt-0.5">Penghapusan reservasi stok partner</p>
+                            <h3 class="text-base font-semibold text-slate-900">Batalkan Pesanan QRIS</h3>
+                            <p class="text-xs text-slate-400">Penghapusan reservasi stok partner.</p>
                         </div>
                     </div>
-                    <button @click="cancelOrderModal = false" class="text-slate-400 hover:text-slate-600 p-1">
-                        <i class="fa-solid fa-xmark text-base"></i>
+                    <button type="button" @click="cancelOrderModal = false" class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 flex items-center justify-center transition">
+                        <i class="fa-solid fa-xmark text-sm"></i>
                     </button>
                 </div>
 
-                {{-- Detail Pesanan --}}
-                <div class="mt-4 p-4 bg-slate-50/80 rounded-xl border border-slate-200/60 space-y-2">
-                    <div class="flex items-center justify-between text-xs">
-                        <span class="text-slate-500 font-medium">ID Pesanan</span>
-                        <span class="font-mono font-bold text-slate-800 bg-white px-2 py-0.5 rounded border border-slate-200" x-text="'#' + selectedOrder.order_id"></span>
+                <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200/80 space-y-2 mb-4 text-xs">
+                    <div class="flex items-center justify-between">
+                        <span class="text-slate-500">ID Pesanan:</span>
+                        <span class="font-mono font-bold text-slate-900" x-text="'#' + selectedOrder.order_id"></span>
                     </div>
-                    <div class="flex items-center justify-between text-xs">
-                        <span class="text-slate-500 font-medium">Partner</span>
+                    <div class="flex items-center justify-between">
+                        <span class="text-slate-500">Partner:</span>
                         <span class="font-semibold text-slate-700 truncate max-w-[200px]" x-text="selectedOrder.partner"></span>
                     </div>
-                    <div class="flex items-center justify-between text-xs">
-                        <span class="text-slate-500 font-medium">Jumlah Unit yang Dihapus</span>
+                    <div class="flex items-center justify-between">
+                        <span class="text-slate-500">Jumlah Unit Dihapus:</span>
                         <span class="font-bold text-red-700 bg-red-50 px-2 py-0.5 rounded border border-red-200" x-text="selectedOrder.qty + ' Unit Kartu'"></span>
                     </div>
                 </div>
 
-                {{-- Warning Box --}}
-                <div class="mt-4 p-3.5 bg-red-50/90 border border-red-200/80 rounded-xl flex items-start gap-3">
-                    <i class="fa-solid fa-triangle-exclamation text-red-600 text-sm mt-0.5 shrink-0"></i>
-                    <div class="text-xs text-red-900 leading-relaxed">
-                        <p class="font-bold text-red-950 mb-0.5">Peringatan Pembatalan</p>
-                        <p>Pesanan QRIS ini akan dibatalkan permanen. Seluruh nomor serial kartu cadangan yang sudah di-reserve akan dihapus dari sistem.</p>
-                    </div>
+                <div class="p-3.5 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-800 leading-relaxed mb-4">
+                    <p class="font-bold text-rose-950 mb-0.5">Peringatan Pembatalan</p>
+                    <p class="text-rose-700">Pesanan QRIS ini akan dibatalkan secara permanen. Seluruh nomor serial kartu cadangan yang sudah di-reserve akan dihapus dari sistem.</p>
                 </div>
 
-                {{-- Form Actions --}}
-                <form :action="selectedOrder.actionUrl" method="POST" class="mt-6 flex items-center justify-end gap-2.5">
+                <form :action="selectedOrder.actionUrl" method="POST" class="flex items-center justify-end gap-2 pt-2">
                     @csrf
-                    <button type="button" @click="cancelOrderModal = false" class="px-4 py-2.5 text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-xl transition-colors">
-                        Kembali
-                    </button>
-                    <button type="submit" class="px-4 py-2.5 text-xs sm:text-sm font-bold text-white bg-red-600 hover:bg-red-700 active:scale-95 rounded-xl shadow-sm shadow-red-500/20 transition-all flex items-center gap-2">
-                        <i class="fa-solid fa-xmark text-xs"></i>
-                        <span>Ya, Batalkan Pesanan</span>
-                    </button>
+                    <x-admin.button type="button" variant="secondary" @click="cancelOrderModal = false">Kembali</x-admin.button>
+                    <x-admin.button type="submit" variant="danger" icon="fa-solid fa-xmark">Ya, Batalkan Pesanan</x-admin.button>
                 </form>
             </div>
         </div>
+    </div>
+
+    {{-- Toast Notification Floating Banner --}}
+    <div x-show="showToast"
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0 translate-y-2"
+        x-transition:enter-end="opacity-100 translate-y-0"
+        x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100 translate-y-0"
+        x-transition:leave-end="opacity-0 translate-y-2"
+        x-cloak
+        class="fixed bottom-6 right-6 z-50 bg-slate-900 text-white text-xs px-4 py-3 rounded-xl shadow-xl flex items-center gap-2.5 border border-slate-800">
+        <i class="fa-solid fa-circle-check text-emerald-400"></i>
+        <span x-text="toastMessage"></span>
     </div>
 
 </div>

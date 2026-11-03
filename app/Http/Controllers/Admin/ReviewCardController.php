@@ -43,8 +43,8 @@ class ReviewCardController extends Controller
             ]);
 
         // Filter Pencarian
-        if ($request->filled('search')) {
-            $search = trim($request->search);
+        $search = trim((string) ($request->query('q') ?? $request->query('search') ?? ''));
+        if ($search !== '') {
             $query->where(function ($q) use ($search) {
                 $q->where('serial_number', 'like', "%{$search}%")
                     ->orWhere('slug', 'like', "%{$search}%")
