@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Validation\Rule;
 
 class Portfolio extends Model
 {
@@ -47,40 +48,37 @@ class Portfolio extends Model
         return $this->belongsTo(PortfolioCategory::class, 'category_id');
     }
 
-    // 🧩 Validasi dinamis
-  public static function rules($id = null)
-{
-    return [
-        'category_id' => 'required|exists:portfolio_categories,id',
-        'title' => 'required|string|max:200',
-        'slug' => 'required|string|max:200|unique:portfolios,slug,' . $id,
-        'client_name' => 'nullable|string|max:100',
-        'project_type' => 'nullable|string|max:100',
-        'short_description' => 'required|string|max:255',
-        'full_description' => 'required|string',
-        'challenge' => 'nullable|string',
-        'solution' => 'nullable|string',
-        'result' => 'nullable|string',
+    // 🧩 Validasi dinamis (dipakai store & update)
+    public static function rules(?int $id = null): array
+    {
+        return [
+            'category_id' => 'required|exists:portfolio_categories,id',
+            'title' => 'required|string|max:200',
+            'slug' => ['nullable', 'string', 'max:200', Rule::unique('portfolios', 'slug')->ignore($id)],
+            'client_name' => 'nullable|string|max:100',
+            'project_type' => 'nullable|string|max:100',
+            'short_description' => 'required|string|max:255',
+            'full_description' => 'required|string',
+            'challenge' => 'nullable|string',
+            'solution' => 'nullable|string',
+            'result' => 'nullable|string',
 
-        // 🔥 STORE = required, UPDATE = nullable
-        'thumbnail_image' => $id
-            ? 'nullable|image|mimes:jpg,jpeg,png|max:20000'
-            : 'required|image|mimes:jpg,jpeg,png|max:20000',
+            // Thumbnail wajib saat membuat, opsional saat update
+            'thumbnail_image' => ($id ? 'nullable' : 'required') . '|image|mimes:jpg,jpeg,png|max:20000',
+            'featured_image' => 'nullable|image|mimes:jpg,jpeg,png|max:20000',
+            'remove_featured_image' => 'nullable|boolean',
 
-        'featured_image' => 'nullable|image|mimes:jpg,jpeg,png|max:20000',
+            // Input berupa teks "a, b, c"; controller mengubahnya jadi array
+            'technologies' => 'nullable|string',
 
-        // 🔥 Input kamu string → controller yg ubah ke array
-        'technologies' => 'nullable|string',
-
-        'project_url' => 'nullable|url|max:255',
-        'github_url' => 'nullable|url|max:255',
-        'completion_date' => 'nullable|date',
-        'is_featured' => 'boolean',
-        'display_order' => 'integer',
-        'is_active' => 'boolean',
-    ];
-}
-
+            'project_url' => 'nullable|url|max:255',
+            'github_url' => 'nullable|url|max:255',
+            'completion_date' => 'nullable|date',
+            'is_featured' => 'boolean',
+            'display_order' => 'integer',
+            'is_active' => 'boolean',
+        ];
+    }
 
     // 🧭 Scope untuk aktif saja
     public function scopeActive($query)

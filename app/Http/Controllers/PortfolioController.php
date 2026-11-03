@@ -7,6 +7,7 @@ use App\Models\PortfolioCategory;
 use Illuminate\Http\Request;
 use App\Helpers\AuthHelper;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class PortfolioController extends Controller
 {
@@ -20,128 +21,139 @@ class PortfolioController extends Controller
     }
     public function index(Request $request)
     {
-        // 🔍 Ambil kategori untuk dropdown filter
-        $categories = PortfolioCategory::orderBy('display_order')->get();
+        $search = trim((string) $request->query('search'));
 
-        // 🔎 Query dasar
-        $query = Portfolio::with('category');
+        $portfolios = Portfolio::select(['id', 'category_id', 'title', 'client_name', 'thumbnail_image', 'is_active', 'is_featured', 'display_order'])
+            ->with('category:id,name')
+            ->when($request->filled('category_id'), fn ($q) => $q->where('category_id', $request->category_id))
+            ->when($request->filled('is_active'), fn ($q) => $q->where('is_active', $request->boolean('is_active')))
+            ->when($search !== '', fn ($q) => $q->where('title', 'like', "%{$search}%"))
+            ->orderBy('display_order')
+            ->orderByDesc('id')
+            ->paginate(10)
+            ->withQueryString();
 
-        // ✅ Filter berdasarkan kategori (jika ada)
-        if ($request->has('category_id') && $request->category_id != '') {
-            $query->where('category_id', $request->category_id);
-        }
-
-        // ✅ Filter berdasarkan status aktif
-        if ($request->has('is_active') && $request->is_active != '') {
-            $query->where('is_active', $request->is_active);
-        }
-
-        // ✅ Filter berdasarkan pencarian judul
-        if ($request->has('search') && $request->search != '') {
-            $query->where('title', 'like', '%' . $request->search . '%');
-        }
-
-        // 🔹 Urutkan & paginasi
-        $portfolios = $query->orderBy('display_order', 'asc')->paginate(10);
-
-        return view('portfolio.index', compact('portfolios', 'categories'));
+        return view('portfolio.index', [
+            'portfolios' => $portfolios,
+            'categories' => PortfolioCategory::orderBy('display_order')->get(['id', 'name']),
+        ]);
     }
 
-    // 🔹 Tampilkan form create
     public function create()
     {
-        $categories = PortfolioCategory::orderBy('display_order')->get();
-        return view('portfolio.create', compact('categories'));
+        return view('portfolio.create', $this->formOptions());
     }
 
-    // 🔹 Simpan data portfolio baru
     public function store(Request $request)
     {
-        // ✅ Validasi (sesuaikan rules di model Portfolio)
-        $validated = $request->validate([
-            'category_id' => 'required|exists:portfolio_categories,id',
-            'title' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:portfolios,slug',
-            'client_name' => 'nullable|string|max:255',
-            'project_type' => 'nullable|string|max:255',
-            'short_description' => 'nullable|string',
-            'full_description' => 'nullable|string',
-            'challenge' => 'nullable|string',
-            'solution' => 'nullable|string',
-            'result' => 'nullable|string',
-            'technologies' => 'nullable|string',
-            'project_url' => 'nullable|url',
-            'github_url' => 'nullable|url',
-            'completion_date' => 'nullable|date',
-            'is_featured' => 'boolean',
-            'is_active' => 'boolean',
-            'thumbnail_image' => 'nullable|image|mimes:jpg,jpeg,png|max:20000',
-            'featured_image' => 'nullable|image|mimes:jpg,jpeg,png|max:20000',
-        ]);
+        $validated = $this->validatePortfolio($request);
 
-        // ✅ Upload file jika ada
-        if ($request->hasFile('thumbnail_image')) {
-            $validated['thumbnail_image'] = $request->file('thumbnail_image')->store('uploads/portfolio', 'public');
-        }
+        $validated['thumbnail_image'] = $request->file('thumbnail_image')->store('uploads/portfolio', 'public');
 
         if ($request->hasFile('featured_image')) {
             $validated['featured_image'] = $request->file('featured_image')->store('uploads/portfolio', 'public');
         }
 
-        // ✅ Simpan ke database
-        \App\Models\Portfolio::create($validated);
+        Portfolio::create($validated);
 
         return redirect()->route('portfolio.index')->with('success', 'Portfolio berhasil ditambahkan!');
     }
 
-
-    // 🔹 Edit
-    public function edit($id)
+    public function edit(Portfolio $portfolio)
     {
-        $item = Portfolio::findOrFail($id);
-        $categories = PortfolioCategory::orderBy('display_order')->get();
-        return view('portfolio.edit', compact('item', 'categories'));
+        return view('portfolio.edit', ['item' => $portfolio] + $this->formOptions());
     }
 
-    // 🔹 Update data
-    public function update(Request $request, $id)
+    public function update(Request $request, Portfolio $portfolio)
     {
-        $portfolio = Portfolio::findOrFail($id);
+        $validated = $this->validatePortfolio($request, $portfolio);
+        unset($validated['remove_featured_image']);
 
-        $validated = $request->validate(Portfolio::rules($id));
-
-        // 🔹 Ubah technologies string → array
-        if (!empty($validated['technologies'])) {
-            $validated['technologies'] = array_map('trim', explode(',', $validated['technologies']));
-        }
-
-        // 🔹 Upload thumbnail jika ada file baru
         if ($request->hasFile('thumbnail_image')) {
-            $validated['thumbnail_image'] = $request->file('thumbnail_image')
-                ->store('uploads/portfolio', 'public');
+            $this->deleteImage($portfolio->thumbnail_image);
+            $validated['thumbnail_image'] = $request->file('thumbnail_image')->store('uploads/portfolio', 'public');
         }
 
-        // 🔹 Upload featured_image jika ada file baru
         if ($request->hasFile('featured_image')) {
-            $validated['featured_image'] = $request->file('featured_image')
-                ->store('uploads/portfolio', 'public');
+            $this->deleteImage($portfolio->featured_image);
+            $validated['featured_image'] = $request->file('featured_image')->store('uploads/portfolio', 'public');
+        } elseif ($request->boolean('remove_featured_image')) {
+            $this->deleteImage($portfolio->featured_image);
+            $validated['featured_image'] = null;
         }
 
         $portfolio->update($validated);
 
-        return redirect()->route('portfolio.index')
-            ->with('success', 'Portfolio berhasil diperbarui!');
+        return redirect()->route('portfolio.index')->with('success', 'Portfolio berhasil diperbarui!');
     }
 
-
-    // 🔹 Hapus
-    public function destroy($id)
+    public function destroy(Portfolio $portfolio)
     {
-        $portfolio = Portfolio::findOrFail($id);
+        $this->deleteImage($portfolio->thumbnail_image);
+        $this->deleteImage($portfolio->featured_image);
+
         $portfolio->delete();
 
-        return redirect()->route('portfolio.index')
-            ->with('success', 'Portfolio berhasil dihapus!');
+        return redirect()->route('portfolio.index')->with('success', 'Portfolio berhasil dihapus!');
+    }
+
+    /**
+     * Data dropdown untuk form create/edit.
+     */
+    private function formOptions(): array
+    {
+        return [
+            'categories' => PortfolioCategory::orderBy('display_order')->get(['id', 'name']),
+        ];
+    }
+
+    /**
+     * Validasi + normalisasi input (dipakai store & update).
+     */
+    private function validatePortfolio(Request $request, ?Portfolio $portfolio = null): array
+    {
+        $validated = $request->validate(Portfolio::rules($portfolio?->id));
+
+        // Field file hanya boleh masuk jika benar-benar ada upload baru (jangan menimpa gambar lama dengan null)
+        unset($validated['thumbnail_image'], $validated['featured_image']);
+
+        $validated['slug'] = $this->uniqueSlug($validated['slug'] ?? '', $validated['title'], $portfolio?->id);
+
+        // "Laravel, Vue.js , MySQL" -> ['Laravel', 'Vue.js', 'MySQL']
+        $validated['technologies'] = collect(explode(',', (string) ($validated['technologies'] ?? '')))
+            ->map(fn ($tech) => trim($tech))
+            ->filter()
+            ->unique()
+            ->values()
+            ->all();
+
+        $validated['is_featured'] = (bool) ($validated['is_featured'] ?? false);
+        $validated['is_active'] = (bool) ($validated['is_active'] ?? false);
+
+        return $validated;
+    }
+
+    /**
+     * Slug dari input (atau dari judul jika kosong), dijamin unik.
+     */
+    private function uniqueSlug(string $slug, string $title, ?int $ignoreId): string
+    {
+        $base = Str::slug($slug !== '' ? $slug : $title) ?: 'portfolio';
+        $candidate = $base;
+        $counter = 2;
+
+        while (Portfolio::where('slug', $candidate)->when($ignoreId, fn ($q) => $q->where('id', '!=', $ignoreId))->exists()) {
+            $candidate = $base . '-' . $counter++;
+        }
+
+        return $candidate;
+    }
+
+    private function deleteImage(?string $path): void
+    {
+        if ($path && Storage::disk('public')->exists($path)) {
+            Storage::disk('public')->delete($path);
+        }
     }
 
     /**

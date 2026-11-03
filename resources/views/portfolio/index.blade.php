@@ -1,117 +1,94 @@
 @extends('layouts.admin.app')
 
 @section('content')
+<x-admin.page-header title="Daftar Portfolio" subtitle="Kelola portfolio yang tampil di website.">
+    <x-admin.button icon="fa-solid fa-plus" :href="route('portfolio.create')">Tambah Portfolio</x-admin.button>
+</x-admin.page-header>
 
+@if (session('success'))
+<x-admin.alert type="success">{{ session('success') }}</x-admin.alert>
+@endif
 
-<div class="max-w-6xl mx-auto px-4 py-8">
-    {{-- ✅ Header --}}
-    <div class="flex flex-col sm:flex-row justify-between items-center mb-5 gap-4">
-        <h2 class="hidden sm:block text-2xl font-semibold text-slate-800">Daftar Portfolio</h2>
-
-        <div class="hidden sm:flex flex-col sm:flex-row w-full sm:w-auto gap-2">
-            {{-- ➕ Tambah (Desktop Only) --}}
-            <a href="{{ route('portfolio.create') }}" class="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 text-blue-600 hover:text-blue-700 sm:bg-blue-900 sm:text-white sm:px-4 sm:py-1.5 sm:rounded-md sm:shadow-sm sm:hover:bg-blue-950 transition w-full sm:w-auto">
-                <i class="fa-solid fa-circle-plus text-xl sm:text-sm"></i>
-                <span class="text-[11px] sm:text-sm font-medium">Create</span>
-            </a>
+<x-admin.card :padding="false">
+    {{-- Filter --}}
+    <form method="GET" class="grid grid-cols-1 sm:grid-cols-12 gap-2 p-4 border-b border-slate-200">
+        <div class="relative sm:col-span-5">
+            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-sm text-slate-400"></i>
+            <x-admin.input name="search" :value="request('search')" placeholder="Cari judul portfolio..." class="pl-9" />
         </div>
-    </div>
-
-    {{-- ✅ Filter & Search --}}
-    <form method="GET" class="flex flex-col gap-3 mb-6">
-        <div class="flex flex-row items-center w-full gap-2">
-            <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari judul portfolio..." class="flex-1 min-w-0 border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:ring focus:ring-blue-900/30 focus:border-blue-900 outline-none transition" />
-
-            <div class="flex flex-row items-center gap-2 flex-shrink-0">
-                <button type="submit" class="flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-2 text-slate-500 hover:text-blue-600 sm:bg-blue-900 sm:text-white sm:px-4 sm:py-1.5 sm:rounded-md sm:shadow-sm sm:hover:bg-blue-950 transition w-10 sm:w-auto">
-                    <i class="fa-solid fa-filter text-[15px] sm:text-sm"></i>
-                    <span class="text-[9px] sm:text-sm font-medium">Filter</span>
-                </button>
-
-                <a href="{{ route('portfolio.create') }}" class="sm:hidden flex flex-col items-center justify-center gap-0.5 text-blue-600 hover:text-blue-700 transition w-10">
-                    <i class="fa-solid fa-circle-plus text-[15px]"></i>
-                    <span class="text-[9px] font-medium">Create</span>
-                </a>
-            </div>
+        <div class="sm:col-span-3">
+            <x-admin.select name="category_id" placeholder="Semua kategori" :options="$categories->pluck('name', 'id')" :selected="request('category_id')" />
         </div>
-
-        <div class="flex flex-row gap-2 w-full">
-            <select name="category_id" class="w-1/2 border border-gray-300 rounded-md px-2 py-1.5 text-[13px] sm:text-sm focus:ring focus:ring-blue-900/30 focus:border-blue-900 outline-none transition bg-white">
-                <option value="">-- Kategori --</option>
-                @foreach($categories as $cat)
-                <option value="{{ $cat->id }}" {{ request('category_id') == $cat->id ? 'selected' : '' }}>
-                    {{ Str::limit($cat->name, 15) }}
-                </option>
-                @endforeach
-            </select>
-
-            <select name="is_active" class="w-1/2 border border-gray-300 rounded-md px-2 py-1.5 text-[13px] sm:text-sm focus:ring focus:ring-blue-900/30 focus:border-blue-900 outline-none transition bg-white">
-                <option value="">-- Status --</option>
-                <option value="1" {{ request('is_active') === '1' ? 'selected' : '' }}>Aktif</option>
-                <option value="0" {{ request('is_active') === '0' ? 'selected' : '' }}>Nonaktif</option>
-            </select>
+        <div class="sm:col-span-2">
+            <x-admin.select name="is_active" placeholder="Semua status" :options="['1' => 'Aktif', '0' => 'Nonaktif']" :selected="request('is_active')" />
+        </div>
+        <div class="sm:col-span-2 flex gap-2">
+            <x-admin.button type="submit" variant="secondary" icon="fa-solid fa-filter" class="flex-1">Filter</x-admin.button>
+            @if (request()->hasAny(['search', 'category_id', 'is_active']))
+            <x-admin.button variant="secondary" icon="fa-solid fa-xmark" :href="route('portfolio.index')" title="Reset filter" aria-label="Reset filter" />
+            @endif
         </div>
     </form>
 
-    {{-- ✅ Alert --}}
-    @if(session('success'))
-    <div class="mb-4 p-4 rounded-lg bg-green-100 border border-green-300 text-green-800">
-        {{ session('success') }}
-    </div>
-    @endif
-
-    {{-- ✅ Table --}}
-    <div class="overflow-x-auto bg-white rounded-lg shadow-sm border border-gray-100">
-        <table class="min-w-full text-sm text-left text-gray-600">
-            <thead class="bg-gray-50 text-gray-700 font-medium text-xs uppercase tracking-wider">
+    <div class="overflow-x-auto">
+        <table class="min-w-full text-sm">
+            <thead class="bg-slate-50 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">
                 <tr>
-                    <th class="py-2.5 px-3">#</th>
-                    <th class="py-2.5 px-3">Judul</th>
-                    <th class="py-2.5 px-3">Kategori</th>
-                    <th class="py-2.5 px-3">Status</th>
-                    <th class="py-2.5 px-3">Gambar</th>
-                    <th class="py-2.5 px-3 text-center">Aksi</th>
+                    <th class="px-4 py-3 w-12">#</th>
+                    <th class="px-4 py-3">Portfolio</th>
+                    <th class="px-4 py-3">Kategori</th>
+                    <th class="px-4 py-3">Status</th>
+                    <th class="px-4 py-3 text-right">Aksi</th>
                 </tr>
             </thead>
-
-            <tbody class="text-[13px]">
-                @forelse($portfolios as $i => $item)
-                <tr class="border-b border-gray-50 hover:bg-gray-50/50 transition">
-                    <td class="py-2 px-3">{{ $portfolios->firstItem() + $i }}</td>
-                    <td class="py-2 px-3 font-medium text-gray-800">{{ $item->title }}</td>
-                    <td class="py-2 px-3">
-                        {{ $item->category ? $item->category->name : '-' }}
+            <tbody class="divide-y divide-slate-100 text-slate-600">
+                @forelse ($portfolios as $item)
+                <tr class="hover:bg-slate-50/70 transition-colors">
+                    <td class="px-4 py-3 text-slate-400">{{ $portfolios->firstItem() + $loop->index }}</td>
+                    <td class="px-4 py-3">
+                        <div class="flex items-center gap-3 min-w-0">
+                            @if ($item->thumbnail_image)
+                            <img src="{{ asset('storage/' . $item->thumbnail_image) }}" alt="{{ $item->title }}" class="w-16 h-11 shrink-0 rounded-lg object-cover border border-slate-200">
+                            @else
+                            <div class="w-16 h-11 shrink-0 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-400">
+                                <i class="fa-regular fa-image"></i>
+                            </div>
+                            @endif
+                            <div class="min-w-0">
+                                <p class="font-medium text-slate-900 truncate max-w-xs" title="{{ $item->title }}">{{ $item->title }}</p>
+                                <p class="text-xs text-slate-500 truncate max-w-xs">{{ $item->client_name ?: 'Tanpa klien' }}</p>
+                            </div>
+                        </div>
                     </td>
-                    <td class="py-2 px-3">
-                        <span class="px-2 py-0.5 rounded-md text-[11px] font-medium border
-                                {{ $item->is_active ? 'bg-green-50 text-green-600 border-green-200' : 'bg-red-50 text-red-600 border-red-200' }}">
-                            {{ $item->is_active ? 'Aktif' : 'Nonaktif' }}
-                        </span>
+                    <td class="px-4 py-3 whitespace-nowrap">{{ $item->category->name ?? '-' }}</td>
+                    <td class="px-4 py-3">
+                        <div class="flex flex-wrap gap-1.5">
+                            @if ($item->is_active)
+                            <x-admin.badge color="green"><i class="fa-solid fa-circle text-[6px]"></i> Aktif</x-admin.badge>
+                            @else
+                            <x-admin.badge color="slate"><i class="fa-solid fa-circle text-[6px]"></i> Nonaktif</x-admin.badge>
+                            @endif
+                            @if ($item->is_featured)
+                            <x-admin.badge color="blue"><i class="fa-solid fa-star text-[10px]"></i> Unggulan</x-admin.badge>
+                            @endif
+                        </div>
                     </td>
-                    <td class="py-2 px-3">
-                        @if($item->thumbnail_image)
-                        <img src="{{ asset('storage/' . $item->thumbnail_image) }}" alt="thumbnail" class="w-16 rounded shadow-sm border border-gray-200">
-                        @else
-                        <span class="text-gray-400 italic">Tidak ada gambar</span>
-                        @endif
-                    </td>
-                    <td class="py-2 px-3 text-center flex gap-1.5 justify-center">
-                        <a href="{{ route('portfolio.edit', $item->id) }}" class="px-2.5 py-1 bg-yellow-50 text-yellow-600 hover:bg-yellow-100 border border-yellow-200 rounded-md text-[11px] font-medium transition">
-                            Edit
-                        </a>
-                        <form action="{{ route('portfolio.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Yakin hapus data ini?')" class="inline-block">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="px-2.5 py-1 bg-red-50 text-red-600 hover:bg-red-100 border border-red-200 rounded-md text-[11px] font-medium transition">
-                                Hapus
-                            </button>
-                        </form>
+                    <td class="px-4 py-3">
+                        <div class="flex items-center justify-end gap-1.5">
+                            <x-admin.button variant="secondary" size="sm" icon="fa-solid fa-pen" :href="route('portfolio.edit', $item)">Edit</x-admin.button>
+                            <form action="{{ route('portfolio.destroy', $item) }}" method="POST" onsubmit="return confirm('Hapus portfolio ini?')">
+                                @csrf
+                                @method('DELETE')
+                                <x-admin.button type="submit" variant="danger" size="sm" icon="fa-solid fa-trash-can" title="Hapus" aria-label="Hapus" />
+                            </form>
+                        </div>
                     </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="6" class="py-6 text-center text-gray-500 italic text-sm">
-                        Belum ada portfolio.
+                    <td colspan="5" class="px-4 py-12 text-center">
+                        <i class="fa-regular fa-folder-open text-3xl text-slate-300 mb-2"></i>
+                        <p class="text-sm text-slate-500">{{ request()->hasAny(['search', 'category_id', 'is_active']) ? 'Tidak ada portfolio yang cocok dengan filter.' : 'Belum ada portfolio.' }}</p>
                     </td>
                 </tr>
                 @endforelse
@@ -119,9 +96,10 @@
         </table>
     </div>
 
-    {{-- ✅ Pagination --}}
-    <div class="mt-6">
-        {{ $portfolios->appends(request()->query())->links('pagination::tailwind') }}
+    @if ($portfolios->hasPages())
+    <div class="px-4 py-3 border-t border-slate-200">
+        {{ $portfolios->links('pagination::tailwind') }}
     </div>
-</div>
+    @endif
+</x-admin.card>
 @endsection

@@ -1,118 +1,82 @@
 @extends('layouts.admin.app')
 
 @section('content')
+<x-admin.page-header title="Detail Blog" subtitle="Preview artikel dan informasinya." :back="route('blogs.index')">
+    <x-admin.button icon="fa-solid fa-pen" :href="route('blogs.edit', $blog)">Edit</x-admin.button>
+    <form action="{{ route('blogs.destroy', $blog) }}" method="POST" onsubmit="return confirm('Hapus blog ini?')">
+        @csrf
+        @method('DELETE')
+        <x-admin.button type="submit" variant="danger" icon="fa-solid fa-trash-can">Hapus</x-admin.button>
+    </form>
+</x-admin.page-header>
 
-<div class="min-h-screen bg-white py-6 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-6xl mx-auto">
-        {{-- Header --}}
-        <div class="flex justify-between items-center mb-6">
-            <div class="flex items-center gap-2 mb-1">
-                <a href="{{ route('blogs.index') }}" class="p-1.5 hover:bg-slate-100 rounded-xl transition-colors">
-                    <svg class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                    </svg>
-                </a>
-                <div>
-                    <h1 class="text-xl tracking-tight font-bold text-slate-900">Detail Blog</h1>
-                    <p class="text-[13px] text-slate-500">Lihat preview dan informasi lengkap blog</p>
-                </div>
-            </div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+    {{-- Preview artikel --}}
+    <x-admin.card class="lg:col-span-2 overflow-hidden" :padding="false">
+        @if ($blog->featured_image)
+        <img src="{{ asset('storage/' . $blog->featured_image) }}" alt="{{ $blog->title }}" class="w-full h-72 object-cover">
+        @endif
 
-            <div class="flex gap-2">
-                <a href="{{ route('blogs.edit', $blog->id) }}" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-[13px] font-medium transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 flex items-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                    </svg>
-                    Edit
-                </a>
+        <article class="p-6">
+            <h1 class="text-2xl font-semibold text-slate-900 leading-snug">{{ $blog->title }}</h1>
 
-                <form action="{{ route('blogs.destroy', $blog->id) }}" method="POST" onsubmit="return confirm('Yakin hapus blog ini?')">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-xl text-[13px] font-medium transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 flex items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                        Hapus
-                    </button>
-                </form>
-            </div>
-        </div>
-
-        {{-- Card Konten --}}
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col gap-6">
-
-            {{-- Featured Image --}}
-            @if($blog->featured_image)
-            <img src="{{ asset('storage/' . $blog->featured_image) }}" class="w-full h-80 object-cover rounded-xl shadow-sm border border-slate-100" alt="{{ $blog->title }}">
+            @if ($blog->excerpt)
+            <p class="mt-3 text-sm text-slate-600 border-l-4 border-blue-600 pl-4">{{ $blog->excerpt }}</p>
             @endif
 
-            {{-- Judul --}}
-            <h1 class="text-2xl font-bold tracking-tight text-slate-900">
-                {{ $blog->title }}
-            </h1>
-
-            {{-- Informasi --}}
-            <div class="flex flex-wrap gap-4 text-[13px] text-slate-500 border-b border-slate-100 pb-4">
-                <div><strong class="text-slate-700 font-medium">Kategori:</strong> {{ $blog->category->name ?? '-' }}</div>
-                <div><strong class="text-slate-700 font-medium">Penulis:</strong> {{ $blog->author->name ?? '-' }}</div>
-                <div>
-                    <strong class="text-slate-700 font-medium">Diterbitkan:</strong>
-                    {{ $blog->published_at ? $blog->published_at->format('d M Y') : '-' }}
-                </div>
-                <div class="flex items-center gap-1.5">
-                    <strong class="text-slate-700 font-medium">Status:</strong>
-                    @if($blog->is_published)
-                    <span class="px-2 py-0.5 bg-slate-900 text-white rounded-full text-[11px] font-medium tracking-wide">Published</span>
-                    @else
-                    <span class="px-2 py-0.5 bg-slate-200 text-slate-700 rounded-full text-[11px] font-medium tracking-wide">Draft</span>
-                    @endif
-                </div>
-                <div>
-                    <strong class="text-slate-700 font-medium">Reading Time:</strong> {{ $blog->reading_time ?? '-' }} menit
-                </div>
-            </div>
-
-            {{-- Excerpt --}}
-            @if($blog->excerpt)
-            <p class="text-slate-600 text-[13px] italic border-l-4 border-slate-900 pl-4 py-1">
-                {{ $blog->excerpt }}
-            </p>
-            @endif
-
-            {{-- Konten --}}
-            <div class="prose prose-sm max-w-none text-[14px] text-slate-700 leading-relaxed">
+            <div class="blog-content mt-6 text-[15px] text-slate-700 leading-relaxed">
                 {!! $blog->content !!}
             </div>
 
-            {{-- Tags --}}
-            @if($blog->tags && count($blog->tags) > 0)
-            <div class="mt-4 flex flex-wrap gap-2 pt-4 border-t border-slate-100">
-                <strong class="text-[13px] text-slate-700 font-medium self-center mr-2">Tags:</strong>
-                @foreach($blog->tags as $tag)
-                <span class="px-3 py-1 bg-slate-50 text-slate-600 border border-slate-200 rounded-full text-[11px] font-medium transition-colors hover:bg-slate-100">
-                    #{{ $tag }}
-                </span>
+            @if (!empty($blog->tags))
+            <div class="mt-8 pt-5 border-t border-slate-200 flex flex-wrap gap-2">
+                @foreach ($blog->tags as $tag)
+                <x-admin.badge color="blue">#{{ $tag }}</x-admin.badge>
                 @endforeach
             </div>
             @endif
+        </article>
+    </x-admin.card>
 
-            {{-- SEO --}}
-            <div class="mt-6 bg-slate-50 rounded-xl border border-slate-200 p-4">
-                <h3 class="text-[13px] font-semibold tracking-wide text-slate-800 mb-2 flex items-center gap-2">
-                    <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                    SEO Information
-                </h3>
-                <div class="space-y-1.5 text-[13px] text-slate-600 ml-6">
-                    <p><strong class="text-slate-700 font-medium">Meta Title:</strong> {{ $blog->meta_title ?? '-' }}</p>
-                    <p><strong class="text-slate-700 font-medium">Meta Description:</strong> {{ $blog->meta_description ?? '-' }}</p>
+    {{-- Informasi --}}
+    <div class="space-y-6">
+        <x-admin.card title="Informasi" icon="fa-solid fa-circle-info">
+            <dl class="space-y-3 text-sm">
+                <div class="flex justify-between gap-3"><dt class="text-slate-500">Status</dt><dd>@include('blogs.partials.status-badge')</dd></div>
+                <div class="flex justify-between gap-3"><dt class="text-slate-500">Kategori</dt><dd class="text-slate-900 text-right">{{ $blog->category->name ?? '-' }}</dd></div>
+                <div class="flex justify-between gap-3"><dt class="text-slate-500">Penulis</dt><dd class="text-slate-900 text-right">{{ $blog->affiliate->name ?? $blog->author->name ?? '-' }}</dd></div>
+                <div class="flex justify-between gap-3"><dt class="text-slate-500">Diterbitkan</dt><dd class="text-slate-900">{{ $blog->published_at?->format('d M Y') ?? '-' }}</dd></div>
+                <div class="flex justify-between gap-3"><dt class="text-slate-500">Waktu baca</dt><dd class="text-slate-900">{{ $blog->reading_time ? $blog->reading_time . ' menit' : '-' }}</dd></div>
+                <div class="flex justify-between gap-3"><dt class="text-slate-500">Views</dt><dd class="text-slate-900">{{ number_format($blog->view_count ?? 0, 0, ',', '.') }}</dd></div>
+                <div class="flex justify-between gap-3"><dt class="text-slate-500">Unggulan</dt><dd class="text-slate-900">{{ $blog->is_featured ? 'Ya' : 'Tidak' }}</dd></div>
+            </dl>
+        </x-admin.card>
+
+        <x-admin.card title="SEO" icon="fa-solid fa-magnifying-glass">
+            <dl class="space-y-3 text-sm">
+                <div>
+                    <dt class="text-slate-500 mb-0.5">Meta Title</dt>
+                    <dd class="text-slate-900">{{ $blog->meta_title ?: '-' }}</dd>
                 </div>
-            </div>
-
-        </div>
+                <div>
+                    <dt class="text-slate-500 mb-0.5">Meta Description</dt>
+                    <dd class="text-slate-900">{{ $blog->meta_description ?: '-' }}</dd>
+                </div>
+            </dl>
+        </x-admin.card>
     </div>
 </div>
 
+<style>
+    .blog-content h1 { font-size: 1.5rem; font-weight: 600; margin: 1.5rem 0 .75rem; color: #0f172a; }
+    .blog-content h2 { font-size: 1.25rem; font-weight: 600; margin: 1.25rem 0 .5rem; color: #0f172a; }
+    .blog-content h3, .blog-content h4 { font-size: 1.0625rem; font-weight: 600; margin: 1rem 0 .5rem; color: #0f172a; }
+    .blog-content p { margin-bottom: .875rem; }
+    .blog-content ul { list-style: disc; padding-left: 1.5rem; margin-bottom: .875rem; }
+    .blog-content ol { list-style: decimal; padding-left: 1.5rem; margin-bottom: .875rem; }
+    .blog-content a { color: #2563eb; text-decoration: underline; }
+    .blog-content blockquote { border-left: 4px solid #cbd5e1; padding-left: 1rem; color: #475569; margin-bottom: .875rem; }
+    .blog-content img { max-width: 100%; border-radius: .5rem; }
+    .blog-content pre { background: #0f172a; color: #e2e8f0; padding: 1rem; border-radius: .5rem; overflow-x: auto; margin-bottom: .875rem; }
+</style>
 @endsection

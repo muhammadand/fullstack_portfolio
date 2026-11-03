@@ -25,9 +25,21 @@ class BlogController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $blogs = Blog::with(['category', 'author'])->latest()->paginate(10);
+        $search = trim((string) $request->query('q'));
+
+        $blogs = Blog::with(['category:id,name', 'author:id,name', 'affiliate:id,name'])
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('title', 'like', "%{$search}%")
+                        ->orWhereHas('category', fn ($c) => $c->where('name', 'like', "%{$search}%"));
+                });
+            })
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
         return view('blogs.index', compact('blogs'));
     }
 
@@ -36,9 +48,7 @@ class BlogController extends Controller
      */
     public function create()
     {
-        $categories = BlogCategory::active()->orderBy('display_order')->get();
-        $authors = User::all();
-        return view('blogs.create', compact('categories', 'authors'));
+        return view('blogs.create', $this->formOptions());
     }
 
     /**
@@ -46,29 +56,14 @@ class BlogController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'category_id' => 'required|exists:blog_categories,id',
-            'author_id' => 'required|exists:users,id',
-            'title' => 'required|string|max:200',
-            'excerpt' => 'nullable|string|max:255',
-            'content' => 'required|string',
-            'featured_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'tags' => 'nullable|array',
-            'meta_title' => 'nullable|string|max:60',
-            'meta_description' => 'nullable|string|max:160',
-            'reading_time' => 'nullable|integer',
-            'is_featured' => 'boolean',
-            'is_published' => 'boolean',
-        ]);
+        $validated = $this->validateBlog($request);
 
-        // Upload image jika ada
         if ($request->hasFile('featured_image')) {
             $validated['featured_image'] = $request->file('featured_image')->store('blog_images', 'public');
         }
 
-        // Auto slug & handle published_at
         $validated['slug'] = Str::slug($validated['title']);
-        $validated['published_at'] = $request->is_published ? now() : null;
+        $validated['published_at'] = $validated['is_published'] ? now() : null;
 
         Blog::create($validated);
 
@@ -80,7 +75,7 @@ class BlogController extends Controller
      */
     public function show(Blog $blog)
     {
-        $blog->load(['category', 'author']);
+        $blog->load(['category:id,name', 'author:id,name', 'affiliate:id,name']);
         return view('blogs.show', compact('blog'));
     }
 
@@ -89,15 +84,49 @@ class BlogController extends Controller
      */
     public function edit(Blog $blog)
     {
-        $categories = BlogCategory::active()->orderBy('display_order')->get();
-        $authors = User::all();
-        return view('blogs.edit', compact('blog', 'categories', 'authors'));
+        return view('blogs.edit', ['blog' => $blog] + $this->formOptions());
     }
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, Blog $blog)
+    {
+        $validated = $this->validateBlog($request);
+        unset($validated['remove_image']);
+
+        if ($request->hasFile('featured_image')) {
+            $this->deleteImage($blog->featured_image);
+            $validated['featured_image'] = $request->file('featured_image')->store('blog_images', 'public');
+        } elseif ($request->boolean('remove_image')) {
+            $this->deleteImage($blog->featured_image);
+            $validated['featured_image'] = null;
+        }
+
+        $validated['slug'] = Str::slug($validated['title']);
+        // Pertahankan tanggal terbit asli; hanya diisi saat pertama kali dipublish
+        $validated['published_at'] = $validated['is_published'] ? ($blog->published_at ?? now()) : null;
+
+        $blog->update($validated);
+
+        return redirect()->route('blogs.index')->with('success', 'Blog berhasil diperbarui!');
+    }
+
+    /**
+     * Data dropdown untuk form create/edit.
+     */
+    private function formOptions(): array
+    {
+        return [
+            'categories' => BlogCategory::active()->orderBy('display_order')->get(['id', 'name']),
+            'authors' => User::orderBy('name')->get(['id', 'name']),
+        ];
+    }
+
+    /**
+     * Validasi form blog (dipakai store & update).
+     */
+    private function validateBlog(Request $request): array
     {
         $validated = $request->validate([
             'category_id' => 'required|exists:blog_categories,id',
@@ -106,7 +135,9 @@ class BlogController extends Controller
             'excerpt' => 'nullable|string|max:255',
             'content' => 'required|string',
             'featured_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'remove_image' => 'nullable|boolean',
             'tags' => 'nullable|array',
+            'tags.*' => 'nullable|string',
             'meta_title' => 'nullable|string|max:60',
             'meta_description' => 'nullable|string|max:160',
             'reading_time' => 'nullable|integer',
@@ -114,20 +145,32 @@ class BlogController extends Controller
             'is_published' => 'boolean',
         ]);
 
-        if ($request->hasFile('featured_image')) {
-            // Hapus gambar lama
-            if ($blog->featured_image && Storage::disk('public')->exists($blog->featured_image)) {
-                Storage::disk('public')->delete($blog->featured_image);
-            }
-            $validated['featured_image'] = $request->file('featured_image')->store('blog_images', 'public');
+        // Input tags berupa satu teks "a, b, c" -> pecah jadi array
+        $validated['tags'] = collect($validated['tags'] ?? [])
+            ->flatMap(fn ($tag) => explode(',', (string) $tag))
+            ->map(fn ($tag) => trim($tag))
+            ->filter()
+            ->unique()
+            ->values()
+            ->all();
+
+        // Kolom excerpt NOT NULL: isi otomatis dari konten jika dikosongkan
+        if (blank($validated['excerpt'] ?? null)) {
+            $plain = trim(preg_replace('/\s+/', ' ', html_entity_decode(strip_tags($validated['content']))));
+            $validated['excerpt'] = Str::limit($plain, 150);
         }
 
-        $validated['slug'] = Str::slug($validated['title']);
-        $validated['published_at'] = $request->is_published ? now() : null;
+        $validated['is_featured'] = (bool) ($validated['is_featured'] ?? false);
+        $validated['is_published'] = (bool) ($validated['is_published'] ?? false);
 
-        $blog->update($validated);
+        return $validated;
+    }
 
-        return redirect()->route('blogs.index')->with('success', 'Blog berhasil diperbarui!');
+    private function deleteImage(?string $path): void
+    {
+        if ($path && Storage::disk('public')->exists($path)) {
+            Storage::disk('public')->delete($path);
+        }
     }
 
     /**
@@ -135,9 +178,7 @@ class BlogController extends Controller
      */
     public function destroy(Blog $blog)
     {
-        if ($blog->featured_image && Storage::disk('public')->exists($blog->featured_image)) {
-            Storage::disk('public')->delete($blog->featured_image);
-        }
+        $this->deleteImage($blog->featured_image);
 
         $blog->delete();
 
