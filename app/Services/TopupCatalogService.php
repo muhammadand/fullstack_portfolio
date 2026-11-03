@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\DigitalProduct;
 use App\Models\DigitalProductBrand;
 use App\Models\DigitalProductCategory;
+use App\Models\PriceLevel;
 use Illuminate\Support\Facades\Cache;
 
 /**
@@ -53,6 +54,66 @@ class TopupCatalogService
                 'brands' => $brands,
             ];
         });
+    }
+
+    /**
+     * Detail satu game beserta daftar produknya (harga level retail). Tidak di-cache karena
+     * jam cut-off dan harga harus selalu akurat; query dibatasi satu brand.
+     *
+     * @return array{brand: array{name: string, slug: string, image: ?string, category: string}, form: array, products: array<int, array{id: int, name: string, price: float, available: bool}>}|null
+     */
+    public static function game(string $slug): ?array
+    {
+        $brand = DigitalProductBrand::where('slug', $slug)
+            ->where('is_active', true)
+            ->whereHas('category', fn ($q) => $q->where('slug', self::CATEGORY_SLUG)->where('is_active', true))
+            ->first(['id', 'name', 'slug', 'image']);
+
+        if (!$brand) {
+            return null;
+        }
+
+        $level = PriceLevel::retail();
+
+        $products = DigitalProduct::sellable()
+            ->where('digital_product_brand_id', $brand->id)
+            ->with('priceOverrides:id,digital_product_id,price_level_id,selling_price')
+            ->get(['id', 'name', 'cost_price', 'start_cut_off', 'end_cut_off'])
+            ->map(fn ($p) => [
+                'id' => $p->id,
+                'name' => $p->name,
+                'price' => $level ? $p->priceFor($level) : (float) $p->cost_price,
+                'available' => !$p->isInCutOff(),
+            ])
+            ->sortBy('price')
+            ->values()
+            ->all();
+
+        if (!$products) {
+            return null;
+        }
+
+        return [
+            'brand' => ['name' => $brand->name, 'slug' => $brand->slug, 'image' => $brand->image],
+            'form' => self::formFor($brand->name),
+            'products' => $products,
+        ];
+    }
+
+    /** Field input yang dibutuhkan sebuah game (lihat config/topup_games.php). */
+    public static function formFor(string $brandName): array
+    {
+        $name = mb_strtolower($brandName);
+
+        foreach (config('topup_games.rules') as $rule) {
+            foreach ($rule['match'] as $needle) {
+                if (str_contains($name, $needle)) {
+                    return ['fields' => $rule['fields'], 'hint' => $rule['hint']];
+                }
+            }
+        }
+
+        return config('topup_games.default');
     }
 
     /** Panggil setiap kali produk/brand/kategori berubah agar landing page tidak menampilkan data basi. */

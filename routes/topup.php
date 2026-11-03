@@ -16,5 +16,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/top-up-game', [TopupController::class, 'index'])->name('topup.index');
 
+Route::get('/top-up-game/{slug}', [TopupController::class, 'show'])
+    ->where('slug', '[a-z0-9-]+')
+    ->name('topup.show');
+
 // Redirect 301 dari URL lama agar SEO tidak hilang
 Route::redirect('/top-up', '/top-up-game', 301);

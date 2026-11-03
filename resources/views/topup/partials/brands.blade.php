@@ -26,7 +26,7 @@
         @if(count($brands) > 0)
         <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2.5 sm:gap-4">
             @foreach($brands as $brand)
-            <div x-show="visible.includes(@js($brand['slug']))"
+            <a href="{{ route('topup.show', $brand['slug']) }}" x-show="visible.includes(@js($brand['slug']))"
                 class="group flex flex-col rounded-2xl overflow-hidden bg-brand-mid border border-white/10 hover:border-brand-accent/50 hover:-translate-y-1 transition-all duration-200 active:scale-95">
                 {{-- Poster game: rasio potret, tepi bawah bergelombang --}}
                 <div class="relative aspect-[3/4] bg-gradient-to-br from-blue-600/30 to-indigo-600/30">
@@ -41,7 +41,7 @@
                     </svg>
                 </div>
                 <span class="flex items-center justify-center text-center px-1.5 pb-3 pt-1 min-h-[3.25rem] sm:min-h-[3.75rem] text-[11px] sm:text-sm font-bold text-white leading-tight line-clamp-2">{{ $brand['name'] }}</span>
-            </div>
+            </a>
             @endforeach
         </div>
 

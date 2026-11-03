@@ -10,4 +10,13 @@ class TopupController extends Controller
     {
         return view('topup.index', ['catalog' => TopupCatalogService::games()]);
     }
+
+    public function show(string $slug)
+    {
+        $game = TopupCatalogService::game($slug);
+
+        abort_if($game === null, 404);
+
+        return view('topup.show', $game);
+    }
 }
