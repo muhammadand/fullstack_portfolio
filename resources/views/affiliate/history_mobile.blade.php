@@ -117,7 +117,7 @@
             </button>
             <button type="button" onclick="switchPocket('wallet')" id="btnPocketWallet" class="py-2.5 rounded-xl transition-all duration-200 text-center flex items-center justify-center gap-1.5 text-slate-400 hover:text-slate-200 cursor-pointer">
                 <i class="fa-solid fa-wallet text-xs"></i>
-                <span>Wallet</span>
+                <span>Wallet PPOB</span>
             </button>
         </div>
 
@@ -151,9 +151,9 @@
         <div id="contentKomisiMasuk" class="block">
             <div class="space-y-2 mb-4">
                 @forelse($commissions as $comm)
-                <div class="p-3 rounded-2xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.05] transition-colors flex items-center justify-between gap-3">
+                <a href="{{ route('affiliate.history.detail', ['type' => 'commission', 'id' => $comm->id]) }}" class="p-3 rounded-2xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.99] transition-all flex items-center justify-between gap-3 group block">
                     <div class="flex items-center gap-2.5 min-w-0 flex-1">
-                        <div class="w-9 h-9 rounded-xl bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 flex items-center justify-center shrink-0">
+                        <div class="w-9 h-9 rounded-xl bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
                             <i class="fa-solid fa-coins text-xs"></i>
                         </div>
                         <div class="min-w-0 flex-1">
@@ -165,15 +165,18 @@
                             </p>
                         </div>
                     </div>
-                    <div class="text-right shrink-0">
-                        <p class="text-xs font-black text-emerald-400 tracking-tight whitespace-nowrap">
-                            +Rp {{ number_format($comm->amount, 0, ',', '.') }}
-                        </p>
-                        <span class="inline-block text-[9px] font-bold text-emerald-400/80 bg-emerald-500/10 px-1.5 py-0.2 rounded mt-0.5">
-                            Lunas
-                        </span>
+                    <div class="text-right shrink-0 flex items-center gap-2">
+                        <div>
+                            <p class="text-xs font-black text-emerald-400 tracking-tight whitespace-nowrap">
+                                +Rp {{ number_format($comm->amount, 0, ',', '.') }}
+                            </p>
+                            <span class="inline-block text-[9px] font-bold text-emerald-400/80 bg-emerald-500/10 px-1.5 py-0.2 rounded mt-0.5">
+                                Lunas
+                            </span>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-[10px] text-slate-600 group-hover:text-slate-400 transition-colors ml-1"></i>
                     </div>
-                </div>
+                </a>
                 @empty
                 <div class="p-8 text-center text-slate-400 text-xs flex flex-col items-center glass-panel rounded-2xl">
                     <div class="w-14 h-14 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-center text-2xl mb-3 text-slate-500">
@@ -198,10 +201,10 @@
         <div id="contentPenarikan" class="hidden">
             <div class="space-y-2 mb-4">
                 @forelse($withdrawals as $w)
-                <div class="p-3 rounded-2xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.05] transition-colors">
+                <a href="{{ route('affiliate.history.detail', ['type' => 'withdrawal', 'id' => $w->id]) }}" class="p-3 rounded-2xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.99] transition-all group block">
                     <div class="flex items-center justify-between gap-3 mb-2">
                         <div class="flex items-center gap-2.5 min-w-0 flex-1">
-                            <div class="w-9 h-9 rounded-xl bg-rose-500/15 text-rose-400 border border-rose-500/30 flex items-center justify-center shrink-0">
+                            <div class="w-9 h-9 rounded-xl bg-rose-500/15 text-rose-400 border border-rose-500/30 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
                                 <i class="fa-solid fa-arrow-up text-xs"></i>
                             </div>
                             <div class="min-w-0 flex-1">
@@ -213,13 +216,16 @@
                                 </p>
                             </div>
                         </div>
-                        <div class="text-right shrink-0">
-                            <p class="text-xs font-black text-rose-400 tracking-tight whitespace-nowrap">
-                                -Rp {{ number_format($w->amount, 0, ',', '.') }}
-                            </p>
-                            <p class="text-[10px] text-slate-400 mt-0.5 whitespace-nowrap">
-                                {{ $w->created_at ? $w->created_at->format('d M, H:i') : '-' }}
-                            </p>
+                        <div class="text-right shrink-0 flex items-center gap-2">
+                            <div>
+                                <p class="text-xs font-black text-rose-400 tracking-tight whitespace-nowrap">
+                                    -Rp {{ number_format($w->amount, 0, ',', '.') }}
+                                </p>
+                                <p class="text-[10px] text-slate-400 mt-0.5 whitespace-nowrap">
+                                    {{ $w->created_at ? $w->created_at->format('d M, H:i') : '-' }}
+                                </p>
+                            </div>
+                            <i class="fa-solid fa-chevron-right text-[10px] text-slate-600 group-hover:text-slate-400 transition-colors ml-1"></i>
                         </div>
                     </div>
 
@@ -241,13 +247,11 @@
                             @endif
                         </div>
 
-                        @if($w->proof_of_payment)
-                        <a href="{{ asset('storage/' . $w->proof_of_payment) }}" target="_blank" class="text-blue-400 hover:text-blue-300 font-semibold flex items-center gap-1">
-                            <i class="fa-solid fa-receipt text-[9px]"></i> Bukti Transfer
-                        </a>
-                        @endif
+                        <span class="text-slate-400 group-hover:text-slate-200 font-semibold flex items-center gap-1">
+                            Lihat Struk <i class="fa-solid fa-arrow-right text-[9px]"></i>
+                        </span>
                     </div>
-                </div>
+                </a>
                 @empty
                 <div class="p-8 text-center text-slate-400 text-xs flex flex-col items-center glass-panel rounded-2xl">
                     <div class="w-14 h-14 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-center text-2xl mb-3 text-slate-500">
@@ -272,9 +276,9 @@
         <div id="contentWalletMasuk" class="hidden">
             <div class="space-y-2 mb-4">
                 @forelse($walletMasuk as $m)
-                <div class="p-3 rounded-2xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.05] transition-colors flex items-center justify-between gap-3">
+                <a href="{{ route('affiliate.history.detail', ['type' => 'mutation', 'id' => $m->mutation_no]) }}" class="p-3 rounded-2xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.99] transition-all flex items-center justify-between gap-3 group block">
                     <div class="flex items-center gap-2.5 min-w-0 flex-1">
-                        <div class="w-9 h-9 rounded-xl bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 flex items-center justify-center shrink-0">
+                        <div class="w-9 h-9 rounded-xl bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
                             <i class="fa-solid fa-qrcode text-xs"></i>
                         </div>
                         <div class="min-w-0 flex-1">
@@ -290,15 +294,18 @@
                             </div>
                         </div>
                     </div>
-                    <div class="text-right shrink-0">
-                        <p class="text-xs font-black text-emerald-400 tracking-tight whitespace-nowrap">
-                            +Rp {{ number_format($m->amount, 0, ',', '.') }}
-                        </p>
-                        <p class="text-[10px] text-slate-400 font-medium mt-0.5 whitespace-nowrap">
-                            Sisa: <span class="text-slate-300 font-semibold">Rp {{ number_format($m->balance_after, 0, ',', '.') }}</span>
-                        </p>
+                    <div class="text-right shrink-0 flex items-center gap-2">
+                        <div>
+                            <p class="text-xs font-black text-emerald-400 tracking-tight whitespace-nowrap">
+                                +Rp {{ number_format($m->amount, 0, ',', '.') }}
+                            </p>
+                            <p class="text-[10px] text-slate-400 font-medium mt-0.5 whitespace-nowrap">
+                                Sisa: <span class="text-slate-300 font-semibold">Rp {{ number_format($m->balance_after, 0, ',', '.') }}</span>
+                            </p>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-[10px] text-slate-600 group-hover:text-slate-400 transition-colors ml-1"></i>
                     </div>
-                </div>
+                </a>
                 @empty
                 <div class="p-8 text-center text-slate-400 text-xs flex flex-col items-center glass-panel rounded-2xl">
                     <div class="w-14 h-14 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-center text-2xl mb-3 text-slate-500">
@@ -326,9 +333,9 @@
         <div id="contentWalletKeluar" class="hidden">
             <div class="space-y-2 mb-4">
                 @forelse($walletKeluar as $m)
-                <div class="p-3 rounded-2xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.05] transition-colors flex items-center justify-between gap-3">
+                <a href="{{ route('affiliate.history.detail', ['type' => 'mutation', 'id' => $m->mutation_no]) }}" class="p-3 rounded-2xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.99] transition-all flex items-center justify-between gap-3 group block">
                     <div class="flex items-center gap-2.5 min-w-0 flex-1">
-                        <div class="w-9 h-9 rounded-xl bg-cyan-500/15 text-cyan-400 border border-cyan-500/30 flex items-center justify-center shrink-0">
+                        <div class="w-9 h-9 rounded-xl bg-cyan-500/15 text-cyan-400 border border-cyan-500/30 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
                             <i class="fa-solid fa-cart-shopping text-xs"></i>
                         </div>
                         <div class="min-w-0 flex-1">
@@ -344,15 +351,18 @@
                             </div>
                         </div>
                     </div>
-                    <div class="text-right shrink-0">
-                        <p class="text-xs font-black text-rose-400 tracking-tight whitespace-nowrap">
-                            -Rp {{ number_format($m->amount, 0, ',', '.') }}
-                        </p>
-                        <p class="text-[10px] text-slate-400 font-medium mt-0.5 whitespace-nowrap">
-                            Sisa: <span class="text-slate-300 font-semibold">Rp {{ number_format($m->balance_after, 0, ',', '.') }}</span>
-                        </p>
+                    <div class="text-right shrink-0 flex items-center gap-2">
+                        <div>
+                            <p class="text-xs font-black text-rose-400 tracking-tight whitespace-nowrap">
+                                -Rp {{ number_format($m->amount, 0, ',', '.') }}
+                            </p>
+                            <p class="text-[10px] text-slate-400 font-medium mt-0.5 whitespace-nowrap">
+                                Sisa: <span class="text-slate-300 font-semibold">Rp {{ number_format($m->balance_after, 0, ',', '.') }}</span>
+                            </p>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-[10px] text-slate-600 group-hover:text-slate-400 transition-colors ml-1"></i>
                     </div>
-                </div>
+                </a>
                 @empty
                 <div class="p-8 text-center text-slate-400 text-xs flex flex-col items-center glass-panel rounded-2xl">
                     <div class="w-14 h-14 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-center text-2xl mb-3 text-slate-500">

@@ -292,6 +292,7 @@ Route::post('/api/blogs/{blog}/track-click', [App\Http\Controllers\HomeControlle
 Route::middleware(['auth:affiliate'])->group(function () {
     Route::get('/partner/dashboard', [App\Http\Controllers\AffiliateController::class, 'dashboard'])->name('affiliate.dashboard');
     Route::get('/partner/history', [App\Http\Controllers\AffiliateController::class, 'history'])->name('affiliate.history');
+    Route::get('/partner/history/detail/{type}/{id}', [App\Http\Controllers\AffiliateController::class, 'historyDetail'])->name('affiliate.history.detail');
     Route::get('/partner/ideas/{slug}', [\App\Http\Controllers\Affiliate\TargetIdeaController::class, 'show'])->name('affiliate.ideas.show');
     Route::get('/partner/proposals/search', [App\Http\Controllers\AffiliateController::class, 'searchProposals'])->name('affiliate.proposals.search');
     Route::get('/partner/proposals', [App\Http\Controllers\AffiliateController::class, 'proposals'])->name('affiliate.proposals');

@@ -192,6 +192,14 @@ class AffiliateController extends Controller
         ));
     }
 
+    /**
+     * Halaman detail bukti transaksi (Struk Digital via Livewire)
+     */
+    public function historyDetail(Request $request, string $type, string $id)
+    {
+        return view('affiliate.history_detail', compact('type', 'id'));
+    }
+
     public function withdraw(Request $request)
     {
         /** @var \App\Models\Affiliate $affiliate */
