@@ -78,7 +78,7 @@ $wallet = $affiliate->getOrCreateWallet();
 
             <!-- Action Buttons Wallet -->
             <div class="grid grid-cols-2 gap-1.5 mt-2">
-                <button type="button" onclick="openWalletDepositModal()" class="py-2 px-1.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white text-[10px] font-bold rounded-xl shadow-md shadow-emerald-500/25 transition-all flex items-center justify-center gap-1 text-center active:scale-95">
+                <button type="button" onclick="openWalletDepositModal()" class="py-2 px-1.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white text-[10px] font-bold rounded-xl shadow-md shadow-emerald-500/25 transition-all flex items-center justify-center gap-1 text-center active:scale-95">
                     <i class="fa-solid fa-circle-plus text-xs"></i>
                     <span>Top Up</span>
                 </button>
