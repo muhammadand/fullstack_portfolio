@@ -36,6 +36,7 @@ class DigitalProductSyncService
             }
 
             $stats = DB::transaction(fn () => $this->process($items));
+            TopupCatalogService::flush();
 
             $log->update($stats + [
                 'status' => 'success',

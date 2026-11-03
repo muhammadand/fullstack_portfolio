@@ -10,6 +10,7 @@ use App\Models\DigitalProductCostHistory;
 use App\Models\DigitalProductSyncLog;
 use App\Models\PriceLevel;
 use App\Services\DigitalProductSyncService;
+use App\Services\TopupCatalogService;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Url;
@@ -120,6 +121,7 @@ class DigitalProductIndex extends Component
     {
         $product = DigitalProduct::digiflazz()->select('id', 'name', 'is_active')->findOrFail($id);
         $product->update(['is_active' => !$product->is_active]);
+        TopupCatalogService::flush();
 
         $this->reset('error');
         $this->notice = sprintf('Produk %s %s.', $product->name, $product->is_active ? 'diaktifkan' : 'dinonaktifkan');
@@ -245,6 +247,7 @@ class DigitalProductIndex extends Component
             }
         });
 
+        TopupCatalogService::flush();
         $this->closeModal();
         $this->reset('error');
         $this->notice = "Produk {$product->name} berhasil diperbarui.";
@@ -254,6 +257,7 @@ class DigitalProductIndex extends Component
     {
         $product = DigitalProduct::digiflazz()->findOrFail($id, ['id', 'name']);
         $product->delete(); // override harga & riwayat modal ikut terhapus (cascade)
+        TopupCatalogService::flush();
 
         $this->closeModal();
         $this->reset('error');
@@ -275,6 +279,7 @@ class DigitalProductIndex extends Component
             return compact('products', 'logs', 'brands', 'categories');
         });
 
+        TopupCatalogService::flush();
         $this->reset('search', 'category', 'brand', 'status', 'detailId', 'editId', 'error');
         $this->resetPage();
         $this->notice = sprintf(

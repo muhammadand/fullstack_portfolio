@@ -361,7 +361,7 @@ class HomeController extends Controller
                 $q->where('order_number', $orderId);
                 if (!empty($order->transaction_id)) {
                     $q->orWhere('order_number', $order->transaction_id)
-                      ->orWhere('transaction_id', $order->transaction_id);
+                        ->orWhere('transaction_id', $order->transaction_id);
                 }
             })->latest()->first();
 

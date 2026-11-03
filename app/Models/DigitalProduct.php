@@ -78,6 +78,18 @@ class DigitalProduct extends Model
     }
 
     /**
+     * Produk Digiflazz yang boleh tampil ke customer (belum memperhitungkan jam cut-off).
+     */
+    public function scopeSellable($query)
+    {
+        return $query->where('provider', 'digiflazz')
+            ->where('is_active', true)
+            ->where('is_missing', false)
+            ->where('buyer_product_status', true)
+            ->where('seller_product_status', true);
+    }
+
+    /**
      * Harga jual untuk sebuah level: override manual jika ada, selain itu modal + margin level.
      * Gunakan eager load `priceOverrides` saat memanggil di dalam loop.
      */

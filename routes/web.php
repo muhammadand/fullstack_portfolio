@@ -227,6 +227,9 @@ Route::put('profile', [UserController::class, 'updateProfile'])->name('profile.u
 //Public Routes
 Route::get('/', [HomeController::class, 'indexCompanyProfile'])->name('index.company.profile');
 
+// Landing page top up untuk customer (kategori Games + daftar brand)
+Route::get('/top-up', [App\Http\Controllers\TopupController::class, 'index'])->name('topup.index');
+
 // Redirect 301 dari route lama (landing/*) ke route baru (s/*) untuk menjaga SEO
 Route::redirect('landing/blogs', '/s/blogs', 301);
 Route::redirect('landing/blog/{slug}', '/s/blog/{slug}', 301);
