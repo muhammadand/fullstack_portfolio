@@ -17,6 +17,10 @@ class WithdrawalController extends Controller
 
     public function approve(Request $request, Withdrawal $withdrawal)
     {
+        if ($withdrawal->status !== Withdrawal::STATUS_PENDING) {
+            return back()->with('error', 'Penarikan ini sudah diproses sebelumnya.');
+        }
+
         $request->validate([
             'proof' => 'required|image|mimes:jpeg,png,jpg|max:2048'
         ]);
@@ -25,13 +29,14 @@ class WithdrawalController extends Controller
             $path = $request->file('proof')->store('withdrawals', 'public');
             
             $withdrawal->update([
-                'status' => 'Completed',
-                'proof_of_payment' => $path
+                'status' => Withdrawal::STATUS_COMPLETED,
+                'proof_of_payment' => $path,
+                'processed_at' => now(),
             ]);
             
             $withdrawal->affiliate->notify(new \App\Notifications\AffiliateNotification(
                 'Penarikan Berhasil!', 
-                'Penarikan dana sebesar Rp ' . number_format($withdrawal->amount, 0, ',', '.') . ' telah ditransfer.', 
+                'Penarikan ' . Withdrawal::sourceLabel($withdrawal->source) . ' sebesar Rp ' . number_format($withdrawal->amount, 0, ',', '.') . ' telah ditransfer ke rekening Anda.', 
                 'success'
             ));
 

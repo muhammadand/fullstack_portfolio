@@ -159,7 +159,7 @@ class AffiliateController extends Controller
             ->paginate(15, ['*'], 'komisi_page');
 
         // 2. Penarikan Saldo Komisi (Lean UI-Only Projection)
-        $withdrawals = \App\Models\Withdrawal::select(['id', 'amount', 'bank_info', 'status', 'proof_of_payment', 'created_at'])
+        $withdrawals = \App\Models\Withdrawal::select(['id', 'source', 'amount', 'bank_info', 'status', 'proof_of_payment', 'created_at'])
             ->where('affiliate_id', $affiliate->id)
             ->latest('id')
             ->paginate(15, ['*'], 'tarik_page');
@@ -200,33 +200,9 @@ class AffiliateController extends Controller
         return view('affiliate.history_detail', compact('type', 'id'));
     }
 
-    public function withdraw(Request $request)
+    public function withdrawPage()
     {
-        /** @var \App\Models\Affiliate $affiliate */
-        $affiliate = Auth::guard('affiliate')->user();
-
-        $request->validate([
-            'amount' => 'required|numeric|min:50000|max:' . $affiliate->balance,
-        ]);
-
-        // Kurangi balance
-        $affiliate->decrement('balance', $request->amount);
-
-        // Buat record withdrawal
-        \App\Models\Withdrawal::create([
-            'affiliate_id' => $affiliate->id,
-            'amount' => $request->amount,
-            'bank_info' => $affiliate->bank_info,
-            'status' => 'Pending',
-        ]);
-
-        $affiliate->notify(new \App\Notifications\AffiliateNotification(
-            'Penarikan Diajukan',
-            'Pengajuan penarikan sebesar Rp ' . number_format($request->amount, 0, ',', '.') . ' sedang diproses.',
-            'success'
-        ));
-
-        return redirect()->back()->with('success', 'Permintaan penarikan komisi berhasil diajukan dan sedang diproses.');
+        return view('affiliate.withdraw');
     }
 
     public function claimDailyPoints(Request $request)

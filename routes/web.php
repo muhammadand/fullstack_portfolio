@@ -306,7 +306,7 @@ Route::middleware(['auth:affiliate'])->group(function () {
     Route::post('/partner/review-proposals/{id}/claim', [\App\Http\Controllers\Affiliate\ReviewCardProposalController::class, 'claim'])->name('affiliate.review_proposals.claim');
     Route::post('/partner/review-proposals/{id}/generate-ai-chat', [\App\Http\Controllers\Affiliate\ReviewCardProposalController::class, 'generateAiChat'])->name('affiliate.review_proposals.generate_ai_chat');
     Route::post('/partner/logout', [App\Http\Controllers\AffiliateController::class, 'logout'])->name('affiliate.logout');
-    Route::post('/partner/withdraw', [App\Http\Controllers\AffiliateController::class, 'withdraw'])->name('affiliate.withdraw');
+    Route::get('/partner/withdraw', [App\Http\Controllers\AffiliateController::class, 'withdrawPage'])->name('affiliate.withdraw');
 
     // Partner Wallet & Deposit (PPOB / Digital Products)
     Route::get('/partner/wallet/mutations', [\App\Http\Controllers\Affiliate\WalletController::class, 'mutations'])->name('affiliate.wallet.mutations');

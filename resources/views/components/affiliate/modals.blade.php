@@ -1,58 +1,5 @@
 @props(['affiliate'])
 
-<!-- Withdraw Modal (Mobile Friendly - Consistent Midnight Blue Theme) -->
-<div id="withdrawModal" class="fixed inset-0 z-[60] flex flex-col justify-end bg-slate-900/80 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300">
-    <div class="bg-[#0B1120] border-t border-white/10 w-full rounded-t-3xl transform translate-y-full transition-transform duration-300" id="withdrawModalContent">
-        <div class="p-5">
-            <div class="w-12 h-1.5 bg-slate-700/80 rounded-full mx-auto mb-4"></div>
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-sm font-bold text-white flex items-center gap-1.5">
-                    <i class="fa-solid fa-money-bill-transfer text-blue-400"></i> Tarik Komisi
-                </h3>
-                <button type="button" onclick="closeWithdrawModal()" class="w-7 h-7 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-white transition-colors active:scale-95">
-                    <i class="fa-solid fa-xmark text-xs"></i>
-                </button>
-            </div>
-
-            @if($affiliate->balance < 50000)
-            <div class="text-center py-5">
-                <div class="w-12 h-12 bg-red-500/20 text-red-400 rounded-2xl flex items-center justify-center text-xl mx-auto mb-3">
-                    <i class="fa-solid fa-circle-xmark"></i>
-                </div>
-                <h4 class="text-sm font-bold text-white mb-1">Saldo Belum Cukup</h4>
-                <p class="text-xs text-slate-400 mb-5 leading-relaxed">
-                    Saldo Anda <b>Rp {{ number_format($affiliate->balance, 0, ',', '.') }}</b>. Minimal penarikan Rp 50.000.
-                </p>
-                <button type="button" onclick="closeWithdrawModal()" class="w-full py-2.5 glass-panel text-white font-bold text-xs rounded-xl hover:bg-white/10 transition-colors">
-                    Tutup
-                </button>
-            </div>
-            @else
-            <form action="{{ route('affiliate.withdraw') }}" method="POST">
-                @csrf
-                <div class="mb-4">
-                    <label class="block text-[11px] font-semibold text-slate-300 mb-1.5">Jumlah Penarikan (Rp):</label>
-                    <input type="number" name="amount" min="50000" max="{{ $affiliate->balance }}" required class="w-full bg-slate-900/60 border border-white/10 text-white font-bold text-xs rounded-xl py-2.5 px-3.5 focus:outline-none focus:border-blue-500 transition-colors" placeholder="Contoh: 100000">
-                    <p class="text-[10px] text-slate-400 mt-1 flex justify-between">
-                        <span>Min: Rp 50.000</span>
-                        <span class="text-blue-400">Max: Rp {{ number_format($affiliate->balance, 0, ',', '.') }}</span>
-                    </p>
-                </div>
-
-                <div class="mb-5 p-3.5 rounded-2xl border border-white/10 bg-white/[0.03]">
-                    <p class="text-[10px] text-slate-400 font-medium mb-0.5">Rekening Pencairan:</p>
-                    <p class="text-xs font-bold text-white">{{ $affiliate->bank_info }}</p>
-                </div>
-
-                <button type="submit" class="w-full py-2.5 bg-blue-500 hover:bg-blue-600 text-white font-bold text-xs rounded-xl shadow-lg shadow-blue-500/25 transition-all flex items-center justify-center gap-1.5 active:scale-98">
-                    <i class="fa-solid fa-paper-plane text-xs"></i> Konfirmasi Penarikan
-                </button>
-            </form>
-            @endif
-        </div>
-    </div>
-</div>
-
 <!-- Notification Modal (Mobile Friendly - Consistent Midnight Blue Theme) -->
 <div id="notificationModal" class="fixed inset-0 z-[60] flex flex-col justify-end bg-slate-900/80 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300">
     <div class="bg-[#0B1120] border-t border-white/10 w-full rounded-t-3xl transform translate-y-full transition-transform duration-300 flex flex-col max-h-[85vh]" id="notificationModalContent">

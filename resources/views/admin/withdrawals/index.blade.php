@@ -4,7 +4,7 @@
 <div class="px-6 py-8">
     <div class="mb-8">
         <h1 class="text-2xl font-bold text-slate-800">Withdrawal Requests</h1>
-        <p class="text-slate-500 text-sm mt-1">Kelola permintaan penarikan komisi dari Affiliate Partner.</p>
+        <p class="text-slate-500 text-sm mt-1">Kelola permintaan penarikan Saldo Komisi & Saldo Wallet dari Affiliate Partner. Target transfer maks. 3x24 jam.</p>
     </div>
 
     @if(session('success'))
@@ -47,13 +47,21 @@
                         <td class="px-6 py-4">
                             <div class="font-medium text-slate-800">{{ $w->created_at->format('d M Y') }}</div>
                             <div class="text-sm text-slate-500">{{ $w->created_at->format('H:i') }} WIB</div>
+                            @if($w->status === 'Pending')
+                            <div class="text-[11px] mt-1 {{ $w->created_at->copy()->addDays(3)->isPast() ? 'text-red-600 font-semibold' : 'text-slate-400' }}">Batas: {{ $w->created_at->copy()->addDays(3)->format('d M Y H:i') }}</div>
+                            @elseif($w->processed_at)
+                            <div class="text-[11px] text-emerald-600 mt-1">Ditransfer {{ $w->processed_at->format('d M Y H:i') }}</div>
+                            @endif
                         </td>
                         <td class="px-6 py-4">
                             <div class="text-sm font-bold text-slate-800">{{ $w->affiliate->name ?? '-' }}</div>
                             <div class="text-xs text-slate-500">{{ $w->affiliate->email ?? '-' }}</div>
                         </td>
                         <td class="px-6 py-4">
-                            <div class="text-sm font-bold text-blue-600">Rp {{ number_format($w->amount, 0, ',', '.') }}</div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-sm font-bold text-blue-600">Rp {{ number_format($w->amount, 0, ',', '.') }}</span>
+                                <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold {{ $w->source === 'wallet' ? 'bg-emerald-100 text-emerald-700' : 'bg-blue-100 text-blue-700' }}">{{ \App\Models\Withdrawal::sourceLabel($w->source) }}</span>
+                            </div>
                             <div class="text-xs text-slate-600 mt-1">{{ $w->bank_info }}</div>
                         </td>
                         <td class="px-6 py-4">
@@ -80,7 +88,7 @@
                     @empty
                     <tr>
                         <td colspan="5" class="px-6 py-8 text-center text-slate-500">
-                            Belum ada permintaan penarikan komisi.
+                            Belum ada permintaan penarikan.
                         </td>
                     </tr>
                     @endforelse

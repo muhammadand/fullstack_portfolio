@@ -39,16 +39,10 @@ $wallet = $affiliate->getOrCreateWallet();
 
             <!-- Action Buttons Komisi -->
             <div class="grid grid-cols-2 gap-1.5 mt-2">
-                @if($affiliate->balance < 50000) <button type="button" onclick="alert('Maaf, saldo komisi Anda minimal Rp 50.000 untuk dapat melakukan penarikan.')" class="py-2 px-1.5 bg-white/5 hover:bg-white/10 text-slate-300 text-[10px] font-bold rounded-xl transition-all flex items-center justify-center gap-1 text-center" title="Minimal Rp 50.000">
+                <a href="{{ route('affiliate.withdraw', ['source' => 'commission']) }}" class="py-2 px-1.5 bg-blue-500 hover:bg-blue-600 text-white text-[10px] font-bold rounded-xl shadow-md shadow-blue-500/25 transition-all flex items-center justify-center gap-1 text-center active:scale-95">
                     <i class="fa-solid fa-money-bill-transfer text-xs"></i>
                     <span>Tarik</span>
-                    </button>
-                    @else
-                    <button type="button" onclick="openWithdrawModal()" class="py-2 px-1.5 bg-blue-500 hover:bg-blue-600 text-white text-[10px] font-bold rounded-xl shadow-md shadow-blue-500/25 transition-all flex items-center justify-center gap-1 text-center active:scale-95">
-                        <i class="fa-solid fa-money-bill-transfer text-xs"></i>
-                        <span>Tarik</span>
-                    </button>
-                    @endif
+                </a>
 
                     <button type="button" onclick="copyLink()" class="py-2 px-1.5 glass-panel hover:bg-white/10 text-white text-[10px] font-semibold rounded-xl border border-white/10 transition-all flex items-center justify-center gap-1 text-center active:scale-95">
                         <i class="fa-solid fa-link text-blue-300 text-xs"></i>
@@ -77,10 +71,10 @@ $wallet = $affiliate->getOrCreateWallet();
                     <span>Top Up</span>
                 </button>
 
-                <button type="button" onclick="openWalletMutationsModal()" class="py-2 px-1.5 glass-panel hover:bg-white/10 text-white text-[10px] font-semibold rounded-xl border border-white/10 transition-all flex items-center justify-center gap-1 text-center active:scale-95">
-                    <i class="fa-solid fa-clock-rotate-left text-emerald-400 text-xs"></i>
-                    <span>Mutasi</span>
-                </button>
+                <a href="{{ route('affiliate.withdraw', ['source' => 'wallet']) }}" class="py-2 px-1.5 glass-panel hover:bg-white/10 text-white text-[10px] font-semibold rounded-xl border border-white/10 transition-all flex items-center justify-center gap-1 text-center active:scale-95">
+                    <i class="fa-solid fa-money-bill-transfer text-emerald-400 text-xs"></i>
+                    <span>Tarik</span>
+                </a>
             </div>
         </div>
 

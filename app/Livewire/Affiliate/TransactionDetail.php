@@ -66,7 +66,7 @@ class TransactionDetail extends Component
             case 'withdrawal':
             case 'penarikan':
             case 'tarik':
-                $record = Withdrawal::select(['id', 'amount', 'bank_info', 'status', 'proof_of_payment', 'created_at'])
+                $record = Withdrawal::select(['id', 'source', 'amount', 'bank_info', 'status', 'proof_of_payment', 'processed_at', 'created_at'])
                     ->where('id', $this->trxId)
                     ->where('affiliate_id', $affiliate->id)
                     ->firstOrFail();
@@ -87,6 +87,10 @@ class TransactionDetail extends Component
                 }
 
                 $amount = (float) $record->amount;
+                $sourceLabel = Withdrawal::sourceLabel($record->source);
+                $statusNote = $rawStatus === 'pending'
+                    ? 'Diproses maks. 3x24 jam (estimasi ' . $record->created_at?->copy()->addDays(Withdrawal::PROCESSING_DAYS)->format('d M Y') . ').'
+                    : ($record->processed_at ? 'Ditransfer pada ' . $record->processed_at->format('d M Y, H:i') . ' WIB.' : 'Status: ' . ucfirst($record->status) . '.');
                 $this->trx = [
                     'type' => 'DEBIT',
                     'amount' => $amount,
@@ -96,13 +100,13 @@ class TransactionDetail extends Component
                     'status' => $statusText,
                     'status_color' => $statusColor,
                     'status_icon' => $statusIcon,
-                    'title' => 'Penarikan Saldo Komisi',
+                    'title' => 'Penarikan ' . $sourceLabel,
                     'date' => $record->created_at ? $record->created_at->format('d M Y, H:i') . ' WIB' : '-',
                     'ref_no' => 'WD-' . $record->id,
                     'category' => 'Pencairan Dana (Withdrawal)',
                     'method' => $record->bank_info ?: 'Rekening Bank Terdaftar',
                     'balance_after' => null,
-                    'notes' => 'Pencairan komisi ke: ' . ($record->bank_info ?: '-') . '. Status: ' . ucfirst($record->status),
+                    'notes' => 'Pencairan ' . strtolower($sourceLabel) . ' ke: ' . ($record->bank_info ?: '-') . '. ' . $statusNote,
                     'proof_url' => $record->proof_of_payment ? asset('storage/' . $record->proof_of_payment) : null,
                 ];
                 break;

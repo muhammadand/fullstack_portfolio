@@ -209,7 +209,7 @@
                             </div>
                             <div class="min-w-0 flex-1">
                                 <p class="text-xs font-bold text-white truncate">
-                                    Penarikan Saldo
+                                    Penarikan {{ \App\Models\Withdrawal::sourceLabel($w->source) }}
                                 </p>
                                 <p class="text-[10px] text-slate-400 mt-0.5 truncate">
                                     {{ $w->bank_info }}
@@ -258,7 +258,7 @@
                         <i class="fa-solid fa-receipt"></i>
                     </div>
                     <h4 class="text-xs font-bold text-slate-200 mb-0.5">Belum Ada Penarikan</h4>
-                    <p class="text-[11px] text-slate-500 max-w-[220px]">Riwayat pencairan komisi ke rekening bank Anda akan tampil di sini.</p>
+                    <p class="text-[11px] text-slate-500 max-w-[220px]">Riwayat pencairan saldo ke rekening bank Anda akan tampil di sini.</p>
                 </div>
                 @endforelse
             </div>

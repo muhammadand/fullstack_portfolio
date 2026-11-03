@@ -44,27 +44,6 @@
         showToast('Link Akses Login berhasil disalin!', 'success');
     }
 
-    function openWithdrawModal() {
-        const modal = document.getElementById('withdrawModal');
-        const content = document.getElementById('withdrawModalContent');
-
-        modal.classList.remove('opacity-0', 'pointer-events-none');
-        // Bottom sheet slide up animation
-        setTimeout(() => {
-            content.classList.remove('translate-y-full');
-        }, 10);
-    }
-
-    function closeWithdrawModal() {
-        const modal = document.getElementById('withdrawModal');
-        const content = document.getElementById('withdrawModalContent');
-
-        content.classList.add('translate-y-full');
-        setTimeout(() => {
-            modal.classList.add('opacity-0', 'pointer-events-none');
-        }, 300);
-    }
-
     function openNotificationModal() {
         const modal = document.getElementById('notificationModal');
         const content = document.getElementById('notificationModalContent');
@@ -319,8 +298,6 @@
     window.showToast = showToast;
     window.copyLink = copyLink;
     window.copyLoginLink = copyLoginLink;
-    window.openWithdrawModal = openWithdrawModal;
-    window.closeWithdrawModal = closeWithdrawModal;
     window.openNotificationModal = openNotificationModal;
     window.closeNotificationModal = closeNotificationModal;
     window.openShareModal = openShareModal;

@@ -313,14 +313,9 @@
                     </div>
                 </div>
 
-                @if($affiliate->balance < 50000) <button type="button" onclick="alert('Maaf, saldo komisi Anda minimal Rp 50.000 untuk dapat melakukan penarikan.')" class="relative z-10 w-full py-2 bg-gray-300 text-gray-500 text-sm font-bold rounded-lg cursor-not-allowed flex items-center justify-center gap-2" title="Saldo minimal Rp 50.000">
-                    <i class="fa-solid fa-money-bill-transfer"></i> Tarik Komisi (Min. 50rb)
-                    </button>
-                    @else
-                    <button onclick="openDesktopWithdrawModal()" class="relative z-10 w-full py-2 bg-yellow-400 hover:bg-yellow-500 text-yellow-900 text-sm font-bold rounded-lg transition-all shadow-sm flex items-center justify-center gap-2 transform hover:-translate-y-0.5">
-                        <i class="fa-solid fa-money-bill-transfer"></i> Tarik Komisi
-                    </button>
-                    @endif
+                <a href="{{ route('affiliate.withdraw') }}" class="relative z-10 w-full py-2 bg-yellow-400 hover:bg-yellow-500 text-yellow-900 text-sm font-bold rounded-lg transition-all shadow-sm flex items-center justify-center gap-2 transform hover:-translate-y-0.5">
+                    <i class="fa-solid fa-money-bill-transfer"></i> Tarik Dana
+                </a>
             </div>
         </div>
 
@@ -333,49 +328,6 @@
 
         @endif
     </div>
-</div>
-
-<!-- Withdraw Modal -->
-<div id="desktopWithdrawModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300">
-    <div class="bg-white w-full max-w-md p-6 rounded-3xl shadow-2xl transform scale-95 transition-transform duration-300" id="desktopWithdrawModalContent">
-        <div class="flex justify-between items-center mb-6">
-            <h3 class="text-xl font-bold text-slate-800">Tarik Komisi</h3>
-            <button type="button" onclick="closeDesktopWithdrawModal()" class="text-slate-400 hover:text-slate-600 bg-slate-100 hover:bg-slate-200 w-8 h-8 rounded-full flex items-center justify-center transition-colors">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-        </div>
-
-        @if($affiliate->balance < 50000) <div class="text-center py-6">
-            <div class="w-16 h-16 bg-red-100 text-red-500 rounded-full flex items-center justify-center text-3xl mx-auto mb-4">
-                <i class="fa-solid fa-circle-xmark"></i>
-            </div>
-            <h4 class="text-lg font-bold text-slate-800 mb-2">Saldo Belum Cukup</h4>
-            <p class="text-sm text-slate-600 mb-6">Maaf, saldo komisi Anda saat ini <b>Rp {{ number_format($affiliate->balance, 0, ',', '.') }}</b>. Minimal penarikan adalah Rp 50.000.</p>
-            <button type="button" onclick="closeDesktopWithdrawModal()" class="w-full py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition-all">
-                Tutup
-            </button>
-    </div>
-    @else
-    <form action="{{ route('affiliate.withdraw') }}" method="POST">
-        @csrf
-        <div class="mb-5">
-            <label class="block text-sm font-medium text-slate-700 mb-2">Jumlah Penarikan (Rp)</label>
-            <input type="number" name="amount" min="50000" max="{{ $affiliate->balance }}" required class="w-full bg-slate-50 border-2 border-slate-200 text-slate-800 font-bold rounded-xl py-3 px-4 focus:outline-none focus:border-blue-400 transition-colors" placeholder="Contoh: 100000">
-            <p class="text-xs text-slate-500 mt-2">Minimal penarikan Rp 50.000. Maksimal Rp {{ number_format($affiliate->balance, 0, ',', '.') }}</p>
-        </div>
-
-        <div class="mb-6 p-4 bg-blue-50 border border-blue-100 rounded-xl">
-            <p class="text-xs text-blue-800 font-medium mb-1">Informasi Rekening Anda:</p>
-            <p class="text-sm font-bold text-blue-900">{{ $affiliate->bank_info }}</p>
-            <p class="text-[10px] text-blue-600 mt-2">*Penarikan akan ditransfer ke rekening di atas dalam 1x24 jam kerja.</p>
-        </div>
-
-        <button type="submit" class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-all shadow-sm">
-            Ajukan Penarikan
-        </button>
-    </form>
-    @endif
-</div>
 </div>
 
 <script>
@@ -395,26 +347,6 @@
             toast.style.opacity = '0';
             setTimeout(() => toast.remove(), 300);
         }, 3000);
-    }
-
-    function openDesktopWithdrawModal() {
-        const modal = document.getElementById('desktopWithdrawModal');
-        const content = document.getElementById('desktopWithdrawModalContent');
-
-        modal.classList.remove('opacity-0', 'pointer-events-none');
-        content.classList.remove('scale-95');
-        content.classList.add('scale-100');
-    }
-
-    function closeDesktopWithdrawModal() {
-        const modal = document.getElementById('desktopWithdrawModal');
-        const content = document.getElementById('desktopWithdrawModalContent');
-
-        content.classList.remove('scale-100');
-        content.classList.add('scale-95');
-        setTimeout(() => {
-            modal.classList.add('opacity-0', 'pointer-events-none');
-        }, 150);
     }
 
 </script>
