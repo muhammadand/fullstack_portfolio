@@ -560,6 +560,26 @@ Route::get('/secret-deploy-trigger-12345', function () {
             '--force' => true
         ]);
 
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_11_03_110000_create_digital_product_brands_table.php',
+            '--force' => true
+        ]);
+
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_11_03_110100_create_price_levels_table.php',
+            '--force' => true
+        ]);
+
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_11_03_110200_add_supplier_columns_to_digital_products_table.php',
+            '--force' => true
+        ]);
+
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_11_03_110300_create_digital_product_prices_table.php',
+            '--force' => true
+        ]);
+
         // Jalankan Seeder yang diperlukan
         \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'BusinessCategorySeeder', '--force' => true]);
         \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'ClientProposalSeeder', '--force' => true]);
