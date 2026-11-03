@@ -1,87 +1,76 @@
 @extends('layouts.admin.app')
 
 @section('content')
+<x-admin.page-header title="Daftar Kategori Blog" subtitle="Kelola kategori artikel blog untuk memudahkan navigasi pembaca.">
+    <x-admin.button icon="fa-solid fa-plus" :href="route('blog-categories.create')">Tambah Kategori</x-admin.button>
+</x-admin.page-header>
 
-<div class="max-w-6xl mx-auto px-4 py-8">
-    {{-- ✅ Header --}}
-    <div class="flex flex-col sm:flex-row justify-between items-center mb-5 gap-4">
-        <h2 class="text-2xl font-semibold text-slate-800">Daftar Kategori Blog</h2>
+@if (session('success'))
+<x-admin.alert type="success">{{ session('success') }}</x-admin.alert>
+@endif
 
-        <div class="w-full sm:w-auto">
-            <form method="GET" class="flex flex-row items-center w-full sm:w-auto gap-2">
-                {{-- 🔍 Search Bar --}}
-                <div class="flex-1 min-w-0">
-                    <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari nama kategori..." class="w-full border border-gray-300 rounded-md px-3 py-1.5 sm:w-56 text-sm focus:ring focus:ring-blue-900/30 focus:border-blue-900 outline-none transition" />
-                </div>
-                
-                {{-- Buttons sejajar di satu baris --}}
-                <div class="flex flex-row items-center gap-2 flex-shrink-0">
-                    <button type="submit" class="flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-2 text-slate-500 hover:text-blue-600 sm:bg-blue-900 sm:text-white sm:px-4 sm:py-1.5 sm:rounded-md sm:shadow-sm sm:hover:bg-blue-950 transition w-10 sm:w-auto">
-                        <i class="fa-solid fa-magnifying-glass text-[15px] sm:text-sm"></i>
-                        <span class="text-[9px] sm:text-sm font-medium">Cari</span>
-                    </button>
-                    
-                    <a href="{{ route('blog-categories.create') }}" class="flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-2 text-blue-600 hover:text-blue-700 sm:bg-blue-900 sm:text-white sm:px-4 sm:py-1.5 sm:rounded-md sm:shadow-sm sm:hover:bg-blue-950 transition w-10 sm:w-auto">
-                        <i class="fa-solid fa-circle-plus text-[15px] sm:text-sm"></i>
-                        <span class="text-[9px] sm:text-sm font-medium">Tambah</span>
-                    </a>
-                </div>
-            </form>
+<x-admin.card :padding="false">
+    {{-- Toolbar pencarian --}}
+    <form method="GET" class="flex flex-col sm:flex-row gap-2 p-4 border-b border-slate-200">
+        <div class="relative flex-1 sm:max-w-sm">
+            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-sm text-slate-400"></i>
+            <x-admin.input name="q" :value="request('q')" placeholder="Cari nama kategori..." class="pl-9" />
         </div>
-    </div>
+        <div class="flex gap-2">
+            <x-admin.button type="submit" variant="secondary">Cari</x-admin.button>
+            @if (request('q'))
+            <x-admin.button variant="secondary" icon="fa-solid fa-xmark" :href="route('blog-categories.index')">Reset</x-admin.button>
+            @endif
+        </div>
+    </form>
 
-    {{-- ✅ Alert --}}
-    @if(session('success'))
-    <div class="mb-4 p-4 rounded-lg bg-green-100 border border-green-300 text-green-800">
-        {{ session('success') }}
-    </div>
-    @endif
-
-    {{-- ✅ Table --}}
-    <div class="overflow-x-auto bg-white rounded-lg shadow-sm border border-gray-100">
-        <table class="min-w-full text-sm text-left text-gray-600">
-            <thead class="bg-gray-50 text-gray-700 font-medium text-xs uppercase tracking-wider">
+    <div class="overflow-x-auto">
+        <table class="min-w-full text-sm">
+            <thead class="bg-slate-50 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">
                 <tr>
-                    <th class="py-2.5 px-3">#</th>
-                    <th class="py-2.5 px-3">Nama Kategori</th>
-                    <th class="py-2.5 px-3">Slug</th>
-                    <th class="py-2.5 px-3">Urutan</th>
-                    <th class="py-2.5 px-3">Status</th>
-                    <th class="py-2.5 px-3 text-center">Aksi</th>
+                    <th class="px-4 py-3 w-12">#</th>
+                    <th class="px-4 py-3">Nama Kategori</th>
+                    <th class="px-4 py-3">Slug</th>
+                    <th class="px-4 py-3">Urutan</th>
+                    <th class="px-4 py-3">Status</th>
+                    <th class="px-4 py-3 text-right">Aksi</th>
                 </tr>
             </thead>
-
-            <tbody class="text-[13px]">
-                @forelse($categories as $i => $category)
-                <tr class="border-b border-gray-50 hover:bg-gray-50/50 transition">
-                    <td class="py-2 px-3">{{ $categories->firstItem() + $i }}</td>
-                    <td class="py-2 px-3 font-medium text-gray-800 max-w-[240px] truncate">{{ $category->name }}</td>
-                    <td class="py-2 px-3 text-gray-600">{{ $category->slug }}</td>
-                    <td class="py-2 px-3 text-gray-600">{{ $category->display_order }}</td>
-                    <td class="py-2 px-3">
-                        @if($category->is_active)
-                        <span class="px-2 py-0.5 bg-green-50 text-green-600 border border-green-200 rounded-md text-[11px] font-medium">Aktif</span>
-                        @else
-                        <span class="px-2 py-0.5 bg-red-50 text-red-600 border border-red-200 rounded-md text-[11px] font-medium">Nonaktif</span>
+            <tbody class="divide-y divide-slate-100 text-slate-600">
+                @forelse ($categories as $i => $category)
+                <tr class="hover:bg-slate-50/70 transition-colors">
+                    <td class="px-4 py-3 text-slate-400">{{ $categories->firstItem() + $i }}</td>
+                    <td class="px-4 py-3 max-w-xs">
+                        <span class="block font-medium text-slate-900 truncate" title="{{ $category->name }}">{{ $category->name }}</span>
+                        @if($category->description)
+                        <span class="text-xs text-slate-500 truncate block">{{ $category->description }}</span>
                         @endif
                     </td>
-                    <td class="py-2 px-3 text-center flex gap-1.5 justify-center">
-                        <a href="{{ route('blog-categories.edit', $category->id) }}" class="px-2.5 py-1 bg-yellow-50 text-yellow-600 hover:bg-yellow-100 border border-yellow-200 rounded-md text-[11px] font-medium transition">
-                            Edit
-                        </a>
-                        <form action="{{ route('blog-categories.destroy', $category->id) }}" method="POST" onsubmit="return confirm('Yakin hapus kategori ini?')">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="px-2.5 py-1 bg-red-50 text-red-600 hover:bg-red-100 border border-red-200 rounded-md text-[11px] font-medium transition">
-                                Hapus
-                            </button>
-                        </form>
+                    <td class="px-4 py-3 whitespace-nowrap text-slate-500 font-mono text-xs">{{ $category->slug }}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-slate-600">{{ $category->display_order }}</td>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                        @if ($category->is_active)
+                        <x-admin.badge color="green"><i class="fa-solid fa-circle text-[6px]"></i> Aktif</x-admin.badge>
+                        @else
+                        <x-admin.badge color="slate"><i class="fa-solid fa-circle text-[6px]"></i> Nonaktif</x-admin.badge>
+                        @endif
+                    </td>
+                    <td class="px-4 py-3">
+                        <div class="flex items-center justify-end gap-1.5">
+                            <x-admin.button variant="secondary" size="sm" icon="fa-solid fa-pen" :href="route('blog-categories.edit', $category->id)">Edit</x-admin.button>
+                            <form action="{{ route('blog-categories.destroy', $category->id) }}" method="POST" onsubmit="return confirm('Hapus kategori blog ini?')">
+                                @csrf
+                                @method('DELETE')
+                                <x-admin.button type="submit" variant="danger" size="sm" icon="fa-solid fa-trash-can" title="Hapus" aria-label="Hapus" />
+                            </form>
+                        </div>
                     </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="6" class="py-6 text-center text-gray-500 italic text-sm">
-                        Belum ada kategori yang ditambahkan.
+                    <td colspan="6" class="px-4 py-12 text-center">
+                        <i class="fa-regular fa-folder-open text-3xl text-slate-300 mb-2"></i>
+                        <p class="text-sm text-slate-500">{{ request('q') ? 'Tidak ada kategori yang cocok dengan pencarian.' : 'Belum ada kategori blog yang ditambahkan.' }}</p>
                     </td>
                 </tr>
                 @endforelse
@@ -89,10 +78,10 @@
         </table>
     </div>
 
-    {{-- ✅ Pagination --}}
-    <div class="mt-6">
+    @if ($categories->hasPages())
+    <div class="px-4 py-3 border-t border-slate-200">
         {{ $categories->links('pagination::tailwind') }}
     </div>
-</div>
-
+    @endif
+</x-admin.card>
 @endsection

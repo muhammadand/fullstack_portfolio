@@ -23,7 +23,12 @@ class AdminPortfolioTest extends TestCase
 
         Storage::fake('public');
 
-        $this->admin = User::first() ?? User::factory()->create();
+        $this->admin = User::first() ?? User::create([
+            'name' => 'Admin Portfolio Test',
+            'email' => 'admin_port_' . uniqid() . '@example.com',
+            'password' => bcrypt('password'),
+            'role' => 'admin',
+        ]);
         $this->category = PortfolioCategory::create([
             'name' => 'Kategori Test ' . uniqid(),
             'slug' => 'kategori-test-' . uniqid(),

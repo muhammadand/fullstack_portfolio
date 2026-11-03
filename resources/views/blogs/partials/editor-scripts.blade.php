@@ -12,6 +12,7 @@
 
         // ---------- Statistik kata ----------
         let statsTimer;
+
         function updateStats() {
             const text = quill.getText().trim();
             const words = text ? text.split(/\s+/).length : 0;
@@ -52,14 +53,26 @@
 
             try {
                 const res = await fetch(form.dataset.aiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
-                    body: JSON.stringify({ title: $('#titleInput').value, category_id: category.value }),
-                });
+                    method: 'POST'
+                    , headers: {
+                        'Content-Type': 'application/json'
+                        , 'X-CSRF-TOKEN': csrfToken
+                    }
+                    , body: JSON.stringify({
+                        title: $('#titleInput').value
+                        , category_id: category.value
+                    })
+                , });
                 const data = await res.json();
                 if (data.status !== 'success') throw new Error(data.message || 'Terjadi kesalahan saat generate AI');
 
-                const fill = { '#titleInput': data.title, '#metaTitleInput': data.meta_title, '#metaDescriptionInput': data.meta_description, '#excerptInput': data.excerpt, '#tagsInput': data.tags };
+                const fill = {
+                    '#titleInput': data.title
+                    , '#metaTitleInput': data.meta_title
+                    , '#metaDescriptionInput': data.meta_description
+                    , '#excerptInput': data.excerpt
+                    , '#tagsInput': data.tags
+                };
                 Object.entries(fill).forEach(([selector, value]) => {
                     if (value) $(selector).value = value;
                 });
@@ -76,4 +89,5 @@
             }
         });
     });
+
 </script>

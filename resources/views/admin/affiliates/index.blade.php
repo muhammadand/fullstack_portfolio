@@ -1,74 +1,109 @@
 @extends('layouts.admin.app')
 
 @section('content')
-<div class="px-4 lg:px-6 py-5 lg:py-7">
-    <div class="mb-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-3.5">
-        <div>
-            <h1 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Affiliate Dashboard</h1>
-            <p class="text-slate-500 text-xs sm:text-sm mt-0.5">Pantau performa partner dan kelola komisi di satu tempat.</p>
-        </div>
-        <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
-            <button onclick="sendPushNotification()" class="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl transition-all shadow-sm flex items-center justify-center gap-1.5">
-                <i class="fa-solid fa-bell text-[11px]"></i> Broadcast Notif
-            </button>
-            <button onclick="openAddPartnerModal()" class="px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-xl transition-all shadow-sm flex items-center justify-center gap-1.5">
-                <i class="fa-solid fa-plus text-[11px]"></i> Tambah Partner
-            </button>
-        </div>
-    </div>
+<div x-data="{
+    addModalOpen: false,
+    commissionModalOpen: false,
+    selectedAffiliateId: null,
+    selectedAffiliateName: '',
+    toastMessage: '',
+    showToast: false,
+    toast(msg) {
+        this.toastMessage = msg;
+        this.showToast = true;
+        setTimeout(() => { this.showToast = false; }, 3500);
+    },
+    openCommission(id, name) {
+        this.selectedAffiliateId = id;
+        this.selectedAffiliateName = name;
+        this.commissionModalOpen = true;
+    },
+    copyMagicLink(url) {
+        navigator.clipboard.writeText(url).then(() => {
+            this.toast('Magic Login link berhasil disalin!');
+        }).catch(() => {
+            alert('Gagal menyalin link.');
+        });
+    },
+    sendBroadcast() {
+        if (!confirm('Kirim notifikasi Push (\'Semangat Pagi\') ke semua Partner sekarang?')) return;
+        fetch('/api/cron/send-daily-push?secret=cuan-tiap-hari')
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    this.toast('Sukses: ' + data.message);
+                } else {
+                    this.toast('Info: ' + (data.message || data.error || 'Gagal mengirim'));
+                }
+            })
+            .catch(err => {
+                alert('Terjadi kesalahan: ' + err);
+            });
+    }
+}">
 
-    <!-- Dashboard Stats Grid -->
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
-        <!-- Total Partners -->
-        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/80 hover:border-blue-400 hover:shadow-md transition-all flex items-center justify-between">
+    {{-- Page Header --}}
+    <x-admin.page-header title="Affiliate Dashboard" subtitle="Pantau performa partner dan kelola komisi di satu tempat.">
+        <x-admin.button type="button" variant="secondary" icon="fa-solid fa-bell" @click="sendBroadcast()">
+            Broadcast Notif
+        </x-admin.button>
+        <x-admin.button type="button" icon="fa-solid fa-plus" @click="addModalOpen = true">
+            Tambah Partner
+        </x-admin.button>
+    </x-admin.page-header>
+
+    {{-- Dashboard Stats Grid --}}
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        {{-- Total Partners --}}
+        <div class="bg-white rounded-xl p-4 border border-slate-200/80 shadow-xs flex items-center justify-between">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center text-sm shrink-0">
                     <i class="fa-solid fa-users"></i>
                 </div>
                 <div>
-                    <p class="text-slate-500 text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider">Total Partner</p>
-                    <p class="text-base sm:text-lg font-bold text-slate-900 tracking-tight mt-0.5">{{ $totalPartners }}</p>
+                    <p class="text-slate-500 text-xs font-medium">Total Partner</p>
+                    <p class="text-lg font-bold text-slate-900 mt-0.5">{{ number_format($totalPartners, 0, ',', '.') }}</p>
                 </div>
             </div>
         </div>
 
-        <!-- Total Clicks -->
-        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/80 hover:border-purple-400 hover:shadow-md transition-all flex items-center justify-between">
+        {{-- Total Clicks --}}
+        <div class="bg-white rounded-xl p-4 border border-slate-200/80 shadow-xs flex items-center justify-between">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 border border-purple-100 flex items-center justify-center text-sm shrink-0">
                     <i class="fa-solid fa-hand-pointer"></i>
                 </div>
                 <div>
-                    <p class="text-slate-500 text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider">Total Klik</p>
-                    <p class="text-base sm:text-lg font-bold text-slate-900 tracking-tight mt-0.5">{{ $totalClicks }}</p>
+                    <p class="text-slate-500 text-xs font-medium">Total Klik</p>
+                    <p class="text-lg font-bold text-slate-900 mt-0.5">{{ number_format($totalClicks, 0, ',', '.') }}</p>
                 </div>
             </div>
         </div>
 
-        <!-- Total Commissions -->
-        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/80 hover:border-emerald-400 hover:shadow-md transition-all flex items-center justify-between">
+        {{-- Total Commissions --}}
+        <div class="bg-white rounded-xl p-4 border border-slate-200/80 shadow-xs flex items-center justify-between">
             <div class="flex items-center gap-3 min-w-0">
                 <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center text-sm shrink-0">
                     <i class="fa-solid fa-wallet"></i>
                 </div>
                 <div class="min-w-0">
-                    <p class="text-slate-500 text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider truncate">Komisi Diberikan</p>
-                    <p class="text-base sm:text-lg font-bold text-emerald-600 tracking-tight mt-0.5 whitespace-nowrap">
-                        <span class="text-xs font-semibold text-emerald-700/80 mr-0.5">Rp</span>{{ number_format($totalCommissions, 0, ',', '.') }}
+                    <p class="text-slate-500 text-xs font-medium truncate">Komisi Diberikan</p>
+                    <p class="text-lg font-bold text-emerald-600 mt-0.5 whitespace-nowrap">
+                        <span class="text-xs font-semibold mr-0.5">Rp</span>{{ number_format($totalCommissions, 0, ',', '.') }}
                     </p>
                 </div>
             </div>
         </div>
 
-        <!-- Pending Approval -->
-        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/80 hover:border-amber-400 hover:shadow-md transition-all flex items-center justify-between">
+        {{-- Pending Approval --}}
+        <div class="bg-white rounded-xl p-4 border border-slate-200/80 shadow-xs flex items-center justify-between">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 border border-amber-100 flex items-center justify-center text-sm shrink-0">
                     <i class="fa-solid fa-user-clock"></i>
                 </div>
                 <div>
-                    <p class="text-slate-500 text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider">Perlu Approval</p>
-                    <p class="text-base sm:text-lg font-bold {{ $totalPending > 0 ? 'text-amber-600' : 'text-slate-900' }} tracking-tight mt-0.5">{{ $totalPending }}</p>
+                    <p class="text-slate-500 text-xs font-medium">Perlu Approval</p>
+                    <p class="text-lg font-bold {{ $totalPending > 0 ? 'text-amber-600' : 'text-slate-900' }} mt-0.5">{{ $totalPending }}</p>
                 </div>
             </div>
             @if($totalPending > 0)
@@ -79,122 +114,147 @@
         </div>
     </div>
 
+    {{-- Alerts --}}
     @if($errors->any())
-    <div class="bg-rose-50 border border-rose-200 text-rose-700 px-4 py-3 rounded-2xl mb-5 flex items-start gap-2.5 shadow-sm text-xs" role="alert">
-        <i class="fa-solid fa-circle-exclamation text-rose-500 text-sm mt-0.5 shrink-0"></i>
-        <ul class="list-disc ml-3.5 space-y-0.5">
+    <x-admin.alert type="error">
+        <p class="font-medium mb-1">Periksa kembali data yang diinput:</p>
+        <ul class="list-disc list-inside space-y-0.5">
             @foreach($errors->all() as $err)
             <li>{{ $err }}</li>
             @endforeach
         </ul>
-    </div>
+    </x-admin.alert>
     @endif
 
     @if(session('success'))
-    <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 px-4 py-3 rounded-2xl mb-5 flex items-center gap-2.5 shadow-sm text-xs font-medium" role="alert">
-        <div class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 text-[10px]">
-            <i class="fa-solid fa-check"></i>
-        </div>
-        <p>{{ session('success') }}</p>
-    </div>
+    <x-admin.alert type="success">{{ session('success') }}</x-admin.alert>
     @endif
 
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden">
+    {{-- Main Table Card --}}
+    <x-admin.card :padding="false">
+        {{-- Toolbar Filter & Search --}}
+        <form method="GET" class="flex flex-col sm:flex-row gap-2.5 p-4 border-b border-slate-200">
+            <div class="relative flex-1 sm:max-w-sm">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-sm text-slate-400"></i>
+                <x-admin.input name="q" :value="request('q')" placeholder="Cari nama, email, kode partner..." class="pl-9" />
+            </div>
+            <div class="sm:w-44">
+                <x-admin.select name="status">
+                    <option value="">Semua Status</option>
+                    <option value="approved" {{ request('status') === 'approved' ? 'selected' : '' }}>Approved</option>
+                    <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Pending</option>
+                    <option value="rejected" {{ request('status') === 'rejected' ? 'selected' : '' }}>Rejected</option>
+                </x-admin.select>
+            </div>
+            <div class="flex gap-2">
+                <x-admin.button type="submit" variant="secondary">Filter</x-admin.button>
+                @if (request('q') || request('status'))
+                <x-admin.button variant="secondary" icon="fa-solid fa-xmark" :href="route('admin.affiliates.index')">Reset</x-admin.button>
+                @endif
+            </div>
+        </form>
 
-        <!-- Desktop Table View -->
-        <div class="hidden md:block overflow-x-auto">
-            <table class="w-full text-left border-collapse text-xs">
-                <thead>
-                    <tr class="bg-slate-50/80 border-b border-slate-200/80">
-                        <th class="px-4 py-3 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Partner</th>
-                        <th class="px-4 py-3 text-[11px] font-semibold text-slate-500 uppercase tracking-wider text-center">Performa</th>
-                        <th class="px-4 py-3 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Saldo Komisi</th>
-                        <th class="px-4 py-3 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Status</th>
-                        <th class="px-4 py-3 text-[11px] font-semibold text-slate-500 uppercase tracking-wider text-right">Aksi</th>
+        {{-- Desktop & Tablet Table View --}}
+        <div class="overflow-x-auto">
+            <table class="min-w-full text-sm">
+                <thead class="bg-slate-50 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">
+                    <tr>
+                        <th class="px-4 py-3 w-12">#</th>
+                        <th class="px-4 py-3">Partner</th>
+                        <th class="px-4 py-3 text-center">Performa</th>
+                        <th class="px-4 py-3">Saldo Komisi</th>
+                        <th class="px-4 py-3">Status</th>
+                        <th class="px-4 py-3 text-right">Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100">
+                <tbody class="divide-y divide-slate-100 text-slate-600">
                     @forelse($affiliates as $affiliate)
                     <tr class="hover:bg-slate-50/70 transition-colors">
+                        <td class="px-4 py-3 text-slate-400">{{ $affiliates->firstItem() + $loop->index }}</td>
                         <td class="px-4 py-3">
-                            <div class="font-semibold text-slate-800 text-xs sm:text-sm">{{ $affiliate->name }}</div>
-                            <div class="text-[11px] text-slate-400">{{ $affiliate->email }}</div>
-                            <div class="text-[10px] text-slate-400 mt-0.5">
-                                Kode: <span class="font-mono font-bold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-200/60">{{ $affiliate->affiliate_code }}</span>
+                            <a href="{{ route('admin.affiliates.show', $affiliate->id) }}" class="font-medium text-slate-900 hover:text-blue-600 block">
+                                {{ $affiliate->name }}
+                            </a>
+                            <span class="text-xs text-slate-500 block">{{ $affiliate->email }}</span>
+                            <div class="text-[11px] text-slate-400 mt-1 flex items-center gap-1.5">
+                                <span>Kode:</span>
+                                <span class="font-mono font-semibold text-blue-700 bg-blue-50 border border-blue-200/70 px-1.5 py-0.5 rounded text-[10px]">
+                                    {{ $affiliate->affiliate_code }}
+                                </span>
                             </div>
                         </td>
-                        <td class="px-4 py-3 text-center">
-                            <div class="inline-flex items-center gap-1 px-2.5 py-1 bg-purple-50 text-purple-700 border border-purple-200/50 rounded-lg text-[11px] font-semibold">
-                                <i class="fa-solid fa-hand-pointer text-[10px]"></i> {{ $affiliate->clicks_count ?? 0 }} Klik
+                        <td class="px-4 py-3 text-center whitespace-nowrap">
+                            <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-purple-50 text-purple-700 border border-purple-200/50 rounded-lg text-xs font-medium">
+                                <i class="fa-solid fa-hand-pointer text-[10px]"></i> {{ number_format($affiliate->clicks_count ?? 0, 0, ',', '.') }} Klik
+                            </span>
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap">
+                            <div class="font-bold text-slate-900 text-sm">
+                                Rp {{ number_format($affiliate->balance, 0, ',', '.') }}
+                            </div>
+                            <div class="text-xs text-slate-400 truncate max-w-[180px]" title="{{ $affiliate->bank_info }}">
+                                {{ $affiliate->bank_info ?: 'Belum ada rekening' }}
                             </div>
                         </td>
-                        <td class="px-4 py-3">
-                            <div class="text-xs sm:text-sm font-bold text-slate-800 whitespace-nowrap">Rp {{ number_format($affiliate->balance, 0, ',', '.') }}</div>
-                            <div class="text-[10px] text-slate-400 mt-0.5 truncate max-w-[140px]">{{ $affiliate->bank_info ?: '-' }}</div>
-                        </td>
-                        <td class="px-4 py-3">
+                        <td class="px-4 py-3 whitespace-nowrap">
                             @if($affiliate->status === 'pending')
-                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-200/80">
-                                Pending
-                            </span>
+                            <x-admin.badge color="yellow">
+                                <i class="fa-solid fa-clock text-[10px]"></i> Pending
+                            </x-admin.badge>
                             @elseif($affiliate->status === 'approved')
-                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/80">
-                                Approved
-                            </span>
+                            <x-admin.badge color="green">
+                                <i class="fa-solid fa-circle-check text-[10px]"></i> Approved
+                            </x-admin.badge>
                             @else
-                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-rose-50 text-rose-700 border border-rose-200/80">
-                                Rejected
-                            </span>
+                            <x-admin.badge color="slate">
+                                <i class="fa-solid fa-circle-xmark text-[10px]"></i> Rejected
+                            </x-admin.badge>
                             @endif
                         </td>
-                        <td class="px-4 py-3 text-right">
-                            @if($affiliate->status === 'pending')
-                            <div class="flex items-center justify-end gap-1.5">
+                        <td class="px-4 py-3">
+                            <div class="flex items-center justify-end gap-1.5 whitespace-nowrap">
+                                @if($affiliate->status === 'pending')
                                 <form action="{{ route('admin.affiliates.approve', $affiliate->id) }}" method="POST">
                                     @csrf
-                                    <button type="submit" class="inline-flex items-center justify-center gap-1 px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg text-[11px] transition-colors shadow-sm">
-                                        <i class="fa-solid fa-check text-[10px]"></i>
-                                        <span>Approve</span>
-                                    </button>
+                                    <x-admin.button type="submit" size="sm" icon="fa-solid fa-check">Approve</x-admin.button>
                                 </form>
-                                <form action="{{ route('admin.affiliates.reject', $affiliate->id) }}" method="POST">
+                                <form action="{{ route('admin.affiliates.reject', $affiliate->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menolak partner ini?')">
                                     @csrf
-                                    <button type="submit" class="inline-flex items-center justify-center gap-1 px-2.5 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-semibold rounded-lg text-[11px] transition-colors shadow-sm" onclick="return confirm('Tolak partner ini?')">
-                                        <i class="fa-solid fa-xmark text-[10px]"></i>
-                                        <span>Reject</span>
-                                    </button>
+                                    <x-admin.button type="submit" variant="danger" size="sm" icon="fa-solid fa-xmark">Reject</x-admin.button>
                                 </form>
-                            </div>
-                            @elseif($affiliate->status === 'approved')
-                            <div class="flex items-center justify-end gap-1.5">
+                                @elseif($affiliate->status === 'approved')
                                 @php
-                                $magicLoginUrl = \Illuminate\Support\Facades\URL::signedRoute('affiliate.magic_login', ['affiliate' => $affiliate->id]);
+                                    $magicLoginUrl = \Illuminate\Support\Facades\URL::signedRoute('affiliate.magic_login', ['affiliate' => $affiliate->id]);
                                 @endphp
-                                <button type="button" onclick="copyMagicLink('{{ $magicLoginUrl }}')" class="inline-flex items-center justify-center gap-1 px-2.5 py-1.5 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg text-[11px] transition-colors shadow-sm" title="Salin Magic Login Link">
-                                    <i class="fa-solid fa-link text-[10px]"></i>
-                                    <span>Link</span>
-                                </button>
-                                <a href="{{ route('admin.affiliates.show', $affiliate->id) }}" class="inline-flex items-center justify-center gap-1 px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-lg text-[11px] transition-colors border border-slate-200">
-                                    <i class="fa-solid fa-eye text-[10px]"></i>
-                                    <span>Detail</span>
-                                </a>
-                                <button type="button" onclick="openCommissionModal({{ $affiliate->id }}, '{{ addslashes($affiliate->name) }}')" class="inline-flex items-center justify-center gap-1 px-2.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg text-[11px] transition-colors shadow-sm">
-                                    <i class="fa-solid fa-plus text-[10px]"></i>
-                                    <span>Komisi</span>
-                                </button>
+                                <x-admin.button type="button" variant="secondary" size="sm" icon="fa-solid fa-link" @click="copyMagicLink('{{ $magicLoginUrl }}')" title="Salin Magic Login Link">
+                                    Link
+                                </x-admin.button>
+                                <x-admin.button variant="secondary" size="sm" icon="fa-solid fa-eye" :href="route('admin.affiliates.show', $affiliate->id)">
+                                    Detail
+                                </x-admin.button>
+                                <x-admin.button type="button" size="sm" icon="fa-solid fa-plus" @click="openCommission({{ $affiliate->id }}, '{{ addslashes($affiliate->name) }}')">
+                                    Komisi
+                                </x-admin.button>
+                                @else
+                                <x-admin.button variant="secondary" size="sm" icon="fa-solid fa-eye" :href="route('admin.affiliates.show', $affiliate->id)">
+                                    Detail
+                                </x-admin.button>
+                                @endif
                             </div>
-                            @else
-                            <a href="{{ route('admin.affiliates.show', $affiliate->id) }}" class="inline-flex items-center justify-center gap-1 px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-lg text-[11px] transition-colors border border-slate-200">
-                                <i class="fa-solid fa-eye text-[10px]"></i>
-                                <span>Detail</span>
-                            </a>
-                            @endif
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="5" class="px-4 py-8 text-center text-slate-400 text-xs">
-                            Belum ada pendaftar affiliate.
+                        <td colspan="6" class="px-4 py-12 text-center">
+                            <div class="w-12 h-12 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-3">
+                                <i class="fa-solid fa-users-slash text-xl"></i>
+                            </div>
+                            <p class="text-sm font-medium text-slate-700">
+                                {{ request('q') || request('status') ? 'Tidak ada partner yang cocok dengan filter.' : 'Belum ada partner affiliate terdaftar.' }}
+                            </p>
+                            <p class="text-xs text-slate-400 mt-1">
+                                {{ request('q') || request('status') ? 'Coba ganti kata kunci pencarian atau reset filter.' : 'Gunakan tombol Tambah Partner untuk mendaftarkan partner baru.' }}
+                            </p>
                         </td>
                     </tr>
                     @endforelse
@@ -202,247 +262,159 @@
             </table>
         </div>
 
-        <!-- Mobile Card View -->
-        <div class="md:hidden divide-y divide-slate-100">
-            @forelse($affiliates as $affiliate)
-            <div class="p-3.5 hover:bg-slate-50/70 transition-colors">
-                <div class="flex justify-between items-start mb-2.5">
-                    <div>
-                        <div class="font-bold text-slate-900 text-xs sm:text-sm">{{ $affiliate->name }}</div>
-                        <div class="text-[11px] text-slate-400">{{ $affiliate->email }}</div>
+        {{-- Pagination --}}
+        @if ($affiliates->hasPages())
+        <div class="px-4 py-3 border-t border-slate-200">
+            {{ $affiliates->links('pagination::tailwind') }}
+        </div>
+        @endif
+    </x-admin.card>
+
+    {{-- Modal Tambah Partner Baru --}}
+    <div x-show="addModalOpen" x-cloak class="fixed inset-0 z-50 overflow-y-auto" role="dialog" aria-modal="true">
+        <div x-show="addModalOpen" x-transition.opacity class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs"></div>
+
+        <div class="min-h-full p-4 flex items-center justify-center">
+            <div x-show="addModalOpen"
+                x-transition:enter="transition ease-out duration-200"
+                x-transition:enter-start="opacity-0 scale-95"
+                x-transition:enter-end="opacity-100 scale-100"
+                x-transition:leave="transition ease-in duration-150"
+                x-transition:leave-start="opacity-100 scale-100"
+                x-transition:leave-end="opacity-0 scale-95"
+                @click.away="addModalOpen = false"
+                class="relative w-full max-w-lg bg-white rounded-2xl shadow-xl border border-slate-200 p-6 z-10">
+
+                <div class="flex items-center justify-between pb-4 mb-4 border-b border-slate-100">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                            <i class="fa-solid fa-user-plus text-sm"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-base font-semibold text-slate-900">Tambah Partner Baru</h3>
+                            <p class="text-xs text-slate-400">Buat akun affiliate secara manual.</p>
+                        </div>
                     </div>
-                    <div>
-                        @if($affiliate->status === 'pending')
-                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-200/80">Pending</span>
-                        @elseif($affiliate->status === 'approved')
-                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/80">Approved</span>
-                        @else
-                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-rose-50 text-rose-700 border border-rose-200/80">Rejected</span>
-                        @endif
-                    </div>
+                    <button type="button" @click="addModalOpen = false" class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 flex items-center justify-center transition">
+                        <i class="fa-solid fa-xmark text-sm"></i>
+                    </button>
                 </div>
 
-                <div class="grid grid-cols-2 gap-2.5 mb-3 bg-slate-50/80 rounded-xl p-2.5 border border-slate-100">
+                <form action="{{ route('admin.affiliates.store') }}" method="POST" class="space-y-4">
+                    @csrf
                     <div>
-                        <p class="text-[10px] text-slate-400 mb-0.5">Kode Referral</p>
-                        <p class="text-xs font-mono font-bold text-blue-600">{{ $affiliate->affiliate_code }}</p>
+                        <x-admin.label for="addPartnerName" required>Nama Lengkap</x-admin.label>
+                        <x-admin.input name="name" id="addPartnerName" required placeholder="Contoh: Budi Santoso" />
                     </div>
+
                     <div>
-                        <p class="text-[10px] text-slate-400 mb-0.5">Performa</p>
-                        <p class="text-xs font-semibold text-purple-700"><i class="fa-solid fa-hand-pointer mr-1 text-[10px]"></i> {{ $affiliate->clicks_count ?? 0 }} Klik</p>
+                        <x-admin.label for="addPartnerEmail" required>Email</x-admin.label>
+                        <x-admin.input type="email" name="email" id="addPartnerEmail" required placeholder="budi@example.com" />
                     </div>
-                    <div class="col-span-2 pt-2 border-t border-slate-200/60">
-                        <div class="flex justify-between items-center">
+
+                    <div>
+                        <x-admin.label for="addPartnerPassword" required>Password</x-admin.label>
+                        <x-admin.input type="password" name="password" id="addPartnerPassword" required minlength="8" placeholder="Minimal 8 karakter" />
+                    </div>
+
+                    <div>
+                        <x-admin.label for="addPartnerStatus" required>Status Awal</x-admin.label>
+                        <x-admin.select name="status" id="addPartnerStatus">
+                            <option value="approved">Approved (Langsung Aktif)</option>
+                            <option value="pending">Pending (Perlu Review)</option>
+                        </x-admin.select>
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-100 flex items-center justify-end gap-2">
+                        <x-admin.button type="button" variant="secondary" @click="addModalOpen = false">Batal</x-admin.button>
+                        <x-admin.button type="submit" icon="fa-solid fa-floppy-disk">Simpan Partner</x-admin.button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {{-- Modal Tambah Komisi Partner --}}
+    <div x-show="commissionModalOpen" x-cloak class="fixed inset-0 z-50 overflow-y-auto" role="dialog" aria-modal="true">
+        <div x-show="commissionModalOpen" x-transition.opacity class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs"></div>
+
+        <div class="min-h-full p-4 flex items-center justify-center">
+            <div x-show="commissionModalOpen"
+                x-transition:enter="transition ease-out duration-200"
+                x-transition:enter-start="opacity-0 scale-95"
+                x-transition:enter-end="opacity-100 scale-100"
+                x-transition:leave="transition ease-in duration-150"
+                x-transition:leave-start="opacity-100 scale-100"
+                x-transition:leave-end="opacity-0 scale-95"
+                @click.away="commissionModalOpen = false"
+                class="relative w-full max-w-md bg-white rounded-2xl shadow-xl border border-slate-200 p-6 z-10">
+
+                <div class="flex items-center justify-between pb-4 mb-4 border-b border-slate-100">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                            <i class="fa-solid fa-wallet text-sm"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-base font-semibold text-slate-900">Tambah Komisi Partner</h3>
+                            <p class="text-xs text-slate-400">Input reward komisi hasil deal project.</p>
+                        </div>
+                    </div>
+                    <button type="button" @click="commissionModalOpen = false" class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 flex items-center justify-center transition">
+                        <i class="fa-solid fa-xmark text-sm"></i>
+                    </button>
+                </div>
+
+                <div class="mb-4 p-3 bg-blue-50 border border-blue-100 rounded-xl text-xs flex items-center justify-between">
+                    <span class="text-blue-700 font-medium">Partner:</span>
+                    <span class="font-bold text-blue-900 truncate max-w-[200px]" x-text="selectedAffiliateName"></span>
+                </div>
+
+                <form :action="'/admin/affiliates/' + selectedAffiliateId + '/commission'" method="POST" class="space-y-4">
+                    @csrf
+                    <div>
+                        <x-admin.label for="commissionDesc" required>Keterangan / Dari Project Apa?</x-admin.label>
+                        <x-admin.input name="description" id="commissionDesc" required placeholder="Contoh: Komisi Project Web E-Commerce PT XYZ" />
+                        <x-admin.hint for="description">Deskripsi project yang berhasil deal.</x-admin.hint>
+                    </div>
+
+                    <div>
+                        <x-admin.label for="commissionAmount" required>Nominal Komisi (Rp)</x-admin.label>
+                        <x-admin.input type="number" name="amount" id="commissionAmount" min="1000" required placeholder="Contoh: 150000" />
+                        <x-admin.hint for="amount">Nominal dalam Rupiah (min. Rp 1.000).</x-admin.hint>
+                    </div>
+
+                    <div class="p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-800 leading-relaxed">
+                        <div class="flex items-start gap-2">
+                            <i class="fa-solid fa-circle-info text-amber-600 mt-0.5"></i>
                             <div>
-                                <p class="text-[10px] text-slate-400 mb-0.5">Saldo Komisi</p>
-                                <p class="text-xs sm:text-sm font-bold text-emerald-600">Rp {{ number_format($affiliate->balance, 0, ',', '.') }}</p>
-                            </div>
-                            <div class="text-right max-w-[50%]">
-                                <p class="text-[10px] text-slate-400 mb-0.5">Bank</p>
-                                <p class="text-[10px] font-medium text-slate-600 truncate">{{ $affiliate->bank_info ?: '-' }}</p>
+                                <span class="font-semibold">Informasi Sistem:</span>
+                                <p class="mt-0.5 text-amber-700">Komisi default partner adalah 10% dari total deal project. Memberikan komisi otomatis menambahkan <b>+100 Poin</b> ke streak partner.</p>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="flex flex-wrap gap-1.5 justify-end">
-                    @if($affiliate->status === 'pending')
-                    <form action="{{ route('admin.affiliates.approve', $affiliate->id) }}" method="POST" class="flex-1">
-                        @csrf
-                        <button type="submit" class="w-full flex items-center justify-center gap-1 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-semibold rounded-lg transition-colors shadow-sm">
-                            <i class="fa-solid fa-check text-[10px]"></i> Approve
-                        </button>
-                    </form>
-                    <form action="{{ route('admin.affiliates.reject', $affiliate->id) }}" method="POST" class="flex-1">
-                        @csrf
-                        <button type="submit" class="w-full flex items-center justify-center gap-1 px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white text-[11px] font-semibold rounded-lg transition-colors shadow-sm" onclick="return confirm('Tolak partner ini?')">
-                            <i class="fa-solid fa-xmark text-[10px]"></i> Reject
-                        </button>
-                    </form>
-                    @elseif($affiliate->status === 'approved')
-                    @php
-                    $magicLoginUrl = \Illuminate\Support\Facades\URL::signedRoute('affiliate.magic_login', ['affiliate' => $affiliate->id]);
-                    @endphp
-                    <button type="button" onclick="copyMagicLink('{{ $magicLoginUrl }}')" class="flex-1 flex items-center justify-center gap-1 px-2.5 py-1.5 bg-purple-600 hover:bg-purple-700 text-white text-[11px] font-semibold rounded-lg transition-colors shadow-sm">
-                        <i class="fa-solid fa-link text-[10px]"></i> Link
-                    </button>
-                    <a href="{{ route('admin.affiliates.show', $affiliate->id) }}" class="flex-1 flex items-center justify-center gap-1 px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-semibold rounded-lg transition-colors border border-slate-200">
-                        <i class="fa-solid fa-eye text-[10px]"></i> Detail
-                    </a>
-                    <button type="button" onclick="openCommissionModal({{ $affiliate->id }}, '{{ addslashes($affiliate->name) }}')" class="flex-1 flex items-center justify-center gap-1 px-2.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-[11px] font-semibold rounded-lg transition-colors shadow-sm">
-                        <i class="fa-solid fa-plus text-[10px]"></i> Komisi
-                    </button>
-                    @else
-                    <a href="{{ route('admin.affiliates.show', $affiliate->id) }}" class="w-full flex items-center justify-center gap-1 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-semibold rounded-lg transition-colors border border-slate-200">
-                        <i class="fa-solid fa-eye text-[10px]"></i> Detail
-                    </a>
-                    @endif
-                </div>
+                    <div class="pt-4 border-t border-slate-100 flex items-center justify-end gap-2">
+                        <x-admin.button type="button" variant="secondary" @click="commissionModalOpen = false">Batal</x-admin.button>
+                        <x-admin.button type="submit" icon="fa-solid fa-floppy-disk">Tambahkan Komisi</x-admin.button>
+                    </div>
+                </form>
             </div>
-            @empty
-            <div class="p-6 text-center text-slate-400 text-xs">
-                Belum ada pendaftar affiliate.
-            </div>
-            @endforelse
         </div>
     </div>
 
-    <!-- Pagination Links -->
-    <div class="mt-6">
-        {{ $affiliates->links() }}
+    {{-- Toast Notification Floating Banner --}}
+    <div x-show="showToast"
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0 translate-y-2"
+        x-transition:enter-end="opacity-100 translate-y-0"
+        x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100 translate-y-0"
+        x-transition:leave-end="opacity-0 translate-y-2"
+        x-cloak
+        class="fixed bottom-6 right-6 z-50 bg-slate-900 text-white text-xs px-4 py-3 rounded-xl shadow-xl flex items-center gap-2.5 border border-slate-800">
+        <i class="fa-solid fa-circle-check text-emerald-400"></i>
+        <span x-text="toastMessage"></span>
     </div>
+
 </div>
-
-<!-- Add Commission Modal -->
-<div id="commissionModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300">
-    <div class="bg-white w-full max-w-md p-6 rounded-3xl shadow-2xl transform scale-95 transition-transform duration-300" id="commissionModalContent">
-        <div class="flex justify-between items-center mb-6">
-            <h3 class="text-xl font-bold text-slate-800">Tambah Komisi Partner</h3>
-            <button type="button" onclick="closeCommissionModal()" class="text-slate-400 hover:text-slate-600 bg-slate-100 hover:bg-slate-200 w-8 h-8 rounded-full flex items-center justify-center transition-colors">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-        </div>
-
-        <div class="mb-4 p-3 bg-blue-50 border border-blue-100 rounded-xl text-sm">
-            <span class="font-semibold text-blue-800">Partner:</span> <span id="partnerNameDisplay" class="text-blue-900 font-bold"></span>
-        </div>
-
-        <form id="commissionForm" action="" method="POST">
-            @csrf
-            <div class="mb-5">
-                <label class="block text-sm font-medium text-slate-700 mb-2">Keterangan / Komisi dari Project Apa?</label>
-                <input type="text" name="description" required class="w-full bg-slate-50 border-2 border-slate-200 text-slate-800 rounded-xl py-3 px-4 mb-4 focus:outline-none focus:border-blue-400 transition-colors" placeholder="Contoh: Komisi Project Web E-Commerce PT XYZ">
-
-                <label class="block text-sm font-medium text-slate-700 mb-2">Nominal Komisi (Rp)</label>
-                <input type="number" name="amount" min="1000" required class="w-full bg-slate-50 border-2 border-slate-200 text-slate-800 font-bold rounded-xl py-3 px-4 focus:outline-none focus:border-blue-400 transition-colors" placeholder="Contoh: 150000">
-
-                <div class="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-xs text-yellow-800 leading-relaxed">
-                    <i class="fa-solid fa-circle-info mr-1"></i> <b>Keterangan Sistem:</b><br>
-                    Sesuai kebijakan sistem, komisi yang diberikan kepada partner adalah <b>10% dari nilai total project</b> yang berhasil (deal). Pastikan nominal yang diinput sudah sesuai.
-                </div>
-            </div>
-
-            <button type="submit" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-all shadow-sm">
-                Tambahkan Komisi
-            </button>
-        </form>
-    </div>
-</div>
-
-<script>
-    function openCommissionModal(id, name) {
-        const modal = document.getElementById('commissionModal');
-        const content = document.getElementById('commissionModalContent');
-        const form = document.getElementById('commissionForm');
-        const nameDisplay = document.getElementById('partnerNameDisplay');
-
-        nameDisplay.textContent = name;
-        form.action = `/admin/affiliates/${id}/commission`;
-
-        modal.classList.remove('opacity-0', 'pointer-events-none');
-        content.classList.remove('scale-95');
-        content.classList.add('scale-100');
-    }
-
-    function closeCommissionModal() {
-        const modal = document.getElementById('commissionModal');
-        const content = document.getElementById('commissionModalContent');
-
-        content.classList.remove('scale-100');
-        content.classList.add('scale-95');
-        setTimeout(() => {
-            modal.classList.add('opacity-0', 'pointer-events-none');
-        }, 150);
-    }
-
-    function sendPushNotification() {
-        if (!confirm('Kirim notifikasi Push ("Semangat Pagi") ke semua Partner sekarang?')) return;
-
-        fetch('/api/cron/send-daily-push?secret=cuan-tiap-hari')
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Sukses: ' + data.message);
-                } else {
-                    alert('Info: ' + (data.message || data.error || 'Gagal mengirim notifikasi.'));
-                }
-            })
-            .catch(err => {
-                alert('Terjadi kesalahan sistem: ' + err);
-            });
-    }
-
-    function openAddPartnerModal() {
-        const modal = document.getElementById('addPartnerModal');
-        const content = document.getElementById('addPartnerModalContent');
-
-        modal.classList.remove('opacity-0', 'pointer-events-none');
-        content.classList.remove('scale-95');
-        content.classList.add('scale-100');
-    }
-
-    function closeAddPartnerModal() {
-        const modal = document.getElementById('addPartnerModal');
-        const content = document.getElementById('addPartnerModalContent');
-
-        content.classList.remove('scale-100');
-        content.classList.add('scale-95');
-        setTimeout(() => {
-            modal.classList.add('opacity-0', 'pointer-events-none');
-        }, 150);
-    }
-
-    function copyMagicLink(url) {
-        navigator.clipboard.writeText(url).then(function() {
-            alert('Magic Login Link berhasil disalin!\nLink ini berlaku selamanya.\nAnda dapat mengirimkan link ini kepada Partner.');
-        }, function(err) {
-            alert('Gagal menyalin link: ' + err);
-        });
-    }
-
-</script>
-
-<!-- Add Partner Modal -->
-<div id="addPartnerModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300">
-    <div class="bg-white w-full max-w-lg p-6 rounded-3xl shadow-2xl transform scale-95 transition-transform duration-300" id="addPartnerModalContent">
-        <div class="flex justify-between items-center mb-6">
-            <h3 class="text-xl font-bold text-slate-800">Tambah Partner Baru</h3>
-            <button type="button" onclick="closeAddPartnerModal()" class="text-slate-400 hover:text-slate-600 bg-slate-100 hover:bg-slate-200 w-8 h-8 rounded-full flex items-center justify-center transition-colors">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-        </div>
-
-        <form action="{{ route('admin.affiliates.store') }}" method="POST">
-            @csrf
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Nama Lengkap</label>
-                    <input type="text" name="name" required class="w-full bg-slate-50 border-2 border-slate-200 text-slate-800 rounded-xl py-2.5 px-4 focus:outline-none focus:border-blue-400 transition-colors" placeholder="Masukkan nama">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Email</label>
-                    <input type="email" name="email" required class="w-full bg-slate-50 border-2 border-slate-200 text-slate-800 rounded-xl py-2.5 px-4 focus:outline-none focus:border-blue-400 transition-colors" placeholder="email@contoh.com">
-                </div>
-            </div>
-
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-slate-700 mb-1">Password</label>
-                <input type="password" name="password" required minlength="8" class="w-full bg-slate-50 border-2 border-slate-200 text-slate-800 rounded-xl py-2.5 px-4 focus:outline-none focus:border-blue-400 transition-colors" placeholder="Minimal 8 karakter">
-            </div>
-
-            <div class="mb-5">
-                <label class="block text-sm font-medium text-slate-700 mb-1">Status Awal</label>
-                <select name="status" class="w-full bg-slate-50 border-2 border-slate-200 text-slate-800 rounded-xl py-2.5 px-4 focus:outline-none focus:border-blue-400 transition-colors">
-                    <option value="approved">Approved (Langsung Aktif)</option>
-                    <option value="pending">Pending (Perlu Review)</option>
-                </select>
-            </div>
-
-            <button type="submit" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-all shadow-sm">
-                Simpan Partner
-            </button>
-        </form>
-    </div>
-</div>
-
 @endsection

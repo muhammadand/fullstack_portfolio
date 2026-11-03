@@ -149,7 +149,12 @@ class AffiliateWithdrawTest extends TestCase
             'status' => 'Pending',
         ]);
 
-        $admin = User::first() ?? User::factory()->create();
+        $admin = User::first() ?? User::create([
+            'name' => 'Admin Withdraw Test',
+            'email' => 'admin_wd_test_' . uniqid() . '@example.com',
+            'password' => bcrypt('password'),
+            'role' => 'admin',
+        ]);
 
         $this->actingAs($admin)
             ->post(route('admin.withdrawals.approve', $withdrawal), [

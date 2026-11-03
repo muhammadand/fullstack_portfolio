@@ -1,37 +1,96 @@
-<div class="space-y-4">
-    <div>
-        <label class="block text-[13px] font-medium tracking-wide text-slate-700 mb-1.5">Nama Kategori <span class="text-red-500">*</span></label>
-        <input type="text" name="name" value="{{ old('name', $item->name ?? '') }}" class="w-full border border-gray-300 rounded-xl px-3 py-2 text-[13px] focus:ring-2 focus:ring-slate-800 focus:border-transparent transition-colors" placeholder="Masukkan nama kategori" required>
-        @error('name')
-        <p class="text-[11px] text-red-600 mt-1">{{ $message }}</p>
-        @enderror
-    </div>
+@php
+    $item = $item ?? null;
+    $isEdit = $item !== null;
+@endphp
 
-    <div>
-        <label class="block text-[13px] font-medium tracking-wide text-slate-700 mb-1.5">Slug</label>
-        <input type="text" name="slug" value="{{ old('slug', $item->slug ?? '') }}" class="w-full border border-gray-300 rounded-xl px-3 py-2 text-[13px] focus:ring-2 focus:ring-slate-800 focus:border-transparent transition-colors" placeholder="Slug otomatis dari nama kategori">
-        @error('slug')
-        <p class="text-[11px] text-red-600 mt-1">{{ $message }}</p>
-        @enderror
-    </div>
+@if ($errors->any())
+<x-admin.alert type="error">
+    <p class="font-medium mb-1">Periksa kembali isian berikut:</p>
+    <ul class="list-disc list-inside space-y-0.5">
+        @foreach ($errors->all() as $error)
+        <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</x-admin.alert>
+@endif
 
-    <div>
-        <label class="block text-[13px] font-medium tracking-wide text-slate-700 mb-1.5">Deskripsi</label>
-        <textarea name="description" rows="3" class="w-full border border-gray-300 rounded-xl px-3 py-2 text-[13px] focus:ring-2 focus:ring-slate-800 focus:border-transparent transition-colors resize-none" placeholder="Tulis deskripsi kategori...">{{ old('description', $item->description ?? '') }}</textarea>
-    </div>
+<form id="categoryForm" method="POST"
+    action="{{ $isEdit ? route('portfolio-categories.update', $item->id) : route('portfolio-categories.store') }}"
+    data-slug-locked="{{ $isEdit || old('slug') ? '1' : '0' }}">
+    @csrf
+    @if ($isEdit) @method('PUT') @endif
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-            <label class="block text-[13px] font-medium tracking-wide text-slate-700 mb-1.5">Urutan Tampilan</label>
-            <input type="number" name="display_order" value="{{ old('display_order', $item->display_order ?? 0) }}" class="w-full border border-gray-300 rounded-xl px-3 py-2 text-[13px] focus:ring-2 focus:ring-slate-800 focus:border-transparent transition-colors" placeholder="0">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+
+        {{-- ================= Kolom utama ================= --}}
+        <div class="lg:col-span-2 space-y-6">
+            <x-admin.card title="Informasi Kategori" icon="fa-solid fa-folder-tree">
+                <div class="space-y-4">
+                    <div>
+                        <x-admin.label for="nameInput" required>Nama Kategori</x-admin.label>
+                        <x-admin.input name="name" id="nameInput" :value="old('name', $item?->name)" required maxlength="100"
+                            placeholder="Contoh: Web Development, Mobile Apps" />
+                        <x-admin.hint for="name" />
+                    </div>
+
+                    <div>
+                        <x-admin.label for="slugInput" required>Slug</x-admin.label>
+                        <x-admin.input name="slug" id="slugInput" :value="old('slug', $item?->slug)" required maxlength="100"
+                            placeholder="otomatis-dari-nama" />
+                        <x-admin.hint for="slug">URL unik untuk kategori ini (dibuat otomatis dari nama).</x-admin.hint>
+                    </div>
+
+                    <div>
+                        <x-admin.label for="descriptionInput">Deskripsi</x-admin.label>
+                        <x-admin.textarea name="description" id="descriptionInput" rows="3"
+                            placeholder="Deskripsi singkat mengenai kategori portfolio ini...">{{ old('description', $item?->description) }}</x-admin.textarea>
+                        <x-admin.hint for="description" />
+                    </div>
+                </div>
+            </x-admin.card>
         </div>
 
-        <div>
-            <label class="block text-[13px] font-medium tracking-wide text-slate-700 mb-1.5">Status Aktif</label>
-            <select name="is_active" class="w-full border border-gray-300 rounded-xl px-3 py-2 text-[13px] focus:ring-2 focus:ring-slate-800 focus:border-transparent transition-colors">
-                <option value="1" {{ old('is_active', $item->is_active ?? true) ? 'selected' : '' }}>Aktif</option>
-                <option value="0" {{ old('is_active', $item->is_active ?? true) ? '' : 'selected' }}>Tidak Aktif</option>
-            </select>
+        {{-- ================= Sidebar ================= --}}
+        <div class="space-y-6 lg:sticky lg:top-0">
+            <x-admin.card title="Pengaturan" icon="fa-solid fa-sliders">
+                <div class="space-y-4">
+                    <x-admin.toggle name="is_active" label="Status Aktif" description="Kategori tampil di pilihan publik"
+                        :checked="old('is_active', $item?->is_active ?? true)" />
+
+                    <div>
+                        <x-admin.label for="displayOrderInput">Urutan Tampilan</x-admin.label>
+                        <x-admin.input type="number" name="display_order" id="displayOrderInput"
+                            :value="old('display_order', $item?->display_order ?? 0)" min="0" placeholder="0" />
+                        <x-admin.hint for="display_order">Nomor urut prioritas tampil (semakin kecil semakin awal).</x-admin.hint>
+                    </div>
+                </div>
+
+                <div class="mt-5 pt-5 border-t border-slate-200 space-y-2">
+                    <x-admin.button type="submit" class="w-full" icon="fa-solid fa-floppy-disk">
+                        {{ $isEdit ? 'Simpan Perubahan' : 'Simpan Kategori' }}
+                    </x-admin.button>
+                    <x-admin.button variant="secondary" class="w-full" :href="route('portfolio-categories.index')">
+                        Batal
+                    </x-admin.button>
+                </div>
+            </x-admin.card>
         </div>
+
     </div>
-</div>
+</form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('categoryForm');
+        if (!form) return;
+        const name = form.querySelector('#nameInput');
+        const slug = form.querySelector('#slugInput');
+        let locked = form.dataset.slugLocked === '1';
+
+        slug.addEventListener('input', () => { locked = slug.value !== ''; });
+        name.addEventListener('input', () => {
+            if (locked) return;
+            slug.value = name.value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+        });
+    });
+</script>

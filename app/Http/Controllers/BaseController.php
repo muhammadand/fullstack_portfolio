@@ -24,10 +24,8 @@ abstract class BaseController extends Controller
 
     public function store(Request $request)
     {
-       
         $validated = $request->validate($this->repository->getModel()::rules());
         $this->repository->create($validated);
-        dd($validated); 
 
         return redirect()->route("{$this->routeName}.index")
             ->with('success', 'Data berhasil ditambahkan!');
@@ -41,7 +39,7 @@ abstract class BaseController extends Controller
 
     public function update(Request $request, $id)
     {
-        $validated = $request->validate($this->repository->model::rules($id));
+        $validated = $request->validate($this->repository->getModel()::rules($id));
         $this->repository->update($id, $validated);
 
         return redirect()->route("{$this->routeName}.index")

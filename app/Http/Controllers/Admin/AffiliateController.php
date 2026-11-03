@@ -10,10 +10,12 @@ use App\Models\Affiliate;
 
 class AffiliateController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $search = trim((string) $request->query('q'));
+        $status = $request->query('status');
+
         // Gunakan DB query langsung untuk kalkulasi statistik agar lebih cepat
-        // Menggunakan DB::table dan selectRaw untuk menggabungkan 3 query menjadi 1 query agar lebih cepat
         $stats = \Illuminate\Support\Facades\DB::table('affiliates')
             ->selectRaw('COUNT(*) as total_partners')
             ->selectRaw('SUM(balance) as total_commissions')
@@ -26,8 +28,20 @@ class AffiliateController extends Controller
 
         $totalClicks = \Illuminate\Support\Facades\DB::table('affiliate_clicks')->count();
 
-        // Gunakan paginate() alih-alih get() untuk mencegah load ribuan data ke RAM
-        $affiliates = Affiliate::withCount('clicks')->latest()->paginate(15);
+        $affiliates = Affiliate::withCount('clicks')
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($sub) use ($search) {
+                    $sub->where('name', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%")
+                        ->orWhere('affiliate_code', 'like', "%{$search}%");
+                });
+            })
+            ->when($status && in_array($status, ['pending', 'approved', 'rejected']), function ($query) use ($status) {
+                $query->where('status', $status);
+            })
+            ->latest('id')
+            ->paginate(15)
+            ->withQueryString();
 
         return view('admin.affiliates.index', compact('affiliates', 'totalPartners', 'totalClicks', 'totalPending', 'totalCommissions'));
     }

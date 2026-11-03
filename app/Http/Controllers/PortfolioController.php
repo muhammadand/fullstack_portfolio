@@ -21,13 +21,19 @@ class PortfolioController extends Controller
     }
     public function index(Request $request)
     {
-        $search = trim((string) $request->query('search'));
+        $search = trim((string) ($request->query('q') ?? $request->query('search')));
 
-        $portfolios = Portfolio::select(['id', 'category_id', 'title', 'client_name', 'thumbnail_image', 'is_active', 'is_featured', 'display_order'])
+        $portfolios = Portfolio::select(['id', 'category_id', 'slug', 'title', 'client_name', 'thumbnail_image', 'is_active', 'is_featured', 'display_order'])
             ->with('category:id,name')
             ->when($request->filled('category_id'), fn ($q) => $q->where('category_id', $request->category_id))
             ->when($request->filled('is_active'), fn ($q) => $q->where('is_active', $request->boolean('is_active')))
-            ->when($search !== '', fn ($q) => $q->where('title', 'like', "%{$search}%"))
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('title', 'like', "%{$search}%")
+                        ->orWhere('client_name', 'like', "%{$search}%")
+                        ->orWhereHas('category', fn ($c) => $c->where('name', 'like', "%{$search}%"));
+                });
+            })
             ->orderBy('display_order')
             ->orderByDesc('id')
             ->paginate(10)

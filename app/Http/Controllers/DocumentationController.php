@@ -11,9 +11,17 @@ class DocumentationController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $documentation = Documentation::all();
+        $search = trim((string) $request->query('q'));
+
+        $documentation = Documentation::when($search !== '', function ($q) use ($search) {
+            $q->where('title', 'like', "%{$search}%");
+        })
+        ->latest('id')
+        ->paginate(15)
+        ->withQueryString();
+
         return view('documentation.index', compact('documentation'));
     }
 
@@ -30,26 +38,28 @@ class DocumentationController extends Controller
      */
     public function store(Request $request)
     {
-
         $request->validate([
-            'title' => 'required',
+            'title' => 'required|string|max:200',
             'images' => 'nullable|image|max:10048',
         ]);
 
         $title = $request->title;
-        $slug = Str::slug($request->title);
+        $slug = Str::slug($request->title) . '-' . uniqid();
+        $fileName = null;
+
         if ($request->hasFile('images')) {
             $file = $request->file('images');
-            $fileName = time() . '.' . $file->getClientOriginalExtension();
+            $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
             $file->move(public_path('images'), $fileName);
         }
+
         Documentation::create([
             'title' => $title,
             'images' => $fileName,
             'slug' => $slug,
         ]);
 
-        return redirect()->route('documentation.index')->with('success', 'Documentation created successfully');
+        return redirect()->route('documentation.index')->with('success', 'Dokumentasi berhasil ditambahkan');
     }
 
     /**
@@ -59,7 +69,7 @@ class DocumentationController extends Controller
     {
         $documentation = Documentation::where('slug', $slug)->first();
         if (!$documentation) {
-            return redirect()->route('documentation.index')->with('error', 'Documentation not found');
+            return redirect()->route('documentation.index')->with('error', 'Dokumentasi tidak ditemukan');
         }
         return view('documentation.show', compact('documentation'));
     }
@@ -71,7 +81,7 @@ class DocumentationController extends Controller
     {
         $documentation = Documentation::where('slug', $slug)->first();
         if (!$documentation) {
-            return redirect()->route('documentation.index')->with('error', 'Documentation not found');
+            return redirect()->route('documentation.index')->with('error', 'Dokumentasi tidak ditemukan');
         }
         return view('documentation.edit', compact('documentation'));
     }
@@ -83,18 +93,38 @@ class DocumentationController extends Controller
     {
         $documentation = Documentation::where('slug', $slug)->first();
         if (!$documentation) {
-            return redirect()->route('documentation.index')->with('error', 'Documentation not found');
+            return redirect()->route('documentation.index')->with('error', 'Dokumentasi tidak ditemukan');
         }
-        if ($request->hasFile('images')) {
-            $file = $request->file('images');
-            $fileName = time() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('images'), $fileName);
-        }
-        $documentation->update([
-            'title' => $request->title,
-            'images' => $fileName,
+
+        $request->validate([
+            'title' => 'required|string|max:200',
+            'images' => 'nullable|image|max:10048',
         ]);
-        return redirect()->route('documentation.index')->with('success', 'Documentation updated successfully');
+
+        $data = [
+            'title' => $request->title,
+        ];
+
+        if ($request->boolean('remove_images')) {
+            if ($documentation->images && file_exists(public_path('images/' . $documentation->images))) {
+                @unlink(public_path('images/' . $documentation->images));
+            }
+            $data['images'] = null;
+        } elseif ($request->hasFile('images')) {
+            $file = $request->file('images');
+            $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('images'), $fileName);
+
+            if ($documentation->images && file_exists(public_path('images/' . $documentation->images))) {
+                @unlink(public_path('images/' . $documentation->images));
+            }
+
+            $data['images'] = $fileName;
+        }
+
+        $documentation->update($data);
+
+        return redirect()->route('documentation.index')->with('success', 'Dokumentasi berhasil diperbarui');
     }
 
     /**
@@ -104,9 +134,15 @@ class DocumentationController extends Controller
     {
         $documentation = Documentation::where('slug', $slug)->first();
         if (!$documentation) {
-            return redirect()->route('documentation.index')->with('error', 'Documentation not found');
+            return redirect()->route('documentation.index')->with('error', 'Dokumentasi tidak ditemukan');
         }
+
+        // Hapus file fisik jika ada
+        if ($documentation->images && file_exists(public_path('images/' . $documentation->images))) {
+            @unlink(public_path('images/' . $documentation->images));
+        }
+
         $documentation->delete();
-        return redirect()->route('documentation.index')->with('success', 'Documentation deleted successfully');
+        return redirect()->route('documentation.index')->with('success', 'Dokumentasi berhasil dihapus');
     }
 }

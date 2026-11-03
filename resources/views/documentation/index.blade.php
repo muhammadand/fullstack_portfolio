@@ -1,91 +1,103 @@
 @extends('layouts.admin.app')
 
 @section('content')
-<div class="max-w-6xl mx-auto px-4 py-8">
+<x-admin.page-header title="Daftar Dokumentasi" subtitle="Kelola foto dan dokumentasi kegiatan Sobat Scalify.">
+    <x-admin.button icon="fa-solid fa-plus" :href="route('documentation.create')">Tambah Foto</x-admin.button>
+</x-admin.page-header>
 
-    {{-- Header --}}
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-5 gap-4">
-        <div class="hidden sm:block">
-            <h2 class="text-2xl font-semibold text-slate-800">Documentation</h2>
-            <p class="text-slate-500 text-xs mt-1">Kelola foto dokumentasi Sobat Scalify</p>
+@if (session('success'))
+<x-admin.alert type="success">{{ session('success') }}</x-admin.alert>
+@endif
+
+@if (session('error'))
+<x-admin.alert type="error">{{ session('error') }}</x-admin.alert>
+@endif
+
+<x-admin.card :padding="false">
+    {{-- Toolbar pencarian --}}
+    <form method="GET" class="flex flex-col sm:flex-row gap-2 p-4 border-b border-slate-200">
+        <div class="relative flex-1 sm:max-w-sm">
+            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-sm text-slate-400"></i>
+            <x-admin.input name="q" :value="request('q')" placeholder="Cari judul dokumentasi..." class="pl-9" />
         </div>
-        <a href="{{ route('documentation.create') }}" class="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 text-blue-600 hover:text-blue-700 sm:bg-blue-900 sm:text-white sm:px-4 sm:py-1.5 sm:rounded-md sm:shadow-sm sm:hover:bg-blue-950 transition w-full sm:w-auto mt-2 sm:mt-0">
-            <i class="fa-solid fa-camera text-xl sm:text-sm"></i>
-            <span class="text-[11px] sm:text-sm font-medium">Tambah Foto</span>
-        </a>
-    </div>
-
-    {{-- Flash Messages --}}
-    @if(session('success'))
-    <div class="mb-4 flex items-center gap-3 px-4 py-3 rounded-lg border text-sm font-medium bg-green-50 border-green-200 text-green-700">
-        <i class="fa-solid fa-circle-check"></i> {{ session('success') }}
-    </div>
-    @endif
-    @if(session('error'))
-    <div class="mb-4 flex items-center gap-3 px-4 py-3 rounded-lg border text-sm font-medium bg-red-50 border-red-200 text-red-700">
-        <i class="fa-solid fa-circle-exclamation"></i> {{ session('error') }}
-    </div>
-    @endif
-
-    {{-- Empty State --}}
-    @if($documentation->isEmpty())
-    <div class="flex flex-col items-center justify-center py-12 rounded-lg text-center bg-white border border-slate-200 shadow-sm">
-        <div class="w-14 h-14 rounded-xl flex items-center justify-center mb-3 bg-blue-50 border border-blue-100">
-            <i class="fa-solid fa-camera text-blue-500 text-xl"></i>
-        </div>
-        <p class="text-slate-700 font-medium mb-1 text-sm">Belum ada dokumentasi</p>
-        <p class="text-slate-400 text-xs">Klik "Tambah Foto" untuk mulai mengunggah</p>
-    </div>
-
-    @else
-
-    {{-- Stats --}}
-    <div class="mb-4 flex items-center gap-2 text-[13px] text-slate-500 font-medium">
-        <i class="fa-solid fa-images"></i>
-        <span>{{ $documentation->count() }} foto tersimpan</span>
-    </div>
-
-    {{-- Photo Grid --}}
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-        @foreach($documentation as $doc)
-        <div class="group relative rounded-lg overflow-hidden cursor-pointer bg-white border border-slate-200 shadow-sm hover:shadow-md transition-shadow" style="aspect-ratio: 3/4;">
-
-            {{-- Foto --}}
-            @if($doc->images)
-            <img src="{{ asset('images/' . $doc->images) }}" alt="{{ $doc->title }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-            @else
-            <div class="w-full h-full flex items-center justify-center bg-slate-50">
-                <i class="fa-solid fa-image text-slate-300 text-3xl"></i>
-            </div>
+        <div class="flex gap-2">
+            <x-admin.button type="submit" variant="secondary">Cari</x-admin.button>
+            @if (request('q'))
+            <x-admin.button variant="secondary" icon="fa-solid fa-xmark" :href="route('documentation.index')">Reset</x-admin.button>
             @endif
-
-            {{-- Overlay Info --}}
-            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col justify-between p-3 bg-gradient-to-t from-slate-900/90 via-slate-900/40 to-transparent">
-
-                {{-- Action buttons (top) --}}
-                <div class="flex justify-end gap-1.5 translate-y-[-8px] group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300 delay-75">
-                    <a href="{{ route('documentation.edit', $doc->slug) }}" class="w-7 h-7 rounded-md flex items-center justify-center text-[10px] bg-yellow-50 text-yellow-600 border border-yellow-200 hover:bg-yellow-100 transition-all shadow-sm" title="Edit">
-                        <i class="fa-solid fa-pen"></i>
-                    </a>
-                    <form action="{{ route('documentation.destroy', $doc->slug) }}" method="POST" onsubmit="return confirm('Yakin hapus foto ini?')">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="w-7 h-7 rounded-md flex items-center justify-center text-[10px] bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 transition-all shadow-sm" title="Hapus">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
-                    </form>
-                </div>
-
-                {{-- Name (bottom) --}}
-                <div class="translate-y-2 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                    <p class="text-white font-medium text-[13px] leading-tight truncate drop-shadow-md">{{ $doc->title }}</p>
-                    <p class="text-slate-200 text-[10px] mt-0.5 drop-shadow-md">Sobat Scalify</p>
-                </div>
-            </div>
         </div>
-        @endforeach
+    </form>
+
+    <div class="overflow-x-auto">
+        <table class="min-w-full text-sm">
+            <thead class="bg-slate-50 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">
+                <tr>
+                    <th class="px-4 py-3 w-12">#</th>
+                    <th class="px-4 py-3 w-24">Foto</th>
+                    <th class="px-4 py-3">Judul & Slug</th>
+                    <th class="px-4 py-3">Diupload</th>
+                    <th class="px-4 py-3 text-right">Aksi</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 text-slate-600">
+                @forelse ($documentation as $item)
+                <tr class="hover:bg-slate-50/70 transition-colors">
+                    <td class="px-4 py-3 text-slate-400">{{ $documentation->firstItem() + $loop->index }}</td>
+                    <td class="px-4 py-3">
+                        @if ($item->images && file_exists(public_path('images/' . $item->images)))
+                        <a href="{{ asset('images/' . $item->images) }}" target="_blank" rel="noopener noreferrer" class="group relative block w-14 h-14 rounded-xl overflow-hidden border border-slate-200 bg-slate-100 shadow-xs hover:ring-2 hover:ring-blue-500 transition">
+                            <img src="{{ asset('images/' . $item->images) }}" alt="{{ $item->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200">
+                            <span class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                                <i class="fa-solid fa-arrow-up-right-from-square text-white text-xs"></i>
+                            </span>
+                        </a>
+                        @else
+                        <div class="w-14 h-14 rounded-xl border border-dashed border-slate-200 bg-slate-50 flex flex-col items-center justify-center text-slate-400">
+                            <i class="fa-regular fa-image text-sm"></i>
+                            <span class="text-[9px] mt-0.5">No img</span>
+                        </div>
+                        @endif
+                    </td>
+                    <td class="px-4 py-3 max-w-md">
+                        <span class="block font-medium text-slate-900 truncate" title="{{ $item->title }}">{{ $item->title }}</span>
+                        <span class="text-xs font-mono text-slate-400 block truncate" title="{{ $item->slug }}">{{ $item->slug }}</span>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap text-slate-500">
+                        {{ $item->created_at?->format('d M Y, H:i') ?? '-' }}
+                    </td>
+                    <td class="px-4 py-3">
+                        <div class="flex items-center justify-end gap-1.5">
+                            @if ($item->images && file_exists(public_path('images/' . $item->images)))
+                            <x-admin.button variant="secondary" size="sm" icon="fa-solid fa-eye" :href="asset('images/' . $item->images)" target="_blank" title="Lihat Foto Penuh" />
+                            @endif
+                            <x-admin.button variant="secondary" size="sm" icon="fa-solid fa-pen" :href="route('documentation.edit', $item->slug)">Edit</x-admin.button>
+                            <form action="{{ route('documentation.destroy', $item->slug) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus foto dokumentasi ini?')">
+                                @csrf
+                                @method('DELETE')
+                                <x-admin.button type="submit" variant="danger" size="sm" icon="fa-solid fa-trash-can" title="Hapus" aria-label="Hapus" />
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="5" class="px-4 py-12 text-center">
+                        <div class="w-12 h-12 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-3">
+                            <i class="fa-solid fa-camera text-xl"></i>
+                        </div>
+                        <p class="text-sm font-medium text-slate-700">{{ request('q') ? 'Tidak ada dokumentasi yang cocok dengan pencarian.' : 'Belum ada foto dokumentasi.' }}</p>
+                        <p class="text-xs text-slate-400 mt-1">{{ request('q') ? 'Coba kata kunci lain atau reset filter.' : 'Mulai tambahkan dokumentasi kegiatan untuk ditampilkan.' }}</p>
+                    </td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+
+    @if ($documentation->hasPages())
+    <div class="px-4 py-3 border-t border-slate-200">
+        {{ $documentation->links('pagination::tailwind') }}
     </div>
     @endif
-
-</div>
+</x-admin.card>
 @endsection

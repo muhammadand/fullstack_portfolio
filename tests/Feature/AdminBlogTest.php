@@ -21,7 +21,12 @@ class AdminBlogTest extends TestCase
     {
         parent::setUp();
 
-        $this->admin = User::first() ?? User::factory()->create();
+        $this->admin = User::first() ?? User::create([
+            'name' => 'Admin Blog Test',
+            'email' => 'admin_blog_' . uniqid() . '@example.com',
+            'password' => bcrypt('password'),
+            'role' => 'admin',
+        ]);
         $this->category = BlogCategory::create([
             'name' => 'Kategori Test ' . uniqid(),
             'slug' => 'kategori-test-' . uniqid(),

@@ -83,16 +83,19 @@
                         <x-admin.label for="challengeInput">Tantangan</x-admin.label>
                         <x-admin.textarea name="challenge" id="challengeInput" rows="3"
                             placeholder="Masalah atau tantangan yang dihadapi">{{ old('challenge', $item?->challenge) }}</x-admin.textarea>
+                        <x-admin.hint for="challenge" />
                     </div>
                     <div>
                         <x-admin.label for="solutionInput">Solusi</x-admin.label>
                         <x-admin.textarea name="solution" id="solutionInput" rows="3"
                             placeholder="Bagaimana masalah diselesaikan">{{ old('solution', $item?->solution) }}</x-admin.textarea>
+                        <x-admin.hint for="solution" />
                     </div>
                     <div>
                         <x-admin.label for="resultInput">Hasil</x-admin.label>
                         <x-admin.textarea name="result" id="resultInput" rows="3"
                             placeholder="Hasil yang dicapai dari proyek ini">{{ old('result', $item?->result) }}</x-admin.textarea>
+                        <x-admin.hint for="result" />
                     </div>
                 </div>
             </x-admin.card>
@@ -113,11 +116,23 @@
                     <x-admin.button type="submit" class="w-full" icon="fa-solid fa-floppy-disk">
                         {{ $isEdit ? 'Simpan Perubahan' : 'Simpan Portfolio' }}
                     </x-admin.button>
-                    <x-admin.button variant="secondary" class="w-full" :href="route('portfolio.index')">Batal</x-admin.button>
+                    <x-admin.button variant="secondary" class="w-full" :href="route('portfolio.index')">
+                        Batal
+                    </x-admin.button>
                 </div>
+
+                @if ($isEdit)
+                <dl class="mt-5 pt-5 border-t border-slate-200 space-y-1.5 text-xs">
+                    <div class="flex justify-between gap-3"><dt class="text-slate-500">Dibuat</dt><dd class="text-slate-700">{{ $item->created_at?->format('d M Y, H:i') }}</dd></div>
+                    <div class="flex justify-between gap-3"><dt class="text-slate-500">Diperbarui</dt><dd class="text-slate-700">{{ $item->updated_at?->format('d M Y, H:i') }}</dd></div>
+                    @if ($item->slug)
+                    <div class="flex justify-between gap-3"><dt class="text-slate-500">Slug</dt><dd class="text-slate-700 truncate" title="{{ $item->slug }}">{{ $item->slug }}</dd></div>
+                    @endif
+                </dl>
+                @endif
             </x-admin.card>
 
-            <x-admin.card title="Detail Proyek" icon="fa-solid fa-circle-info">
+            <x-admin.card title="Detail Proyek" icon="fa-solid fa-folder-tree">
                 <div class="space-y-4">
                     <div>
                         <x-admin.label for="categoryInput" required>Kategori</x-admin.label>
