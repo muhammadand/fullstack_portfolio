@@ -114,14 +114,22 @@ class TransactionDetail extends Component
             case 'ppob':
             default:
                 $record = WalletMutation::select([
-                    'id', 'mutation_no', 'type', 'amount', 'balance_before', 'balance_after', 'category', 'description', 'created_at'
+                    'id',
+                    'mutation_no',
+                    'type',
+                    'amount',
+                    'balance_before',
+                    'balance_after',
+                    'category',
+                    'description',
+                    'created_at'
                 ])
-                ->where('affiliate_id', $affiliate->id)
-                ->where(function ($q) {
-                    $q->where('id', $this->trxId)
-                      ->orWhere('mutation_no', $this->trxId);
-                })
-                ->firstOrFail();
+                    ->where('affiliate_id', $affiliate->id)
+                    ->where(function ($q) {
+                        $q->where('id', $this->trxId)
+                            ->orWhere('mutation_no', $this->trxId);
+                    })
+                    ->firstOrFail();
 
                 $isCredit = ($record->type === 'CREDIT');
                 $amount = (float) $record->amount;
@@ -139,8 +147,8 @@ class TransactionDetail extends Component
                     'title' => $record->description ?: ($isCredit ? 'Top Up Saldo Wallet' : 'Transaksi Produk Digital'),
                     'date' => $record->created_at ? $record->created_at->format('d M Y, H:i') . ' WIB' : '-',
                     'ref_no' => $record->mutation_no,
-                    'category' => $record->category ?: ($isCredit ? 'Top Up Saldo' : 'Transaksi PPOB'),
-                    'method' => $isCredit ? 'QRIS Nasional / Scalify Pay' : 'Saldo Wallet Scalify',
+                    'category' => $record->category ?: ($isCredit ? 'Top Up Saldo' : 'Transaksi Produk Digital'),
+                    'method' => $isCredit ? 'QRIS' : 'Saldo Wallet Scalify',
                     'balance_after' => $balanceAfter !== null ? 'Rp ' . number_format($balanceAfter, 0, ',', '.') : null,
                     'notes' => $record->description ?: ($isCredit ? 'Top up saldo wallet berhasil diproses.' : 'Pembayaran produk digital via wallet.'),
                     'proof_url' => null,
@@ -154,4 +162,3 @@ class TransactionDetail extends Component
         return view('livewire.affiliate.transaction-detail');
     }
 }
-

@@ -21,191 +21,191 @@
     </header>
 
     @if(!$trx)
-        <div class="p-8 text-center text-slate-400 text-xs flex flex-col items-center glass-panel rounded-3xl my-auto">
-            <div class="w-14 h-14 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-center text-2xl mb-3 text-slate-500">
-                <i class="fa-solid fa-triangle-exclamation text-amber-400"></i>
-            </div>
-            <h4 class="text-xs font-bold text-slate-200 mb-1">Data Transaksi Tidak Ditemukan</h4>
-            <p class="text-[11px] text-slate-500 max-w-[240px] mb-4">Transaksi tidak tersedia atau Anda tidak memiliki akses ke data ini.</p>
-            <a href="{{ route('affiliate.history') }}" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white font-bold text-xs rounded-xl transition-all">
-                Kembali ke Riwayat
-            </a>
+    <div class="p-8 text-center text-slate-400 text-xs flex flex-col items-center glass-panel rounded-3xl my-auto">
+        <div class="w-14 h-14 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-center text-2xl mb-3 text-slate-500">
+            <i class="fa-solid fa-triangle-exclamation text-amber-400"></i>
         </div>
+        <h4 class="text-xs font-bold text-slate-200 mb-1">Data Transaksi Tidak Ditemukan</h4>
+        <p class="text-[11px] text-slate-500 max-w-[240px] mb-4">Transaksi tidak tersedia atau Anda tidak memiliki akses ke data ini.</p>
+        <a href="{{ route('affiliate.history') }}" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white font-bold text-xs rounded-xl transition-all">
+            Kembali ke Riwayat
+        </a>
+    </div>
     @else
 
-        <!-- THE DANA-STYLE DIGITAL RECEIPT CARD -->
-        <div id="receiptCardToCapture" class="relative bg-gradient-to-b from-slate-900/95 via-[#0E172A] to-slate-900/95 border border-white/10 rounded-3xl p-5 shadow-2xl overflow-hidden text-center mb-5">
-            
-            <!-- Ambient Glow behind Amount -->
-            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-56 h-24 {{ $trx['type'] === 'CREDIT' ? 'bg-emerald-500/20' : 'bg-rose-500/15' }} rounded-full blur-2xl pointer-events-none"></div>
+    <!-- THE DANA-STYLE DIGITAL RECEIPT CARD -->
+    <div id="receiptCardToCapture" class="relative bg-gradient-to-b from-slate-900/95 via-[#0E172A] to-slate-900/95 border border-white/10 rounded-3xl p-5 shadow-2xl overflow-hidden text-center mb-5">
 
-            <!-- Brand Header Inside Receipt -->
-            <div class="flex items-center justify-between pb-3.5 border-b border-white/10 relative z-10 text-[10px]">
-                <div class="flex items-center gap-2 font-black tracking-wider text-white">
-                    <div class="w-6 h-6 rounded-lg bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-slate-950 font-black text-xs shadow-md shadow-emerald-500/30">
-                        <i class="fa-solid fa-bolt"></i>
-                    </div>
-                    <span class="text-xs tracking-wide">SCALIFY PAY</span>
+        <!-- Ambient Glow behind Amount -->
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-56 h-24 {{ $trx['type'] === 'CREDIT' ? 'bg-emerald-500/20' : 'bg-rose-500/15' }} rounded-full blur-2xl pointer-events-none"></div>
+
+        <!-- Brand Header Inside Receipt -->
+        <div class="flex items-center justify-between pb-3.5 border-b border-white/10 relative z-10 text-[10px]">
+            <div class="flex items-center gap-2 font-black tracking-wider text-white">
+                <div class="w-6 h-6 rounded-lg bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-slate-950 font-black text-xs shadow-md shadow-emerald-500/30">
+                    <i class="fa-solid fa-bolt"></i>
                 </div>
-                <span class="text-[9px] font-mono font-bold text-slate-300 bg-white/10 px-2.5 py-0.5 rounded-full border border-white/10 flex items-center gap-1">
-                    <i class="fa-solid fa-shield-halved text-emerald-400 text-[9px]"></i> BUKTI RESMI
+                <span class="text-xs tracking-wide">SCALIFY PAY</span>
+            </div>
+            <span class="text-[9px] font-mono font-bold text-slate-300 bg-white/10 px-2.5 py-0.5 rounded-full border border-white/10 flex items-center gap-1">
+                <i class="fa-solid fa-shield-halved text-emerald-400 text-[9px]"></i> BUKTI RESMI
+            </span>
+        </div>
+
+        <!-- Status Badge Pill -->
+        <div class="mt-4 mb-2 flex justify-center relative z-10">
+            @if($trx['status_color'] === 'emerald')
+            <div class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-bold">
+                <i class="fa-solid {{ $trx['status_icon'] }} text-xs"></i>
+                <span>{{ $trx['status'] }}</span>
+            </div>
+            @elseif($trx['status_color'] === 'amber')
+            <div class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-bold">
+                <i class="fa-solid {{ $trx['status_icon'] }} text-xs"></i>
+                <span>{{ $trx['status'] }}</span>
+            </div>
+            @else
+            <div class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs font-bold">
+                <i class="fa-solid {{ $trx['status_icon'] }} text-xs"></i>
+                <span>{{ $trx['status'] }}</span>
+            </div>
+            @endif
+        </div>
+
+        <!-- Hero Amount -->
+        <div class="my-3 relative z-10">
+            <div class="text-3xl sm:text-4xl font-black tracking-tight {{ $trx['type'] === 'CREDIT' ? 'text-emerald-400' : 'text-rose-400' }}">
+                {{ $trx['type'] === 'CREDIT' ? '+' : '-' }}{{ $trx['amount_formatted'] }}
+            </div>
+            <h4 class="text-xs sm:text-sm font-bold text-slate-200 mt-1 max-w-[290px] mx-auto truncate" title="{{ $trx['title'] }}">
+                {{ $trx['title'] }}
+            </h4>
+            <p class="text-[10px] text-slate-400 mt-1 font-medium flex items-center justify-center gap-1">
+                <i class="fa-regular fa-clock text-[9px]"></i> {{ $trx['date'] }}
+            </p>
+        </div>
+
+        <!-- Ticket Serrated Cutout Divider (DANA Style) -->
+        <div class="relative my-4 border-b border-dashed border-white/15">
+            <div class="absolute -left-7 -top-2.5 w-5 h-5 bg-[#0B1120] rounded-full border-r border-white/15"></div>
+            <div class="absolute -right-7 -top-2.5 w-5 h-5 bg-[#0B1120] rounded-full border-l border-white/15"></div>
+        </div>
+
+        <!-- Detailed Breakdown Rows -->
+        <div class="space-y-3 text-left text-xs relative z-10">
+
+            <!-- ID Transaksi / Ref -->
+            <div class="flex items-center justify-between gap-2">
+                <span class="text-slate-400 text-[11px]">No. Referensi:</span>
+                <div class="flex items-center gap-1.5">
+                    <span class="font-mono font-bold text-white text-[11px] select-all bg-white/5 px-2 py-0.5 rounded border border-white/10">
+                        #{{ $trx['ref_no'] }}
+                    </span>
+                    <button type="button" onclick="copyText('{{ $trx['ref_no'] }}', 'No. Referensi berhasil disalin!')" class="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-emerald-400 transition-colors" title="Salin ID">
+                        <i class="fa-regular fa-copy text-xs"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Kategori -->
+            <div class="flex items-center justify-between gap-2">
+                <span class="text-slate-400 text-[11px]">Kategori Transaksi:</span>
+                <span class="text-slate-200 font-semibold text-[11px] text-right truncate">
+                    {{ $trx['category'] }}
                 </span>
             </div>
 
-            <!-- Status Badge Pill -->
-            <div class="mt-4 mb-2 flex justify-center relative z-10">
-                @if($trx['status_color'] === 'emerald')
-                    <div class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-bold">
-                        <i class="fa-solid {{ $trx['status_icon'] }} text-xs"></i>
-                        <span>{{ $trx['status'] }}</span>
-                    </div>
-                @elseif($trx['status_color'] === 'amber')
-                    <div class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-bold">
-                        <i class="fa-solid {{ $trx['status_icon'] }} text-xs"></i>
-                        <span>{{ $trx['status'] }}</span>
-                    </div>
-                @else
-                    <div class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs font-bold">
-                        <i class="fa-solid {{ $trx['status_icon'] }} text-xs"></i>
-                        <span>{{ $trx['status'] }}</span>
-                    </div>
-                @endif
+            <!-- Metode Pembayaran -->
+            <div class="flex items-center justify-between gap-2">
+                <span class="text-slate-400 text-[11px]">Metode / Sumber Dana:</span>
+                <span class="text-slate-200 font-semibold text-[11px] text-right truncate">
+                    {{ $trx['method'] }}
+                </span>
             </div>
 
-            <!-- Hero Amount -->
-            <div class="my-3 relative z-10">
-                <div class="text-3xl sm:text-4xl font-black tracking-tight {{ $trx['type'] === 'CREDIT' ? 'text-emerald-400' : 'text-rose-400' }}">
-                    {{ $trx['type'] === 'CREDIT' ? '+' : '-' }}{{ $trx['amount_formatted'] }}
-                </div>
-                <h4 class="text-xs sm:text-sm font-bold text-slate-200 mt-1 max-w-[290px] mx-auto truncate" title="{{ $trx['title'] }}">
-                    {{ $trx['title'] }}
-                </h4>
-                <p class="text-[10px] text-slate-400 mt-1 font-medium flex items-center justify-center gap-1">
-                    <i class="fa-regular fa-clock text-[9px]"></i> {{ $trx['date'] }}
+            <!-- Nominal Transaksi -->
+            <div class="flex items-center justify-between gap-2 pt-1 border-t border-white/5">
+                <span class="text-slate-400 text-[11px]">Nominal Pokok:</span>
+                <span class="text-white font-bold text-[11px] text-right">
+                    {{ $trx['amount_formatted'] }}
+                </span>
+            </div>
+
+            <!-- Total -->
+            <div class="flex items-center justify-between gap-2">
+                <span class="text-slate-300 font-bold text-xs">Total Pembayaran:</span>
+                <span class="text-emerald-400 font-extrabold text-sm text-right">
+                    {{ $trx['total_formatted'] }}
+                </span>
+            </div>
+
+            <!-- Sisa Saldo (Jika ada) -->
+            @if($trx['balance_after'])
+            <div class="flex items-center justify-between gap-2 pt-1 border-t border-white/5">
+                <span class="text-slate-400 text-[11px]">Sisa Saldo Setelahnya:</span>
+                <span class="text-slate-200 font-semibold text-[11px] text-right">
+                    {{ $trx['balance_after'] }}
+                </span>
+            </div>
+            @endif
+
+            <!-- Bukti Transfer Bank (Khusus Penarikan jika ada) -->
+            @if($trx['proof_url'])
+            <div class="flex items-center justify-between gap-2 pt-1 border-t border-white/5">
+                <span class="text-slate-400 text-[11px]">Bukti Transfer Bank:</span>
+                <a href="{{ $trx['proof_url'] }}" target="_blank" class="text-blue-400 hover:text-blue-300 font-semibold text-[11px] flex items-center gap-1">
+                    <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i> Lihat Bukti Transfer
+                </a>
+            </div>
+            @endif
+
+            <!-- Catatan / Deskripsi -->
+            @if($trx['notes'])
+            <div class="pt-2 border-t border-white/5">
+                <span class="text-slate-400 text-[10px] block mb-1 font-medium">Keterangan:</span>
+                <p class="text-[11px] text-slate-300 italic bg-white/[0.04] p-2.5 rounded-xl border border-white/5 leading-relaxed">
+                    {{ $trx['notes'] }}
                 </p>
             </div>
-
-            <!-- Ticket Serrated Cutout Divider (DANA Style) -->
-            <div class="relative my-4 border-b border-dashed border-white/15">
-                <div class="absolute -left-7 -top-2.5 w-5 h-5 bg-[#0B1120] rounded-full border-r border-white/15"></div>
-                <div class="absolute -right-7 -top-2.5 w-5 h-5 bg-[#0B1120] rounded-full border-l border-white/15"></div>
-            </div>
-
-            <!-- Detailed Breakdown Rows -->
-            <div class="space-y-3 text-left text-xs relative z-10">
-                
-                <!-- ID Transaksi / Ref -->
-                <div class="flex items-center justify-between gap-2">
-                    <span class="text-slate-400 text-[11px]">No. Referensi:</span>
-                    <div class="flex items-center gap-1.5">
-                        <span class="font-mono font-bold text-white text-[11px] select-all bg-white/5 px-2 py-0.5 rounded border border-white/10">
-                            #{{ $trx['ref_no'] }}
-                        </span>
-                        <button type="button" onclick="copyText('{{ $trx['ref_no'] }}', 'No. Referensi berhasil disalin!')" class="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-emerald-400 transition-colors" title="Salin ID">
-                            <i class="fa-regular fa-copy text-xs"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Kategori -->
-                <div class="flex items-center justify-between gap-2">
-                    <span class="text-slate-400 text-[11px]">Kategori Transaksi:</span>
-                    <span class="text-slate-200 font-semibold text-[11px] text-right truncate">
-                        {{ $trx['category'] }}
-                    </span>
-                </div>
-
-                <!-- Metode Pembayaran -->
-                <div class="flex items-center justify-between gap-2">
-                    <span class="text-slate-400 text-[11px]">Metode / Sumber Dana:</span>
-                    <span class="text-slate-200 font-semibold text-[11px] text-right truncate">
-                        {{ $trx['method'] }}
-                    </span>
-                </div>
-
-                <!-- Nominal Transaksi -->
-                <div class="flex items-center justify-between gap-2 pt-1 border-t border-white/5">
-                    <span class="text-slate-400 text-[11px]">Nominal Pokok:</span>
-                    <span class="text-white font-bold text-[11px] text-right">
-                        {{ $trx['amount_formatted'] }}
-                    </span>
-                </div>
-
-                <!-- Total -->
-                <div class="flex items-center justify-between gap-2">
-                    <span class="text-slate-300 font-bold text-xs">Total Pembayaran:</span>
-                    <span class="text-emerald-400 font-extrabold text-sm text-right">
-                        {{ $trx['total_formatted'] }}
-                    </span>
-                </div>
-
-                <!-- Sisa Saldo (Jika ada) -->
-                @if($trx['balance_after'])
-                <div class="flex items-center justify-between gap-2 pt-1 border-t border-white/5">
-                    <span class="text-slate-400 text-[11px]">Sisa Saldo Setelahnya:</span>
-                    <span class="text-slate-200 font-semibold text-[11px] text-right">
-                        {{ $trx['balance_after'] }}
-                    </span>
-                </div>
-                @endif
-
-                <!-- Bukti Transfer Bank (Khusus Penarikan jika ada) -->
-                @if($trx['proof_url'])
-                <div class="flex items-center justify-between gap-2 pt-1 border-t border-white/5">
-                    <span class="text-slate-400 text-[11px]">Bukti Transfer Bank:</span>
-                    <a href="{{ $trx['proof_url'] }}" target="_blank" class="text-blue-400 hover:text-blue-300 font-semibold text-[11px] flex items-center gap-1">
-                        <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i> Lihat Bukti Transfer
-                    </a>
-                </div>
-                @endif
-
-                <!-- Catatan / Deskripsi -->
-                @if($trx['notes'])
-                <div class="pt-2 border-t border-white/5">
-                    <span class="text-slate-400 text-[10px] block mb-1 font-medium">Keterangan:</span>
-                    <p class="text-[11px] text-slate-300 italic bg-white/[0.04] p-2.5 rounded-xl border border-white/5 leading-relaxed">
-                        {{ $trx['notes'] }}
-                    </p>
-                </div>
-                @endif
-
-            </div>
-
-            <!-- Footer Watermark Security -->
-            <div class="mt-5 pt-3 border-t border-white/5 flex items-center justify-center gap-1.5 text-[9px] text-slate-400 font-medium">
-                <i class="fa-solid fa-shield-halved text-emerald-400 text-[10px]"></i>
-                <span>Bukti Transaksi Resmi • Dilindungi Enkripsi Scalify Partner</span>
-            </div>
+            @endif
 
         </div>
 
-        <!-- ACTION BUTTONS: Bagikan, Salin, Unduh -->
-        <div class="space-y-2.5">
-            <!-- 1. Tombol Utama: Bagikan Struk (Android & iOS Native Web Share) -->
-            <button type="button" onclick="shareReceipt()" class="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white font-bold text-xs shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-2 transition-all active:scale-[0.98] cursor-pointer">
-                <i class="fa-solid fa-share-nodes text-xs"></i>
-                <span>Bagikan Bukti Transaksi</span>
+        <!-- Footer Watermark Security -->
+        <div class="mt-5 pt-3 border-t border-white/5 flex items-center justify-center gap-1.5 text-[9px] text-slate-400 font-medium">
+            <i class="fa-solid fa-shield-halved text-emerald-400 text-[10px]"></i>
+            <span>Bukti Transaksi Resmi • Dilindungi Enkripsi Scalify Partner</span>
+        </div>
+
+    </div>
+
+    <!-- ACTION BUTTONS: Bagikan, Salin, Unduh -->
+    <div class="space-y-2.5">
+        <!-- 1. Tombol Utama: Bagikan Struk (Android & iOS Native Web Share) -->
+        <button type="button" onclick="shareReceipt()" class="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white font-bold text-xs shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-2 transition-all active:scale-[0.98] cursor-pointer">
+            <i class="fa-solid fa-share-nodes text-xs"></i>
+            <span>Bagikan Bukti Transaksi</span>
+        </button>
+
+        <!-- 2. Tombol Sekunder: Salin Teks Struk & Simpan Gambar PNG -->
+        <div class="grid grid-cols-2 gap-2">
+            <button type="button" onclick="copyReceiptAsText()" class="py-2.5 px-3 rounded-xl glass-panel hover:bg-white/10 text-slate-200 hover:text-white font-semibold text-[11px] flex items-center justify-center gap-1.5 transition-colors border border-white/10 active:scale-95 cursor-pointer">
+                <i class="fa-solid fa-copy text-xs text-blue-400"></i>
+                <span>Salin Teks Struk</span>
             </button>
 
-            <!-- 2. Tombol Sekunder: Salin Teks Struk & Simpan Gambar PNG -->
-            <div class="grid grid-cols-2 gap-2">
-                <button type="button" onclick="copyReceiptAsText()" class="py-2.5 px-3 rounded-xl glass-panel hover:bg-white/10 text-slate-200 hover:text-white font-semibold text-[11px] flex items-center justify-center gap-1.5 transition-colors border border-white/10 active:scale-95 cursor-pointer">
-                    <i class="fa-solid fa-copy text-xs text-blue-400"></i>
-                    <span>Salin Teks Struk</span>
-                </button>
-
-                <button type="button" onclick="downloadReceiptImage()" class="py-2.5 px-3 rounded-xl glass-panel hover:bg-white/10 text-slate-200 hover:text-white font-semibold text-[11px] flex items-center justify-center gap-1.5 transition-colors border border-white/10 active:scale-95 cursor-pointer">
-                    <i class="fa-solid fa-download text-xs text-emerald-400"></i>
-                    <span>Simpan Gambar</span>
-                </button>
-            </div>
-
-            <!-- 3. Kembali ke Riwayat -->
-            <a href="{{ route('affiliate.history') }}" class="w-full py-2.5 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/5 text-slate-400 hover:text-slate-200 text-center font-bold text-xs flex items-center justify-center gap-1.5 transition-all active:scale-95">
-                <i class="fa-solid fa-clock-rotate-left text-[11px]"></i>
-                <span>Kembali ke Riwayat Transaksi</span>
-            </a>
+            <button type="button" onclick="downloadReceiptImage()" class="py-2.5 px-3 rounded-xl glass-panel hover:bg-white/10 text-slate-200 hover:text-white font-semibold text-[11px] flex items-center justify-center gap-1.5 transition-colors border border-white/10 active:scale-95 cursor-pointer">
+                <i class="fa-solid fa-download text-xs text-emerald-400"></i>
+                <span>Simpan Gambar</span>
+            </button>
         </div>
+
+        <!-- 3. Kembali ke Riwayat -->
+        <a href="{{ route('affiliate.history') }}" class="w-full py-2.5 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/5 text-slate-400 hover:text-slate-200 text-center font-bold text-xs flex items-center justify-center gap-1.5 transition-all active:scale-95">
+            <i class="fa-solid fa-clock-rotate-left text-[11px]"></i>
+            <span>Kembali ke Riwayat Transaksi</span>
+        </a>
+    </div>
 
     @endif
 
@@ -268,14 +268,16 @@ https://scalify.id
 
         async function shareReceipt() {
             const shareText = buildShareText();
-            const shareTitle = 'Bukti Transaksi Scalify Pay #{{ $trx['ref_no'] ?? '' }}';
+            const shareTitle = 'Bukti Transaksi Scalify Pay #{{ $trx['
+            ref_no '] ?? '
+            ' }}';
 
             if (navigator.share) {
                 try {
                     await navigator.share({
-                        title: shareTitle,
-                        text: shareText,
-                    });
+                        title: shareTitle
+                        , text: shareText
+                    , });
                     return;
                 } catch (err) {
                     if (err.name === 'AbortError') return;
@@ -311,7 +313,7 @@ https://scalify.id
             // 3. Header Scalify Pay
             ctx.fillStyle = '#10B981';
             ctx.font = 'bold 22px Inter, sans-serif';
-            ctx.fillText('⚡ SCALIFY PAY', 60, 80);
+            ctx.fillText('SCALIFY PAY', 60, 80);
 
             ctx.fillStyle = '#94A3B8';
             ctx.font = '14px Inter, sans-serif';
@@ -334,20 +336,29 @@ https://scalify.id
             ctx.fillStyle = '#34D399';
             ctx.font = 'bold 14px Inter, sans-serif';
             ctx.textAlign = 'center';
-            ctx.fillText('✔ {{ $trx['status'] }}', 320, 153);
+            ctx.fillText('✔ {{ $trx['
+                status '] }}', 320, 153);
 
             // 5. Hero Amount
-            ctx.fillStyle = '{{ $trx['type'] === 'CREDIT' ? '#34D399' : '#F87171' }}';
+            ctx.fillStyle = '{{ $trx['
+            type '] === '
+            CREDIT ' ? '
+            #34D399' : '# F87171 ' }}';
             ctx.font = '900 36px Inter, sans-serif';
-            ctx.fillText('{{ $trx['type'] === 'CREDIT' ? '+' : '-' }}{{ $trx['amount_formatted'] }}', 320, 215);
+            ctx.fillText('{{ $trx['
+                type '] === '
+                CREDIT ' ? ' + ' : ' - ' }}{{ $trx['
+                amount_formatted '] }}', 320, 215);
 
             ctx.fillStyle = '#E2E8F0';
             ctx.font = 'bold 16px Inter, sans-serif';
-            ctx.fillText('{{ addslashes($trx['title']) }}', 320, 245);
+            ctx.fillText('{{ addslashes($trx['
+                title ']) }}', 320, 245);
 
             ctx.fillStyle = '#94A3B8';
             ctx.font = '13px Inter, sans-serif';
-            ctx.fillText('{{ $trx['date'] }}', 320, 270);
+            ctx.fillText('{{ $trx['
+                date '] }}', 320, 270);
 
             // 6. Dashed line divider
             ctx.setLineDash([8, 6]);
@@ -374,13 +385,19 @@ https://scalify.id
                 y += 38;
             };
 
-            drawRow('No. Referensi:', '#{{ $trx['ref_no'] }}', true);
-            drawRow('Kategori:', '{{ addslashes($trx['category']) }}', false);
-            drawRow('Metode Pembayaran:', '{{ addslashes($trx['method']) }}', false);
-            drawRow('Nominal Transaksi:', '{{ $trx['amount_formatted'] }}', true);
-            drawRow('Total Pembayaran:', '{{ $trx['total_formatted'] }}', true, '#34D399');
+            drawRow('No. Referensi:', '#{{ $trx['
+                ref_no '] }}', true);
+            drawRow('Kategori:', '{{ addslashes($trx['
+                category ']) }}', false);
+            drawRow('Metode Pembayaran:', '{{ addslashes($trx['
+                method ']) }}', false);
+            drawRow('Nominal Transaksi:', '{{ $trx['
+                amount_formatted '] }}', true);
+            drawRow('Total Pembayaran:', '{{ $trx['
+                total_formatted '] }}', true, '#34D399');
             @if($trx['balance_after'])
-            drawRow('Sisa Saldo Setelahnya:', '{{ $trx['balance_after'] }}', false, '#E2E8F0');
+            drawRow('Sisa Saldo Setelahnya:', '{{ $trx['
+                balance_after '] }}', false, '#E2E8F0');
             @endif
 
             // 8. Footer Shield
@@ -391,7 +408,8 @@ https://scalify.id
 
             // Download trigger
             const link = document.createElement('a');
-            link.download = 'Struk-Transaksi-{{ $trx['ref_no'] }}.png';
+            link.download = 'Struk-Transaksi-{{ $trx['
+            ref_no '] }}.png';
             link.href = canvas.toDataURL('image/png');
             link.click();
 
@@ -412,6 +430,6 @@ https://scalify.id
             ctx.quadraticCurveTo(x, y, x + radius, y);
             ctx.closePath();
         }
+
     </script>
 </div>
-

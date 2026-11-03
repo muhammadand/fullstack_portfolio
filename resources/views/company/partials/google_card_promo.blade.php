@@ -350,7 +350,7 @@
                     </form>
                 </div>
 
-                {{-- STEP 2: TAMPILAN QRIS RESMI (SCALIFY PAY) & KONFIRMASI WA --}}
+                {{-- STEP 2: TAMPILAN QRIS RESMI (SCALIFY) & KONFIRMASI WA --}}
                 <div x-show="step === 'payment'" x-cloak class="text-left space-y-4">
 
                     {{-- Header Step 2 --}}
@@ -390,7 +390,7 @@
                                     Quick Response Code<br>Indonesian Standard
                                 </span>
                             </div>
-                            <span class="text-[9px] font-bold text-red-600 bg-red-50 border border-red-200 px-2 py-0.5 rounded">GPN &bull; SCALIFY PAY</span>
+                            <span class="text-[9px] font-bold text-red-600 bg-red-50 border border-red-200 px-2 py-0.5 rounded">GPN &bull; SCALIFY</span>
                         </div>
 
                         {{-- Total Nominal Highlight --}}
