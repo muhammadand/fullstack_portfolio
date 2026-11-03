@@ -24,10 +24,8 @@ $wallet = $affiliate->getOrCreateWallet();
         </button>
     </div>
 
-    <!-- Dual Balance Grid -->
     <div class="grid grid-cols-2 gap-3 relative z-10">
 
-        <!-- 1. Pocket Kiri: Saldo Komisi -->
         <div class="flex flex-col justify-between pr-2 border-r border-white/10">
             <div>
                 <p class="text-[11px] text-blue-200/70 font-semibold flex items-center gap-1.5 mb-0.5">
@@ -58,8 +56,6 @@ $wallet = $affiliate->getOrCreateWallet();
                     </button>
             </div>
         </div>
-
-        <!-- 2. Pocket Kanan: Saldo Wallet PPOB -->
         <div class="flex flex-col justify-between pl-1">
             <div>
                 <div class="flex items-center justify-between mb-0.5">
@@ -75,8 +71,6 @@ $wallet = $affiliate->getOrCreateWallet();
                     <span class="text-xs text-emerald-400/90 font-bold mr-0.5">Rp</span>{{ number_format($wallet->balance, 0, ',', '.') }}
                 </div>
             </div>
-
-            <!-- Action Buttons Wallet -->
             <div class="grid grid-cols-2 gap-1.5 mt-2">
                 <button type="button" onclick="openWalletDepositModal()" class="py-2 px-1.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white text-[10px] font-bold rounded-xl shadow-md shadow-emerald-500/25 transition-all flex items-center justify-center gap-1 text-center active:scale-95">
                     <i class="fa-solid fa-circle-plus text-xs"></i>
