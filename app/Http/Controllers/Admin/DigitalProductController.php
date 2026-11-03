@@ -14,8 +14,9 @@ class DigitalProductController extends Controller
     {
         $query = DigitalProduct::query();
 
-        if ($request->filled('search')) {
-            $search = $request->search;
+        $search = trim((string) ($request->query('q') ?? $request->query('search') ?? ''));
+
+        if ($search !== '') {
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
                     ->orWhere('category', 'like', "%{$search}%")
@@ -101,7 +102,12 @@ class DigitalProductController extends Controller
         $validated['is_active'] = $request->has('is_active');
         $validated['display_order'] = $request->input('display_order', 0);
 
-        if ($request->hasFile('thumbnail')) {
+        if ($request->boolean('remove_thumbnail')) {
+            if ($digitalProduct->thumbnail && Storage::disk('public')->exists($digitalProduct->thumbnail)) {
+                Storage::disk('public')->delete($digitalProduct->thumbnail);
+            }
+            $validated['thumbnail'] = null;
+        } elseif ($request->hasFile('thumbnail')) {
             if ($digitalProduct->thumbnail && Storage::disk('public')->exists($digitalProduct->thumbnail)) {
                 Storage::disk('public')->delete($digitalProduct->thumbnail);
             }
