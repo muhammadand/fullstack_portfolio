@@ -51,14 +51,14 @@ $menus = [
 'icon' => 'fa-solid fa-money-bill-transfer',
 ],
 [
+'label' => 'Digiflazz',
+'icon' => 'fa-solid fa-bolt',
+'submenu' => [
+[
 'label' => 'Produk Digital',
 'route' => 'admin.digital_products.index',
 'icon' => 'fa-solid fa-cubes-stacked',
 ],
-[
-'label' => 'PPOB Digiflazz',
-'icon' => 'fa-solid fa-bolt',
-'submenu' => [
 [
 'label' => 'Cek Saldo & Akun',
 'route' => 'admin.ppob.index',
@@ -173,9 +173,9 @@ $activeRoute = \Illuminate\Support\Facades\Route::currentRouteName();
                 <button @click="open = !open" class="w-full flex flex-col lg:flex-row items-center lg:justify-between justify-center gap-1.5 lg:gap-3 p-3 lg:px-3 lg:py-2.5 rounded-xl transition-all duration-200 group relative {{ $isSubActive ? 'bg-white/5' : '' }}" style="border: 1px solid transparent;">
                     <div class="flex flex-col lg:flex-row items-center gap-1.5 lg:gap-3">
                         @if(isset($menu['logo']))
-                            <img src="{{ asset($menu['logo']) }}" alt="{{ $menu['label'] }}" class="w-5 h-5 rounded-md object-cover border border-white/20 shrink-0">
+                        <img src="{{ asset($menu['logo']) }}" alt="{{ $menu['label'] }}" class="w-5 h-5 rounded-md object-cover border border-white/20 shrink-0">
                         @else
-                            <i class="{{ $menu['icon'] ?? '' }} text-lg lg:text-sm w-4 text-center transition-colors duration-200 {{ $isSubActive ? 'text-blue-400' : 'text-white/40 group-hover:text-white/70' }}"></i>
+                        <i class="{{ $menu['icon'] ?? '' }} text-lg lg:text-sm w-4 text-center transition-colors duration-200 {{ $isSubActive ? 'text-blue-400' : 'text-white/40 group-hover:text-white/70' }}"></i>
                         @endif
                         <span class="text-[10px] lg:text-sm font-medium transition-colors duration-200 text-center lg:text-left leading-tight {{ $isSubActive ? 'text-white' : 'text-white/55 group-hover:text-white/90' }} flex items-center justify-center lg:justify-start">
                             {{ $menu['label'] }}

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\DigitalProduct;
 use App\Models\DigitalProductBrand;
+use App\Models\DigitalProductCategory;
 use App\Models\DigitalProductCostHistory;
 use App\Models\DigitalProductSyncLog;
 use Illuminate\Support\Facades\DB;
@@ -61,7 +62,8 @@ class DigitalProductSyncService
         $stats = ['total_received' => 0, 'total_new' => 0, 'total_updated' => 0, 'total_cost_changed' => 0, 'total_missing' => 0];
 
         $existing = DigitalProduct::where('provider', 'digiflazz')->get()->keyBy('sku_code');
-        $brands = DigitalProductBrand::all()->keyBy(fn ($b) => $b->category . '|' . $b->name);
+        $categories = DigitalProductCategory::all()->keyBy('name');
+        $brands = DigitalProductBrand::all()->keyBy(fn ($b) => $b->digital_product_category_id . '|' . $b->name);
         $seen = [];
 
         foreach ($items as $item) {
@@ -73,13 +75,13 @@ class DigitalProductSyncService
             $stats['total_received']++;
             $seen[$sku] = true;
 
-            $brand = $this->resolveBrand($brands, (string) ($item['category'] ?? 'Lainnya'), (string) ($item['brand'] ?? 'Lainnya'));
+            $category = $this->resolveCategory($categories, (string) ($item['category'] ?? 'Lainnya'));
+            $brand = $this->resolveBrand($brands, $category, (string) ($item['brand'] ?? 'Lainnya'));
             $cost = (float) ($item['price'] ?? 0);
 
             $supplier = [
                 'name' => (string) ($item['product_name'] ?? $sku),
                 'digital_product_brand_id' => $brand->id,
-                'category' => $brand->category,
                 'type' => $item['type'] ?? null,
                 'cost_price' => $cost,
                 'seller_name' => $item['seller_name'] ?? null,
@@ -138,15 +140,31 @@ class DigitalProductSyncService
         return $stats;
     }
 
-    protected function resolveBrand($brands, string $category, string $name): DigitalProductBrand
+    protected function resolveCategory($categories, string $name): DigitalProductCategory
     {
-        $key = $category . '|' . $name;
+        if (!$categories->has($name)) {
+            $base = Str::slug($name) ?: 'kategori';
+            $slug = $base;
+            $i = 1;
+            while (DigitalProductCategory::where('slug', $slug)->exists()) {
+                $slug = $base . '-' . $i++;
+            }
+
+            $categories->put($name, DigitalProductCategory::create(['name' => $name, 'slug' => $slug]));
+        }
+
+        return $categories->get($name);
+    }
+
+    protected function resolveBrand($brands, DigitalProductCategory $category, string $name): DigitalProductBrand
+    {
+        $key = $category->id . '|' . $name;
 
         if (!$brands->has($key)) {
             $brands->put($key, DigitalProductBrand::create([
-                'category' => $category,
+                'digital_product_category_id' => $category->id,
                 'name' => $name,
-                'slug' => $this->uniqueBrandSlug($category, $name),
+                'slug' => $this->uniqueBrandSlug($category->name, $name),
             ]));
         }
 

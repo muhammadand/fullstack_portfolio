@@ -167,10 +167,10 @@ Route::resource('admin/digital-products', App\Http\Controllers\Admin\DigitalProd
     'edit' => 'admin.digital_products.edit',
     'update' => 'admin.digital_products.update',
     'destroy' => 'admin.digital_products.destroy',
-]);
+])->middleware('auth');
 
-// Manajemen PPOB & Saldo Digiflazz
-Route::get('admin/ppob', [App\Http\Controllers\Admin\PpobAdminController::class, 'index'])->name('admin.ppob.index')->middleware('auth');
+// Cek Saldo Digiflazz
+Route::get('admin/cek-saldo', [App\Http\Controllers\Admin\PpobAdminController::class, 'index'])->name('admin.ppob.index')->middleware('auth');
 
 Route::resource('admin/client-proposals', App\Http\Controllers\Admin\ClientProposalController::class)->names([
     'index' => 'admin.client_proposals.index',
@@ -577,6 +577,11 @@ Route::get('/secret-deploy-trigger-12345', function () {
 
         \Illuminate\Support\Facades\Artisan::call('migrate', [
             '--path' => 'database/migrations/2026_11_03_110300_create_digital_product_prices_table.php',
+            '--force' => true
+        ]);
+
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_11_03_110400_create_digital_product_categories_table.php',
             '--force' => true
         ]);
 

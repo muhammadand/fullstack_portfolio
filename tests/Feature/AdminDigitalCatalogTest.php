@@ -76,6 +76,8 @@ class AdminDigitalCatalogTest extends TestCase
         $this->assertSame('10992.00', $product->cost_price);
         $this->assertSame('00:10:00', $product->end_cut_off);
         $this->assertSame('AXIS', $product->brand->name);
+        $this->assertSame('Pulsa', $product->brand->category->name);
+        $this->assertNull($product->category); // kategori ada di tabel kategori, bukan string di produk
         $this->assertSame('Reguler', $product->description);
     }
 
@@ -181,6 +183,23 @@ class AdminDigitalCatalogTest extends TestCase
             ->assertDontSee('Axis Aktif Filter');
     }
 
+    public function test_page_filters_by_category_id_and_narrows_brand_options(): void
+    {
+        $this->fakePriceList([
+            $this->item(['product_name' => 'Axis Pulsa Kat']),
+            $this->item(['buyer_sku_code' => 'zz-test-gm', 'category' => 'Games', 'brand' => 'FREE FIRE', 'product_name' => 'Free Fire Kat']),
+        ]);
+        app(DigitalProductSyncService::class)->sync();
+        $gamesId = \App\Models\DigitalProductCategory::where('name', 'Games')->value('id');
+
+        Livewire::actingAs($this->admin)->test(DigitalProductIndex::class)
+            ->set('search', 'Kat')
+            ->set('category', (string) $gamesId)
+            ->assertSee('Free Fire Kat')
+            ->assertDontSee('Axis Pulsa Kat')
+            ->assertSet('brand', '');
+    }
+
     public function test_lynk_tab_hides_digiflazz_products_and_vice_versa(): void
     {
         $this->fakePriceList([$this->item(['product_name' => 'Produk Khusus Digiflazz Hidden'])]);
@@ -233,5 +252,183 @@ class AdminDigitalCatalogTest extends TestCase
 
         $this->assertTrue($queries->isNotEmpty());
         $this->assertTrue($queries->every(fn ($q) => !str_contains($q, 'select * from `digital_products`') && !str_contains($q, '`raw_payload`')));
+    }
+
+    protected function syncedProduct(array $override = []): DigitalProduct
+    {
+        $this->fakePriceList([$this->item($override)]);
+        app(DigitalProductSyncService::class)->sync();
+
+        return DigitalProduct::where('sku_code', $override['buyer_sku_code'] ?? 'zz-test-ax10')->firstOrFail();
+    }
+
+    public function test_guest_is_redirected_to_login(): void
+    {
+        $this->get(route('admin.digital_products.index'))->assertRedirect(route('login'));
+    }
+
+    public function test_table_shows_row_number_column(): void
+    {
+        $this->syncedProduct();
+
+        Livewire::actingAs($this->admin)->test(DigitalProductIndex::class)
+            ->set('search', 'zz-test-ax10')
+            ->assertSeeHtmlInOrder(['>No<', '>1<']);
+    }
+
+    public function test_detail_modal_shows_product_prices_and_cost_history(): void
+    {
+        $product = $this->syncedProduct();
+        $this->fakePriceList([$this->item(['price' => 12000])]);
+        app(DigitalProductSyncService::class)->sync();
+
+        Livewire::actingAs($this->admin)->test(DigitalProductIndex::class)
+            ->call('openDetail', $product->id)
+            ->assertSet('detailId', $product->id)
+            ->assertSee('Informasi Produk')
+            ->assertSee('zz-test-ax10')
+            ->assertSee('Riwayat Perubahan Modal')
+            ->assertSee('Rp 12.000')
+            ->call('closeModal')
+            ->assertSet('detailId', null);
+    }
+
+    public function test_edit_saves_status_order_and_manual_price_override(): void
+    {
+        $product = $this->syncedProduct();
+        $retail = PriceLevel::where('code', 'retail')->firstOrFail();
+        $partner = PriceLevel::where('code', 'partner')->firstOrFail();
+
+        Livewire::actingAs($this->admin)->test(DigitalProductIndex::class)
+            ->call('openEdit', $product->id)
+            ->assertSet('editIsActive', false)
+            ->set('editIsActive', true)
+            ->set('editDisplayOrder', '5')
+            ->set("editPrices.{$retail->id}", '13000')
+            ->set("editPrices.{$partner->id}", '')
+            ->call('saveEdit')
+            ->assertHasNoErrors()
+            ->assertSet('editId', null)
+            ->assertSee('berhasil diperbarui');
+
+        $product->refresh()->load('priceOverrides');
+        $this->assertTrue($product->is_active);
+        $this->assertSame(5, $product->display_order);
+        $this->assertSame(13000.0, $product->priceFor($retail));
+        $this->assertSame(11211.84, $product->priceFor($partner)); // otomatis: 10992 + margin partner 2%
+    }
+
+    public function test_edit_rejects_price_below_cost_and_clears_override_when_blank(): void
+    {
+        $product = $this->syncedProduct();
+        $retail = PriceLevel::where('code', 'retail')->firstOrFail();
+
+        Livewire::actingAs($this->admin)->test(DigitalProductIndex::class)
+            ->call('openEdit', $product->id)
+            ->set("editPrices.{$retail->id}", '5000')
+            ->call('saveEdit')
+            ->assertHasErrors(["editPrices.{$retail->id}"]);
+
+        $this->assertSame(0, $product->priceOverrides()->count());
+
+        $product->priceOverrides()->create(['price_level_id' => $retail->id, 'selling_price' => 20000]);
+
+        Livewire::actingAs($this->admin)->test(DigitalProductIndex::class)
+            ->call('openEdit', $product->id)
+            ->assertSet("editPrices.{$retail->id}", '20000')
+            ->set("editPrices.{$retail->id}", '')
+            ->call('saveEdit')
+            ->assertHasNoErrors();
+
+        $this->assertSame(0, $product->priceOverrides()->count());
+    }
+
+    public function test_delete_removes_product_with_its_history_and_overrides(): void
+    {
+        $product = $this->syncedProduct();
+        $retail = PriceLevel::where('code', 'retail')->firstOrFail();
+        $product->priceOverrides()->create(['price_level_id' => $retail->id, 'selling_price' => 20000]);
+        DigitalProductCostHistory::create(['digital_product_id' => $product->id, 'old_cost' => 1, 'new_cost' => 2, 'changed_at' => now()]);
+
+        Livewire::actingAs($this->admin)->test(DigitalProductIndex::class)
+            ->call('deleteProduct', $product->id)
+            ->assertSee('dihapus');
+
+        $this->assertDatabaseMissing('digital_products', ['id' => $product->id]);
+        $this->assertDatabaseMissing('digital_product_prices', ['digital_product_id' => $product->id]);
+        $this->assertDatabaseMissing('digital_product_cost_histories', ['digital_product_id' => $product->id]);
+    }
+
+    public function test_cannot_delete_or_edit_lynk_product_via_catalog_actions(): void
+    {
+        $lynk = DigitalProduct::create(['name' => 'Lynk Safe', 'slug' => 'lynk-safe-' . uniqid(), 'lynk_slug' => 'ls1', 'price' => 1000, 'is_active' => true]);
+
+        $this->expectException(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
+        Livewire::actingAs($this->admin)->test(DigitalProductIndex::class)->call('deleteProduct', $lynk->id);
+    }
+
+    public function test_clear_all_wipes_catalog_and_logs_but_keeps_lynk_products(): void
+    {
+        $product = $this->syncedProduct();
+        DigitalProductCostHistory::create(['digital_product_id' => $product->id, 'old_cost' => 1, 'new_cost' => 2, 'changed_at' => now()]);
+        $lynk = DigitalProduct::create(['name' => 'Lynk Stay', 'slug' => 'lynk-stay-' . uniqid(), 'lynk_slug' => 'st1', 'price' => 1000, 'is_active' => true]);
+
+        $this->assertGreaterThan(0, \App\Models\DigitalProductSyncLog::count());
+
+        Livewire::actingAs($this->admin)->test(DigitalProductIndex::class)
+            ->call('clearAll')
+            ->assertSee('Semua data dibersihkan');
+
+        $this->assertSame(0, DigitalProduct::where('provider', 'digiflazz')->count());
+        $this->assertSame(0, \App\Models\DigitalProductSyncLog::count());
+        $this->assertSame(0, \App\Models\DigitalProductBrand::count());
+        $this->assertSame(0, \App\Models\DigitalProductCategory::count());
+        $this->assertSame(0, DigitalProductCostHistory::count());
+        $this->assertDatabaseHas('digital_products', ['id' => $lynk->id]);
+    }
+
+    public function test_pricing_modal_loads_levels_from_table_and_saves_margin(): void
+    {
+        $product = $this->syncedProduct(); // modal 10.992
+        $retail = PriceLevel::where('code', 'retail')->firstOrFail();
+        $partner = PriceLevel::where('code', 'partner')->firstOrFail();
+
+        Livewire::actingAs($this->admin)->test(DigitalProductIndex::class)
+            ->call('openPricing')
+            ->assertSet('pricingOpen', true)
+            ->assertSet("levelForms.{$retail->id}.margin_type", $retail->margin_type)
+            ->assertSee('Pengaturan Harga')
+            ->set("levelForms.{$retail->id}.margin_value", '10')
+            ->set("levelForms.{$partner->id}.margin_type", 'fixed')
+            ->set("levelForms.{$partner->id}.margin_value", '500')
+            ->call('savePricing')
+            ->assertHasNoErrors()
+            ->assertSet('pricingOpen', false)
+            ->assertSee('Pengaturan harga berhasil disimpan');
+
+        $product->refresh()->load('priceOverrides');
+        $this->assertSame(12091.2, $product->priceFor($retail->fresh()));   // 10992 + 10%
+        $this->assertSame(11492.0, $product->priceFor($partner->fresh()));  // 10992 + Rp 500
+    }
+
+    public function test_pricing_rejects_invalid_margin(): void
+    {
+        $retail = PriceLevel::where('code', 'retail')->firstOrFail();
+        $before = $retail->margin_value;
+
+        Livewire::actingAs($this->admin)->test(DigitalProductIndex::class)
+            ->call('openPricing')
+            ->set("levelForms.{$retail->id}.margin_value", '150') // persen > 100
+            ->call('savePricing')
+            ->assertHasErrors(["levelForms.{$retail->id}.margin_value"])
+            ->set("levelForms.{$retail->id}.margin_value", '-1')
+            ->call('savePricing')
+            ->assertHasErrors(["levelForms.{$retail->id}.margin_value"])
+            ->set("levelForms.{$retail->id}.margin_value", '5')
+            ->set("levelForms.{$retail->id}.margin_type", 'bogus')
+            ->call('savePricing')
+            ->assertHasErrors(["levelForms.{$retail->id}.margin_type"]);
+
+        $this->assertEquals($before, $retail->fresh()->margin_value);
     }
 }
