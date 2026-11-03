@@ -268,9 +268,7 @@ https://scalify.id
 
         async function shareReceipt() {
             const shareText = buildShareText();
-            const shareTitle = 'Bukti Transaksi Scalify Pay #{{ $trx['
-            ref_no '] ?? '
-            ' }}';
+            const shareTitle = 'Bukti Transaksi Scalify Pay #' + @js($trx['ref_no'] ?? '');
 
             if (navigator.share) {
                 try {
@@ -295,6 +293,7 @@ https://scalify.id
             canvas.width = 640;
             canvas.height = 760;
             const ctx = canvas.getContext('2d');
+            const trx = @js($trx);
 
             // 1. Background
             ctx.fillStyle = '#0B1120';
@@ -336,29 +335,20 @@ https://scalify.id
             ctx.fillStyle = '#34D399';
             ctx.font = 'bold 14px Inter, sans-serif';
             ctx.textAlign = 'center';
-            ctx.fillText('✔ {{ $trx['
-                status '] }}', 320, 153);
+            ctx.fillText('✔ ' + trx.status, 320, 153);
 
             // 5. Hero Amount
-            ctx.fillStyle = '{{ $trx['
-            type '] === '
-            CREDIT ' ? '
-            #34D399' : '# F87171 ' }}';
+            ctx.fillStyle = trx.type === 'CREDIT' ? '#34D399' : '#F87171';
             ctx.font = '900 36px Inter, sans-serif';
-            ctx.fillText('{{ $trx['
-                type '] === '
-                CREDIT ' ? ' + ' : ' - ' }}{{ $trx['
-                amount_formatted '] }}', 320, 215);
+            ctx.fillText((trx.type === 'CREDIT' ? '+ ' : '- ') + trx.amount_formatted, 320, 215);
 
             ctx.fillStyle = '#E2E8F0';
             ctx.font = 'bold 16px Inter, sans-serif';
-            ctx.fillText('{{ addslashes($trx['
-                title ']) }}', 320, 245);
+            ctx.fillText(trx.title, 320, 245);
 
             ctx.fillStyle = '#94A3B8';
             ctx.font = '13px Inter, sans-serif';
-            ctx.fillText('{{ $trx['
-                date '] }}', 320, 270);
+            ctx.fillText(trx.date, 320, 270);
 
             // 6. Dashed line divider
             ctx.setLineDash([8, 6]);
@@ -385,20 +375,14 @@ https://scalify.id
                 y += 38;
             };
 
-            drawRow('No. Referensi:', '#{{ $trx['
-                ref_no '] }}', true);
-            drawRow('Kategori:', '{{ addslashes($trx['
-                category ']) }}', false);
-            drawRow('Metode Pembayaran:', '{{ addslashes($trx['
-                method ']) }}', false);
-            drawRow('Nominal Transaksi:', '{{ $trx['
-                amount_formatted '] }}', true);
-            drawRow('Total Pembayaran:', '{{ $trx['
-                total_formatted '] }}', true, '#34D399');
-            @if($trx['balance_after'])
-            drawRow('Sisa Saldo Setelahnya:', '{{ $trx['
-                balance_after '] }}', false, '#E2E8F0');
-            @endif
+            drawRow('No. Referensi:', '#' + trx.ref_no, true);
+            drawRow('Kategori:', trx.category, false);
+            drawRow('Metode Pembayaran:', trx.method, false);
+            drawRow('Nominal Transaksi:', trx.amount_formatted, true);
+            drawRow('Total Pembayaran:', trx.total_formatted, true, '#34D399');
+            if (trx.balance_after) {
+                drawRow('Sisa Saldo Setelahnya:', trx.balance_after, false, '#E2E8F0');
+            }
 
             // 8. Footer Shield
             ctx.textAlign = 'center';
@@ -408,8 +392,7 @@ https://scalify.id
 
             // Download trigger
             const link = document.createElement('a');
-            link.download = 'Struk-Transaksi-{{ $trx['
-            ref_no '] }}.png';
+            link.download = 'Struk-Transaksi-' + trx.ref_no + '.png';
             link.href = canvas.toDataURL('image/png');
             link.click();
 
