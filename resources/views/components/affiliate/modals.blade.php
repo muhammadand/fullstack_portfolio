@@ -177,7 +177,7 @@ $modalMutations = $modalWallet->mutations()->take(30)->get();
             <div class="flex justify-between items-center mb-4">
                 <div>
                     <h3 class="text-sm font-bold text-white flex items-center gap-1.5">
-                        <i class="fa-solid fa-qrcode text-emerald-400"></i> Isi Saldo via QRIS
+                        <i class="fa-solid fa-qrcode text-emerald-400"></i> Isi Saldo
                     </h3>
                     <p class="text-[10px] text-slate-400 mt-0.5">Saldo saat ini: <b class="text-emerald-400">Rp {{ number_format($modalWallet->balance, 0, ',', '.') }}</b></p>
                 </div>

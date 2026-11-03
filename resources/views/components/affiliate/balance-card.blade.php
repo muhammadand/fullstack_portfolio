@@ -1,7 +1,7 @@
 @props(['affiliate'])
 
 @php
-    $wallet = $affiliate->getOrCreateWallet();
+$wallet = $affiliate->getOrCreateWallet();
 @endphp
 
 <!-- UNIFIED DUAL-FINANCE HUB CARD (KOMISI & WALLET PPOB) -->
@@ -41,22 +41,21 @@
 
             <!-- Action Buttons Komisi -->
             <div class="grid grid-cols-2 gap-1.5 mt-2">
-                @if($affiliate->balance < 50000)
-                <button type="button" onclick="alert('Maaf, saldo komisi Anda minimal Rp 50.000 untuk dapat melakukan penarikan.')" class="py-2 px-1.5 bg-white/5 hover:bg-white/10 text-slate-300 text-[10px] font-bold rounded-xl transition-all flex items-center justify-center gap-1 text-center" title="Minimal Rp 50.000">
+                @if($affiliate->balance < 50000) <button type="button" onclick="alert('Maaf, saldo komisi Anda minimal Rp 50.000 untuk dapat melakukan penarikan.')" class="py-2 px-1.5 bg-white/5 hover:bg-white/10 text-slate-300 text-[10px] font-bold rounded-xl transition-all flex items-center justify-center gap-1 text-center" title="Minimal Rp 50.000">
                     <i class="fa-solid fa-money-bill-transfer text-xs"></i>
                     <span>Tarik</span>
-                </button>
-                @else
-                <button type="button" onclick="openWithdrawModal()" class="py-2 px-1.5 bg-blue-500 hover:bg-blue-600 text-white text-[10px] font-bold rounded-xl shadow-md shadow-blue-500/25 transition-all flex items-center justify-center gap-1 text-center active:scale-95">
-                    <i class="fa-solid fa-money-bill-transfer text-xs"></i>
-                    <span>Tarik</span>
-                </button>
-                @endif
+                    </button>
+                    @else
+                    <button type="button" onclick="openWithdrawModal()" class="py-2 px-1.5 bg-blue-500 hover:bg-blue-600 text-white text-[10px] font-bold rounded-xl shadow-md shadow-blue-500/25 transition-all flex items-center justify-center gap-1 text-center active:scale-95">
+                        <i class="fa-solid fa-money-bill-transfer text-xs"></i>
+                        <span>Tarik</span>
+                    </button>
+                    @endif
 
-                <button type="button" onclick="copyLink()" class="py-2 px-1.5 glass-panel hover:bg-white/10 text-white text-[10px] font-semibold rounded-xl border border-white/10 transition-all flex items-center justify-center gap-1 text-center active:scale-95">
-                    <i class="fa-solid fa-link text-blue-300 text-xs"></i>
-                    <span>Salin</span>
-                </button>
+                    <button type="button" onclick="copyLink()" class="py-2 px-1.5 glass-panel hover:bg-white/10 text-white text-[10px] font-semibold rounded-xl border border-white/10 transition-all flex items-center justify-center gap-1 text-center active:scale-95">
+                        <i class="fa-solid fa-link text-blue-300 text-xs"></i>
+                        <span>Salin</span>
+                    </button>
             </div>
         </div>
 
@@ -66,7 +65,7 @@
                 <div class="flex items-center justify-between mb-0.5">
                     <p class="text-[11px] text-emerald-200/70 font-semibold flex items-center gap-1.5">
                         <i class="fa-solid fa-wallet text-emerald-400 text-xs"></i>
-                        <span>Wallet PPOB</span>
+                        <span>Saldo Wallet</span>
                     </p>
                     <span class="text-[8px] bg-emerald-500/20 text-emerald-300 font-extrabold px-1.5 py-0.2 rounded-full border border-emerald-500/30">
                         ACTIVE

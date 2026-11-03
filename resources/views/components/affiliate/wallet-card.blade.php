@@ -1,8 +1,8 @@
 @props(['affiliate'])
 
 @php
-    $wallet = $affiliate->getOrCreateWallet();
-    $recentMutations = $wallet->mutations()->take(2)->get();
+$wallet = $affiliate->getOrCreateWallet();
+$recentMutations = $wallet->mutations()->take(2)->get();
 @endphp
 
 <div class="glass-card rounded-3xl p-5 mb-6 relative overflow-hidden border border-emerald-500/20 bg-gradient-to-br from-emerald-950/40 via-slate-900/60 to-slate-900/90 shadow-[0_8px_32px_0_rgba(16,185,129,0.15)]">
@@ -17,7 +17,7 @@
                 <i class="fa-solid fa-wallet text-sm"></i>
             </div>
             <div>
-                <span class="text-xs font-semibold text-emerald-300 tracking-wide uppercase">Saldo Wallet PPOB</span>
+                <span class="text-xs font-semibold text-emerald-300 tracking-wide uppercase">Saldo Wallet</span>
                 <span class="inline-flex items-center ml-1 px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
                     {{ strtoupper($wallet->status) }}
                 </span>
@@ -34,7 +34,7 @@
             <span class="text-lg text-emerald-400/80 font-semibold mr-1.5">Rp</span>
             <span id="wallet-balance-display">{{ number_format($wallet->balance, 0, ',', '.') }}</span>
         </div>
-        <p class="text-[11px] text-slate-400 mt-0.5">Saldo siap pakai untuk transaksi produk digital & PPOB</p>
+        <p class="text-[11px] text-slate-400 mt-0.5">Saldo siap pakai untuk transaksi produk digital</p>
     </div>
 
     <!-- Action Buttons -->
@@ -69,4 +69,3 @@
     </div>
     @endif
 </div>
-

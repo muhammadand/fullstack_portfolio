@@ -33,9 +33,10 @@
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
+
     </style>
 </head>
-<body class="min-h-screen bg-[#0B1120] text-white flex flex-col justify-between overflow-x-hidden relative px-4 py-4 sm:py-6">
+<body class="min-h-screen bg-[#0B1120] text-white flex flex-col justify-between overflow-x-hidden relative px-4 pt-4 pb-24 sm:pt-6">
 
     <x-affiliate.page-loader />
 
@@ -207,7 +208,9 @@
             if (!isPolling) return;
             try {
                 const res = await fetch(checkUrl, {
-                    headers: { 'Accept': 'application/json' }
+                    headers: {
+                        'Accept': 'application/json'
+                    }
                 });
                 const data = await res.json();
                 if (data.success && data.is_paid) {
@@ -241,7 +244,9 @@
 
             try {
                 const res = await fetch(checkUrl, {
-                    headers: { 'Accept': 'application/json' }
+                    headers: {
+                        'Accept': 'application/json'
+                    }
                 });
                 const data = await res.json();
                 if (data.success && data.is_paid) {
@@ -260,7 +265,11 @@
                 btn.disabled = false;
             }
         }
+
     </script>
+
+    <!-- Bottom Navigation Bar -->
+    <x-affiliate.bottom-nav />
 
 </body>
 </html>

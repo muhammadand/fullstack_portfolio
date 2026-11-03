@@ -9,13 +9,13 @@
             <div class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
                 <span>Admin Panel</span>
                 <i class="fa-solid fa-chevron-right text-[10px]"></i>
-                <span class="text-blue-600">PPOB & Integrasi Digiflazz</span>
+                <span class="text-blue-600">Integrasi Digiflazz</span>
             </div>
             <h1 class="text-2xl font-bold text-slate-800 flex items-center gap-2.5">
                 <span class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white shadow-sm shadow-amber-500/20">
                     <i class="fa-solid fa-bolt text-sm"></i>
                 </span>
-                PPOB & Saldo Digiflazz
+                Saldo Digiflazz
             </h1>
             <p class="text-slate-500 text-sm mt-1">Pantau sisa deposit akun, status server API Digiflazz, dan kelola konfigurasi transaksi digital.</p>
         </div>
