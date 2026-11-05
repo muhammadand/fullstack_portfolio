@@ -23,6 +23,7 @@ class TopupCheckoutTest extends TestCase
     {
         parent::setUp();
         TopupCatalogService::flush();
+        config(['services.digiflazz.webhook_secret' => '']); // .env lokal bisa berisi secret; tes tanda tangan mengaturnya sendiri
         $this->fakeGateway();
 
         $cat = DigitalProductCategory::firstOrCreate(['slug' => 'games'], ['name' => 'Games']);
@@ -41,12 +42,39 @@ class TopupCheckoutTest extends TestCase
     protected function fakeGateway(bool $ok = true): void
     {
         Http::swap(new \Illuminate\Http\Client\Factory());
-        Http::fake(['*/payments/charge' => $ok
-            ? Http::response(['data' => [
+        Http::fake([
+            '*/payments/charge' => $ok
+                ? Http::response(['data' => [
+                    'transaction_id' => 'trx-123', 'status' => 'pending',
+                    'payment_details' => ['actions' => [['name' => 'generate-qr-code', 'url' => 'https://qr.test/abc.png']]],
+                ]])
+                : Http::response(['message' => 'Gateway down'], 500),
+            // Webhook lunas akan memanggil Digiflazz: tes tidak boleh menembak API sungguhan.
+            '*/transaction' => Http::response(['data' => ['status' => 'Sukses', 'sn' => 'SN-DEFAULT', 'message' => 'ok']]),
+        ]);
+        Http::preventStrayRequests();
+    }
+
+    protected function fakeDigiflazz(string $status = 'Sukses', string $sn = 'SN-123456'): void
+    {
+        Http::swap(new \Illuminate\Http\Client\Factory());
+        Http::fake([
+            '*/payments/charge' => Http::response(['data' => [
                 'transaction_id' => 'trx-123', 'status' => 'pending',
                 'payment_details' => ['actions' => [['name' => 'generate-qr-code', 'url' => 'https://qr.test/abc.png']]],
-            ]])
-            : Http::response(['message' => 'Gateway down'], 500)]);
+            ]]),
+            '*/transaction' => Http::response(['data' => [
+                'ref_id' => 'x', 'status' => $status, 'rc' => $status === 'Sukses' ? '00' : '03', 'sn' => $sn, 'message' => "Transaksi $status",
+            ]]),
+        ]);
+    }
+
+    protected function paidOrderNo(): string
+    {
+        $no = $this->postJson(route('topup.checkout', $this->brand->slug), $this->payload())->json('order_no');
+        $this->webhook($no, 'settlement')->assertOk();
+
+        return $no;
     }
 
     protected function webhook(string $orderNo, string $status, $amount = null)
@@ -111,7 +139,7 @@ class TopupCheckoutTest extends TestCase
 
         $order = Order::where('order_no', $no)->first();
         $this->assertSame(Order::PAYMENT_PAID, $order->payment_status);
-        $this->assertSame(Order::STATUS_PROCESSING, $order->status);
+        $this->assertSame(Order::STATUS_PROCESSING, $order->status); // lunas -> dikirim ke Digiflazz, hasil akhir lewat webhook Digiflazz
         $this->assertNotNull($order->paid_at);
 
         $this->getJson(route('topup.order.status', $no))->assertJson(['is_paid' => true, 'email' => 'b***@example.com']);
@@ -162,5 +190,157 @@ class TopupCheckoutTest extends TestCase
 
         $this->get(route('topup.show', $this->brand->slug))
             ->assertOk()->assertSee('Email Struk', false);
+    }
+
+    public function test_webhook_paid_sends_once_to_digiflazz_and_polling_status_never_does(): void
+    {
+        $this->fakeDigiflazz('Sukses');
+        $no = $this->postJson(route('topup.checkout', $this->brand->slug), $this->payload())->json('order_no');
+
+        $this->getJson(route('topup.order.status', $no))->assertOk();
+        Http::assertNotSent(fn ($r) => str_contains($r->url(), '/transaction')); // belum lunas
+
+        $this->webhook($no, 'settlement')->assertOk();
+        $this->webhook($no, 'settlement')->assertOk(); // webhook diulang gateway
+        $this->getJson(route('topup.order.status', $no))->assertOk()->assertJson(['is_paid' => true]);
+        $this->getJson(route('topup.order.status', $no))->assertOk();
+
+        Http::assertSentCount(2); // 1x charge QRIS + tepat 1x transaction Digiflazz
+    }
+
+    protected function digiflazzWebhook(string $refId, string $status, array $over = [])
+    {
+        return $this->postJson('/api/digiflazz/webhook', ['data' => array_merge([
+            'ref_id' => $refId, 'status' => $status, 'rc' => $status === 'Sukses' ? '00' : ($status === 'Pending' ? '03' : '40'),
+            'sn' => $status === 'Sukses' ? 'SN-FINAL' : '', 'message' => "Transaksi $status",
+            'buyer_sku_code' => $this->product->sku_code, 'customer_no' => '123456781234',
+        ], $over)]);
+    }
+
+    public function test_digiflazz_payload_uses_sku_code_customer_no_and_order_no_and_status_stays_processing(): void
+    {
+        $this->fakeDigiflazz('Sukses', 'SN-777'); // balasan langsung dari transaction
+        $no = $this->paidOrderNo();
+
+        Http::assertSent(fn ($r) => str_contains($r->url(), '/transaction')
+            && $r['buyer_sku_code'] === $this->product->sku_code
+            && $r['customer_no'] === '123456781234'
+            && $r['ref_id'] === $no);
+
+        // Status BUKAN dari balasan langsung: tetap processing sampai webhook Digiflazz datang.
+        $order = Order::where('order_no', $no)->first();
+        $this->assertSame(Order::STATUS_PROCESSING, $order->status);
+        $this->assertSame('SN-777', $order->sn);
+        $this->assertSame($no, $order->provider_ref_id);
+        $this->assertNull($order->completed_at);
+        $this->assertSame(Order::PAYMENT_PAID, $order->payment_status);
+    }
+
+    public function test_digiflazz_webhook_sets_final_status_success_failed_and_pending(): void
+    {
+        $this->fakeDigiflazz('Pending', '');
+        $ok = $this->paidOrderNo();
+        $bad = $this->paidOrderNo();
+        $wait = $this->paidOrderNo();
+
+        $this->digiflazzWebhook($wait, 'Pending')->assertOk();
+        $this->assertSame(Order::STATUS_PROCESSING, Order::where('order_no', $wait)->first()->status);
+
+        $this->digiflazzWebhook($ok, 'Sukses')->assertOk();
+        $o = Order::where('order_no', $ok)->first();
+        $this->assertSame(Order::STATUS_SUCCESS, $o->status);
+        $this->assertSame('SN-FINAL', $o->sn);
+        $this->assertNotNull($o->completed_at);
+
+        $this->digiflazzWebhook($bad, 'Gagal')->assertOk();
+        $f = Order::where('order_no', $bad)->first();
+        $this->assertSame(Order::STATUS_FAILED, $f->status);
+        $this->assertSame(Order::PAYMENT_PAID, $f->payment_status);
+
+        $this->assertTrue(\App\Models\DigiflazzWebhook::where('ref_id', $ok)->latest('id')->first()->is_processed);
+    }
+
+    public function test_final_status_is_not_overwritten_by_late_or_duplicate_webhooks(): void
+    {
+        $this->fakeDigiflazz('Pending', '');
+        $no = $this->paidOrderNo();
+
+        $this->digiflazzWebhook($no, 'Sukses')->assertOk();
+        $this->digiflazzWebhook($no, 'Gagal')->assertOk();   // terlambat/salah urutan
+        $this->digiflazzWebhook($no, 'Pending')->assertOk();
+
+        $this->assertSame(Order::STATUS_SUCCESS, Order::where('order_no', $no)->first()->status);
+    }
+
+    public function test_digiflazz_webhook_ignores_unpaid_orders_other_modules_pings_and_sku_mismatch(): void
+    {
+        $this->fakeDigiflazz('Pending', '');
+        $unpaid = $this->postJson(route('topup.checkout', $this->brand->slug), $this->payload())->json('order_no');
+        $this->digiflazzWebhook($unpaid, 'Sukses')->assertOk();
+        $this->assertSame(Order::STATUS_PENDING, Order::where('order_no', $unpaid)->first()->status);
+
+        $this->digiflazzWebhook('GRC-XYZ', 'Sukses')->assertOk();
+        $this->postJson('/api/digiflazz/webhook', ['hook_id' => 'abc'])->assertOk();
+
+        $paid = $this->paidOrderNo();
+        $this->digiflazzWebhook($paid, 'Sukses', ['buyer_sku_code' => 'sku-lain'])->assertOk();
+        $this->assertSame(Order::STATUS_PROCESSING, Order::where('order_no', $paid)->first()->status);
+    }
+
+    public function test_digiflazz_webhook_requires_valid_signature_when_secret_is_set(): void
+    {
+        config(['services.digiflazz.webhook_secret' => 'rahasia']);
+        $this->fakeDigiflazz('Pending', '');
+        $no = $this->paidOrderNo();
+
+        $this->digiflazzWebhook($no, 'Sukses')->assertOk(); // tanpa signature
+        $this->assertSame(Order::STATUS_PROCESSING, Order::where('order_no', $no)->first()->status);
+
+        $body = json_encode(['data' => ['ref_id' => $no, 'status' => 'Sukses', 'sn' => 'SN-SIGNED', 'buyer_sku_code' => $this->product->sku_code]]);
+        $sig = 'sha1=' . hash_hmac('sha1', $body, 'rahasia');
+        $this->call('POST', '/api/digiflazz/webhook', [], [], [], [
+            'CONTENT_TYPE' => 'application/json', 'HTTP_X_HUB_SIGNATURE' => $sig, 'HTTP_ACCEPT' => 'application/json',
+        ], $body)->assertOk();
+
+        $this->assertSame(Order::STATUS_SUCCESS, Order::where('order_no', $no)->first()->status);
+    }
+
+    public function test_unreadable_reply_releases_claim_and_repeated_webhook_retries(): void
+    {
+        $this->fakeDigiflazz('Sukses');
+        $no = $this->postJson(route('topup.checkout', $this->brand->slug), $this->payload())->json('order_no');
+
+        // Balasan Digiflazz tidak valid saat webhook pertama.
+        Http::swap(new \Illuminate\Http\Client\Factory());
+        Http::fake(['*/transaction' => Http::response('gateway error', 502)]);
+        Http::preventStrayRequests();
+        $this->webhook($no, 'settlement')->assertOk();
+
+        $order = Order::where('order_no', $no)->first();
+        $this->assertSame(Order::PAYMENT_PAID, $order->payment_status);
+        $this->assertNull($order->provider_ref_id);
+        $this->assertSame(Order::STATUS_PROCESSING, $order->status);
+
+        // Gateway mengulang webhook, Digiflazz sudah pulih: dikirim ulang dan sukses.
+        Http::swap(new \Illuminate\Http\Client\Factory());
+        Http::fake(['*/transaction' => Http::response(['data' => ['status' => 'Sukses', 'sn' => 'SN-OK', 'message' => 'ok']])]);
+        Http::preventStrayRequests();
+        $this->webhook($no, 'settlement')->assertOk();
+
+        $order->refresh();
+        $this->assertSame(Order::STATUS_PROCESSING, $order->status); // hasil akhir menunggu webhook Digiflazz
+        $this->assertSame('SN-OK', $order->sn);
+        $this->assertSame($no, $order->provider_ref_id);
+    }
+
+    public function test_expired_or_failed_payment_webhook_never_sends_to_digiflazz(): void
+    {
+        $this->fakeDigiflazz('Sukses');
+        $no = $this->postJson(route('topup.checkout', $this->brand->slug), $this->payload())->json('order_no');
+
+        $this->webhook($no, 'expire')->assertOk();
+        $this->webhook($no, 'settlement', 100)->assertOk(); // nominal tidak cocok
+
+        Http::assertNotSent(fn ($r) => str_contains($r->url(), '/transaction'));
     }
 }

@@ -139,9 +139,12 @@ class DigiflazzController extends Controller
      * - X-Hub-Signature
      * - User-Agent
      */
-    public function handleWebhook(Request $request): JsonResponse
+    public function handleWebhook(Request $request, \App\Services\DigiflazzFulfillmentService $fulfillment): JsonResponse
     {
         $webhook = DigiflazzService::saveWebhook($request);
+
+        // Status order (success / failed / processing) bersumber dari webhook ini.
+        $fulfillment->applyWebhook($webhook);
 
         return response()->json([
             'success'    => true,

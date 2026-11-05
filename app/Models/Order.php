@@ -57,11 +57,36 @@ class Order extends Model
         'expires_at'     => 'datetime',
     ];
 
-    /** Nomor order unik, contoh: TP-20261105-A1B2C3. */
-    public static function generateOrderNo(): string
+    /**
+     * Awalan nomor order per jenis produk. Dipakai untuk mengenali order di webhook pembayaran/Digiflazz.
+     * Tambah jenis baru di sini (pulsa, listrik, dll.); alur pengiriman & status sama untuk semuanya.
+     */
+    public const ORDER_NO_PREFIXES = [
+        'TP-'  => 'Top Up Game',
+        'PL-'  => 'Pulsa & Paket Data',
+        'PLN-' => 'Token Listrik PLN',
+    ];
+
+    public static function hasKnownPrefix(string $orderNo): bool
     {
+        foreach (array_keys(self::ORDER_NO_PREFIXES) as $prefix) {
+            if (str_starts_with($orderNo, $prefix)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /** Nomor order unik, contoh: TP-20261105-A1B2C3. */
+    public static function generateOrderNo(string $prefix = 'TP-'): string
+    {
+        if (!array_key_exists($prefix, self::ORDER_NO_PREFIXES)) {
+            throw new \InvalidArgumentException("Awalan nomor order tidak dikenal: {$prefix}");
+        }
+
         do {
-            $no = 'TP-' . now()->format('Ymd') . '-' . strtoupper(\Illuminate\Support\Str::random(6));
+            $no = $prefix . now()->format('Ymd') . '-' . strtoupper(\Illuminate\Support\Str::random(6));
         } while (static::withTrashed()->where('order_no', $no)->exists());
 
         return $no;
@@ -137,5 +162,44 @@ class Order extends Model
         if (!$this->isPaid()) {
             $this->update(['payment_status' => self::PAYMENT_FAILED, 'status' => self::STATUS_FAILED]);
         }
+    }
+
+    /**
+     * Terapkan hasil dari Digiflazz (webhook). Hanya order yang sudah lunas dan masih "processing"
+     * yang bisa berubah, jadi webhook ulang/terlambat tidak menimpa hasil akhir.
+     *
+     * @return string success | failed | pending | ignored
+     */
+    public function applyProviderResult(string $providerStatus, ?string $sn = null, ?string $message = null): string
+    {
+        $new = match (strtolower($providerStatus)) {
+            'sukses' => self::STATUS_SUCCESS,
+            'gagal'  => self::STATUS_FAILED,
+            default  => null, // Pending: belum ada hasil akhir
+        };
+
+        $query = static::whereKey($this->id)
+            ->where('payment_status', self::PAYMENT_PAID)
+            ->where('status', self::STATUS_PROCESSING);
+
+        $values = ['provider_message' => $message ?? $this->provider_message, 'updated_at' => now()];
+        if ($sn !== null && $sn !== '') {
+            $values['sn'] = $sn;
+        }
+
+        if ($new === null) {
+            $query->update($values);
+            $this->refresh();
+
+            return 'pending';
+        }
+
+        $changed = $query->update($values + [
+            'status'       => $new,
+            'completed_at' => $new === self::STATUS_SUCCESS ? now() : null,
+        ]);
+        $this->refresh();
+
+        return $changed > 0 ? $new : 'ignored';
     }
 }

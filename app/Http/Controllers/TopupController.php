@@ -142,6 +142,7 @@ class TopupController extends Controller
             'payment_status' => $order->payment_status,
             'is_paid'        => $order->isPaid(),
             'is_expired'     => $order->payment_status === Order::PAYMENT_EXPIRED,
+            'is_failed'      => $order->payment_status === Order::PAYMENT_FAILED,
             'product_name'   => $order->product_name,
             'total'          => (float) $order->total_amount,
             'email'          => $order->email ? preg_replace('/(?<=.).(?=[^@]*@)/', '*', $order->email) : null,

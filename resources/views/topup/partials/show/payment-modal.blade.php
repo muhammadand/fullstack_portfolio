@@ -139,5 +139,13 @@
             <p class="text-sm text-white/55 mt-1.5">QRIS sudah kedaluwarsa. Belum ada dana yang terpotong, silakan buat pesanan baru.</p>
             <button type="button" @click="modal = 'confirm'; error = ''" class="mt-6 w-full h-12 rounded-xl bg-btn-gradient text-white font-bold text-sm shadow-glow-sm active:scale-95 transition-transform">Buat QRIS Baru</button>
         </div>
+
+        {{-- ========== 5. Pembayaran gagal / ditolak ========== --}}
+        <div x-show="modal === 'failed'" style="display:none" class="p-6 sm:p-8 text-center">
+            <div class="mx-auto w-20 h-20 rounded-full bg-red-500/15 border border-red-400/30 flex items-center justify-center"><i class="fa-solid fa-circle-xmark text-3xl text-red-300"></i></div>
+            <h3 class="font-sans font-extrabold text-xl text-white mt-4">Pembayaran Gagal</h3>
+            <p class="text-sm text-white/55 mt-1.5">Pembayaran tidak dapat diproses. Belum ada dana yang terpotong, silakan coba lagi.</p>
+            <button type="button" @click="modal = 'confirm'; error = ''" class="mt-6 w-full h-12 rounded-xl bg-btn-gradient text-white font-bold text-sm shadow-glow-sm active:scale-95 transition-transform">Coba Lagi</button>
+        </div>
     </div>
 </div>

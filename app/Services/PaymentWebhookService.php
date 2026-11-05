@@ -182,9 +182,9 @@ class PaymentWebhookService
             return $this->processBookingOrder($orderNumber, $transactionId, $status, $payload);
         }
 
-        // 3b. Prefix 'TP-' -> Order Top Up Game
-        if (str_starts_with($orderNumber, 'TP-')) {
-            return $this->processTopupOrder($orderNumber, $transactionId, $status, $payload);
+        // 3b. Order produk digital (top up game, pulsa, listrik, ...) -> lihat Order::ORDER_NO_PREFIXES
+        if (Order::hasKnownPrefix($orderNumber)) {
+            return $this->processDigitalOrder($orderNumber, $transactionId, $status, $payload);
         }
 
         // 4. Fallback jika order_number tidak memiliki prefix standar
@@ -292,14 +292,14 @@ class PaymentWebhookService
     }
 
     /**
-     * Proses Order Top Up Game (idempoten).
+     * Proses Order produk digital (idempoten): lunas -> kirim ke Digiflazz lewat DigiflazzFulfillmentService.
      */
-    protected function processTopupOrder(string $orderNumber, ?string $transactionId, ?string $status, array $payload): array
+    protected function processDigitalOrder(string $orderNumber, ?string $transactionId, ?string $status, array $payload): array
     {
         $order = Order::where('order_no', $orderNumber)->first();
 
         if (!$order) {
-            return ['type' => 'topup_order', 'action' => 'not_found', 'response_data' => ['order_updated' => false]];
+            return ['type' => 'digital_order', 'action' => 'not_found', 'response_data' => ['order_updated' => false]];
         }
 
         $action = 'none';
@@ -312,6 +312,12 @@ class PaymentWebhookService
                 $action = 'amount_mismatch';
             } else {
                 $action = $order->markAsPaid($transactionId) ? 'paid' : 'already_paid';
+
+                // Lunas -> kirim ke Digiflazz. Dipanggil juga saat webhook diulang (already_paid) agar
+                // order yang tadinya gagal terhubung ke supplier bisa dicoba lagi; klaim atomik mencegah kirim ganda.
+                if ($order->status === Order::STATUS_PROCESSING && $order->provider_ref_id === null) {
+                    app(DigiflazzFulfillmentService::class)->send($order);
+                }
             }
         } elseif ($status && in_array($status, self::EXPIRED_STATUSES)) {
             $order->markAsExpired();
@@ -322,11 +328,15 @@ class PaymentWebhookService
         }
 
         return [
-            'type' => 'topup_order',
+            'type' => 'digital_order',
             'action' => $action,
             'response_data' => [
                 'order_updated' => true,
-                'topup_order' => ['order_no' => $order->order_no, 'payment_status' => $order->payment_status],
+                'digital_order' => [
+                    'order_no' => $order->order_no,
+                    'payment_status' => $order->payment_status,
+                    'status' => $order->status,
+                ],
             ],
         ];
     }

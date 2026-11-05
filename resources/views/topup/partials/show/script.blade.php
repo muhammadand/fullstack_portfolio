@@ -21,7 +21,7 @@ document.addEventListener('alpine:init', () => {
         emailTouched: false,
         submitted: false,
 
-        // modal: none | confirm | qris | success | expired
+        // modal: none | confirm | qris | success | expired | failed
         modal: 'none',
         paying: false,
         error: '',
@@ -119,6 +119,9 @@ document.addEventListener('alpine:init', () => {
                 } else if (s.is_expired) {
                     this.stopTimers();
                     this.modal = 'expired';
+                } else if (s.is_failed) {
+                    this.stopTimers();
+                    this.modal = 'failed';
                 }
             } catch (e) { /* jaringan putus sesaat, coba lagi di siklus berikutnya */ }
         },
