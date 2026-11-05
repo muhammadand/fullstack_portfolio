@@ -30,4 +30,16 @@ class TopupNavbarTest extends TestCase
             $this->assertStringContainsString($shown, $html);
         }
     }
+
+    public function test_topup_index_has_loader_and_skips_heavy_chatbot_widget(): void
+    {
+        $html = $this->get(route('topup.index'))->assertOk()->getContent();
+
+        $this->assertStringContainsString('id="topup-page-loader"', $html);
+        $this->assertStringNotContainsString('scalify-native-launcher', $html);
+
+        $other = $this->get(route('index.company.profile'))->getContent();
+        $this->assertStringContainsString('scalify-native-launcher', $other);
+        $this->assertStringNotContainsString('id="topup-page-loader"', $other);
+    }
 }

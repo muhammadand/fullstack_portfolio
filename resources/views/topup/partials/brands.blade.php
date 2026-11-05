@@ -32,7 +32,7 @@
                 <div class="relative aspect-[3/4] bg-gradient-to-br from-blue-600/30 to-indigo-600/30">
                     @if($brand['image'])
                     <img src="{{ asset('storage/' . $brand['image']) }}" alt="Top up {{ $brand['name'] }}" width="300" height="400"
-                        loading="lazy" decoding="async" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                        loading="{{ $loop->index < 8 ? 'eager' : 'lazy' }}" @if($loop->index < 4) fetchpriority="high" @endif decoding="async" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                     @else
                     <span class="absolute inset-0 flex items-center justify-center font-sans font-black text-4xl text-white/70 select-none">{{ mb_strtoupper(mb_substr($brand['name'], 0, 1)) }}</span>
                     @endif

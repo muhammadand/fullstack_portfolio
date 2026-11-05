@@ -154,4 +154,14 @@ class TopupLandingTest extends TestCase
         $slugs = collect(TopupCatalogService::games()['brands'])->pluck('name');
         $this->assertFalse($slugs->contains('Toggle Brand Zz'));
     }
+
+    public function test_about_section_explains_the_page_and_uses_brand_name(): void
+    {
+        $this->get(route('topup.index'))
+            ->assertOk()
+            ->assertSee('Top</span> Indonesia', false)
+            ->assertSee('Bayar dalam hitungan detik')
+            ->assertSee('Satu QRIS untuk semua')
+            ->assertSee('Layanan pelanggan ramah');
+    }
 }

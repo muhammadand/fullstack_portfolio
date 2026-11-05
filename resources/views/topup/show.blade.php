@@ -16,7 +16,10 @@
 <meta name="twitter:card" content="summary_large_image" />
 @endsection
 
+@section('hide_chatbot', true)
+
 @section('content')
+<x-topup.page-loader />
 @php
 $fields = $form['fields'];
 $state = [

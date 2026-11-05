@@ -19,7 +19,10 @@
 <meta name="twitter:card" content="summary_large_image" />
 @endsection
 
+@section('hide_chatbot', true)
+
 @section('content')
+<x-topup.page-loader />
 @php
 $brands = $catalog['brands'] ?? [];
 // slug => nama huruf kecil, dipakai Alpine untuk filter pencarian di sisi browser (tanpa request tambahan).
