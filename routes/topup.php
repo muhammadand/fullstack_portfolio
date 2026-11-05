@@ -20,5 +20,32 @@ Route::get('/top-up-game/{slug}', [TopupController::class, 'show'])
     ->where('slug', '[a-z0-9-]+')
     ->name('topup.show');
 
+Route::post('/top-up-game/{slug}/checkout', [TopupController::class, 'checkout'])
+    ->where('slug', '[a-z0-9-]+')
+    ->middleware('throttle:20,1')
+    ->name('topup.checkout');
+
+Route::get('/top-up-game/pesanan/{orderNo}/status', [TopupController::class, 'status'])
+    ->where('orderNo', 'TP-[A-Z0-9-]+')
+    ->middleware('throttle:90,1')
+    ->name('topup.order.status');
+
 // Redirect 301 dari URL lama agar SEO tidak hilang
 Route::redirect('/top-up', '/top-up-game', 301);
+
+/*
+|--------------------------------------------------------------------------
+| Akun Customer (guard "customer")
+|--------------------------------------------------------------------------
+*/
+use App\Http\Controllers\CustomerAuthController;
+
+Route::middleware('guest:customer')->group(function () {
+    Route::get('/masuk', [CustomerAuthController::class, 'showLoginForm'])->name('customer.login');
+    Route::post('/masuk', [CustomerAuthController::class, 'login'])->name('customer.login.post')->middleware('throttle:10,1');
+    Route::get('/daftar', [CustomerAuthController::class, 'showRegisterForm'])->name('customer.register');
+    Route::post('/daftar', [CustomerAuthController::class, 'register'])->name('customer.register.post')->middleware('throttle:10,1');
+});
+
+Route::get('/akun', [CustomerAuthController::class, 'account'])->name('customer.account')->middleware('auth:customer');
+Route::post('/keluar', [CustomerAuthController::class, 'logout'])->name('customer.logout')->middleware('auth:customer');

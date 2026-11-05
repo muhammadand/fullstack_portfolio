@@ -7,6 +7,7 @@ use App\Models\DigitalProductBrand;
 use App\Models\DigitalProductCategory;
 use App\Models\DigitalProductCostHistory;
 use App\Models\DigitalProductSyncLog;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -35,7 +36,7 @@ class DigitalProductSyncService
                 throw new \RuntimeException($message);
             }
 
-            $stats = DB::transaction(fn () => $this->process($items));
+            $stats = DB::transaction(fn() => $this->process($items));
             TopupCatalogService::flush();
 
             $log->update($stats + [
@@ -63,8 +64,8 @@ class DigitalProductSyncService
         $stats = ['total_received' => 0, 'total_new' => 0, 'total_updated' => 0, 'total_cost_changed' => 0, 'total_missing' => 0];
 
         $existing = DigitalProduct::where('provider', 'digiflazz')->get()->keyBy('sku_code');
-        $categories = DigitalProductCategory::all()->keyBy('name');
-        $brands = DigitalProductBrand::all()->keyBy(fn ($b) => $b->digital_product_category_id . '|' . $b->name);
+        $categories = DigitalProductCategory::all()->keyBy(fn($c) => mb_strtolower($c->name));
+        $brands = DigitalProductBrand::all()->keyBy(fn($b) => $b->digital_product_category_id . '|' . mb_strtolower($b->name));
         $seen = [];
 
         foreach ($items as $item) {
@@ -116,7 +117,8 @@ class DigitalProductSyncService
             $oldCost = (float) $product->cost_price;
             $product->fill($supplier);
 
-            if ($product->isDirty()) {
+            // last_synced_at selalu berubah tiap sinkron, jangan dihitung sebagai perubahan data.
+            if ($product->isDirty(array_keys(Arr::except($supplier, ['last_synced_at'])))) {
                 $stats['total_updated']++;
             }
 
@@ -143,7 +145,9 @@ class DigitalProductSyncService
 
     protected function resolveCategory($categories, string $name): DigitalProductCategory
     {
-        if (!$categories->has($name)) {
+        $lookup = mb_strtolower($name);
+
+        if (!$categories->has($lookup)) {
             $base = Str::slug($name) ?: 'kategori';
             $slug = $base;
             $i = 1;
@@ -151,25 +155,25 @@ class DigitalProductSyncService
                 $slug = $base . '-' . $i++;
             }
 
-            $categories->put($name, DigitalProductCategory::create(['name' => $name, 'slug' => $slug]));
+            $categories->put($lookup, DigitalProductCategory::create(['name' => $name, 'slug' => $slug]));
         }
 
-        return $categories->get($name);
+        return $categories->get($lookup);
     }
 
     protected function resolveBrand($brands, DigitalProductCategory $category, string $name): DigitalProductBrand
     {
-        $key = $category->id . '|' . $name;
+        $lookup = $category->id . '|' . mb_strtolower($name);
 
-        if (!$brands->has($key)) {
-            $brands->put($key, DigitalProductBrand::create([
+        if (!$brands->has($lookup)) {
+            $brands->put($lookup, DigitalProductBrand::create([
                 'digital_product_category_id' => $category->id,
                 'name' => $name,
                 'slug' => $this->uniqueBrandSlug($category->name, $name),
             ]));
         }
 
-        return $brands->get($key);
+        return $brands->get($lookup);
     }
 
     protected function uniqueBrandSlug(string $category, string $name): string

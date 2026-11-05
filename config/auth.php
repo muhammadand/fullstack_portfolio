@@ -45,6 +45,11 @@ return [
             'driver' => 'session',
             'provider' => 'affiliates',
         ],
+
+        'customer' => [
+            'driver' => 'session',
+            'provider' => 'customers',
+        ],
     ],
 
     /*
@@ -73,6 +78,11 @@ return [
         'affiliates' => [
             'driver' => 'eloquent',
             'model' => App\Models\Affiliate::class,
+        ],
+
+        'customers' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Customer::class,
         ],
 
         // 'users' => [

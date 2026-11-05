@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Booking;
 use App\Models\GoogleCardOrder;
+use App\Models\Order;
 use App\Models\PaymentCallback;
 use App\Models\WalletDeposit;
 use Illuminate\Support\Facades\Log;
@@ -181,6 +182,11 @@ class PaymentWebhookService
             return $this->processBookingOrder($orderNumber, $transactionId, $status, $payload);
         }
 
+        // 3b. Prefix 'TP-' -> Order Top Up Game
+        if (str_starts_with($orderNumber, 'TP-')) {
+            return $this->processTopupOrder($orderNumber, $transactionId, $status, $payload);
+        }
+
         // 4. Fallback jika order_number tidak memiliki prefix standar
         return $this->fallbackDispatch($orderNumber, $transactionId, $status, $payload);
     }
@@ -281,6 +287,46 @@ class PaymentWebhookService
                     'scan_url' => $createdCard->scan_url,
                     'google_review_url' => $createdCard->google_review_url,
                 ] : null,
+            ],
+        ];
+    }
+
+    /**
+     * Proses Order Top Up Game (idempoten).
+     */
+    protected function processTopupOrder(string $orderNumber, ?string $transactionId, ?string $status, array $payload): array
+    {
+        $order = Order::where('order_no', $orderNumber)->first();
+
+        if (!$order) {
+            return ['type' => 'topup_order', 'action' => 'not_found', 'response_data' => ['order_updated' => false]];
+        }
+
+        $action = 'none';
+
+        if ($status && in_array($status, self::SUCCESS_STATUSES)) {
+            // Nominal dari gateway (bila ada) harus sama dengan total order.
+            $gross = $payload['gross_amount'] ?? $payload['amount'] ?? null;
+            if ($gross !== null && (int) round((float) $gross) !== (int) round((float) $order->total_amount)) {
+                Log::warning("Topup Order #{$orderNumber}: amount mismatch (gateway {$gross} vs order {$order->total_amount}).");
+                $action = 'amount_mismatch';
+            } else {
+                $action = $order->markAsPaid($transactionId) ? 'paid' : 'already_paid';
+            }
+        } elseif ($status && in_array($status, self::EXPIRED_STATUSES)) {
+            $order->markAsExpired();
+            $action = 'expired';
+        } elseif ($status && in_array($status, self::FAILED_STATUSES)) {
+            $order->markAsFailed();
+            $action = 'failed';
+        }
+
+        return [
+            'type' => 'topup_order',
+            'action' => $action,
+            'response_data' => [
+                'order_updated' => true,
+                'topup_order' => ['order_no' => $order->order_no, 'payment_status' => $order->payment_status],
             ],
         ];
     }

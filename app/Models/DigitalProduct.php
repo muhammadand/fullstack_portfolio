@@ -67,6 +67,11 @@ class DigitalProduct extends Model
         return $this->hasMany(DigitalProductCostHistory::class);
     }
 
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class);
+    }
+
     public function scopeLynk($query)
     {
         return $query->where('provider', 'lynk');

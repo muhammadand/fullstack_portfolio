@@ -129,8 +129,8 @@ class TopupLandingTest extends TestCase
         $second = DB::getQueryLog();
         DB::disableQueryLog();
 
-        $this->assertTrue($first->every(fn ($q) => !str_contains($q, 'select *')));
-        $this->assertTrue($first->contains(fn ($q) => str_contains($q, 'select `name`, `slug`, `logo` from `digital_product_brands`')));
+        $this->assertTrue($first->every(fn($q) => !str_contains($q, 'select *')));
+        $this->assertTrue($first->contains(fn($q) => str_contains($q, 'select `name`, `slug`, `image` from `digital_product_brands`')));
         $this->assertCount(0, $second, 'Panggilan kedua harus dari cache, tanpa query.');
     }
 
@@ -142,8 +142,10 @@ class TopupLandingTest extends TestCase
         $this->assertNotEmpty(TopupCatalogService::games()['brands']);
 
         $admin = \App\Models\User::first() ?? \App\Models\User::create([
-            'name' => 'Admin Topup', 'email' => 'admin_topup_' . uniqid() . '@example.com',
-            'password' => \Illuminate\Support\Facades\Hash::make('password'), 'role' => 'admin',
+            'name' => 'Admin Topup',
+            'email' => 'admin_topup_' . uniqid() . '@example.com',
+            'password' => \Illuminate\Support\Facades\Hash::make('password'),
+            'role' => 'admin',
         ]);
 
         \Livewire\Livewire::actingAs($admin)->test(\App\Livewire\Admin\DigitalProductIndex::class)
