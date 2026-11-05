@@ -260,9 +260,17 @@ class HomeController extends Controller
         $orderId = 'GRC-' . date('ymd') . '-' . strtoupper(\Illuminate\Support\Str::random(4));
 
         try {
+            // 0. Catat pembeli sebagai customer (kunci: no. HP + source google_card)
+            [$customer] = \App\Models\Customer::findOrCreateByPhone(
+                $validated['phone'],
+                \App\Models\Customer::SOURCE_GOOGLE_CARD,
+                trim($validated['customer_name'])
+            );
+
             // 1. Simpan order ke database (Best Practice)
             $order = GoogleCardOrder::create([
                 'order_id'        => $orderId,
+                'customer_id'     => $customer->id,
                 'business_name'   => $validated['business_name'],
                 'customer_name'   => $validated['customer_name'],
                 'phone'           => $validated['phone'],

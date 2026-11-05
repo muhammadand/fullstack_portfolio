@@ -76,7 +76,7 @@ class BookingApp extends Component
         // Restore Customer Session if available
         $savedPhone = session('travel_customer_phone');
         if ($savedPhone) {
-            $customer = Customer::where('phone', $savedPhone)->first();
+            $customer = Customer::findByPhone($savedPhone, Customer::SOURCE_TRAVEL);
             if ($customer) {
                 $this->isLoggedIn = true;
                 $this->customerName = $customer->name;
@@ -215,29 +215,8 @@ class BookingApp extends Component
             return;
         }
 
-        // Find or create customer
-        $customer = Customer::where('phone', $cleanPhone)
-            ->orWhere(function ($q) use ($cleanPhone) {
-                if (str_starts_with($cleanPhone, '62')) {
-                    $q->where('phone', '0' . substr($cleanPhone, 2));
-                } elseif (str_starts_with($cleanPhone, '0')) {
-                    $q->where('phone', '62' . substr($cleanPhone, 1));
-                }
-            })->first();
-
-        $isNew = false;
-        if (!$customer) {
-            $customer = Customer::create([
-                'name' => $cleanName,
-                'phone' => $cleanPhone,
-                'points' => 50, // Welcome bonus
-            ]);
-            $isNew = true;
-        } else {
-            if (!empty($cleanName)) {
-                $customer->update(['name' => $cleanName]);
-            }
-        }
+        // Find or create customer (kunci: no. HP + source travel)
+        [$customer, $isNew] = Customer::findOrCreateByPhone($cleanPhone, Customer::SOURCE_TRAVEL, $cleanName, 50); // 50 = welcome bonus
 
         // Save session
         session(['travel_customer_phone' => $customer->phone]);
@@ -274,7 +253,7 @@ class BookingApp extends Component
             return;
         }
 
-        $customer = Customer::where('phone', $this->customerPhone)->first();
+        $customer = Customer::findByPhone((string) $this->customerPhone, Customer::SOURCE_TRAVEL);
         if ($customer) {
             $customer->update(['name' => $cleanName]);
             $this->customerName = $cleanName;
@@ -327,18 +306,7 @@ class BookingApp extends Component
 
             // 2. Customer
             $cleanPhone = preg_replace('/[^0-9]/', '', $this->customerPhone);
-            $customer = Customer::where('phone', $cleanPhone)->first();
-            if (!$customer) {
-                $customer = Customer::create([
-                    'name' => trim($this->customerName),
-                    'phone' => $cleanPhone,
-                    'points' => 50,
-                ]);
-            } else {
-                if (!empty($this->customerName)) {
-                    $customer->update(['name' => trim($this->customerName)]);
-                }
-            }
+            [$customer] = Customer::findOrCreateByPhone($cleanPhone, Customer::SOURCE_TRAVEL, trim($this->customerName), 50);
 
             session(['travel_customer_phone' => $customer->phone]);
             $this->isLoggedIn = true;
@@ -503,16 +471,10 @@ class BookingApp extends Component
             return;
         }
 
-        $customerIds = Customer::where('phone', $cleanPhone)
-            ->orWhere(function ($q) use ($cleanPhone) {
-                if (str_starts_with($cleanPhone, '62')) {
-                    $q->orWhere('phone', '0' . substr($cleanPhone, 2));
-                } elseif (str_starts_with($cleanPhone, '0')) {
-                    $q->orWhere('phone', '62' . substr($cleanPhone, 1));
-                }
-                if (strlen($cleanPhone) >= 8) {
-                    $q->orWhere('phone', 'like', '%' . substr($cleanPhone, -8));
-                }
+        $customerIds = Customer::fromSource(Customer::SOURCE_TRAVEL)
+            ->where(function ($q) use ($cleanPhone) {
+                $q->whereIn('phone', Customer::phoneVariants($cleanPhone))
+                    ->orWhere('phone', 'like', '%' . substr($cleanPhone, -8));
             })->pluck('id');
 
         $query = Booking::whereIn('customer_id', $customerIds)

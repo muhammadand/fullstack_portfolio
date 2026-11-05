@@ -51,7 +51,7 @@ class CustomerAuthController extends Controller
             'password' => ['required', 'string', 'min:8'],
         ]);
 
-        $customer = Customer::create($data + ['points' => self::WELCOME_POINTS]);
+        $customer = Customer::create($data + ['points' => self::WELCOME_POINTS, 'source' => Customer::SOURCE_TOPUP]);
 
         Auth::guard('customer')->login($customer);
         $request->session()->regenerate();

@@ -17,6 +17,7 @@ class GoogleCardOrder extends Model
 
     protected $fillable = [
         'order_id',
+        'customer_id',
         'business_name',
         'customer_name',
         'phone',
@@ -46,6 +47,11 @@ class GoogleCardOrder extends Model
     public function affiliate()
     {
         return $this->belongsTo(Affiliate::class);
+    }
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
     }
 
     public function reviewCard()

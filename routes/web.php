@@ -169,6 +169,18 @@ Route::resource('admin/digital-products', App\Http\Controllers\Admin\DigitalProd
     'destroy' => 'admin.digital_products.destroy',
 ])->middleware('auth');
 
+// Order Top Up Game (admin): daftar & detail
+Route::prefix('admin/topup-orders')->name('admin.topup_orders.')->middleware('auth')->group(function () {
+    Route::get('/', [App\Http\Controllers\Admin\TopupOrderController::class, 'index'])->name('index');
+    Route::get('/{order}', [App\Http\Controllers\Admin\TopupOrderController::class, 'show'])->whereNumber('order')->name('show');
+});
+
+// Customers (admin): daftar & detail
+Route::prefix('admin/customers')->name('admin.customers.')->middleware('auth')->group(function () {
+    Route::get('/', [App\Http\Controllers\Admin\CustomerController::class, 'index'])->name('index');
+    Route::get('/{customer}', [App\Http\Controllers\Admin\CustomerController::class, 'show'])->whereNumber('customer')->name('show');
+});
+
 // Cek Saldo Digiflazz
 Route::get('admin/cek-saldo', [App\Http\Controllers\Admin\PpobAdminController::class, 'index'])->name('admin.ppob.index')->middleware('auth');
 
@@ -610,6 +622,16 @@ Route::get('/secret-deploy-trigger-12345', function () {
 
         \Illuminate\Support\Facades\Artisan::call('migrate', [
             '--path' => 'database/migrations/2026_11_05_100000_add_qris_columns_to_orders_table.php',
+            '--force' => true
+        ]);
+
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_11_05_120000_add_source_to_customers_table.php',
+            '--force' => true
+        ]);
+
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_11_05_130000_add_customer_link_and_phone_source_index.php',
             '--force' => true
         ]);
 

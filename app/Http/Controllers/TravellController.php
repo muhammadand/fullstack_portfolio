@@ -137,21 +137,7 @@ class TravellController extends Controller
 
         // 3. Find or create Customer by unique phone
         $cleanPhone = preg_replace('/[^0-9]/', '', $validated['phone']);
-        $customer = Customer::where('phone', $cleanPhone)
-            ->orWhere('phone', $validated['phone'])
-            ->first();
-
-        if (!$customer) {
-            $customer = Customer::create([
-                'name' => $validated['name'],
-                'phone' => $cleanPhone,
-                'points' => 50, // Welcome points
-            ]);
-        } else {
-            if ($customer->name !== $validated['name'] && !empty($validated['name'])) {
-                $customer->update(['name' => $validated['name']]);
-            }
-        }
+        [$customer] = Customer::findOrCreateByPhone($cleanPhone, Customer::SOURCE_TRAVEL, (string) ($validated['name'] ?? ''), 50); // 50 = welcome points
 
         // 4. Generate Unique Booking Code
         $prefix = $validated['booking_type'] === 'reguler' ? 'RVN' : 'CHR';
@@ -397,19 +383,17 @@ class TravellController extends Controller
         $customerIds = collect();
 
         if (!empty($customerId)) {
-            $customer = Customer::find($customerId);
+            $customer = Customer::fromSource(Customer::SOURCE_TRAVEL)->find($customerId);
             if ($customer) {
                 $cleanPhone = preg_replace('/[^0-9]/', '', $customer->phone ?? '');
-                $customerIds = Customer::where('id', $customer->id)
-                    ->when(!empty($cleanPhone), function ($q) use ($cleanPhone) {
-                        $q->orWhere('phone', $cleanPhone);
-                        if (str_starts_with($cleanPhone, '62')) {
-                            $q->orWhere('phone', '0' . substr($cleanPhone, 2));
-                        } elseif (str_starts_with($cleanPhone, '0')) {
-                            $q->orWhere('phone', '62' . substr($cleanPhone, 1));
-                        }
-                        if (strlen($cleanPhone) >= 8) {
-                            $q->orWhere('phone', 'like', '%' . substr($cleanPhone, -8));
+                $customerIds = Customer::fromSource(Customer::SOURCE_TRAVEL)
+                    ->where(function ($q) use ($customer, $cleanPhone) {
+                        $q->where('id', $customer->id);
+                        if (!empty($cleanPhone)) {
+                            $q->orWhereIn('phone', Customer::phoneVariants($cleanPhone));
+                            if (strlen($cleanPhone) >= 8) {
+                                $q->orWhere('phone', 'like', '%' . substr($cleanPhone, -8));
+                            }
                         }
                     })->pluck('id');
             } else {
@@ -425,15 +409,8 @@ class TravellController extends Controller
             }
 
             // Find customer matching phone variations (08xxx vs 62xxx or last 8 digits)
-            $customerIds = Customer::where(function ($q) use ($cleanPhone) {
-                $q->where('phone', $cleanPhone);
-                if (str_starts_with($cleanPhone, '62')) {
-                    $alt = '0' . substr($cleanPhone, 2);
-                    $q->orWhere('phone', $alt);
-                } elseif (str_starts_with($cleanPhone, '0')) {
-                    $alt = '62' . substr($cleanPhone, 1);
-                    $q->orWhere('phone', $alt);
-                }
+            $customerIds = Customer::fromSource(Customer::SOURCE_TRAVEL)->where(function ($q) use ($cleanPhone) {
+                $q->whereIn('phone', Customer::phoneVariants($cleanPhone));
                 if (strlen($cleanPhone) >= 8) {
                     $q->orWhere('phone', 'like', '%' . substr($cleanPhone, -8));
                 }
@@ -568,15 +545,8 @@ class TravellController extends Controller
             ], 422);
         }
 
-        // Look up customer by phone variations
-        $customer = Customer::where('phone', $cleanPhone)
-            ->orWhere(function ($q) use ($cleanPhone) {
-                if (str_starts_with($cleanPhone, '62')) {
-                    $q->where('phone', '0' . substr($cleanPhone, 2));
-                } elseif (str_starts_with($cleanPhone, '0')) {
-                    $q->where('phone', '62' . substr($cleanPhone, 1));
-                }
-            })->first();
+        // Look up customer (kunci: no. HP + source travel)
+        $customer = Customer::findByPhone($cleanPhone, Customer::SOURCE_TRAVEL);
 
         $isNew = false;
         if (!$customer) {
@@ -592,6 +562,7 @@ class TravellController extends Controller
             $customer = Customer::create([
                 'name' => $name,
                 'phone' => $cleanPhone,
+                'source' => Customer::SOURCE_TRAVEL,
                 'points' => 50, // Welcome bonus points
             ]);
             $isNew = true;
@@ -625,15 +596,7 @@ class TravellController extends Controller
             return response()->json(['success' => false, 'message' => 'Nomor HP wajib.'], 422);
         }
 
-        $cleanPhone = preg_replace('/[^0-9]/', '', $rawPhone);
-        $customer = Customer::where('phone', $cleanPhone)
-            ->orWhere(function ($q) use ($cleanPhone) {
-                if (str_starts_with($cleanPhone, '62')) {
-                    $q->where('phone', '0' . substr($cleanPhone, 2));
-                } elseif (str_starts_with($cleanPhone, '0')) {
-                    $q->where('phone', '62' . substr($cleanPhone, 1));
-                }
-            })->first();
+        $customer = Customer::findByPhone((string) $rawPhone, Customer::SOURCE_TRAVEL);
 
         if (!$customer) {
             return response()->json(['success' => false, 'message' => 'Customer tidak ditemukan.'], 404);

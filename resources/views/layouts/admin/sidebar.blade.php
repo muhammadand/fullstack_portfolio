@@ -60,11 +60,21 @@ $menus = [
 'icon' => 'fa-solid fa-cubes-stacked',
 ],
 [
+'label' => 'Order Top Up',
+'route' => 'admin.topup_orders.index',
+'icon' => 'fa-solid fa-receipt',
+],
+[
 'label' => 'Cek Saldo & Akun',
 'route' => 'admin.ppob.index',
 'icon' => 'fa-solid fa-wallet',
 ],
 ],
+],
+[
+'label' => 'Customers',
+'route' => 'admin.customers.index',
+'icon' => 'fa-solid fa-user-group',
 ],
 [
 'label' => 'CV Service',
@@ -204,6 +214,11 @@ $activeRoute = \Illuminate\Support\Facades\Route::currentRouteName();
                             @if($sub['route'] === 'admin.travel_bookings.index' && ($pendingTravelCount = \App\Models\Booking::where('status', 'pending')->count()) > 0)
                             <span class="ml-1.5 inline-flex items-center justify-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 animate-pulse">
                                 {{ $pendingTravelCount }}
+                            </span>
+                            @endif
+                            @if($sub['route'] === 'admin.topup_orders.index' && ($processingTopupCount = \App\Models\Order::where('status', 'processing')->count()) > 0)
+                            <span class="ml-1.5 inline-flex items-center justify-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30 animate-pulse">
+                                {{ $processingTopupCount }}
                             </span>
                             @endif
                             @if($sub['route'] === 'admin.review_cards.index' && ($pendingReviewCount = \Illuminate\Support\Facades\DB::table('review_cards')->where('payment_status', 'pending')->count()) > 0)

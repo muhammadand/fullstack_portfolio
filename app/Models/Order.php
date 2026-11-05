@@ -25,6 +25,25 @@ class Order extends Model
     public const PAYMENT_EXPIRED = 'expired';
     public const PAYMENT_FAILED  = 'failed';
 
+    public const STATUSES = [self::STATUS_PENDING, self::STATUS_PROCESSING, self::STATUS_SUCCESS, self::STATUS_FAILED, self::STATUS_EXPIRED, self::STATUS_CANCELLED];
+    public const PAYMENT_STATUSES = [self::PAYMENT_UNPAID, self::PAYMENT_PAID, self::PAYMENT_EXPIRED, self::PAYMENT_FAILED];
+
+    /** Label & warna badge (palet Tailwind) untuk tampilan admin. */
+    public const STATUS_META = [
+        'pending'    => ['Menunggu', 'amber'],
+        'processing' => ['Diproses', 'blue'],
+        'success'    => ['Berhasil', 'emerald'],
+        'failed'     => ['Gagal', 'red'],
+        'expired'    => ['Kedaluwarsa', 'slate'],
+        'cancelled'  => ['Dibatalkan', 'slate'],
+    ];
+    public const PAYMENT_META = [
+        'unpaid'  => ['Belum Bayar', 'amber'],
+        'paid'    => ['Lunas', 'emerald'],
+        'expired' => ['Kedaluwarsa', 'slate'],
+        'failed'  => ['Gagal', 'red'],
+    ];
+
     protected $guarded = ['id'];
 
     protected $casts = [
