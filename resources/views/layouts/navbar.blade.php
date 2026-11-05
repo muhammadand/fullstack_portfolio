@@ -1,11 +1,37 @@
+<style>[x-cloak]{display:none!important}</style>
+@php
+    $isTopupArea = request()->routeIs('topup.*');
+    $customer = auth('customer')->user();
+@endphp
+
+{{-- Top Announcement Bar: di halaman top up mengajak daftar customer, selain itu promo --}}
+@if($isTopupArea)
+<div class="bg-gradient-to-r from-blue-700 via-indigo-600 to-blue-600 text-white text-[11px] sm:text-xs font-semibold py-2 px-3 sm:px-4 text-center relative z-50 overflow-hidden shadow-sm">
+    @if($customer)
+    <div class="flex items-center justify-center gap-2">
+        <i class="fa-solid fa-circle-user shrink-0"></i>
+        <span class="truncate">Halo, {{ \Illuminate\Support\Str::of($customer->name)->before(' ') }}! Pesanan top up kamu tercatat di akun ini.</span>
+    </div>
+    @else
+    <a href="{{ route('customer.register') }}" class="flex items-center justify-center gap-2 hover:underline transition-all group">
+        <span class="shrink-0 whitespace-nowrap bg-white/20 px-2 py-0.5 rounded-full text-[10px] uppercase tracking-wider font-extrabold group-hover:bg-white/30 transition-colors">Gratis</span>
+        <span class="min-w-0 text-left sm:text-center leading-tight">Daftar akun, pesanan &amp; poin top up tersimpan</span>
+        <i class="fa-solid fa-arrow-right shrink-0 text-[10px] transition-transform group-hover:translate-x-0.5"></i>
+    </a>
+    @endif
+</div>
+@else
 {{-- Top Announcement Bar (Promo Banner) --}}
-<div class="bg-gradient-to-r from-blue-700 via-indigo-600 to-blue-600 text-white text-[11px] sm:text-xs font-semibold py-1.5 px-4 text-center relative z-50 overflow-hidden shadow-sm">
-    <a href="{{ route('landing.google_review_card') }}" class="inline-flex items-center justify-center gap-1.5 hover:underline transition-all group">
-        <span class="bg-white/20 px-2 py-0.5 rounded-full text-[10px] uppercase tracking-wider font-extrabold group-hover:bg-white/30 transition-colors">Promo Spesial</span>
-        <span class="truncate max-w-[280px] sm:max-w-none">Bikin Google Review Card Siap Cetak Cuma Rp 20.000 · Scan QR, Pelanggan Auto Kasih Bintang 5!</span>
-        <i class="fa-solid fa-arrow-right text-[10px] ml-1 transition-transform group-hover:translate-x-0.5"></i>
+<div class="bg-gradient-to-r from-blue-700 via-indigo-600 to-blue-600 text-white text-[11px] sm:text-xs font-semibold py-2 px-3 sm:px-4 text-center relative z-50 overflow-hidden shadow-sm">
+    <a href="{{ route('landing.google_review_card') }}" class="flex items-center justify-center gap-2 hover:underline transition-all group">
+        <span class="shrink-0 whitespace-nowrap bg-white/20 px-2 py-0.5 rounded-full text-[10px] uppercase tracking-wider font-extrabold group-hover:bg-white/30 transition-colors">Promo</span>
+        {{-- Mobile: pesan singkat, tidak terpotong. Desktop: pesan lengkap. --}}
+        <span class="min-w-0 text-left sm:text-center leading-tight sm:hidden">Google Review Card cuma <span class="font-extrabold">Rp 20.000</span></span>
+        <span class="hidden sm:inline">Bikin Google Review Card Siap Cetak Cuma Rp 20.000 · Scan QR, Pelanggan Auto Kasih Bintang 5!</span>
+        <i class="fa-solid fa-arrow-right shrink-0 text-[10px] transition-transform group-hover:translate-x-0.5"></i>
     </a>
 </div>
+@endif
 
 {{-- Main Navbar --}}
 <nav class="sticky top-0 left-0 right-0 z-40 bg-[#0B1120]/85 backdrop-blur-xl border-b border-white/[0.08] transition-all duration-300">
@@ -29,13 +55,14 @@
             <div class="hidden lg:flex items-center gap-1 xl:gap-2">
 
                 {{-- Home --}}
-                <a href="{{ route('index.company.profile') }}" class="px-3.5 py-2 rounded-xl text-xs xl:text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 transition-all whitespace-nowrap">
+                <a href="{{ route('index.company.profile') }}" class="px-3 xl:px-3.5 py-2 rounded-xl text-xs xl:text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 transition-all whitespace-nowrap">
                     Home
                 </a>
 
+                @unless($isTopupArea)
                 {{-- Dropdown: Layanan & Solusi --}}
                 <div class="relative group py-2">
-                    <button class="px-3.5 py-2 rounded-xl text-xs xl:text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 transition-all flex items-center gap-1.5 focus:outline-none cursor-pointer whitespace-nowrap">
+                    <button class="px-3 xl:px-3.5 py-2 rounded-xl text-xs xl:text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 transition-all flex items-center gap-1.5 focus:outline-none cursor-pointer whitespace-nowrap">
                         <span>Layanan & Solusi</span>
                         <i class="fa-solid fa-chevron-down text-[10px] text-white/40 transition-transform duration-300 group-hover:rotate-180 group-hover:text-brand-accent"></i>
                     </button>
@@ -129,17 +156,22 @@
                     </div>
                 </div>
 
+                @endunless
+
+                @unless($isTopupArea)
                 {{-- Portofolio --}}
-                <a href="{{ route('landing.portfolio') }}" class="px-3.5 py-2 rounded-xl text-xs xl:text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 transition-all whitespace-nowrap">
+                <a href="{{ route('landing.portfolio') }}" class="px-3 xl:px-3.5 py-2 rounded-xl text-xs xl:text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 transition-all whitespace-nowrap">
                     Portofolio
                 </a>
-                <a href="{{ route('topup.index') }}" class="px-3.5 py-2 rounded-xl text-xs xl:text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 transition-all whitespace-nowrap">
+                @endunless
+                <a href="{{ route('topup.index') }}" class="px-3 xl:px-3.5 py-2 rounded-xl text-xs xl:text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 transition-all whitespace-nowrap">
                     Top-Up Game
                 </a>
 
+                @unless($isTopupArea)
                 {{-- Dropdown: Program & Karir --}}
                 <div class="relative group py-2">
-                    <button class="px-3.5 py-2 rounded-xl text-xs xl:text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 transition-all flex items-center gap-1.5 focus:outline-none cursor-pointer whitespace-nowrap">
+                    <button class="px-3 xl:px-3.5 py-2 rounded-xl text-xs xl:text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 transition-all flex items-center gap-1.5 focus:outline-none cursor-pointer whitespace-nowrap">
                         <span>Program & Karir</span>
                         <i class="fa-solid fa-chevron-down text-[10px] text-white/40 transition-transform duration-300 group-hover:rotate-180 group-hover:text-brand-accent"></i>
                     </button>
@@ -204,15 +236,17 @@
                     </div>
                 </div>
 
+                @endunless
+
                 {{-- Blog --}}
-                <a href="{{ route('landing.blogs') }}" class="px-3.5 py-2 rounded-xl text-xs xl:text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 transition-all whitespace-nowrap">
+                <a href="{{ route('landing.blogs') }}" class="px-3 xl:px-3.5 py-2 rounded-xl text-xs xl:text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 transition-all whitespace-nowrap">
                     Blog
                 </a>
 
             </div>
 
             {{-- Right Actions (Search Icon + WA CTA + Mobile Toggle) --}}
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2 sm:gap-3 shrink-0">
 
                 {{-- Compact Search Button / Modal Trigger (Desktop) --}}
                 <div class="relative group/search hidden md:block">
@@ -234,11 +268,76 @@
                     </div>
                 </div>
 
-                {{-- WhatsApp Consultation Button --}}
-                <a href="https://wa.me/6285221694067?text=Halo%20Scalify,%20saya%20ingin%20konsultasi%20pembuatan%20website" target="_blank" class="hidden sm:inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs sm:text-sm font-semibold px-5 py-2.5 rounded-full shadow-lg shadow-blue-500/20 hover:shadow-blue-500/35 border border-white/10 active:scale-95 transition-all">
+                @if($isTopupArea)
+                {{-- Akun customer (desktop) --}}
+                <div class="hidden md:flex items-center gap-2 pl-3 ml-1 border-l border-white/10">
+                    @if($customer)
+                    <div class="relative group py-1">
+                        <button type="button" class="flex items-center gap-2 pl-1 pr-3 py-1 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 transition-colors focus:outline-none">
+                            <span class="w-7 h-7 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-white text-xs font-bold flex items-center justify-center">{{ mb_strtoupper(mb_substr($customer->name, 0, 1)) }}</span>
+                            <span class="text-xs font-semibold text-white max-w-[96px] truncate whitespace-nowrap">{{ \Illuminate\Support\Str::of($customer->name)->before(' ') }}</span>
+                            <i class="fa-solid fa-chevron-down text-[9px] text-white/40 transition-transform group-hover:rotate-180"></i>
+                        </button>
+                        <div class="absolute top-full right-0 w-56 pt-2 hidden group-hover:block z-50">
+                            <div class="bg-[#0B1120]/95 backdrop-blur-2xl border border-white/10 rounded-2xl p-2 shadow-2xl shadow-black/80">
+                                <div class="px-3 py-2 border-b border-white/5 mb-1">
+                                    <p class="text-xs font-semibold text-white truncate">{{ $customer->name }}</p>
+                                    <p class="text-[11px] text-white/45 truncate">{{ $customer->email }}</p>
+                                    <p class="text-[11px] text-amber-300 mt-1"><i class="fa-solid fa-gift mr-1"></i>{{ number_format($customer->points, 0, ',', '.') }} poin</p>
+                                </div>
+                                <a href="{{ route('customer.account') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs text-white/80 hover:text-white hover:bg-white/5 transition-colors"><i class="fa-solid fa-clock-rotate-left w-4 text-center text-brand-accent"></i> Riwayat Pesanan</a>
+                                <form action="{{ route('customer.logout') }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs text-white/80 hover:text-white hover:bg-white/5 transition-colors"><i class="fa-solid fa-arrow-right-from-bracket w-4 text-center text-white/40"></i> Keluar</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    @else
+                    <a href="{{ route('customer.login') }}" class="whitespace-nowrap text-sm font-medium text-white/75 hover:text-white px-3 py-2 rounded-full hover:bg-white/5 transition-all">Masuk</a>
+                    <a href="{{ route('customer.register') }}" class="inline-flex items-center gap-1.5 whitespace-nowrap text-sm font-semibold text-white px-4 py-2 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 shadow-lg shadow-blue-500/20 border border-white/10 active:scale-95 transition-all">
+                        <i class="fa-solid fa-gift text-[11px] text-amber-300"></i> Daftar
+                    </a>
+                    @endif
+                </div>
+
+                {{-- Akun customer (mobile): ikon + petunjuk reward --}}
+                @unless($customer)
+                <div class="md:hidden relative"
+                     x-data="{ tip: false, init() { if (!localStorage.getItem('rewardTipSeen')) setTimeout(() => this.tip = true, 800); }, close() { this.tip = false; localStorage.setItem('rewardTipSeen', '1'); } }">
+                    <a href="{{ route('customer.login') }}" aria-label="Masuk atau daftar, dapat reward" class="relative flex items-center justify-center w-10 h-10 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white transition-colors">
+                        <i class="fa-regular fa-user text-sm"></i>
+                        <span class="absolute -top-1 -right-1 flex h-3 w-3" aria-hidden="true">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-3 w-3 bg-amber-400 border border-[#0B1120]"></span>
+                        </span>
+                    </a>
+
+                    {{-- Bubble petunjuk --}}
+                    <div x-show="tip" x-cloak x-transition.opacity.duration.200ms
+                         class="absolute top-full right-0 mt-3 w-56 z-50">
+                        <span class="absolute -top-1.5 right-3.5 w-3 h-3 rotate-45 bg-indigo-600 border-l border-t border-white/20" aria-hidden="true"></span>
+                        <div class="relative rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 border border-white/20 shadow-xl shadow-black/50 p-3 pr-8">
+                            <a href="{{ route('customer.register') }}" @click="close()" class="block">
+                                <span class="block text-xs font-bold text-white"><i class="fa-solid fa-gift text-amber-300 mr-1"></i> Daftar, dapat reward!</span>
+                                <span class="block text-[11px] text-white/80 mt-0.5 leading-snug">Bonus {{ \App\Http\Controllers\CustomerAuthController::WELCOME_POINTS }} poin gratis untuk akun baru.</span>
+                            </a>
+                            <button type="button" @click="close()" aria-label="Tutup petunjuk" class="absolute top-1.5 right-1.5 w-6 h-6 flex items-center justify-center text-white/70 hover:text-white">
+                                <i class="fa-solid fa-xmark text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                @endunless
+                @endif
+
+                {{-- WhatsApp Consultation Button (disembunyikan di halaman top up) --}}
+                @unless($isTopupArea)
+                <a href="https://wa.me/6285221694067?text=Halo%20Scalify,%20saya%20ingin%20konsultasi%20pembuatan%20website" target="_blank" class="hidden sm:inline-flex items-center gap-2 whitespace-nowrap bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs sm:text-sm font-semibold px-5 py-2.5 rounded-full shadow-lg shadow-blue-500/20 hover:shadow-blue-500/35 border border-white/10 active:scale-95 transition-all">
                     <i class="fa-brands fa-whatsapp text-sm text-emerald-300"></i>
                     <span>Konsultasi Web</span>
                 </a>
+                @endunless
 
                 {{-- Mobile Hamburger Toggle --}}
                 <button id="nav-toggle" aria-label="Toggle menu" aria-expanded="false" class="lg:hidden flex items-center justify-center w-10 h-10 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white focus:outline-none transition-colors">
@@ -268,8 +367,30 @@
                 </div>
             </form>
 
+            @if($isTopupArea)
+            {{-- Akun customer (mobile) --}}
+            <div class="rounded-xl bg-gradient-to-r from-blue-600/15 to-indigo-600/15 border border-blue-500/30 p-3">
+                @if($customer)
+                <div class="flex items-center justify-between gap-3">
+                    <a href="{{ route('customer.account') }}" class="mobile-nav-link text-xs font-semibold text-white truncate"><i class="fa-solid fa-circle-user mr-1.5 text-brand-accent"></i>{{ $customer->name }}</a>
+                    <form action="{{ route('customer.logout') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="text-[11px] font-bold text-white/80 px-3 py-1.5 rounded-lg border border-white/15">Keluar</button>
+                    </form>
+                </div>
+                @else
+                <p class="text-xs text-white/70 mb-2.5">Daftar gratis &amp; dapat bonus {{ \App\Http\Controllers\CustomerAuthController::WELCOME_POINTS }} poin reward. Riwayat pesanan juga tersimpan.</p>
+                <div class="grid grid-cols-2 gap-2">
+                    <a href="{{ route('customer.login') }}" class="mobile-nav-link text-center text-xs font-semibold text-white py-2.5 rounded-lg border border-white/20 hover:bg-white/5">Masuk</a>
+                    <a href="{{ route('customer.register') }}" class="mobile-nav-link text-center text-xs font-bold text-white py-2.5 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600">Daftar</a>
+                </div>
+                @endif
+            </div>
+            @endif
+
             <a href="{{ route('index.company.profile') }}" class="mobile-nav-link text-sm text-white/90 font-medium px-3.5 py-2.5 rounded-xl hover:bg-white/5 transition-all">Home</a>
 
+            @unless($isTopupArea)
             {{-- Mobile Collapsible: Layanan --}}
             <div class="rounded-xl bg-white/[0.02] border border-white/5 p-2">
                 <div class="text-[10px] uppercase font-bold text-white/40 px-2 py-1 tracking-wider">Layanan & Solusi</div>
@@ -324,8 +445,15 @@
                 </div>
             </div>
 
+            @endunless
+
+            @if($isTopupArea)
+            <a href="{{ route('topup.index') }}" class="mobile-nav-link text-sm text-white/90 font-medium px-3.5 py-2.5 rounded-xl hover:bg-white/5 transition-all">Top-Up Game</a>
+            @endif
+
             <a href="{{ route('landing.blogs') }}" class="mobile-nav-link text-sm text-white/90 font-medium px-3.5 py-2.5 rounded-xl hover:bg-white/5 transition-all">Blog & Insight</a>
 
+            @unless($isTopupArea)
             {{-- WhatsApp Consultation Mobile Button --}}
             <div class="mt-2 pt-2">
                 <a href="https://wa.me/6285221694067?text=Halo%20Scalify,%20saya%20ingin%20konsultasi%20pembuatan%20website" target="_blank" class="flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs font-semibold px-5 py-3 rounded-xl shadow-lg shadow-blue-500/20 active:scale-95 transition-all">
@@ -333,6 +461,7 @@
                     <span>Konsultasi via WhatsApp</span>
                 </a>
             </div>
+            @endunless
 
         </div>
     </div>
