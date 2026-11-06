@@ -39,6 +39,44 @@ class TopupOrderStatusMail extends Mailable
 
     public function content(): Content
     {
-        return new Content(view: 'emails.topup-order-status');
+        return new Content(view: 'emails.topup-order-status', with: ['meta' => $this->meta()]);
+    }
+
+    /**
+     * Teks & warna per event. Sengaja di sini (bukan di @php Blade) agar tidak rusak oleh formatter Blade.
+     */
+    public function meta(): array
+    {
+        $brand = config('mail.from.name');
+
+        return [
+            'paid' => [
+                'title'   => 'Pembayaran Diterima',
+                'badge'   => 'Sedang Diproses',
+                'message' => 'Terima kasih, pembayaranmu sudah kami terima. Pesanan sedang diproses dan biasanya masuk ke akun tujuan dalam beberapa menit.',
+                'icon'    => '&#8635;',
+                'color'   => '#2563EB',
+                'soft'    => '#EFF6FF',
+                'ring'    => '#BFDBFE',
+            ],
+            'success' => [
+                'title'   => 'Top Up Berhasil',
+                'badge'   => 'Berhasil',
+                'message' => 'Pesananmu sudah berhasil dikirim ke akun tujuan. Terima kasih sudah bertransaksi di ' . $brand . '.',
+                'icon'    => '&#10003;',
+                'color'   => '#059669',
+                'soft'    => '#ECFDF5',
+                'ring'    => '#A7F3D0',
+            ],
+            'failed' => [
+                'title'   => 'Top Up Gagal Diproses',
+                'badge'   => 'Gagal',
+                'message' => 'Mohon maaf, pesananmu gagal diproses oleh sistem. Silakan hubungi admin dengan menyertakan nomor order di bawah agar segera kami bantu.',
+                'icon'    => '&#33;',
+                'color'   => '#DC2626',
+                'soft'    => '#FEF2F2',
+                'ring'    => '#FECACA',
+            ],
+        ][$this->event];
     }
 }

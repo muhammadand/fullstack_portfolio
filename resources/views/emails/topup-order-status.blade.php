@@ -4,21 +4,8 @@
     font-family ditulis di setiap elemen teks karena beberapa client membuang style <body>.
 --}}
 @php
+// $meta (judul, label, warna per event) dikirim dari App\Mail\TopupOrderStatusMail::meta().
 $brand = config('mail.from.name');
-$meta = [
-'paid' => [
-'message' => 'Terima kasih, pembayaranmu sudah kami terima. Pesanan sedang diproses dan biasanya masuk ke akun tujuan dalam beberapa menit.',
-'icon' => '&#8635;', 'color' => '#2563EB', 'soft' => '#EFF6FF', 'ring' => '#BFDBFE',
-],
-'success' => [
-'message' => "Pesananmu sudah berhasil dikirim ke akun tujuan. Terima kasih sudah bertransaksi di {$brand}.",
-'icon' => '&#10003;', 'color' => '#059669', 'soft' => '#ECFDF5', 'ring' => '#A7F3D0',
-],
-'failed' => [
-'message' => 'Mohon maaf, pesananmu gagal diproses oleh sistem. Silakan hubungi admin dengan menyertakan nomor order di bawah agar segera kami bantu.',
-'icon' => '&#33;', 'color' => '#DC2626', 'soft' => '#FEF2F2', 'ring' => '#FECACA',
-],
-][$event];
 
 $rupiah = fn ($v) => 'Rp ' . number_format((float) $v, 0, ',', '.');
 $font = "'Plus Jakarta Sans','Segoe UI',Roboto,Helvetica,Arial,sans-serif";
