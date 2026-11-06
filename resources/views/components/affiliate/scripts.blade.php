@@ -7,6 +7,12 @@
         if (type === 'success') {
             toast.classList.add('bg-slate-800', 'border', 'border-emerald-500/30', 'text-white');
             toast.innerHTML = `<div class="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0"><i class="fa-solid fa-check text-xs"></i></div> <span class="truncate">${message}</span>`;
+        } else if (type === 'info') {
+            // Info netral (mis. menu "Segera"): ganti toast info sebelumnya agar tidak menumpuk saat di-tap berulang.
+            document.querySelectorAll('[data-toast="info"]').forEach((el) => el.remove());
+            toast.dataset.toast = 'info';
+            toast.classList.add('bg-slate-800', 'border', 'border-blue-500/30', 'text-white');
+            toast.innerHTML = `<div class="w-6 h-6 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 shrink-0"><i class="fa-solid fa-hourglass-half text-xs"></i></div> <span class="truncate">${message}</span>`;
         } else {
             toast.classList.add('bg-slate-800', 'border', 'border-red-500/30', 'text-white');
             toast.innerHTML = `<div class="w-6 h-6 rounded-full bg-red-500/20 flex items-center justify-center text-red-400 shrink-0"><i class="fa-solid fa-xmark text-xs"></i></div> <span class="truncate">${message}</span>`;

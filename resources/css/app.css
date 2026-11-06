@@ -5,6 +5,7 @@
 @source "../**/*.blade.php";
 @source "../**/*.js";
 @source "../**/*.vue";
+@source "../../app/Support/**/*.php";
 
 @theme {
     --font-sans: 'Plus Jakarta Sans', sans-serif;

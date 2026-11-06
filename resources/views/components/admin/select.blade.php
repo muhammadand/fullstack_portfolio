@@ -12,4 +12,5 @@
     @foreach ($options as $value => $label)
     <option value="{{ $value }}" @selected((string) $selected === (string) $value)>{{ $label }}</option>
     @endforeach
+    {{ $slot }}
 </select>

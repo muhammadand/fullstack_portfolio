@@ -46,6 +46,8 @@ class AdminAffiliatesModernizationTest extends TestCase
         $response->assertSee('Total Partner');
         $response->assertSee('Partner Scalify Modern');
         $response->assertSee($affiliate->affiliate_code);
+        $response->assertSee('Approved (Langsung Aktif)');
+        $response->assertSee('Pending (Perlu Review)');
     }
 
     public function test_affiliates_index_search_and_filter(): void

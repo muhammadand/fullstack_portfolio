@@ -146,6 +146,25 @@ class AffiliateController extends Controller
         return view('affiliate.dashboard', compact('affiliate', 'totalClicks', 'totalProjects', 'withdrawals', 'hasTemplates'));
     }
 
+    /**
+     * Halaman "Semua Menu": seluruh menu affiliate dikelompokkan per lini bisnis.
+     */
+    public function allMenu()
+    {
+        /** @var \App\Models\Affiliate $affiliate */
+        $affiliate = Auth::guard('affiliate')->user();
+
+        // Akun yang belum disetujui tidak punya akses menu (sama seperti dashboard).
+        if ($affiliate->status === 'pending') {
+            return redirect()->route('affiliate.dashboard');
+        }
+
+        $menuGroups = \App\Support\AffiliateMenu::groups();
+        $totalProjects = \App\Models\Commission::where('affiliate_id', $affiliate->id)->count();
+
+        return view('affiliate.all_menu', compact('affiliate', 'menuGroups', 'totalProjects'));
+    }
+
     public function history(Request $request)
     {
         /** @var \App\Models\Affiliate $affiliate */
