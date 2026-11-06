@@ -101,6 +101,11 @@ class DigiflazzFulfillmentService
 
         $webhook->update(['is_processed' => true, 'processed_at' => now()]);
 
+        // Email hasil akhir hanya saat status benar-benar berubah (webhook ulang/terlambat = 'ignored').
+        if (in_array($result, [Order::STATUS_SUCCESS, Order::STATUS_FAILED], true)) {
+            TopupOrderMailer::send($order, $result);
+        }
+
         Log::info("Digiflazz webhook {$order->order_no}: {$webhook->status} -> {$result}");
 
         return $result;

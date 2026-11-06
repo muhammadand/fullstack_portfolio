@@ -343,4 +343,73 @@ class TopupCheckoutTest extends TestCase
 
         Http::assertNotSent(fn ($r) => str_contains($r->url(), '/transaction'));
     }
+
+    public function test_status_emails_are_sent_once_for_paid_success_and_failed(): void
+    {
+        \Illuminate\Support\Facades\Mail::fake();
+        $this->fakeDigiflazz('Pending', '');
+
+        $ok = $this->paidOrderNo();
+        $bad = $this->paidOrderNo();
+        $this->webhook($ok, 'settlement')->assertOk(); // webhook lunas ulang: tidak kirim lagi
+
+        $this->digiflazzWebhook($ok, 'Pending')->assertOk(); // belum final: tidak kirim
+        $this->digiflazzWebhook($ok, 'Sukses')->assertOk();
+        $this->digiflazzWebhook($ok, 'Sukses')->assertOk(); // duplikat: tidak kirim lagi
+        $this->digiflazzWebhook($bad, 'Gagal')->assertOk();
+
+        $sent = fn (string $no, string $event) => \Illuminate\Support\Facades\Mail::sent(
+            \App\Mail\TopupOrderStatusMail::class,
+            fn ($m) => $m->order->order_no === $no && $m->event === $event && $m->hasTo('budi@example.com')
+        )->count();
+
+        $this->assertSame(1, $sent($ok, 'paid'));
+        $this->assertSame(1, $sent($ok, 'success'));
+        $this->assertSame(0, $sent($ok, 'failed'));
+        $this->assertSame(1, $sent($bad, 'paid'));
+        $this->assertSame(1, $sent($bad, 'failed'));
+        \Illuminate\Support\Facades\Mail::assertSentCount(4);
+    }
+
+    public function test_no_email_is_sent_when_order_has_no_email(): void
+    {
+        \Illuminate\Support\Facades\Mail::fake();
+        $this->fakeDigiflazz('Pending', '');
+
+        $no = $this->postJson(route('topup.checkout', $this->brand->slug), $this->payload(['email' => null]))->json('order_no');
+        $this->webhook($no, 'settlement')->assertOk();
+        $this->digiflazzWebhook($no, 'Sukses')->assertOk();
+
+        $this->assertSame(Order::STATUS_SUCCESS, Order::where('order_no', $no)->first()->status);
+        \Illuminate\Support\Facades\Mail::assertNothingSent();
+    }
+
+    public function test_status_email_renders_order_details_and_sn(): void
+    {
+        $this->fakeDigiflazz('Pending', '');
+        $no = $this->paidOrderNo();
+        $this->digiflazzWebhook($no, 'Sukses')->assertOk();
+
+        $order = Order::where('order_no', $no)->first();
+        foreach (['paid' => 'Pembayaran Diterima', 'success' => 'Top Up Berhasil', 'failed' => 'Top Up Gagal Diproses'] as $event => $title) {
+            $this->assertStringContainsString($title, (new \App\Mail\TopupOrderStatusMail($order, $event))->render());
+        }
+
+        $html = (new \App\Mail\TopupOrderStatusMail($order, 'success'))->render();
+
+        $this->assertStringContainsString($no, $html);
+        $this->assertStringContainsString('86 Diamond', $html);
+        $this->assertStringContainsString('SN-FINAL', $html);
+        $this->assertStringContainsString('12345678', $html);
+    }
+
+    public function test_smtp_failure_does_not_break_payment_webhook(): void
+    {
+        \Illuminate\Support\Facades\Mail::shouldReceive('to')->andThrow(new \RuntimeException('SMTP down'));
+        $this->fakeDigiflazz('Pending', '');
+
+        $no = $this->paidOrderNo(); // assertOk di dalamnya
+
+        $this->assertSame(Order::PAYMENT_PAID, Order::where('order_no', $no)->first()->payment_status);
+    }
 }

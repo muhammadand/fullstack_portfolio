@@ -313,6 +313,11 @@ class PaymentWebhookService
             } else {
                 $action = $order->markAsPaid($transactionId) ? 'paid' : 'already_paid';
 
+                // Email "pembayaran diterima" hanya saat baru lunas (webhook ulang tidak mengirim lagi).
+                if ($action === 'paid') {
+                    TopupOrderMailer::send($order, 'paid');
+                }
+
                 // Lunas -> kirim ke Digiflazz. Dipanggil juga saat webhook diulang (already_paid) agar
                 // order yang tadinya gagal terhubung ke supplier bisa dicoba lagi; klaim atomik mencegah kirim ganda.
                 if ($order->status === Order::STATUS_PROCESSING && $order->provider_ref_id === null) {
