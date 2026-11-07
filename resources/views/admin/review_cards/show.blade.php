@@ -428,16 +428,15 @@
                         }
                     }, 500);
 
-                    this.statusMessage = 'PNG berhasil di-download!';
-                    setTimeout(() => {
-                        this.statusMessage = '';
-                    }, 3000);
+                    this.statusMessage = '';
+                    window.toast('success', 'PNG berhasil di-download!');
                 } catch (error) {
                     console.error('Error saat download PNG:', error);
-                    alert('Gagal mendownload kartu: ' + (error.message || 'Terjadi kesalahan sistem'));
+                    window.toast('error', 'Gagal mendownload kartu: ' + (error.message || 'Terjadi kesalahan sistem'));
                 } finally {
                     this.isGenerating = false;
                     this.generatingType = '';
+                    this.statusMessage = '';
                 }
             },
 
@@ -470,16 +469,15 @@
                         pdf.save(filename);
                     }
 
-                    this.statusMessage = 'PDF berhasil di-download!';
-                    setTimeout(() => {
-                        this.statusMessage = '';
-                    }, 3000);
+                    this.statusMessage = '';
+                    window.toast('success', 'PDF berhasil di-download!');
                 } catch (err) {
                     console.error('Error saat download PDF:', err);
-                    alert('Gagal membuat PDF: ' + (err.message || 'Terjadi kesalahan sistem'));
+                    window.toast('error', 'Gagal membuat PDF: ' + (err.message || 'Terjadi kesalahan sistem'));
                 } finally {
                     this.isGenerating = false;
                     this.generatingType = '';
+                    this.statusMessage = '';
                 }
             },
 
@@ -536,16 +534,15 @@
                         }, 500);
                     }
 
-                    this.statusMessage = 'QR Code HD berhasil di-download!';
-                    setTimeout(() => {
-                        this.statusMessage = '';
-                    }, 3000);
+                    this.statusMessage = '';
+                    window.toast('success', 'QR Code HD berhasil di-download!');
                 } catch (error) {
                     console.error('Error download QR:', error);
-                    alert('Gagal download QR Code');
+                    window.toast('error', 'Gagal download QR Code');
                 } finally {
                     this.isGenerating = false;
                     this.generatingType = '';
+                    this.statusMessage = '';
                 }
             }
         }

@@ -49,7 +49,7 @@
                     <x-admin.button variant="secondary" size="sm" icon="fa-solid fa-arrow-up-right-from-square" :href="$product->demo_url" target="_blank" title="Lihat Live Demo" />
                     @endif
                     <x-admin.button variant="secondary" size="sm" icon="fa-solid fa-pen" :href="route('admin.digital_products.edit', $product->id)">Edit</x-admin.button>
-                    <form action="{{ route('admin.digital_products.destroy', $product->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus produk digital ini?')">
+                    <form action="{{ route('admin.digital_products.destroy', $product->id) }}" method="POST" data-confirm="Apakah Anda yakin ingin menghapus produk digital ini?" data-confirm-danger>
                         @csrf
                         @method('DELETE')
                         <x-admin.button type="submit" variant="danger" size="sm" icon="fa-solid fa-trash-can" title="Hapus" aria-label="Hapus" />

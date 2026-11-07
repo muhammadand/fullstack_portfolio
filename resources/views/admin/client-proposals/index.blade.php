@@ -139,24 +139,6 @@
         </form>
     </div>
 
-    @if(session('success'))
-    <div class="bg-emerald-50 border-l-4 border-emerald-500 text-emerald-800 p-4 mb-6 rounded-r-lg shadow-sm flex items-center justify-between" role="alert">
-        <div class="flex items-center gap-3">
-            <i class="fa-solid fa-circle-check text-emerald-500 text-lg"></i>
-            <p class="text-sm font-medium">{{ session('success') }}</p>
-        </div>
-    </div>
-    @endif
-
-    @if(session('error'))
-    <div class="bg-rose-50 border-l-4 border-rose-500 text-rose-800 p-4 mb-6 rounded-r-lg shadow-sm flex items-center justify-between" role="alert">
-        <div class="flex items-center gap-3">
-            <i class="fa-solid fa-circle-exclamation text-rose-500 text-lg"></i>
-            <p class="text-sm font-medium">{{ session('error') }}</p>
-        </div>
-    </div>
-    @endif
-
     <!-- Selected Items Banner -->
     <div x-show="selectedIds.length > 0" x-transition.opacity style="display: none;" class="bg-amber-50 border border-amber-200 rounded-xl p-3.5 mb-4 flex flex-wrap items-center justify-between gap-3">
         <div class="flex items-center gap-2 text-sm text-amber-900 font-medium">

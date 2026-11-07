@@ -20,21 +20,6 @@
         </div>
     </div>
 
-    <!-- Alert Messages -->
-    @if(session('success'))
-    <div class="bg-emerald-50 border-l-4 border-emerald-500 text-emerald-700 p-4 rounded-r-lg mb-6 text-sm flex items-center gap-3 shadow-xs" role="alert">
-        <i class="fa-solid fa-circle-check text-emerald-500"></i>
-        <span>{{ session('success') }}</span>
-    </div>
-    @endif
-
-    @if(session('error'))
-    <div class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-r-lg mb-6 text-sm flex items-center gap-3 shadow-xs" role="alert">
-        <i class="fa-solid fa-circle-exclamation text-red-500"></i>
-        <span>{{ session('error') }}</span>
-    </div>
-    @endif
-
     <!-- Dashboard Stats Grid (Soft & Clean) -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <!-- Total Pesanan -->
@@ -280,7 +265,7 @@
                         <td class="px-5 py-4 align-top text-right">
                             <div class="flex items-center justify-end gap-1">
                                 @if($b->payment_status !== 'paid' || $b->status === 'pending')
-                                <form action="{{ route('admin.travel_bookings.verify_payment', $b->id) }}" method="POST" onsubmit="return confirm('Verifikasi pembayaran pesanan #{{ $b->booking_code }}?')">
+                                <form action="{{ route('admin.travel_bookings.verify_payment', $b->id) }}" method="POST" data-confirm="Verifikasi pembayaran pesanan #{{ $b->booking_code }}?">
                                     @csrf
                                     <button type="submit" class="p-1.5 text-emerald-600 hover:text-emerald-800 hover:bg-emerald-50 rounded-lg transition-colors" title="Verifikasi Lunas & Konfirmasi">
                                         <i class="fa-solid fa-check text-sm"></i>
@@ -292,7 +277,7 @@
                                     <i class="fa-solid fa-pen-to-square text-sm"></i>
                                 </button>
 
-                                <form action="{{ route('admin.travel_bookings.destroy', $b->id) }}" method="POST" onsubmit="return confirm('Hapus pesanan #{{ $b->booking_code }}?')">
+                                <form action="{{ route('admin.travel_bookings.destroy', $b->id) }}" method="POST" data-confirm="Hapus pesanan #{{ $b->booking_code }}?" data-confirm-danger>
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Hapus">

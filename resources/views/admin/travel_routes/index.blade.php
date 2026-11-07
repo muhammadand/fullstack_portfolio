@@ -20,21 +20,6 @@
         </div>
     </div>
 
-    <!-- Alert Messages -->
-    @if(session('success'))
-    <div class="bg-emerald-50 border-l-4 border-emerald-500 text-emerald-700 p-4 rounded-r-lg mb-6 text-sm flex items-center gap-3 shadow-xs" role="alert">
-        <i class="fa-solid fa-circle-check text-emerald-500"></i>
-        <span>{{ session('success') }}</span>
-    </div>
-    @endif
-
-    @if(session('error'))
-    <div class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-r-lg mb-6 text-sm flex items-center gap-3 shadow-xs" role="alert">
-        <i class="fa-solid fa-circle-exclamation text-red-500"></i>
-        <span>{{ session('error') }}</span>
-    </div>
-    @endif
-
     <!-- Table of Routes -->
     <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
         <div class="overflow-x-auto">
@@ -75,7 +60,7 @@
                                 <button type="button" @click="openEditModal({{ json_encode($r) }})" class="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors cursor-pointer" title="Edit Rute">
                                     <i class="fa-solid fa-pen-to-square text-sm"></i>
                                 </button>
-                                <form action="{{ route('admin.travel_routes.destroy', $r->id) }}" method="POST" onsubmit="return confirm('Hapus rute {{ $r->origin }} - {{ $r->destination }}?')">
+                                <form action="{{ route('admin.travel_routes.destroy', $r->id) }}" method="POST" data-confirm="Hapus rute {{ $r->origin }} - {{ $r->destination }}?" data-confirm-danger>
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer" title="Hapus Rute">

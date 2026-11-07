@@ -84,15 +84,6 @@
         </div>
     </div>
 
-    {{-- Alerts --}}
-    @if(session('success'))
-    <x-admin.alert type="success">{{ session('success') }}</x-admin.alert>
-    @endif
-
-    @if(session('error'))
-    <x-admin.alert type="error">{{ session('error') }}</x-admin.alert>
-    @endif
-
     @if($errors->any())
     <x-admin.alert type="error">
         <p class="font-medium mb-1">Periksa kembali data yang diinput:</p>

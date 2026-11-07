@@ -477,8 +477,27 @@ class DigitalProductIndex extends Component
             ->get(['id', 'status', 'total_received', 'total_new', 'total_updated', 'total_cost_changed', 'total_missing', 'error_message', 'triggered_by', 'started_at']);
     }
 
+    /**
+     * Pesan $notice / $error dikirim sebagai toast standar admin lalu dikosongkan,
+     * jadi tidak menumpuk sebagai banner di halaman.
+     */
+    private function flushToasts(): void
+    {
+        if ($this->notice) {
+            $this->dispatch('toast', type: 'success', message: $this->notice);
+            $this->notice = null;
+        }
+
+        if ($this->error) {
+            $this->dispatch('toast', type: 'error', message: $this->error);
+            $this->error = null;
+        }
+    }
+
     public function render()
     {
+        $this->flushToasts();
+
         $isDigiflazz = $this->provider === 'digiflazz';
         $search = trim($this->search);
 

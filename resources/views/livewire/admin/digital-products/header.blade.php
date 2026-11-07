@@ -21,18 +21,6 @@
     @endif
 </x-admin.page-header>
 
-@if(session('success'))
-<x-admin.alert type="success">{{ session('success') }}</x-admin.alert>
-@endif
-
-@if($notice)
-<x-admin.alert type="success">{{ $notice }}</x-admin.alert>
-@endif
-
-@if($error)
-<x-admin.alert type="error">{{ $error }}</x-admin.alert>
-@endif
-
 {{-- Tab sumber produk --}}
 <div class="flex gap-1 mb-4 border-b border-slate-200">
     @foreach(['digiflazz' => 'Digiflazz', 'lynk' => 'Lynk.id'] as $key => $label)

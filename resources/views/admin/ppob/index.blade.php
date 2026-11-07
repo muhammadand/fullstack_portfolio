@@ -11,9 +11,6 @@
         </x-admin.button>
     </x-admin.page-header>
 
-    @if(session('success'))<x-admin.alert type="success">{{ session('success') }}</x-admin.alert>@endif
-    @if(session('error'))<x-admin.alert type="error">{{ session('error') }}</x-admin.alert>@endif
-
     {{-- Sub-navigation Tabs --}}
     <div class="flex items-center gap-2 border-b border-slate-200 pb-3 mb-6 overflow-x-auto text-xs" style="scrollbar-width: none;">
         <a href="{{ route('admin.ppob.index') }}" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl font-semibold bg-blue-600 text-white shadow-xs">
@@ -29,29 +26,6 @@
             <i class="fa-solid fa-satellite-dish text-xs"></i>
             <span>Log Webhook</span>
             <span class="text-[9px] px-1.5 py-0.5 rounded bg-slate-200 text-slate-600 font-bold uppercase tracking-wider">Segera</span>
-        </div>
-    </div>
-
-    {{-- Alert Messages --}}
-    @if(session('success'))
-    <x-admin.alert type="success">{{ session('success') }}</x-admin.alert>
-    @endif
-
-    @if(session('error'))
-    <x-admin.alert type="error">{{ session('error') }}</x-admin.alert>
-    @endif
-
-    {{-- Dynamic Alpine.js Status Banner --}}
-    <div x-show="statusMessage" x-cloak class="mb-6">
-        <div class="p-4 rounded-xl text-xs flex items-center justify-between gap-3 border shadow-xs transition-all"
-            :class="isSuccess ? 'bg-emerald-50 border-emerald-200 text-emerald-800' : 'bg-rose-50 border-rose-200 text-rose-800'">
-            <div class="flex items-center gap-2.5">
-                <i class="fa-solid text-sm" :class="isSuccess ? 'fa-circle-check text-emerald-500' : 'fa-circle-exclamation text-rose-500'"></i>
-                <span class="font-medium" x-text="statusMessage"></span>
-            </div>
-            <button type="button" @click="statusMessage = ''" class="text-slate-400 hover:text-slate-600 cursor-pointer">
-                <i class="fa-solid fa-xmark text-sm"></i>
-            </button>
         </div>
     </div>
 
@@ -139,12 +113,13 @@
                 <p class="text-sm font-bold mt-0.5 {{ $isProduction ? 'text-emerald-700' : 'text-amber-700' }}">{{ $isProduction ? 'Production Live' : 'Development / Sandbox' }}</p>
 
                 <form method="POST" action="{{ route('admin.ppob.mode') }}" class="mt-2"
-                      onsubmit="return this.mode.value !== 'production' || confirm('Pindah ke PRODUCTION? Semua transaksi akan memotong saldo Digiflazz sungguhan.');">
+                      >
                     @csrf
                     <div class="grid grid-cols-2 w-full max-w-[220px] rounded-lg bg-slate-100 p-0.5 text-xs font-semibold" role="radiogroup" aria-label="Mode Digiflazz">
                         @foreach(['development' => ['Dev', 'fa-flask'], 'production' => ['Prod', 'fa-circle-play']] as $value => [$label, $icon])
                         @php $active = $mode === $value; @endphp
                         <button type="submit" name="mode" value="{{ $value }}" role="radio" aria-checked="{{ $active ? 'true' : 'false' }}"
+                                @if($value === 'production') data-confirm-title="Pindah ke Production?" data-confirm="Semua transaksi akan dikirim sungguhan dan memotong saldo Digiflazz." data-confirm-button="Ya, pindah" data-confirm-danger @endif
                                 @disabled($active || ! $keyReady[$value])
                                 title="{{ $keyReady[$value] ? ucfirst($value) : 'API key mode ini belum diisi di .env' }}"
                                 @class(['inline-flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-md transition-colors',
@@ -293,7 +268,6 @@
             isLoading: false,
             isConnected: {{ $balanceStatus ? 'true' : 'false' }},
             isSuccess: {{ $balanceStatus ? 'true' : 'false' }},
-            statusMessage: '',
             lastChecked: '{{ date("H:i:s") }} WIB',
             showRaw: false,
             copyFeedback: false,
@@ -313,7 +287,6 @@
 
             async refreshBalance() {
                 this.isLoading = true;
-                this.statusMessage = '';
 
                 try {
                     const response = await fetch('/api/digiflazz/cek-saldo', {
@@ -330,16 +303,16 @@
                         this.isConnected = true;
                         this.isSuccess = true;
                         this.lastChecked = new Date().toLocaleTimeString('id-ID') + ' WIB';
-                        this.statusMessage = 'Saldo berhasil diperbarui langsung dari server Digiflazz!';
+                        toast('success', 'Saldo berhasil diperbarui dari Digiflazz.');
                     } else {
                         this.isConnected = false;
                         this.isSuccess = false;
-                        this.statusMessage = data.digiflazz_response?.data?.message || data.message || 'Gagal mengambil saldo dari Digiflazz.';
+                        toast('error', data.digiflazz_response?.data?.message || data.message || 'Gagal mengambil saldo dari Digiflazz.');
                     }
                 } catch (error) {
                     this.isConnected = false;
                     this.isSuccess = false;
-                    this.statusMessage = 'Terjadi kesalahan koneksi saat memanggil /api/digiflazz/cek-saldo: ' + error.message;
+                    toast('error', 'Koneksi ke Digiflazz gagal: ' + error.message);
                 } finally {
                     this.isLoading = false;
                 }

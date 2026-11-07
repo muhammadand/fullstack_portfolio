@@ -57,6 +57,7 @@
         </main>
     </div>
     @livewireScripts
+    @include('layouts.admin.toast')
 </body>
 
 </html>

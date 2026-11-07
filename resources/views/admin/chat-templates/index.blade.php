@@ -12,12 +12,6 @@
         </button>
     </div>
 
-    @if(session('success'))
-    <div class="bg-emerald-100 border-l-4 border-emerald-500 text-emerald-700 p-4 mb-6 rounded-lg shadow-sm" role="alert">
-        <p class="flex items-center gap-2"><i class="fa-solid fa-check-circle"></i> {{ session('success') }}</p>
-    </div>
-    @endif
-
     @if($errors->any())
     <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-lg shadow-sm" role="alert">
         <ul class="list-disc ml-5 text-sm">
@@ -55,7 +49,7 @@
                     <button type="button" onclick="openTemplateModal({{ $t->id }}, '{{ addslashes($t->name) }}', '{{ base64_encode($t->content) }}', '{{ $t->business_category_id }}')" class="w-8 h-8 rounded-lg bg-yellow-50 text-yellow-600 hover:bg-yellow-100 flex items-center justify-center transition-colors" title="Edit Template">
                         <i class="fa-solid fa-pen text-xs"></i>
                     </button>
-                    <form action="{{ route('admin.chat_templates.destroy', $t->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus template ini?');">
+                    <form action="{{ route('admin.chat_templates.destroy', $t->id) }}" method="POST" data-confirm="Apakah Anda yakin ingin menghapus template ini?" data-confirm-danger>
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="w-8 h-8 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 flex items-center justify-center transition-colors" title="Hapus Template">

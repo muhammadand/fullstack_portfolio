@@ -166,7 +166,7 @@ class AdminDigitalCatalogTest extends TestCase
             ->set('search', 'zz-test-ax10')
             ->assertSee('Axis 10.000')
             ->call('toggle', $product->id)
-            ->assertSee('diaktifkan');
+            ->assertDispatched('toast', fn ($e, $p) => $p['type'] === 'success' && str_contains($p['message'], 'diaktifkan'));
 
         $this->assertTrue($product->fresh()->is_active);
     }
@@ -232,8 +232,8 @@ class AdminDigitalCatalogTest extends TestCase
 
         Livewire::actingAs($this->admin)->test(DigitalProductIndex::class)
             ->call('sync')
-            ->assertSee('Sinkronisasi selesai')
-            ->assertSet('error', null);
+            ->assertDispatched('toast', fn ($e, $p) => $p['type'] === 'success' && str_contains($p['message'], 'Sinkronisasi selesai'))
+            ->assertNotDispatched('toast', fn ($e, $p) => $p['type'] === 'error');
 
         $this->assertSame('success', \App\Models\DigitalProductSyncLog::latest('id')->value('status'));
     }
@@ -245,7 +245,7 @@ class AdminDigitalCatalogTest extends TestCase
 
         Livewire::actingAs($this->admin)->test(DigitalProductIndex::class)
             ->call('sync')
-            ->assertSee('Sinkronisasi gagal');
+            ->assertDispatched('toast', fn ($e, $p) => $p['type'] === 'error' && str_contains($p['message'], 'Sinkronisasi gagal'));
     }
 
     public function test_queries_only_select_columns_needed_by_ui(): void
@@ -317,7 +317,7 @@ class AdminDigitalCatalogTest extends TestCase
             ->call('saveEdit')
             ->assertHasNoErrors()
             ->assertSet('editId', null)
-            ->assertSee('berhasil diperbarui');
+            ->assertDispatched('toast', fn ($e, $p) => $p['type'] === 'success' && str_contains($p['message'], 'berhasil diperbarui'));
 
         $product->refresh()->load('priceOverrides');
         $this->assertTrue($product->is_active);
@@ -362,7 +362,7 @@ class AdminDigitalCatalogTest extends TestCase
 
         Livewire::actingAs($this->admin)->test(DigitalProductIndex::class)
             ->call('deleteProduct', $product->id)
-            ->assertSee('dihapus');
+            ->assertDispatched('toast', fn ($e, $p) => $p['type'] === 'success' && str_contains($p['message'], 'dihapus'));
 
         $this->assertDatabaseMissing('digital_products', ['id' => $product->id]);
         $this->assertDatabaseMissing('digital_product_prices', ['digital_product_id' => $product->id]);
@@ -387,7 +387,7 @@ class AdminDigitalCatalogTest extends TestCase
 
         Livewire::actingAs($this->admin)->test(DigitalProductIndex::class)
             ->call('clearAll')
-            ->assertSee('Semua data dibersihkan');
+            ->assertDispatched('toast', fn ($e, $p) => $p['type'] === 'success' && str_contains($p['message'], 'Semua data dibersihkan'));
 
         $this->assertSame(0, DigitalProduct::where('provider', 'digiflazz')->count());
         $this->assertSame(0, \App\Models\DigitalProductSyncLog::count());
@@ -414,7 +414,7 @@ class AdminDigitalCatalogTest extends TestCase
             ->call('savePricing')
             ->assertHasNoErrors()
             ->assertSet('pricingOpen', false)
-            ->assertSee('Pengaturan harga berhasil disimpan');
+            ->assertDispatched('toast', fn ($e, $p) => $p['type'] === 'success' && str_contains($p['message'], 'Pengaturan harga berhasil disimpan'));
 
         $product->refresh()->load('priceOverrides');
         $this->assertSame(12091.2, $product->priceFor($retail->fresh()));   // 10992 + 10%

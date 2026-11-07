@@ -13,18 +13,6 @@
         </a>
     </div>
 
-    @if(session('success'))
-    <div class="bg-emerald-100 border-l-4 border-emerald-500 text-emerald-700 p-4 mb-6" role="alert">
-        <p>{{ session('success') }}</p>
-    </div>
-    @endif
-
-    @if(session('error'))
-    <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6" role="alert">
-        <p>{{ session('error') }}</p>
-    </div>
-    @endif
-
     <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
@@ -56,7 +44,7 @@
                             <a href="{{ route('admin.business_categories.edit', $cat->id) }}" class="px-3 py-1.5 bg-yellow-100 hover:bg-yellow-200 text-yellow-700 text-xs font-medium rounded-lg transition-colors" title="Edit Data">
                                 <i class="fa-solid fa-pen"></i>
                             </a>
-                            <form action="{{ route('admin.business_categories.destroy', $cat->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Apakah Anda yakin ingin menghapus kategori ini?');">
+                            <form action="{{ route('admin.business_categories.destroy', $cat->id) }}" method="POST" class="inline-block" data-confirm="Apakah Anda yakin ingin menghapus kategori ini?" data-confirm-danger>
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="px-3 py-1.5 bg-red-100 hover:bg-red-200 text-red-700 text-xs font-medium rounded-lg transition-colors" title="Hapus Data">

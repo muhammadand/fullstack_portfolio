@@ -7,18 +7,14 @@
 
 <div x-data="{
     commissionModalOpen: false,
-    toastMessage: '',
-    showToast: false,
-    toast(msg) {
-        this.toastMessage = msg;
-        this.showToast = true;
-        setTimeout(() => { this.showToast = false; }, 3500);
+    toast(msg, type = 'success') {
+        window.toast(type, msg); // toast standar admin (layouts/admin/toast)
     },
     copyText(text, label) {
         navigator.clipboard.writeText(text).then(() => {
             this.toast(label + ' berhasil disalin!');
         }).catch(() => {
-            alert('Gagal menyalin ke clipboard.');
+            window.toast('error', 'Gagal menyalin ke clipboard.');
         });
     }
 }">
@@ -42,10 +38,6 @@
             @endforeach
         </ul>
     </x-admin.alert>
-    @endif
-
-    @if(session('success'))
-    <x-admin.alert type="success">{{ session('success') }}</x-admin.alert>
     @endif
 
     {{-- Partner Info Card --}}
@@ -421,19 +413,6 @@
         </div>
     </div>
 
-    {{-- Toast Notification Floating Banner --}}
-    <div x-show="showToast"
-        x-transition:enter="transition ease-out duration-300"
-        x-transition:enter-start="opacity-0 translate-y-2"
-        x-transition:enter-end="opacity-100 translate-y-0"
-        x-transition:leave="transition ease-in duration-200"
-        x-transition:leave-start="opacity-100 translate-y-0"
-        x-transition:leave-end="opacity-0 translate-y-2"
-        x-cloak
-        class="fixed bottom-6 right-6 z-50 bg-slate-900 text-white text-xs px-4 py-3 rounded-xl shadow-xl flex items-center gap-2.5 border border-slate-800">
-        <i class="fa-solid fa-circle-check text-emerald-400"></i>
-        <span x-text="toastMessage"></span>
-    </div>
 
 </div>
 @endsection

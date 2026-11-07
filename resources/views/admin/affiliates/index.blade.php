@@ -6,12 +6,8 @@
     commissionModalOpen: false,
     selectedAffiliateId: null,
     selectedAffiliateName: '',
-    toastMessage: '',
-    showToast: false,
-    toast(msg) {
-        this.toastMessage = msg;
-        this.showToast = true;
-        setTimeout(() => { this.showToast = false; }, 3500);
+    toast(msg, type = 'success') {
+        window.toast(type, msg); // toast standar admin (layouts/admin/toast)
     },
     openCommission(id, name) {
         this.selectedAffiliateId = id;
@@ -22,22 +18,22 @@
         navigator.clipboard.writeText(url).then(() => {
             this.toast('Magic Login link berhasil disalin!');
         }).catch(() => {
-            alert('Gagal menyalin link.');
+            window.toast('error', 'Gagal menyalin link.');
         });
     },
-    sendBroadcast() {
-        if (!confirm('Kirim notifikasi Push (\'Semangat Pagi\') ke semua Partner sekarang?')) return;
+    async sendBroadcast() {
+        if (!(await confirmDialog({ title: 'Kirim notifikasi?', text: "Kirim notifikasi Push ('Semangat Pagi') ke semua Partner sekarang?", confirmText: 'Kirim' }))) return;
         fetch('/api/cron/send-daily-push?secret=cuan-tiap-hari')
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    this.toast('Sukses: ' + data.message);
+                    this.toast(data.message);
                 } else {
-                    this.toast('Info: ' + (data.message || data.error || 'Gagal mengirim'));
+                    this.toast(data.message || data.error || 'Gagal mengirim', 'warning');
                 }
             })
             .catch(err => {
-                alert('Terjadi kesalahan: ' + err);
+                window.toast('error', 'Terjadi kesalahan: ' + err);
             });
     }
 }">
@@ -124,10 +120,6 @@
             @endforeach
         </ul>
     </x-admin.alert>
-    @endif
-
-    @if(session('success'))
-    <x-admin.alert type="success">{{ session('success') }}</x-admin.alert>
     @endif
 
     {{-- Main Table Card --}}
@@ -218,7 +210,7 @@
                                     @csrf
                                     <x-admin.button type="submit" size="sm" icon="fa-solid fa-check">Approve</x-admin.button>
                                 </form>
-                                <form action="{{ route('admin.affiliates.reject', $affiliate->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menolak partner ini?')">
+                                <form action="{{ route('admin.affiliates.reject', $affiliate->id) }}" method="POST" data-confirm="Apakah Anda yakin ingin menolak partner ini?" data-confirm-danger>
                                     @csrf
                                     <x-admin.button type="submit" variant="danger" size="sm" icon="fa-solid fa-xmark">Reject</x-admin.button>
                                 </form>
@@ -402,19 +394,6 @@
         </div>
     </div>
 
-    {{-- Toast Notification Floating Banner --}}
-    <div x-show="showToast"
-        x-transition:enter="transition ease-out duration-300"
-        x-transition:enter-start="opacity-0 translate-y-2"
-        x-transition:enter-end="opacity-100 translate-y-0"
-        x-transition:leave="transition ease-in duration-200"
-        x-transition:leave-start="opacity-100 translate-y-0"
-        x-transition:leave-end="opacity-0 translate-y-2"
-        x-cloak
-        class="fixed bottom-6 right-6 z-50 bg-slate-900 text-white text-xs px-4 py-3 rounded-xl shadow-xl flex items-center gap-2.5 border border-slate-800">
-        <i class="fa-solid fa-circle-check text-emerald-400"></i>
-        <span x-text="toastMessage"></span>
-    </div>
 
 </div>
 @endsection

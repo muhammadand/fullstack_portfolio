@@ -20,12 +20,8 @@
         this.selectedOrder = { order_id: orderId, partner: partner, qty: qty, amount: amount, actionUrl: url };
         this.cancelOrderModal = true;
     },
-    toastMessage: '',
-    showToast: false,
-    toast(msg) {
-        this.toastMessage = msg;
-        this.showToast = true;
-        setTimeout(() => { this.showToast = false; }, 3000);
+    toast(msg, type = 'success') {
+        window.toast(type, msg); // toast standar admin (layouts/admin/toast)
     },
     copyText(text) {
         navigator.clipboard.writeText(text).then(() => {
@@ -46,15 +42,6 @@
             Tambah Kartu
         </x-admin.button>
     </x-admin.page-header>
-
-    {{-- Alert Messages --}}
-    @if(session('success'))
-    <x-admin.alert type="success">{{ session('success') }}</x-admin.alert>
-    @endif
-
-    @if(session('error'))
-    <x-admin.alert type="error">{{ session('error') }}</x-admin.alert>
-    @endif
 
     {{-- 4 Quick Stats Grid --}}
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
@@ -291,7 +278,7 @@
                                 <x-admin.button variant="secondary" size="sm" icon="fa-solid fa-pen" :href="route('admin.review_cards.edit', $card->id)" title="Edit Kartu" />
 
                                 {{-- Delete --}}
-                                <form action="{{ route('admin.review_cards.destroy', $card->id) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus kartu {{ $card->serial_number }}?');">
+                                <form action="{{ route('admin.review_cards.destroy', $card->id) }}" method="POST" class="inline" data-confirm="Apakah Anda yakin ingin menghapus kartu {{ $card->serial_number }}?" data-confirm-danger>
                                     @csrf
                                     @method('DELETE')
                                     <x-admin.button type="submit" variant="danger" size="sm" icon="fa-solid fa-trash-can" title="Hapus" aria-label="Hapus" />
@@ -567,19 +554,6 @@
         </div>
     </div>
 
-    {{-- Toast Notification Floating Banner --}}
-    <div x-show="showToast"
-        x-transition:enter="transition ease-out duration-300"
-        x-transition:enter-start="opacity-0 translate-y-2"
-        x-transition:enter-end="opacity-100 translate-y-0"
-        x-transition:leave="transition ease-in duration-200"
-        x-transition:leave-start="opacity-100 translate-y-0"
-        x-transition:leave-end="opacity-0 translate-y-2"
-        x-cloak
-        class="fixed bottom-6 right-6 z-50 bg-slate-900 text-white text-xs px-4 py-3 rounded-xl shadow-xl flex items-center gap-2.5 border border-slate-800">
-        <i class="fa-solid fa-circle-check text-emerald-400"></i>
-        <span x-text="toastMessage"></span>
-    </div>
 
 </div>
 @endsection
