@@ -110,6 +110,12 @@ $logo = isset($message) && is_file($logoPath) ? $message->embed($logoPath) : ass
                                     <td style="white-space:nowrap;padding:14px 12px 0 0;border-top:1px solid #CBD5E1;font-family:{!! $font !!};font-size:14px;font-weight:700;color:#0F172A;">Total Dibayar</td>
                                     <td style="padding:14px 0 0;border-top:1px solid #CBD5E1;font-family:{!! $font !!};font-size:18px;font-weight:800;color:#2563EB;text-align:right;">{{ $rupiah($order->total_amount) }}</td>
                                 </tr>
+                                @if ($order->refunded_at)
+                                <tr>
+                                    <td style="{{ $label }}">Saldo Dikembalikan</td>
+                                    <td style="{{ $value }}color:#059669;font-weight:700;">{{ $rupiah($order->total_amount) }}</td>
+                                </tr>
+                                @endif
                             </table>
 
                             @if ($event === 'success' && $order->sn)
@@ -127,7 +133,7 @@ $logo = isset($message) && is_file($logoPath) ? $message->embed($logoPath) : ass
                             <table role="presentation" cellpadding="0" cellspacing="0" align="center" style="margin-top:28px;">
                                 <tr>
                                     <td align="center" bgcolor="#2563EB" style="border-radius:10px;background-color:#2563EB;">
-                                        <a href="{{ route('topup.index') }}" style="display:inline-block;padding:13px 32px;font-family:{!! $font !!};font-size:14px;font-weight:700;color:#FFFFFF;text-decoration:none;">Top Up Lagi</a>
+                                        <a href="{{ $meta['cta_url'] }}" style="display:inline-block;padding:13px 32px;font-family:{!! $font !!};font-size:14px;font-weight:700;color:#FFFFFF;text-decoration:none;">{{ $meta['cta_label'] }}</a>
                                     </td>
                                 </tr>
                             </table>

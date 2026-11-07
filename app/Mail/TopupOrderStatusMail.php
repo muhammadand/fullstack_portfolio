@@ -28,13 +28,7 @@ class TopupOrderStatusMail extends Mailable
 
     public function envelope(): Envelope
     {
-        $subject = match ($this->event) {
-            'paid'    => 'Pembayaran Diterima',
-            'success' => 'Top Up Berhasil',
-            'failed'  => 'Top Up Gagal Diproses',
-        };
-
-        return new Envelope(subject: "{$subject} - #{$this->order->order_no}");
+        return new Envelope(subject: "{$this->meta()['title']} - #{$this->order->order_no}");
     }
 
     public function content(): Content
@@ -48,8 +42,19 @@ class TopupOrderStatusMail extends Mailable
     public function meta(): array
     {
         $brand = config('mail.from.name');
+        $order = $this->order;
+        // Top up game tetap memakai kata "Top Up"; jenis lain memakai labelnya (Pulsa, Paket Data, ...).
+        $label = ($order->source ?? Order::SOURCE_TOPUP_GAME) === Order::SOURCE_TOPUP_GAME ? 'Top Up' : $order->sourceLabel();
+        $wallet = $order->isWalletPayment();
+        $refund = $order->refunded_at
+            ? ' Saldo sebesar Rp ' . number_format((float) $order->total_amount, 0, ',', '.') . ' sudah dikembalikan ke wallet kamu.'
+            : '';
 
-        return [
+        $cta = $wallet
+            ? ['cta_url' => route('affiliate.ppob.pulsa'), 'cta_label' => 'Beli Lagi']
+            : ['cta_url' => route('topup.index'), 'cta_label' => 'Top Up Lagi'];
+
+        return $cta + [
             'paid' => [
                 'title'   => 'Pembayaran Diterima',
                 'badge'   => 'Sedang Diproses',
@@ -60,7 +65,7 @@ class TopupOrderStatusMail extends Mailable
                 'ring'    => '#BFDBFE',
             ],
             'success' => [
-                'title'   => 'Top Up Berhasil',
+                'title'   => "{$label} Berhasil",
                 'badge'   => 'Berhasil',
                 'message' => 'Pesananmu sudah berhasil dikirim ke akun tujuan. Terima kasih sudah bertransaksi di ' . $brand . '.',
                 'icon'    => '&#10003;',
@@ -69,9 +74,11 @@ class TopupOrderStatusMail extends Mailable
                 'ring'    => '#A7F3D0',
             ],
             'failed' => [
-                'title'   => 'Top Up Gagal Diproses',
+                'title'   => "{$label} Gagal Diproses",
                 'badge'   => 'Gagal',
-                'message' => 'Mohon maaf, pesananmu gagal diproses oleh sistem. Silakan hubungi admin dengan menyertakan nomor order di bawah agar segera kami bantu.',
+                'message' => $wallet
+                    ? 'Mohon maaf, pesananmu gagal diproses oleh supplier.' . $refund . ' Silakan coba lagi atau hubungi admin dengan menyertakan nomor order di bawah.'
+                    : 'Mohon maaf, pesananmu gagal diproses oleh sistem. Silakan hubungi admin dengan menyertakan nomor order di bawah agar segera kami bantu.',
                 'icon'    => '&#33;',
                 'color'   => '#DC2626',
                 'soft'    => '#FEF2F2',

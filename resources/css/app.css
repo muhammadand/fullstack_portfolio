@@ -6,6 +6,7 @@
 @source "../**/*.js";
 @source "../**/*.vue";
 @source "../../app/Support/**/*.php";
+@source "../../config/ppob.php";
 
 @theme {
     --font-sans: 'Plus Jakarta Sans', sans-serif;

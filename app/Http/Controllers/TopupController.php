@@ -72,6 +72,7 @@ class TopupController extends Controller
 
         $order = Order::create([
             'order_no'           => Order::generateOrderNo(),
+            'source'             => Order::SOURCE_TOPUP_GAME,
             'customer_id'        => $customer?->id,
             'digital_product_id' => $product->id,
             // Digiflazz menerima semua ID akun sebagai satu string (mis. User ID + Zone ID digabung).

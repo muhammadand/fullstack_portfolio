@@ -43,7 +43,7 @@ class AffiliateAllMenuTest extends TestCase
         $response->assertSeeInOrder([
             'Jual Website ke Bisnis',
             'Google Review Card',
-            'Produk Digital &amp; PPOB',
+            'Produk Digital',
             'Promosi, Konten &amp; Poin',
             'Akun &amp; Panduan',
         ], false);
@@ -55,9 +55,9 @@ class AffiliateAllMenuTest extends TestCase
             }
         }
 
-        // Pulsa, Paket Data & PLN belum punya halaman: tampil "Segera" dan tidak bisa diklik.
+        // Paket Data & PLN belum punya halaman: tampil "Segera" dan tidak bisa diklik.
         $response->assertSee('Segera');
-        $response->assertSee('aria-disabled="true" title="Pulsa segera hadir" data-menu-key="pulsa"', false);
+        $response->assertSee('aria-disabled="true" title="Paket Data segera hadir" data-menu-key="paket_data"', false);
         $response->assertSee(route('affiliate.proposals'), false);
     }
 

@@ -55,7 +55,26 @@ class Order extends Model
         'paid_at'        => 'datetime',
         'completed_at'   => 'datetime',
         'expires_at'     => 'datetime',
+        'refunded_at'    => 'datetime',
     ];
+
+    /**
+     * Sumber / jenis order (kolom `source`). Tambah jenis baru di sini beserta awalan nomor ordernya.
+     */
+    public const SOURCE_TOPUP_GAME = 'topup_game';
+    public const SOURCE_PULSA      = 'pulsa';
+    public const SOURCE_PAKET_DATA = 'paket_data';
+    public const SOURCE_PLN        = 'pln';
+
+    /** source => [label, awalan nomor order] */
+    public const SOURCES = [
+        self::SOURCE_TOPUP_GAME => ['Top Up Game', 'TP-'],
+        self::SOURCE_PULSA      => ['Pulsa', 'PL-'],
+        self::SOURCE_PAKET_DATA => ['Paket Data', 'PL-'],
+        self::SOURCE_PLN        => ['Token Listrik PLN', 'PLN-'],
+    ];
+
+    public const PAYMENT_METHOD_WALLET = 'wallet';
 
     /**
      * Awalan nomor order per jenis produk. Dipakai untuk mengenali order di webhook pembayaran/Digiflazz.
@@ -90,6 +109,32 @@ class Order extends Model
         } while (static::withTrashed()->where('order_no', $no)->exists());
 
         return $no;
+    }
+
+    public static function prefixFor(string $source): string
+    {
+        return self::SOURCES[$source][1] ?? throw new \InvalidArgumentException("Source order tidak dikenal: {$source}");
+    }
+
+    public function sourceLabel(): string
+    {
+        return self::SOURCES[$this->source][0] ?? 'Produk Digital';
+    }
+
+    /** Order dibayar dengan saldo wallet partner (bukan payment gateway). */
+    public function isWalletPayment(): bool
+    {
+        return $this->payment_method === self::PAYMENT_METHOD_WALLET && $this->affiliate_id !== null;
+    }
+
+    public function affiliate(): BelongsTo
+    {
+        return $this->belongsTo(Affiliate::class);
+    }
+
+    public function events(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(OrderEvent::class)->orderBy('id');
     }
 
     /**

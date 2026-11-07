@@ -221,6 +221,11 @@
         const hasSeenDashboardGuide = localStorage.getItem('hasSeenDashboardGuide');
         const coachMark = document.getElementById('dashboardCoachMark');
 
+        // Link "Isi Saldo" dari halaman lain (?isi_saldo=1) langsung membuka modal deposit wallet.
+        if (new URLSearchParams(window.location.search).has('isi_saldo') && document.getElementById('walletDepositModal')) {
+            openWalletDepositModal();
+        }
+
         if (!hasSeenDashboardGuide && coachMark) {
             // Show after a short delay
             setTimeout(() => {

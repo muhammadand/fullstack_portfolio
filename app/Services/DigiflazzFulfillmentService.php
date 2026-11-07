@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\DigiflazzWebhook;
 use App\Models\Order;
+use App\Models\OrderEvent;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -51,6 +52,9 @@ class DigiflazzFulfillmentService
                 'provider_ref_id'  => null,
                 'provider_message' => $result['message'] ?? 'Tidak ada balasan valid dari Digiflazz.',
             ]);
+            OrderEvent::safeRecord($order, OrderEvent::PROVIDER_SEND_FAIL, [
+                'context' => ['message' => mb_substr((string) ($result['message'] ?? 'Tidak ada balasan valid'), 0, 500)],
+            ]);
 
             return;
         }
@@ -59,6 +63,15 @@ class DigiflazzFulfillmentService
         $order->update([
             'sn'               => $data['sn'] ?: null,
             'provider_message' => $data['message'] ?? null,
+        ]);
+        OrderEvent::safeRecord($order, OrderEvent::PROVIDER_SENT, [
+            'context' => [
+                'ref_id'          => $order->order_no,
+                'buyer_sku_code'  => $order->sku_code,
+                'provider_status' => $data['status'] ?? null,
+                'rc'              => $data['rc'] ?? null,
+                'message'         => mb_substr((string) ($data['message'] ?? ''), 0, 255),
+            ],
         ]);
     }
 
@@ -97,9 +110,30 @@ class DigiflazzFulfillmentService
             return 'ignored';
         }
 
+        $statusBefore = $order->status;
         $result = $order->applyProviderResult($webhook->status, $webhook->sn, $webhook->message);
 
         $webhook->update(['is_processed' => true, 'processed_at' => now()]);
+
+        if ($result !== 'ignored') {
+            OrderEvent::safeRecord($order, OrderEvent::PROVIDER_RESULT, [
+                'actor_type'  => OrderEvent::ACTOR_DIGIFLAZZ,
+                'status_from' => $statusBefore,
+                'status_to'   => $order->status,
+                'context'     => [
+                    'webhook_id'      => $webhook->id,
+                    'provider_status' => $webhook->status,
+                    'sn'              => $webhook->sn,
+                    'message'         => mb_substr((string) $webhook->message, 0, 255),
+                    'signature_valid' => $webhook->is_valid_signature,
+                ],
+            ]);
+        }
+
+        // Order dibayar saldo partner yang gagal: kembalikan saldo DULU agar email bisa menyebut refund.
+        if ($result === Order::STATUS_FAILED && $order->isWalletPayment()) {
+            app(PartnerOrderService::class)->refund($order, 'Digiflazz: ' . ($webhook->message ?: 'Gagal'), OrderEvent::ACTOR_DIGIFLAZZ);
+        }
 
         // Email hasil akhir hanya saat status benar-benar berubah (webhook ulang/terlambat = 'ignored').
         if (in_array($result, [Order::STATUS_SUCCESS, Order::STATUS_FAILED], true)) {

@@ -368,6 +368,11 @@ Route::middleware(['auth:affiliate'])->group(function () {
     // Digital Products (Lynk.id)
     Route::get('/partner/digital-products', [\App\Http\Controllers\Affiliate\DigitalProductController::class, 'index'])->name('affiliate.digital_products.index');
 
+    // PPOB (harga level partner, belum checkout)
+    Route::get('/partner/pulsa', [\App\Http\Controllers\Affiliate\PpobController::class, 'pulsa'])->name('affiliate.ppob.pulsa');
+    Route::post('/partner/pulsa/order', [\App\Http\Controllers\Affiliate\PpobController::class, 'orderPulsa'])->middleware('throttle:10,1')->name('affiliate.ppob.pulsa.order');
+    Route::get('/partner/ppob/orders/{orderNo}', [\App\Http\Controllers\Affiliate\PpobController::class, 'showOrder'])->name('affiliate.ppob.orders.show');
+
     // Smart Google Review Cards (Partner Reseller Hub)
     Route::get('/partner/review-cards', [\App\Http\Controllers\Affiliate\ReviewCardPartnerController::class, 'index'])->name('affiliate.review_cards.index');
     Route::post('/partner/review-cards/buy', [\App\Http\Controllers\Affiliate\ReviewCardPartnerController::class, 'buy'])->name('affiliate.review_cards.buy');
