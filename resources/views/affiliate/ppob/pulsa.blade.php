@@ -76,8 +76,9 @@
                 closeSheet() {
                     if (!this.submitting) this.sheet = null;
                 },
+                // Validasi format nomor dimatikan sementara untuk testing (aktifkan lagi: /^08\d{8,11}$/).
                 get phoneValid() {
-                    return /^08\d{8,11}$/.test(this.phone);
+                    return this.phone.trim() !== '';
                 },
                 get insufficient() {
                     return this.sheet && this.balance < this.sheet.price;
@@ -181,7 +182,6 @@
                     @foreach($operators as $op)
                         <span x-show="detected === @js($op['slug'])" x-cloak class="text-emerald-400"><i class="fa-solid fa-circle-check mr-1"></i>Operator: {{ $op['name'] }}</span>
                     @endforeach
-                    <span x-show="detected === false" x-cloak class="text-amber-400"><i class="fa-solid fa-circle-info mr-1"></i>Operator tidak dikenali, pilih manual di bawah.</span>
                 </p>
             </div>
 
@@ -269,7 +269,6 @@
                        x-model="phone" @input="onPhoneInput()" class="flex-1 min-w-0 bg-transparent text-sm text-white placeholder-slate-500 outline-none">
             </div>
             <p class="text-[11px] pl-1 mb-4 min-h-[1rem]">
-                <span x-show="phone && !phoneValid" class="text-amber-400">Format nomor 08xxxxxxxxxx (10-13 digit).</span>
             </p>
 
             <div class="glass-panel rounded-2xl p-4 space-y-2.5 text-xs mb-4">

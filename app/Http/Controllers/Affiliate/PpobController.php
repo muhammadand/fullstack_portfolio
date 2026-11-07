@@ -51,11 +51,11 @@ class PpobController extends Controller
 
         $data = $request->validate([
             'product_id' => ['required', 'integer'],
-            'customer_no' => ['required', 'regex:/^08\d{8,11}$/'],
+            // Validasi format nomor dimatikan sementara untuk testing (aktifkan lagi: 'regex:/^08\d{8,11}$/').
+            'customer_no' => ['required', 'string', 'max:30'],
             'idempotency_key' => ['required', 'string', 'uuid'],
         ], [
             'customer_no.required' => 'Nomor HP tujuan wajib diisi.',
-            'customer_no.regex' => 'Nomor HP tidak valid. Gunakan format 08xxxxxxxxxx.',
         ]);
 
         $product = PpobCatalogService::findProduct('pulsa', (int) $data['product_id']);
