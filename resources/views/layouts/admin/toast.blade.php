@@ -14,15 +14,21 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.14.5/sweetalert2.all.min.js" data-navigate-once></script>
 <style>
     /* Toast: pil putih kecil di tengah atas, masuk dengan slide dari atas. */
-    .swal2-container.admin-toast-container { padding: 14px 12px 0; }
+    /* Container bawaan toast SweetAlert lebarnya 360px + overflow hidden: toast lebih lebar akan terpotong. */
+    .swal2-container.admin-toast-container {
+        width: min(100vw, 480px) !important; padding: 14px 12px 0 !important;
+        grid-template-columns: 1fr !important; justify-items: center; overflow: visible !important;
+    }
     .swal2-popup.admin-toast {
         width: max-content !important; max-width: min(92vw, 440px) !important; min-width: 0;
-        padding: 10px 16px 10px 10px !important; border-radius: 999px !important;
+        padding: 10px 16px 10px 10px !important; border-radius: 22px !important; /* pil saat 1 baris, kotak bulat saat teks turun 2 baris */
         background: #fff; box-shadow: 0 10px 30px -8px rgba(15, 23, 42, .25), 0 0 0 1px rgba(15, 23, 42, .06) !important;
         display: flex !important; align-items: center; gap: 10px; grid-template-columns: none !important;
     }
-    .swal2-popup.admin-toast .swal2-html-container { margin: 0 !important; padding: 0 !important; overflow: visible; text-align: left; }
-    .admin-toast-body { display: flex; align-items: center; gap: 10px; font: 500 13px/1.35 Inter, sans-serif; color: #0f172a; }
+    .swal2-popup.admin-toast .swal2-html-container { margin: 0 !important; padding: 0 !important; overflow: visible; text-align: left; flex: 1 1 auto; min-width: 0; }
+    .admin-toast-body { display: flex; align-items: center; gap: 10px; font: 500 13px/1.4 Inter, sans-serif; color: #0f172a; min-width: 0; }
+    /* Teks panjang turun ke baris berikutnya, ikon tetap di kiri. */
+    .admin-toast-text { flex: 1 1 auto; min-width: 0; white-space: normal; overflow-wrap: anywhere; }
     .admin-toast-icon { width: 26px; height: 26px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 12px; color: #fff; }
     .admin-toast-icon.success { background: #10b981; }
     .admin-toast-icon.error   { background: #ef4444; }
@@ -59,7 +65,7 @@
                 position: 'top',
                 showConfirmButton: false,
                 timer: options.timer ?? (type === 'error' || type === 'warning' ? 5000 : 3000),
-                html: `<div class="admin-toast-body" role="${type === 'error' ? 'alert' : 'status'}"><span class="admin-toast-icon ${type}"><i class="fa-solid ${ICONS[type]}"></i></span><span>${escapeHtml(message)}</span></div>`,
+                html: `<div class="admin-toast-body" role="${type === 'error' ? 'alert' : 'status'}"><span class="admin-toast-icon ${type}"><i class="fa-solid ${ICONS[type]}"></i></span><span class="admin-toast-text">${escapeHtml(message)}</span></div>`,
                 customClass: { container: 'admin-toast-container', popup: 'admin-toast' },
                 showClass: { popup: 'admin-toast-in' },
                 hideClass: { popup: 'admin-toast-out' },
