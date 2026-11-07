@@ -187,6 +187,8 @@ Route::prefix('admin/customers')->name('admin.customers.')->middleware('auth')->
 // Cek Saldo Digiflazz
 Route::get('admin/cek-saldo', [App\Http\Controllers\Admin\PpobAdminController::class, 'index'])->name('admin.ppob.index')->middleware('auth');
 Route::post('admin/cek-saldo/mode', [App\Http\Controllers\Admin\PpobAdminController::class, 'updateMode'])->name('admin.ppob.mode')->middleware(['auth', 'throttle:10,1']);
+Route::get('admin/cek-saldo/balance', [App\Http\Controllers\Admin\PpobAdminController::class, 'balance'])->name('admin.ppob.balance')->middleware(['auth', 'throttle:30,1']);
+Route::post('admin/cek-saldo/deposit', [App\Http\Controllers\Admin\PpobAdminController::class, 'deposit'])->name('admin.ppob.deposit')->middleware(['auth', 'throttle:5,1']);
 
 Route::resource('admin/client-proposals', App\Http\Controllers\Admin\ClientProposalController::class)->names([
     'index' => 'admin.client_proposals.index',

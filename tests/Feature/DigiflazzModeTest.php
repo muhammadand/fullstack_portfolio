@@ -158,6 +158,9 @@ class DigiflazzModeTest extends TestCase
 
     public function test_cek_saldo_endpoint_can_target_each_mode(): void
     {
+        config(['services.digiflazz.internal_token' => 'token-uji']);
+        $this->withHeader('X-Internal-Token', 'token-uji');
+
         $this->getJson('/api/digiflazz/cek-saldo?mode=production')->assertOk()->assertJsonPath('mode', 'production');
         Http::assertSent(fn ($r) => str_contains($r->url(), '/cek-saldo') && $r['sign'] === md5('tester' . 'prod-key-456' . 'depo'));
 

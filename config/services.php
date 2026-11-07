@@ -54,6 +54,8 @@ return [
             'production' => env('DIGIFLAZZ_PROD_API_KEY') ?: (env('DIGIFLAZZ_API_KEY') && !str_starts_with((string) env('DIGIFLAZZ_API_KEY'), 'dev-') ? env('DIGIFLAZZ_API_KEY') : ''),
         ],
         'webhook_secret' => env('DIGIFLAZZ_WEBHOOK_SECRET', ''),
+        // Token untuk endpoint internal /api/digiflazz/* (Postman / server lain). Kosong = endpoint ditolak.
+        'internal_token' => env('DIGIFLAZZ_INTERNAL_TOKEN', ''),
     ],
 
     'scalify_pay' => [

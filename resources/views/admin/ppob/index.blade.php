@@ -4,7 +4,7 @@
 <div x-data="ppobAdmin()">
 
     {{-- Page Header --}}
-    <x-admin.page-header title="Integrasi Digiflazz (PPOB)" subtitle="Pantau saldo deposit akun, status koneksi API Digiflazz, dan kelola konfigurasi transaksi digital." />
+    <x-admin.page-header title="Integrasi Digiflazz" subtitle="Pantau saldo deposit akun, status koneksi API Digiflazz, dan kelola konfigurasi transaksi digital." />
 
     {{-- Sub-navigation Tabs --}}
     <div class="flex items-center gap-2 border-b border-slate-200 pb-3 mb-6 overflow-x-auto text-xs" style="scrollbar-width: none;">
@@ -61,7 +61,7 @@
 
                 <p class="text-xs text-slate-500 flex items-center gap-1.5 max-w-2xl">
                     <i class="fa-solid fa-circle-info text-blue-500 shrink-0"></i>
-                    Saldo ini digunakan sebagai modal otomatis untuk memproses transaksi pulsa, paket data, token PLN, e-wallet, dan produk PPOB lainnya.
+                    Saldo ini digunakan sebagai modal otomatis untuk memproses transaksi pulsa, paket data, token PLN, e-wallet, dan produk digital lainnya.
                 </p>
             </div>
 
@@ -169,12 +169,57 @@
 
     </div>
 
+    {{-- Deposit saldo Digiflazz via ShopeePay --}}
+    @php $ticket = session('deposit_ticket'); @endphp
+    <x-admin.card title="Deposit Saldo via ShopeePay" icon="fa-solid fa-wallet" class="mb-6">
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+            <form method="POST" action="{{ route('admin.ppob.deposit') }}" class="lg:col-span-2 space-y-3"
+                  data-confirm-title="Buat tiket deposit?" data-confirm="Digiflazz akan memberi nominal transfer (dengan kode unik) yang harus dibayar lewat ShopeePay." data-confirm-button="Buat tiket">
+                @csrf
+                @if($errors->hasAny(['amount', 'owner_name']))
+                <x-admin.alert type="error" class="!mb-0">{{ $errors->first('amount') ?: $errors->first('owner_name') }}</x-admin.alert>
+                @endif
+                <div>
+                    <label for="deposit_amount" class="block text-xs font-semibold text-slate-600 mb-1">Nominal Deposit</label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-slate-400">Rp</span>
+                        <input id="deposit_amount" name="amount" type="number" inputmode="numeric" min="10000" step="1000" required
+                               value="{{ old('amount', 200000) }}"
+                               class="w-full rounded-lg border border-slate-300 pl-9 pr-3 py-2 text-sm text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none">
+                    </div>
+                    <div class="mt-2 flex flex-wrap gap-1.5">
+                        @foreach([200000, 500000, 1000000, 2000000] as $preset)
+                        <button type="button" onclick="document.getElementById('deposit_amount').value = {{ $preset }}"
+                                class="px-2.5 py-1 rounded-md border border-slate-200 bg-slate-50 text-xs font-medium text-slate-600 hover:border-blue-300 hover:text-blue-600">{{ number_format($preset / 1000, 0, ',', '.') }}rb</button>
+                        @endforeach
+                    </div>
+                </div>
+                <div>
+                    <label for="deposit_owner" class="block text-xs font-semibold text-slate-600 mb-1">Nama Pemilik Akun ShopeePay</label>
+                    <input id="deposit_owner" name="owner_name" type="text" maxlength="100" required value="{{ old('owner_name') }}" placeholder="Sesuai nama di ShopeePay"
+                           class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none">
+                </div>
+                <x-admin.button type="submit" icon="fa-solid fa-ticket" class="w-full justify-center">Buat Tiket Deposit</x-admin.button>
+                <p class="text-[11px] text-slate-400">Mode aktif: <span class="font-semibold {{ $isProduction ? 'text-emerald-600' : 'text-amber-600' }}">{{ $isProduction ? 'Production' : 'Development' }}</span>. Transfer harus <b>persis</b> sesuai nominal tiket agar saldo masuk otomatis.</p>
+            </form>
+
+            <div class="lg:col-span-3 space-y-4">
+                <div class="rounded-xl border border-slate-200 bg-slate-50 p-4 text-xs text-slate-600 space-y-1.5">
+                    <p class="font-semibold text-slate-800">Cara deposit</p>
+                    <p>1. Isi nominal dan nama pemilik akun ShopeePay, lalu klik <b>Buat Tiket Deposit</b>.</p>
+                    <p>2. Digiflazz memberi nominal transfer unik dan rekening tujuan.</p>
+                    <p>3. Transfer dari ShopeePay dengan nominal <b>persis</b>, lalu klik <b>Refresh Saldo</b>.</p>
+                </div>
+            </div>
+        </div>
+    </x-admin.card>
+
     {{-- Live JSON Response Inspector Card --}}
     <x-admin.card title="Live JSON Response Inspector" icon="fa-solid fa-code" class="mb-6">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 mb-4 border-b border-slate-100 text-xs">
             <div class="flex items-center gap-2">
                 <span class="text-slate-500">Endpoint:</span>
-                <code class="font-mono font-semibold text-slate-800 bg-slate-100 px-2 py-0.5 rounded">POST /api/digiflazz/cek-saldo</code>
+                <code class="font-mono font-semibold text-slate-800 bg-slate-100 px-2 py-0.5 rounded">POST /cek-saldo (Digiflazz)</code>
             </div>
 
             <div class="flex items-center gap-2">
@@ -221,38 +266,70 @@
         </div>
     </x-admin.card>
 
-    {{-- Panduan Deposit & Top Up Digiflazz --}}
-    <x-admin.card title="Panduan Tambah Saldo (Deposit) Digiflazz" icon="fa-solid fa-circle-question">
-        <p class="text-xs text-slate-500 -mt-2 mb-4">
-            Untuk menambah saldo deposit Digiflazz secara resmi, silakan ikuti langkah-langkah berikut:
-        </p>
 
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
-            <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200/70">
-                <div class="w-6 h-6 rounded-lg bg-blue-100 text-blue-700 font-bold flex items-center justify-center mb-2">1</div>
-                <h4 class="font-bold text-slate-800 mb-1">Login Member</h4>
-                <p class="text-slate-500 leading-relaxed">Buka situs resmi <a href="https://member.digiflazz.com" target="_blank" class="text-blue-600 font-semibold underline">member.digiflazz.com</a> dan masuk menggunakan akun terdaftar.</p>
+
+    {{-- Modal tiket deposit: muncul sekali setelah Digiflazz membalas (tidak disimpan). --}}
+    @if($ticket)
+    <div x-data="{ open: true }" x-show="open" x-cloak @keydown.escape.window="open = false"
+         class="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="depositTicketTitle">
+        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" @click="open = false"></div>
+
+        <div class="relative w-full max-w-md bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden"
+             x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100">
+            <div class="flex items-center justify-between gap-3 px-5 py-4 border-b border-slate-200">
+                <h3 id="depositTicketTitle" class="text-sm font-semibold text-slate-900 flex items-center gap-2">
+                    <span class="w-7 h-7 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span>
+                    Tiket Deposit Dibuat
+                </h3>
+                <button type="button" @click="open = false" class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100" aria-label="Tutup">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
             </div>
 
-            <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200/70">
-                <div class="w-6 h-6 rounded-lg bg-blue-100 text-blue-700 font-bold flex items-center justify-center mb-2">2</div>
-                <h4 class="font-bold text-slate-800 mb-1">Tiket Deposit</h4>
-                <p class="text-slate-500 leading-relaxed">Pilih menu <b>Deposit</b> > <b>Tiket Tambah Saldo</b>, lalu pilih bank tujuan transfer (BCA, Mandiri, BRI).</p>
+            <div class="p-5 space-y-4">
+                <p class="text-sm text-slate-600">Transfer dari <b>ShopeePay</b> ke rekening di bawah dengan nominal <b>persis</b> (termasuk kode unik).</p>
+
+                <div class="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                    <p class="text-xs font-medium text-slate-500">Rekening tujuan</p>
+                    <div class="mt-1 flex items-center justify-between gap-3">
+                        <span class="text-xl sm:text-2xl font-bold tracking-wide text-slate-900 font-mono break-all" data-ticket-account>{{ $ticket['account_no'] ?? '-' }}</span>
+                        @if($ticket['account_no'])
+                        <button type="button" class="shrink-0 inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-2 text-xs font-semibold text-white hover:bg-blue-700 active:scale-95"
+                                onclick="navigator.clipboard.writeText({{ \Illuminate\Support\Js::from($ticket['account_no']) }}).then(() => toast('success', 'Nomor rekening disalin'), () => toast('error', 'Gagal menyalin, salin manual ya'))">
+                            <i class="fa-regular fa-copy"></i> Salin
+                        </button>
+                        @endif
+                    </div>
+                    <p class="mt-1 text-xs text-slate-500">{{ $ticket['bank'] }}@if($ticket['payment_method']) · {{ $ticket['payment_method'] }}@endif</p>
+                </div>
+
+                <div class="rounded-xl border border-slate-200 p-4">
+                    <p class="text-xs font-medium text-slate-500">Nominal transfer</p>
+                    <div class="mt-1 flex items-center justify-between gap-3">
+                        <span class="text-xl sm:text-2xl font-bold text-slate-900 font-mono whitespace-nowrap">Rp {{ number_format($ticket['amount'], 0, ',', '.') }}</span>
+                        <button type="button" class="shrink-0 inline-flex items-center gap-1.5 rounded-lg border border-slate-300 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 active:scale-95"
+                                onclick="navigator.clipboard.writeText('{{ $ticket['amount'] }}').then(() => toast('success', 'Nominal disalin'), () => toast('error', 'Gagal menyalin, salin manual ya'))">
+                            <i class="fa-regular fa-copy"></i> Salin
+                        </button>
+                    </div>
+                </div>
+
+                @if($ticket['notes'])
+                <div>
+                    <p class="text-xs font-medium text-slate-500">Berita transfer</p>
+                    <p class="mt-0.5 font-mono font-semibold text-slate-900 break-all">{{ $ticket['notes'] }}</p>
+                </div>
+                @endif
+
+                <p class="text-[11px] text-amber-700"><i class="fa-solid fa-triangle-exclamation"></i> Data tiket tidak disimpan. Salin sebelum menutup atau memuat ulang halaman.</p>
             </div>
 
-            <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200/70">
-                <div class="w-6 h-6 rounded-lg bg-blue-100 text-blue-700 font-bold flex items-center justify-center mb-2">3</div>
-                <h4 class="font-bold text-slate-800 mb-1">Transfer Tepat</h4>
-                <p class="text-slate-500 leading-relaxed">Transfer sesuai <b>nominal unik</b> yang tertera pada tiket agar saldo otomatis masuk tanpa konfirmasi manual.</p>
-            </div>
-
-            <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200/70">
-                <div class="w-6 h-6 rounded-lg bg-blue-100 text-blue-700 font-bold flex items-center justify-center mb-2">4</div>
-                <h4 class="font-bold text-slate-800 mb-1">Refresh Panel</h4>
-                <p class="text-slate-500 leading-relaxed">Setelah transfer berhasil, klik tombol <b>Refresh Saldo</b> di atas untuk menyinkronkan data terbaru.</p>
+            <div class="flex justify-end px-5 py-3 border-t border-slate-200 bg-slate-50">
+                <x-admin.button type="button" variant="secondary" @click="open = false">Tutup</x-admin.button>
             </div>
         </div>
-    </x-admin.card>
+    </div>
+    @endif
 
 </div>
 
@@ -284,7 +361,7 @@
                 this.isLoading = true;
 
                 try {
-                    const response = await fetch('/api/digiflazz/cek-saldo', {
+                    const response = await fetch(@js(route('admin.ppob.balance')), {
                         headers: {
                             'Accept': 'application/json',
                         }

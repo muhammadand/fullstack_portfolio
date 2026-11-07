@@ -44,13 +44,14 @@ class AdminPpobModernizationTest extends TestCase
 
         $response = $this->actingAs($this->admin)->get(route('admin.ppob.index'));
         $response->assertOk();
-        $response->assertSee('Integrasi Digiflazz (PPOB)');
+        $response->assertSee('Integrasi Digiflazz');
+        $response->assertDontSee('PPOB');
         $response->assertSee('Sisa Saldo Deposit Aktif');
         $response->assertSee('Username API');
         $response->assertSee('Mode Environment');
         $response->assertSee('Status Webhook');
         $response->assertSee('Live JSON Response Inspector');
-        $response->assertSee('Panduan Tambah Saldo (Deposit) Digiflazz');
+        $response->assertSee('Deposit Saldo via ShopeePay');
     }
 
     public function test_api_cek_saldo_returns_exact_structure(): void
@@ -63,7 +64,8 @@ class AdminPpobModernizationTest extends TestCase
             ], 200),
         ]);
 
-        $response = $this->getJson(route('digiflazz.cek_saldo'));
+        config(['services.digiflazz.internal_token' => 'token-uji']);
+        $response = $this->getJson(route('digiflazz.cek_saldo'), ['X-Internal-Token' => 'token-uji']);
         $response->assertOk();
         $response->assertJson([
             'success' => true,
