@@ -33,9 +33,16 @@ class DigiflazzService
      */
     public static function mode(): string
     {
-        $mode = \App\Models\AppSetting::get(self::MODE_SETTING_KEY, (string) config('services.digiflazz.mode'));
+        $mode = \App\Models\AppSetting::get(self::MODE_SETTING_KEY) ?: config('services.digiflazz.mode');
 
-        return $mode === self::MODE_PRODUCTION ? self::MODE_PRODUCTION : self::MODE_DEVELOPMENT;
+        if (!in_array($mode, [self::MODE_DEVELOPMENT, self::MODE_PRODUCTION], true)) {
+            // Belum dipilih: pakai production kalau hanya key production yang tersedia (server lama).
+            $mode = self::getApiKey(self::MODE_DEVELOPMENT) === '' && self::getApiKey(self::MODE_PRODUCTION) !== ''
+                ? self::MODE_PRODUCTION
+                : self::MODE_DEVELOPMENT;
+        }
+
+        return $mode;
     }
 
     public static function isProduction(): bool

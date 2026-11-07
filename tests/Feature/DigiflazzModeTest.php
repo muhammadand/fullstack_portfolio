@@ -108,4 +108,39 @@ class DigiflazzModeTest extends TestCase
         $this->expectException(\LogicException::class);
         $log->delete();
     }
+
+    public function test_legacy_single_production_key_without_prefix_is_used_in_production_mode(): void
+    {
+        // Server lama: hanya DIGIFLAZZ_API_KEY berisi key production (key production Digiflazz tanpa awalan).
+        $saved = [];
+        foreach (['DIGIFLAZZ_API_KEY' => 'a1b2c3d4-0000-1111-2222-333344445555', 'DIGIFLAZZ_DEV_API_KEY' => null, 'DIGIFLAZZ_PROD_API_KEY' => null, 'DIGIFLAZZ_MODE' => null] as $k => $v) {
+            $saved[$k] = $_ENV[$k] ?? null;
+            if ($v === null) { unset($_ENV[$k], $_SERVER[$k]); putenv($k); } else { $_ENV[$k] = $_SERVER[$k] = $v; putenv("$k=$v"); }
+        }
+
+        try {
+            $digiflazz = (require config_path('services.php'))['digiflazz'];
+        } finally {
+            foreach ($saved as $k => $v) {
+                if ($v === null) { unset($_ENV[$k], $_SERVER[$k]); putenv($k); } else { $_ENV[$k] = $_SERVER[$k] = $v; putenv("$k=$v"); }
+            }
+        }
+
+        $this->assertSame('', $digiflazz['api_keys']['development']);
+        $this->assertSame('a1b2c3d4-0000-1111-2222-333344445555', $digiflazz['api_keys']['production']);
+        $this->assertNull($digiflazz['mode']);
+
+        config(['services.digiflazz.mode' => $digiflazz['mode'], 'services.digiflazz.api_keys' => $digiflazz['api_keys']]);
+        $this->assertSame('production', DigiflazzService::mode()); // otomatis production, bukan development tanpa key
+        $this->assertSame('a1b2c3d4-0000-1111-2222-333344445555', DigiflazzService::getApiKey());
+    }
+
+    public function test_admin_choice_overrides_automatic_mode(): void
+    {
+        config(['services.digiflazz.mode' => null]);
+        $this->assertSame('development', DigiflazzService::mode()); // dua key ada -> aman ke development
+
+        $this->actingAs($this->admin())->post(route('admin.ppob.mode'), ['mode' => 'production']);
+        $this->assertSame('production', DigiflazzService::mode());
+    }
 }
