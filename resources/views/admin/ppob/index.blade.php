@@ -4,12 +4,7 @@
 <div x-data="ppobAdmin()">
 
     {{-- Page Header --}}
-    <x-admin.page-header title="Integrasi Digiflazz (PPOB)" subtitle="Pantau saldo deposit akun, status koneksi API Digiflazz, dan kelola konfigurasi transaksi digital.">
-        <x-admin.button type="button" icon="fa-solid fa-arrows-rotate" @click="refreshBalance()" ::disabled="isLoading">
-            <i class="fa-solid fa-arrows-rotate mr-1.5" :class="{ 'fa-spin': isLoading }"></i>
-            <span x-text="isLoading ? 'Memeriksa...' : 'Refresh Saldo'"></span>
-        </x-admin.button>
-    </x-admin.page-header>
+    <x-admin.page-header title="Integrasi Digiflazz (PPOB)" subtitle="Pantau saldo deposit akun, status koneksi API Digiflazz, dan kelola konfigurasi transaksi digital." />
 
     {{-- Sub-navigation Tabs --}}
     <div class="flex items-center gap-2 border-b border-slate-200 pb-3 mb-6 overflow-x-auto text-xs" style="scrollbar-width: none;">
@@ -74,7 +69,7 @@
             <div class="flex flex-col sm:flex-row lg:flex-col gap-2.5 w-full lg:w-auto shrink-0">
                 <x-admin.button type="button" @click="refreshBalance()" ::disabled="isLoading" class="w-full justify-center">
                     <i class="fa-solid fa-arrows-rotate mr-1.5" :class="{ 'fa-spin': isLoading }"></i>
-                    <span x-text="isLoading ? 'Memuat Saldo...' : 'Refresh Saldo Live'"></span>
+                    <span x-text="isLoading ? 'Memeriksa...' : 'Refresh Saldo'"></span>
                 </x-admin.button>
 
                 <div class="text-[11px] text-center text-slate-400 font-mono py-1 px-3 bg-slate-50 border border-slate-200/80 rounded-lg">
