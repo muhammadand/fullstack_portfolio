@@ -656,6 +656,11 @@ Route::get('/secret-deploy-trigger-12345', function () {
             '--force' => true
         ]);
 
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_11_07_132000_add_affiliate_id_to_orders_table.php',
+            '--force' => true
+        ]);
+
         // Jaring pengaman: jalankan migrate umum agar bila ada migrasi baru lainnya tidak terlewat
         \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
 
