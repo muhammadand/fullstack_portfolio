@@ -12,7 +12,7 @@ $preview = function (array $form) use ($sampleCost) {
 <x-admin.modal title="Pengaturan Harga" icon="fa-solid fa-tags" size="lg">
     <form wire:submit="savePricing" id="pricing-form" class="space-y-5">
         <p class="text-sm text-slate-500">
-            Harga jual = <strong>modal + margin</strong> sesuai level pembeli. Produk dengan harga manual (menu Edit) tidak terpengaruh.
+            Harga jual otomatis dihitung dari <strong>modal + margin</strong> level pembeli dan dicatat ke tabel harga produk.
         </p>
 
         @foreach($levelForms as $id => $form)

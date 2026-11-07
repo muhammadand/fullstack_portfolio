@@ -6,7 +6,9 @@ use App\Models\DigitalProduct;
 use App\Models\DigitalProductBrand;
 use App\Models\DigitalProductCategory;
 use App\Models\DigitalProductCostHistory;
+use App\Models\DigitalProductPrice;
 use App\Models\DigitalProductSyncLog;
+use App\Models\PriceLevel;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -66,6 +68,7 @@ class DigitalProductSyncService
         $existing = DigitalProduct::where('provider', 'digiflazz')->get()->keyBy('sku_code');
         $categories = DigitalProductCategory::all()->keyBy(fn($c) => mb_strtolower($c->name));
         $brands = DigitalProductBrand::all()->keyBy(fn($b) => $b->digital_product_category_id . '|' . mb_strtolower($b->name));
+        $priceLevels = PriceLevel::all();
         $seen = [];
 
         foreach ($items as $item) {
@@ -111,6 +114,7 @@ class DigitalProductSyncService
                     'is_active' => false, // masuk katalog dulu, belum dijual
                 ]);
                 $stats['total_new']++;
+
                 continue;
             }
 
@@ -130,6 +134,13 @@ class DigitalProductSyncService
                     'changed_at' => $now,
                 ]);
                 $stats['total_cost_changed']++;
+
+                foreach ($priceLevels as $lvl) {
+                    DigitalProductPrice::updateOrCreate(
+                        ['digital_product_id' => $product->id, 'price_level_id' => $lvl->id],
+                        ['selling_price' => $lvl->applyMargin($cost)]
+                    );
+                }
             }
 
             $product->save();

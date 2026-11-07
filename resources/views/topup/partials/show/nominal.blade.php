@@ -6,14 +6,11 @@
     </h2>
     <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5" role="radiogroup" aria-label="Pilih nominal top up">
         @foreach($products as $p)
-        <button type="button" role="radio" :aria-checked="selected === {{ $p['id'] }}"
-            @if($p['available']) @click="selected = {{ $p['id'] }}; errors.product = null" @else disabled @endif
-            :class="selected === {{ $p['id'] }} ? 'border-brand-accent bg-brand-blue/20 shadow-glow-sm' : 'border-white/10 bg-white/[0.04] hover:border-white/25'"
-            class="relative text-left p-3 rounded-xl border transition-all active:scale-[0.97] disabled:opacity-40 disabled:cursor-not-allowed">
+        <button type="button" role="radio" :aria-checked="selected === {{ $p['id'] }}" @if($p['available']) @click="selected = {{ $p['id'] }}; errors.product = null" @else disabled @endif :class="selected === {{ $p['id'] }} ? 'border-brand-accent bg-brand-blue/20 shadow-glow-sm' : 'border-white/10 bg-white/[0.04] hover:border-white/25'" class="relative text-left p-3 rounded-xl border transition-all active:scale-[0.97] disabled:opacity-40 disabled:cursor-not-allowed">
             <span class="block text-[13px] font-bold text-white leading-snug line-clamp-2 min-h-[2.4em]">{{ $p['name'] }}</span>
             <span class="block text-xs font-semibold text-cyan-300 mt-1.5">Rp {{ number_format($p['price'], 0, ',', '.') }}</span>
             @unless($p['available'])
-            <span class="block text-[10px] text-white/50 mt-0.5">Sedang gangguan</span>
+            <span class="block text-[10px] text-white/50 mt-0.5">{{ $p['price'] <= 0 ? 'Harga belum diatur' : 'Sedang gangguan' }}</span>
             @endunless
             <i x-show="selected === {{ $p['id'] }}" style="display:none" class="fa-solid fa-circle-check absolute top-2 right-2 text-brand-accent text-sm"></i>
         </button>

@@ -59,7 +59,7 @@ class TopupController extends Controller
 
         $item = $products->get((int) $data['product_id']);
 
-        if (!$item || !$item['available']) {
+        if (!$item || !$item['available'] || (float) $item['price'] <= 0) {
             throw ValidationException::withMessages([
                 'product_id' => 'Nominal tidak tersedia, silakan pilih yang lain.',
             ]);

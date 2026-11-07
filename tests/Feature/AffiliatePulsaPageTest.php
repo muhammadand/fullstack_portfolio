@@ -92,7 +92,7 @@ class AffiliatePulsaPageTest extends TestCase
     public function test_manual_price_override_is_used_for_partner_level(): void
     {
         $product = $this->makeProduct($this->brand->name . ' 25.000', 24800);
-        $product->priceOverrides()->create(['price_level_id' => $this->partner->id, 'selling_price' => 24999]);
+        $product->priceOverrides()->updateOrCreate(['price_level_id' => $this->partner->id], ['selling_price' => 24999]);
 
         $catalog = PpobCatalogService::catalog('pulsa', $this->affiliate->fresh());
         $operator = collect($catalog['operators'])->firstWhere('slug', $this->brand->slug);

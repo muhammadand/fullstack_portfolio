@@ -7,6 +7,7 @@ use App\Models\DigitalProduct;
 use App\Models\DigitalProductBrand;
 use App\Models\DigitalProductCategory;
 use App\Models\DigitalProductCostHistory;
+use App\Models\DigitalProductPrice;
 use App\Models\DigitalProductSyncLog;
 use App\Models\PriceLevel;
 use App\Services\DigitalProductSyncService;
@@ -201,19 +202,46 @@ class DigitalProductIndex extends Component
         }
 
         DB::transaction(function () {
+            $levels = [];
             foreach ($this->levelForms as $id => $form) {
-                PriceLevel::whereKey($id)->update([
+                $level = PriceLevel::findOrFail($id);
+                $level->update([
                     'name' => $form['name'],
                     'margin_type' => $form['margin_type'],
                     'margin_value' => $form['margin_value'],
                 ]);
+                $levels[] = $level;
             }
+
+            $now = now();
+            DigitalProduct::digiflazz()->select(['id', 'cost_price'])->chunkById(200, function ($products) use ($levels, $now) {
+                $priceRows = [];
+                foreach ($levels as $level) {
+                    foreach ($products as $product) {
+                        $priceRows[] = [
+                            'digital_product_id' => $product->id,
+                            'price_level_id' => $level->id,
+                            'selling_price' => $level->applyMargin((float) $product->cost_price),
+                            'created_at' => $now,
+                            'updated_at' => $now,
+                        ];
+                    }
+                }
+                if (!empty($priceRows)) {
+                    DigitalProductPrice::upsert(
+                        $priceRows,
+                        ['digital_product_id', 'price_level_id'],
+                        ['selling_price', 'updated_at']
+                    );
+                }
+            });
         });
 
+        TopupCatalogService::flush();
         unset($this->levels); // muat ulang agar harga di tabel langsung memakai margin baru
         $this->closeModal();
         $this->reset('error');
-        $this->notice = 'Pengaturan harga berhasil disimpan. Harga jual otomatis mengikuti margin baru, kecuali produk dengan harga manual.';
+        $this->notice = 'Pengaturan harga berhasil disimpan. Harga jual seluruh produk telah dicatat di tabel harga.';
     }
 
     public function openBrandImages(): void
@@ -298,9 +326,15 @@ class DigitalProductIndex extends Component
                 'display_order' => (int) $this->editDisplayOrder,
             ]);
 
+            $levels = PriceLevel::whereIn('id', array_keys($this->editPrices))->get()->keyBy('id');
             foreach ($this->editPrices as $levelId => $price) {
                 if ($price === '') {
-                    $product->priceOverrides()->where('price_level_id', $levelId)->delete();
+                    $level = $levels->get($levelId);
+                    $autoPrice = $level ? $level->applyMargin((float) $product->cost_price) : 0;
+                    $product->priceOverrides()->updateOrCreate(
+                        ['price_level_id' => $levelId],
+                        ['selling_price' => $autoPrice]
+                    );
                 } else {
                     $product->priceOverrides()->updateOrCreate(
                         ['price_level_id' => $levelId],

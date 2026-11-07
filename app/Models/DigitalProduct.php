@@ -52,6 +52,21 @@ class DigitalProduct extends Model
         'last_synced_at' => 'datetime',
     ];
 
+    protected static function booted(): void
+    {
+        static::created(function (DigitalProduct $product) {
+            if ($product->provider === 'digiflazz' && (float) $product->cost_price > 0) {
+                $levels = PriceLevel::all();
+                foreach ($levels as $level) {
+                    $product->priceOverrides()->firstOrCreate(
+                        ['price_level_id' => $level->id],
+                        ['selling_price' => $level->applyMargin((float) $product->cost_price)]
+                    );
+                }
+            }
+        });
+    }
+
     public function brand(): BelongsTo
     {
         return $this->belongsTo(DigitalProductBrand::class, 'digital_product_brand_id');
@@ -95,16 +110,15 @@ class DigitalProduct extends Model
     }
 
     /**
-     * Harga jual untuk sebuah level: override manual jika ada, selain itu modal + margin level.
+     * Harga jual untuk sebuah level: ambil dari tabel digital_product_prices (priceOverrides).
+     * Jika tidak ada di tabel, kembalikan 0.0 (konsisten dengan data tabel digital_product_prices).
      * Gunakan eager load `priceOverrides` saat memanggil di dalam loop.
      */
     public function priceFor(PriceLevel $level): float
     {
         $override = $this->priceOverrides->firstWhere('price_level_id', $level->id);
 
-        return $override
-            ? (float) $override->selling_price
-            : $level->applyMargin((float) $this->cost_price);
+        return $override ? (float) $override->selling_price : 0.0;
     }
 
     /**

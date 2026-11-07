@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Livewire\Admin\DigitalProductIndex;
 use App\Models\DigitalProduct;
 use App\Models\DigitalProductCostHistory;
+use App\Models\DigitalProductPrice;
 use App\Models\PriceLevel;
 use App\Models\User;
 use App\Services\DigitalProductSyncService;
@@ -139,6 +140,13 @@ class AdminDigitalCatalogTest extends TestCase
         $product->setRelation('priceOverrides', collect());
         $retail = PriceLevel::where('code', 'retail')->firstOrFail();
         $partner = PriceLevel::where('code', 'partner')->firstOrFail();
+        $this->assertSame(0.0, $product->priceFor($retail));
+        $this->assertSame(0.0, $product->priceFor($partner));
+
+        $product->setRelation('priceOverrides', collect([
+            new DigitalProductPrice(['price_level_id' => $retail->id, 'selling_price' => 10500.0]),
+            new DigitalProductPrice(['price_level_id' => $partner->id, 'selling_price' => 10200.0]),
+        ]));
         $this->assertSame(10500.0, $product->priceFor($retail));
         $this->assertSame(10200.0, $product->priceFor($partner));
     }
@@ -329,9 +337,10 @@ class AdminDigitalCatalogTest extends TestCase
             ->call('saveEdit')
             ->assertHasErrors(["editPrices.{$retail->id}"]);
 
-        $this->assertSame(0, $product->priceOverrides()->count());
+        // Level harga dari sync sudah tersimpan
+        $this->assertGreaterThan(0, $product->priceOverrides()->count());
 
-        $product->priceOverrides()->create(['price_level_id' => $retail->id, 'selling_price' => 20000]);
+        $product->priceOverrides()->updateOrCreate(['price_level_id' => $retail->id], ['selling_price' => 20000]);
 
         Livewire::actingAs($this->admin)->test(DigitalProductIndex::class)
             ->call('openEdit', $product->id)
@@ -340,14 +349,15 @@ class AdminDigitalCatalogTest extends TestCase
             ->call('saveEdit')
             ->assertHasNoErrors();
 
-        $this->assertSame(0, $product->priceOverrides()->count());
+        // Saat dikosongkan, harga kembali dihitung otomatis dari modal + margin level
+        $this->assertSame($retail->applyMargin((float) $product->cost_price), (float) $product->fresh()->priceOverrides()->firstWhere('price_level_id', $retail->id)?->selling_price);
     }
 
     public function test_delete_removes_product_with_its_history_and_overrides(): void
     {
         $product = $this->syncedProduct();
         $retail = PriceLevel::where('code', 'retail')->firstOrFail();
-        $product->priceOverrides()->create(['price_level_id' => $retail->id, 'selling_price' => 20000]);
+        $product->priceOverrides()->updateOrCreate(['price_level_id' => $retail->id], ['selling_price' => 20000]);
         DigitalProductCostHistory::create(['digital_product_id' => $product->id, 'old_cost' => 1, 'new_cost' => 2, 'changed_at' => now()]);
 
         Livewire::actingAs($this->admin)->test(DigitalProductIndex::class)

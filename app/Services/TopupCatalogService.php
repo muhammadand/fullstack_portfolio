@@ -79,12 +79,16 @@ class TopupCatalogService
             ->where('digital_product_brand_id', $brand->id)
             ->with('priceOverrides:id,digital_product_id,price_level_id,selling_price')
             ->get(['id', 'name', 'cost_price', 'start_cut_off', 'end_cut_off'])
-            ->map(fn ($p) => [
-                'id' => $p->id,
-                'name' => $p->name,
-                'price' => $level ? $p->priceFor($level) : (float) $p->cost_price,
-                'available' => !$p->isInCutOff(),
-            ])
+            ->map(function ($p) use ($level) {
+                $price = $level ? $p->priceFor($level) : (float) $p->cost_price;
+
+                return [
+                    'id' => $p->id,
+                    'name' => $p->name,
+                    'price' => $price,
+                    'available' => !$p->isInCutOff() && $price > 0,
+                ];
+            })
             ->sortBy('price')
             ->values()
             ->all();
