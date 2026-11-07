@@ -13,10 +13,23 @@ class DigiflazzController extends Controller
     /**
      * Endpoint API Cek Saldo Akun Digiflazz
      * GET / POST /api/digiflazz/cek-saldo
+     *
+     * Opsional ?mode=development|production untuk menguji key tertentu
+     * (default: mode aktif di Admin > Cek Saldo & Akun).
      */
-    public function checkBalance(): JsonResponse
+    public function checkBalance(Request $request): JsonResponse
     {
-        $result = DigiflazzService::checkBalance();
+        $mode = $request->input('mode');
+
+        if ($mode !== null && !in_array($mode, [DigiflazzService::MODE_DEVELOPMENT, DigiflazzService::MODE_PRODUCTION], true)) {
+            return response()->json(['success' => false, 'message' => 'Parameter mode harus development atau production.'], 422);
+        }
+
+        if ($mode !== null && DigiflazzService::getApiKey($mode) === '') {
+            return response()->json(['success' => false, 'mode' => $mode, 'message' => "API key untuk mode {$mode} belum diisi di .env."], 422);
+        }
+
+        $result = DigiflazzService::checkBalance($mode);
 
         return response()->json($result, $result['http_status'] ?? 200);
     }

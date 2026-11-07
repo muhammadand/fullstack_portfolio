@@ -60,9 +60,9 @@ class DigiflazzService
      * Generate MD5 signature standard Digiflazz.
      * sign = md5(username + apiKey + suffix)
      */
-    public static function generateSign(string $suffix): string
+    public static function generateSign(string $suffix, ?string $mode = null): string
     {
-        return md5(self::getUsername() . self::getApiKey() . $suffix);
+        return md5(self::getUsername() . self::getApiKey($mode) . $suffix);
     }
 
     /**
@@ -116,12 +116,14 @@ class DigiflazzService
      * Cek Saldo Akun Digiflazz (Deposit).
      * Endpoint: POST /cek-saldo
      */
-    public static function checkBalance(): array
+    public static function checkBalance(?string $mode = null): array
     {
-        return self::post('/cek-saldo', [
+        $mode ??= self::mode();
+
+        return ['mode' => $mode] + self::post('/cek-saldo', [
             'cmd'      => 'deposit',
             'username' => self::getUsername(),
-            'sign'     => self::generateSign('depo'),
+            'sign'     => self::generateSign('depo', $mode),
         ], 25);
     }
 

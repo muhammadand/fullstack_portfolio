@@ -155,4 +155,21 @@ class DigiflazzModeTest extends TestCase
         $this->actingAs($this->admin())->post(route('admin.ppob.mode'), ['mode' => 'production']);
         $this->assertSame('production', DigiflazzService::mode());
     }
+
+    public function test_cek_saldo_endpoint_can_target_each_mode(): void
+    {
+        $this->getJson('/api/digiflazz/cek-saldo?mode=production')->assertOk()->assertJsonPath('mode', 'production');
+        Http::assertSent(fn ($r) => str_contains($r->url(), '/cek-saldo') && $r['sign'] === md5('tester' . 'prod-key-456' . 'depo'));
+
+        $this->getJson('/api/digiflazz/cek-saldo?mode=development')->assertOk()->assertJsonPath('mode', 'development');
+        Http::assertSent(fn ($r) => str_contains($r->url(), '/cek-saldo') && $r['sign'] === md5('tester' . 'dev-key-123' . 'depo'));
+
+        // Tanpa parameter = mode aktif.
+        $this->getJson('/api/digiflazz/cek-saldo')->assertOk()->assertJsonPath('mode', 'development');
+
+        $this->getJson('/api/digiflazz/cek-saldo?mode=staging')->assertStatus(422);
+
+        config(['services.digiflazz.api_keys.production' => '']);
+        $this->getJson('/api/digiflazz/cek-saldo?mode=production')->assertStatus(422)->assertJsonPath('mode', 'production');
+    }
 }
