@@ -169,11 +169,14 @@ Route::resource('admin/digital-products', App\Http\Controllers\Admin\DigitalProd
     'destroy' => 'admin.digital_products.destroy',
 ])->middleware('auth');
 
-// Order Top Up Game (admin): daftar & detail
-Route::prefix('admin/topup-orders')->name('admin.topup_orders.')->middleware('auth')->group(function () {
-    Route::get('/', [App\Http\Controllers\Admin\TopupOrderController::class, 'index'])->name('index');
-    Route::get('/{order}', [App\Http\Controllers\Admin\TopupOrderController::class, 'show'])->whereNumber('order')->name('show');
+// Order produk digital (admin): semua source (top up game, pulsa, ...) dibedakan lewat tab ?source=
+Route::prefix('admin/orders')->name('admin.orders.')->middleware('auth')->group(function () {
+    Route::get('/', [App\Http\Controllers\Admin\OrderController::class, 'index'])->name('index');
+    Route::get('/{order}', [App\Http\Controllers\Admin\OrderController::class, 'show'])->whereNumber('order')->name('show');
 });
+// URL lama tetap jalan (bookmark): diarahkan ke tab Top Up Game / detail order.
+Route::redirect('admin/topup-orders', '/admin/orders?source=topup_game', 301);
+Route::get('admin/topup-orders/{order}', fn (int $order) => redirect()->route('admin.orders.show', $order, 301))->whereNumber('order');
 
 // Customers (admin): daftar & detail
 Route::prefix('admin/customers')->name('admin.customers.')->middleware('auth')->group(function () {

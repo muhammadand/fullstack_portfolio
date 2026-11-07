@@ -60,8 +60,8 @@ $menus = [
 'icon' => 'fa-solid fa-cubes-stacked',
 ],
 [
-'label' => 'Order Top Up',
-'route' => 'admin.topup_orders.index',
+'label' => 'Order',
+'route' => 'admin.orders.index',
 'icon' => 'fa-solid fa-receipt',
 ],
 [
@@ -216,7 +216,7 @@ $activeRoute = \Illuminate\Support\Facades\Route::currentRouteName();
                                 {{ $pendingTravelCount }}
                             </span>
                             @endif
-                            @if($sub['route'] === 'admin.topup_orders.index' && ($processingTopupCount = \App\Models\Order::where('status', 'processing')->count()) > 0)
+                            @if($sub['route'] === 'admin.orders.index' && ($processingTopupCount = \App\Models\Order::where('status', 'processing')->count()) > 0)
                             <span class="ml-1.5 inline-flex items-center justify-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30 animate-pulse">
                                 {{ $processingTopupCount }}
                             </span>

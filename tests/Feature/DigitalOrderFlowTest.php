@@ -165,7 +165,7 @@ class DigitalOrderFlowTest extends TestCase
         // 8. Customer dan admin sama-sama melihat "Berhasil".
         $this->get(route('customer.account'))->assertSee('Berhasil');
         $admin = User::create(['name' => 'Admin', 'email' => 'adm_' . uniqid() . '@example.com', 'password' => 'secret123', 'role' => 'admin']);
-        $this->actingAs($admin)->get(route('admin.topup_orders.show', $order))->assertOk()->assertSee('Berhasil')->assertSee($order->sn);
+        $this->actingAs($admin)->get(route('admin.orders.show', $order))->assertOk()->assertSee('Berhasil')->assertSee($order->sn);
 
         // 9. Webhook Digiflazz yang telat/dobel tidak mengubah hasil akhir; total panggilan Digiflazz tetap satu.
         $this->digiflazzWebhook($order, 'Gagal')->assertOk();

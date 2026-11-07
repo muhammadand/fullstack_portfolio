@@ -11,7 +11,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
-class AdminTopupOrderTest extends TestCase
+class AdminOrderTest extends TestCase
 {
     use DatabaseTransactions;
 
@@ -38,8 +38,8 @@ class AdminTopupOrderTest extends TestCase
     public function test_admin_pages_require_login(): void
     {
         $o = $this->order();
-        $this->get(route('admin.topup_orders.index'))->assertRedirect();
-        $this->get(route('admin.topup_orders.show', $o))->assertRedirect();
+        $this->get(route('admin.orders.index'))->assertRedirect();
+        $this->get(route('admin.orders.show', $o))->assertRedirect();
     }
 
     public function test_index_lists_filters_and_searches_orders(): void
@@ -49,10 +49,10 @@ class AdminTopupOrderTest extends TestCase
 
         $admin = $this->admin();
 
-        $this->actingAs($admin)->get(route('admin.topup_orders.index'))
-            ->assertOk()->assertSee($paid->order_no)->assertSee($unpaid->order_no)->assertSee('Order Top Up Game');
+        $this->actingAs($admin)->get(route('admin.orders.index'))
+            ->assertOk()->assertSee($paid->order_no)->assertSee($unpaid->order_no)->assertSee('Order Produk Digital');
 
-        $this->actingAs($admin)->get(route('admin.topup_orders.index', ['payment_status' => 'paid', 'search' => 'XYZ']))
+        $this->actingAs($admin)->get(route('admin.orders.index', ['payment_status' => 'paid', 'search' => 'XYZ']))
             ->assertOk()->assertSee($paid->order_no)->assertDontSee($unpaid->order_no);
     }
 
@@ -61,7 +61,7 @@ class AdminTopupOrderTest extends TestCase
         $c = Customer::create(['name' => 'Siti Gamers', 'email' => 's_' . uniqid() . '@example.com', 'password' => 'secret123']);
         $o = $this->order(['customer_id' => $c->id, 'payment_status' => 'paid', 'status' => 'processing', 'paid_at' => now()]);
 
-        $this->actingAs($this->admin())->get(route('admin.topup_orders.show', $o))
+        $this->actingAs($this->admin())->get(route('admin.orders.show', $o))
             ->assertOk()->assertSee($o->order_no)->assertSee('Diproses')->assertSee('Lunas')
             ->assertSee('Siti Gamers')->assertSee('buyer@example.com')->assertSee('Zone Id')->assertSee('99');
     }
@@ -72,7 +72,7 @@ class AdminTopupOrderTest extends TestCase
         $this->order();
 
         \Illuminate\Support\Facades\DB::enableQueryLog();
-        $res = $this->actingAs($this->admin())->get(route('admin.topup_orders.index'))->assertOk();
+        $res = $this->actingAs($this->admin())->get(route('admin.orders.index'))->assertOk();
         $queries = collect(\Illuminate\Support\Facades\DB::getQueryLog())->pluck('query');
 
         $list = $queries->first(fn ($q) => str_contains($q, 'from `orders`') && str_contains($q, '`order_no`') && ! str_contains($q, 'count(*)'));
@@ -87,5 +87,34 @@ class AdminTopupOrderTest extends TestCase
         }
 
         $res->assertSee('>#<', false)->assertSee('>1</td>', false)->assertSee('>2</td>', false);
+    }
+
+    public function test_tabs_filter_orders_by_source(): void
+    {
+        $game = $this->order(['product_name' => 'Diamond Game ABC']);
+        $pulsa = $this->order([
+            'order_no' => Order::generateOrderNo(Order::prefixFor(Order::SOURCE_PULSA)),
+            'source' => Order::SOURCE_PULSA, 'product_name' => 'Pulsa Telkomsel 10.000',
+        ]);
+        $admin = $this->admin();
+
+        $this->actingAs($admin)->get(route('admin.orders.index', ['source' => 'pulsa']))
+            ->assertOk()->assertSee($pulsa->order_no)->assertDontSee($game->order_no)
+            ->assertSee('aria-current="page"', false)->assertSee('Top Up Game')->assertSee('Paket Data');
+
+        $this->actingAs($admin)->get(route('admin.orders.index', ['source' => 'topup_game']))
+            ->assertOk()->assertSee($game->order_no)->assertDontSee($pulsa->order_no);
+
+        // Source tak dikenal = tab "Semua".
+        $this->actingAs($admin)->get(route('admin.orders.index', ['source' => 'ngawur']))
+            ->assertOk()->assertSee($game->order_no)->assertSee($pulsa->order_no);
+    }
+
+    public function test_old_topup_orders_urls_redirect(): void
+    {
+        $o = $this->order();
+
+        $this->get('/admin/topup-orders')->assertRedirect('/admin/orders?source=topup_game');
+        $this->get("/admin/topup-orders/{$o->id}")->assertRedirect(route('admin.orders.show', $o));
     }
 }

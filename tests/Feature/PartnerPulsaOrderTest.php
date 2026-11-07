@@ -259,4 +259,18 @@ class PartnerPulsaOrderTest extends TestCase
             ->get(route('affiliate.ppob.orders.show', $order->order_no))
             ->assertNotFound();
     }
+
+    public function test_admin_sees_partner_order_in_pulsa_tab_with_audit_trail(): void
+    {
+        $this->order();
+        $order = $this->latestOrder();
+        $admin = \App\Models\User::create(['name' => 'Admin', 'email' => 'adm_' . uniqid() . '@example.com', 'password' => 'secret123', 'role' => 'admin']);
+
+        $this->actingAs($admin)->get(route('admin.orders.index', ['source' => 'pulsa']))
+            ->assertOk()->assertSee($order->order_no)->assertSee('Pulsa Buyer');
+
+        $this->actingAs($admin)->get(route('admin.orders.show', $order))
+            ->assertOk()->assertSee('Partner')->assertSee('Pulsa Buyer')->assertSee('Saldo Wallet')
+            ->assertSee('Jejak Audit')->assertSee('Rantai hash utuh')->assertSee('Saldo wallet dipotong');
+    }
 }

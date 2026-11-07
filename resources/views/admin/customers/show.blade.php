@@ -54,13 +54,13 @@
                     @forelse($orders as $order)
                     <tr class="hover:bg-slate-50/70 transition-colors">
                         <td class="px-4 py-3 whitespace-nowrap">
-                            <a href="{{ route('admin.topup_orders.show', $order->id) }}" class="font-mono text-xs font-semibold text-blue-600 hover:underline">{{ $order->order_no }}</a>
+                            <a href="{{ route('admin.orders.show', $order->id) }}" class="font-mono text-xs font-semibold text-blue-600 hover:underline">{{ $order->order_no }}</a>
                             <span class="block text-xs text-slate-400 mt-0.5">{{ $order->created_at->format('d M Y, H:i') }}</span>
                         </td>
                         <td class="px-4 py-3 max-w-[200px]"><span class="block truncate text-slate-900">{{ $order->product_name }}</span></td>
                         <td class="px-4 py-3 whitespace-nowrap font-mono text-xs font-semibold text-slate-900">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</td>
-                        <td class="px-4 py-3 whitespace-nowrap">@include('admin.topup_orders.partials.badge', ['type' => 'payment', 'value' => $order->payment_status])</td>
-                        <td class="px-4 py-3 whitespace-nowrap">@include('admin.topup_orders.partials.badge', ['type' => 'status', 'value' => $order->status])</td>
+                        <td class="px-4 py-3 whitespace-nowrap">@include('admin.orders.partials.badge', ['type' => 'payment', 'value' => $order->payment_status])</td>
+                        <td class="px-4 py-3 whitespace-nowrap">@include('admin.orders.partials.badge', ['type' => 'status', 'value' => $order->status])</td>
                     </tr>
                     @empty
                     <tr>
