@@ -64,12 +64,6 @@ class PpobController extends Controller
             return back()->withInput()->with('error', 'Produk tidak ditemukan atau sedang tidak dijual.');
         }
 
-        // Nomor harus sesuai operator produk (mencegah order yang pasti gagal di supplier).
-        $prefixes = PpobCatalogService::operatorMeta($product->brand->name)['prefixes'];
-        if ($prefixes && !in_array(substr($data['customer_no'], 0, 4), $prefixes, true)) {
-            return back()->withInput()->with('error', "Nomor {$data['customer_no']} bukan nomor {$product->brand->name}.");
-        }
-
         try {
             $order = $orders->checkout($affiliate, $product, Order::SOURCE_PULSA, $data['customer_no'], $data['idempotency_key']);
         } catch (PartnerOrderException $e) {

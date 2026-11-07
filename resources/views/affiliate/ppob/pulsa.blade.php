@@ -79,12 +79,6 @@
                 get phoneValid() {
                     return /^08\d{8,11}$/.test(this.phone);
                 },
-                // Nomor harus sesuai operator produk (operator tanpa daftar prefix dilewati).
-                get phoneMatches() {
-                    if (!this.sheet) return false;
-                    const prefixes = prefixMap[this.sheet.opSlug] || [];
-                    return prefixes.length === 0 || prefixes.includes(this.phone.slice(0, 4));
-                },
                 get insufficient() {
                     return this.sheet && this.balance < this.sheet.price;
                 },
@@ -276,7 +270,6 @@
             </div>
             <p class="text-[11px] pl-1 mb-4 min-h-[1rem]">
                 <span x-show="phone && !phoneValid" class="text-amber-400">Format nomor 08xxxxxxxxxx (10-13 digit).</span>
-                <span x-show="phoneValid && !phoneMatches" class="text-amber-400">Nomor ini bukan <span x-text="sheet?.opName"></span>.</span>
             </p>
 
             <div class="glass-panel rounded-2xl p-4 space-y-2.5 text-xs mb-4">
@@ -292,7 +285,7 @@
                 </a>
             </template>
             <template x-if="!insufficient">
-                <button type="submit" :disabled="submitting || !phoneValid || !phoneMatches"
+                <button type="submit" :disabled="submitting || !phoneValid"
                         class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-sm font-bold active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed">
                     <span x-show="!submitting"><i class="fa-solid fa-lock mr-1.5"></i>Bayar dengan Saldo</span>
                     <span x-show="submitting"><i class="fa-solid fa-spinner fa-spin mr-1.5"></i>Memproses...</span>

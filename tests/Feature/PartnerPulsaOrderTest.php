@@ -163,12 +163,11 @@ class PartnerPulsaOrderTest extends TestCase
         $this->assertEquals(50000 - $this->price, (float) $this->wallet->fresh()->balance);
     }
 
-    public function test_number_from_other_operator_is_rejected(): void
+    public function test_number_from_other_operator_is_not_blocked(): void
     {
-        $this->order(['customer_no' => '085712345678'])->assertSessionHas('error');
+        $this->order(['customer_no' => '085712345678'])->assertSessionMissing('error');
 
-        $this->assertSame(0, Order::where('affiliate_id', $this->affiliate->id)->count());
-        $this->assertEquals(50000, (float) $this->wallet->fresh()->balance);
+        $this->assertSame('085712345678', $this->latestOrder()->customer_no);
     }
 
     public function test_success_webhook_completes_order_and_sends_email_without_refund(): void
