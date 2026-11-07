@@ -44,7 +44,13 @@ return [
     'digiflazz' => [
         'url' => env('DIGIFLAZZ_URL') ?: 'https://api.digiflazz.com/v1',
         'username' => env('DIGIFLAZZ_USERNAME') ?: 'tuwumiWXAdqg',
-        'api_key' => env('DIGIFLAZZ_API_KEY') ?: '',
+        // Mode default bila admin belum memilih (switch di Admin > Digiflazz > Cek Saldo & Akun).
+        'mode' => env('DIGIFLAZZ_MODE', 'development'),
+        // Key per mode. DIGIFLAZZ_API_KEY lama tetap dipakai sesuai awalannya (dev-/prod-).
+        'api_keys' => [
+            'development' => env('DIGIFLAZZ_DEV_API_KEY') ?: (str_starts_with((string) env('DIGIFLAZZ_API_KEY'), 'dev-') ? env('DIGIFLAZZ_API_KEY') : ''),
+            'production' => env('DIGIFLAZZ_PROD_API_KEY') ?: (str_starts_with((string) env('DIGIFLAZZ_API_KEY'), 'prod-') ? env('DIGIFLAZZ_API_KEY') : ''),
+        ],
         'webhook_secret' => env('DIGIFLAZZ_WEBHOOK_SECRET', ''),
     ],
 

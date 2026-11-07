@@ -186,6 +186,7 @@ Route::prefix('admin/customers')->name('admin.customers.')->middleware('auth')->
 
 // Cek Saldo Digiflazz
 Route::get('admin/cek-saldo', [App\Http\Controllers\Admin\PpobAdminController::class, 'index'])->name('admin.ppob.index')->middleware('auth');
+Route::post('admin/cek-saldo/mode', [App\Http\Controllers\Admin\PpobAdminController::class, 'updateMode'])->name('admin.ppob.mode')->middleware(['auth', 'throttle:10,1']);
 
 Route::resource('admin/client-proposals', App\Http\Controllers\Admin\ClientProposalController::class)->names([
     'index' => 'admin.client_proposals.index',
@@ -661,6 +662,11 @@ Route::get('/secret-deploy-trigger-12345', function () {
 
         \Illuminate\Support\Facades\Artisan::call('migrate', [
             '--path' => 'database/migrations/2026_11_07_132000_add_affiliate_id_to_orders_table.php',
+            '--force' => true
+        ]);
+
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_11_07_140000_create_app_settings_tables.php',
             '--force' => true
         ]);
 

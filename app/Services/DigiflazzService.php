@@ -24,12 +24,29 @@ class DigiflazzService
         return (string) config('services.digiflazz.username');
     }
 
+    public const MODE_DEVELOPMENT = 'development';
+    public const MODE_PRODUCTION = 'production';
+    public const MODE_SETTING_KEY = 'digiflazz.mode';
+
     /**
-     * Get API Key Digiflazz dari Config.
+     * Mode aktif: pilihan admin (app_settings), kalau belum ada pakai DIGIFLAZZ_MODE.
      */
-    public static function getApiKey(): string
+    public static function mode(): string
     {
-        return (string) config('services.digiflazz.api_key', '');
+        $mode = \App\Models\AppSetting::get(self::MODE_SETTING_KEY, (string) config('services.digiflazz.mode'));
+
+        return $mode === self::MODE_PRODUCTION ? self::MODE_PRODUCTION : self::MODE_DEVELOPMENT;
+    }
+
+    public static function isProduction(): bool
+    {
+        return self::mode() === self::MODE_PRODUCTION;
+    }
+
+    /** API key untuk mode tertentu (default: mode aktif). Key tetap di .env, tidak di database. */
+    public static function getApiKey(?string $mode = null): string
+    {
+        return (string) config('services.digiflazz.api_keys.' . ($mode ?? self::mode()), '');
     }
 
     /**
@@ -188,7 +205,8 @@ class DigiflazzService
             'sign'           => $sign,
         ];
 
-        if ($testing || $buyerSkuCode === 'test') {
+        // Mode development: transaksi selalu ditandai testing agar tidak memotong saldo sungguhan.
+        if ($testing || $buyerSkuCode === 'test' || !self::isProduction()) {
             $payload['testing'] = true;
         }
 

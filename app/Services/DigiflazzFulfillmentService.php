@@ -68,6 +68,7 @@ class DigiflazzFulfillmentService
             'context' => [
                 'ref_id'          => $order->order_no,
                 'buyer_sku_code'  => $order->sku_code,
+                'mode'            => DigiflazzService::mode(),
                 'provider_status' => $data['status'] ?? null,
                 'rc'              => $data['rc'] ?? null,
                 'message'         => mb_substr((string) ($data['message'] ?? ''), 0, 255),

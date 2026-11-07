@@ -11,6 +11,9 @@
         </x-admin.button>
     </x-admin.page-header>
 
+    @if(session('success'))<x-admin.alert type="success">{{ session('success') }}</x-admin.alert>@endif
+    @if(session('error'))<x-admin.alert type="error">{{ session('error') }}</x-admin.alert>@endif
+
     {{-- Sub-navigation Tabs --}}
     <div class="flex items-center gap-2 border-b border-slate-200 pb-3 mb-6 overflow-x-auto text-xs" style="scrollbar-width: none;">
         <a href="{{ route('admin.ppob.index') }}" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl font-semibold bg-blue-600 text-white shadow-xs">
@@ -126,27 +129,53 @@
             </div>
         </div>
 
-        {{-- Card 2: Mode Environment --}}
-        <div class="bg-white rounded-xl p-4 border border-slate-200/80 shadow-xs flex items-start gap-3.5">
-            <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 border border-amber-100 flex items-center justify-center shrink-0 text-sm">
-                <i class="fa-solid fa-sliders"></i>
+        {{-- Card 2: Mode Environment + switch dev/prod --}}
+        <div class="bg-white rounded-xl p-4 border shadow-xs flex items-start gap-3.5 {{ $isProduction ? 'border-emerald-300 ring-1 ring-emerald-200' : 'border-slate-200/80' }}">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 text-sm border {{ $isProduction ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-amber-50 text-amber-600 border-amber-100' }}">
+                <i class="fa-solid {{ $isProduction ? 'fa-circle-play' : 'fa-flask' }}"></i>
             </div>
             <div class="min-w-0 flex-1">
                 <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Mode Environment</p>
-                <div class="mt-1">
-                    @if($isProduction)
-                    <x-admin.badge color="green">
-                        <i class="fa-solid fa-circle-play text-[10px]"></i> Production Live
-                    </x-admin.badge>
-                    @else
-                    <x-admin.badge color="yellow">
-                        <i class="fa-solid fa-flask text-[10px]"></i> Development / Sandbox
-                    </x-admin.badge>
-                    @endif
-                </div>
+                <p class="text-sm font-bold mt-0.5 {{ $isProduction ? 'text-emerald-700' : 'text-amber-700' }}">{{ $isProduction ? 'Production Live' : 'Development / Sandbox' }}</p>
+
+                <form method="POST" action="{{ route('admin.ppob.mode') }}" class="mt-2"
+                      onsubmit="return this.mode.value !== 'production' || confirm('Pindah ke PRODUCTION? Semua transaksi akan memotong saldo Digiflazz sungguhan.');">
+                    @csrf
+                    <div class="grid grid-cols-2 w-full max-w-[220px] rounded-lg bg-slate-100 p-0.5 text-xs font-semibold" role="radiogroup" aria-label="Mode Digiflazz">
+                        @foreach(['development' => ['Dev', 'fa-flask'], 'production' => ['Prod', 'fa-circle-play']] as $value => [$label, $icon])
+                        @php $active = $mode === $value; @endphp
+                        <button type="submit" name="mode" value="{{ $value }}" role="radio" aria-checked="{{ $active ? 'true' : 'false' }}"
+                                @disabled($active || ! $keyReady[$value])
+                                title="{{ $keyReady[$value] ? ucfirst($value) : 'API key mode ini belum diisi di .env' }}"
+                                @class(['inline-flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-md transition-colors',
+                                        'bg-white shadow-xs ' . ($value === 'production' ? 'text-emerald-700' : 'text-amber-700') => $active,
+                                        'text-slate-500 hover:text-slate-800' => ! $active && $keyReady[$value],
+                                        'text-slate-300 cursor-not-allowed' => ! $active && ! $keyReady[$value]])>
+                            <i class="fa-solid {{ $icon }} text-[10px]"></i> {{ $label }}
+                        </button>
+                        @endforeach
+                    </div>
+                </form>
+
                 <p class="text-[11px] text-slate-400 mt-2 font-mono truncate">
-                    Key: {{ substr($apiKey, 0, 8) }}••••••••
+                    Key: {{ $apiKey !== '' ? substr($apiKey, 0, 8) . '••••••••' : 'belum diisi' }}
                 </p>
+                @foreach($keyReady as $m => $ready)
+                    @unless($ready)
+                    <p class="text-[11px] text-amber-600 mt-1 break-words"><i class="fa-solid fa-triangle-exclamation"></i> Key {{ $m }} belum diisi: <code class="break-all">{{ $m === 'production' ? 'DIGIFLAZZ_PROD_API_KEY' : 'DIGIFLAZZ_DEV_API_KEY' }}</code></p>
+                    @endunless
+                @endforeach
+
+                @if($modeLogs->isNotEmpty())
+                <details class="mt-2 text-[11px] text-slate-500">
+                    <summary class="cursor-pointer">Riwayat perubahan mode</summary>
+                    <ul class="mt-1.5 space-y-1">
+                        @foreach($modeLogs as $log)
+                        <li>{{ $log->created_at->format('d M Y H:i') }} · {{ $log->old_value ?? 'default' }} → <span class="font-semibold">{{ $log->new_value }}</span> · {{ $log->user_email ?? 'system' }}</li>
+                        @endforeach
+                    </ul>
+                </details>
+                @endif
             </div>
         </div>
 
