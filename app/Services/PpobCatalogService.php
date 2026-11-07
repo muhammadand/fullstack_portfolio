@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\Affiliate;
 use App\Models\DigitalProduct;
-use App\Models\DigitalProductBrand;
 use App\Models\DigitalProductCategory;
 use App\Models\PriceLevel;
 use Illuminate\Support\Str;
@@ -27,6 +26,7 @@ class PpobCatalogService
         $level = self::levelFor($affiliate);
         $empty = ['level' => ['name' => $level?->name ?? 'Partner'], 'operators' => []];
 
+        // 1) Kategori berdasarkan slug (mis. "pulsa").
         $category = DigitalProductCategory::where('slug', config("ppob.categories.$type", $type))
             ->where('is_active', true)
             ->first(['id']);
@@ -35,11 +35,16 @@ class PpobCatalogService
             return $empty;
         }
 
-        $brands = DigitalProductBrand::where('digital_product_category_id', $category->id)
+        // 2) Brand milik kategori -> 3) produk per digital_product_brand_id -> 4) harga per level dari digital_product_prices.
+        //    Eager load = 3 query total (brands, products, prices), bukan query per brand/produk.
+        $brands = $category->brands()
             ->where('is_active', true)
             ->orderBy('display_order')
             ->orderBy('name')
-            ->get(['id', 'name', 'slug', 'image']);
+            ->with(['products' => fn ($q) => $q->sellable()
+                ->select(['id', 'digital_product_brand_id', 'name', 'cost_price', 'start_cut_off', 'end_cut_off'])
+                ->with('priceOverrides:id,digital_product_id,price_level_id,selling_price')])
+            ->get(['id', 'digital_product_category_id', 'name', 'slug', 'image']);
 
         if ($brands->isEmpty()) {
             return $empty;
@@ -47,15 +52,9 @@ class PpobCatalogService
 
         $retail = PriceLevel::retail();
 
-        $productsByBrand = DigitalProduct::sellable()
-            ->whereIn('digital_product_brand_id', $brands->pluck('id'))
-            ->with('priceOverrides:id,digital_product_id,price_level_id,selling_price')
-            ->get(['id', 'digital_product_brand_id', 'name', 'cost_price', 'start_cut_off', 'end_cut_off'])
-            ->groupBy('digital_product_brand_id');
-
         $operators = [];
         foreach ($brands as $brand) {
-            $products = ($productsByBrand->get($brand->id) ?? collect())
+            $products = $brand->products
                 ->map(function (DigitalProduct $p) use ($brand, $level, $retail) {
                     $price = $level ? $p->priceFor($level) : (float) $p->cost_price;
                     $retailPrice = $retail ? $p->priceFor($retail) : $price;
