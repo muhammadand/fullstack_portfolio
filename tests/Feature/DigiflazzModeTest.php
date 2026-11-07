@@ -48,7 +48,7 @@ class DigiflazzModeTest extends TestCase
 
         DigiflazzService::transaction('tsel5', '081234567890', 'PL-1');
 
-        Http::assertSent(fn ($r) => str_contains($r->url(), '/transaction')
+        Http::assertSent(fn($r) => str_contains($r->url(), '/transaction')
             && $r['testing'] === true
             && $r['sign'] === md5('tester' . 'dev-key-123' . 'PL-1'));
     }
@@ -72,7 +72,7 @@ class DigiflazzModeTest extends TestCase
 
         // Produksi: tanpa flag testing, sign pakai key production.
         DigiflazzService::transaction('tsel5', '081234567890', 'PL-2');
-        Http::assertSent(fn ($r) => str_contains($r->url(), '/transaction')
+        Http::assertSent(fn($r) => str_contains($r->url(), '/transaction')
             && !isset($r['testing'])
             && $r['sign'] === md5('tester' . 'prod-key-456' . 'PL-2'));
 
@@ -115,14 +115,26 @@ class DigiflazzModeTest extends TestCase
         $saved = [];
         foreach (['DIGIFLAZZ_API_KEY' => 'a1b2c3d4-0000-1111-2222-333344445555', 'DIGIFLAZZ_DEV_API_KEY' => null, 'DIGIFLAZZ_PROD_API_KEY' => null, 'DIGIFLAZZ_MODE' => null] as $k => $v) {
             $saved[$k] = $_ENV[$k] ?? null;
-            if ($v === null) { unset($_ENV[$k], $_SERVER[$k]); putenv($k); } else { $_ENV[$k] = $_SERVER[$k] = $v; putenv("$k=$v"); }
+            if ($v === null) {
+                unset($_ENV[$k], $_SERVER[$k]);
+                putenv($k);
+            } else {
+                $_ENV[$k] = $_SERVER[$k] = $v;
+                putenv("$k=$v");
+            }
         }
 
         try {
             $digiflazz = (require config_path('services.php'))['digiflazz'];
         } finally {
             foreach ($saved as $k => $v) {
-                if ($v === null) { unset($_ENV[$k], $_SERVER[$k]); putenv($k); } else { $_ENV[$k] = $_SERVER[$k] = $v; putenv("$k=$v"); }
+                if ($v === null) {
+                    unset($_ENV[$k], $_SERVER[$k]);
+                    putenv($k);
+                } else {
+                    $_ENV[$k] = $_SERVER[$k] = $v;
+                    putenv("$k=$v");
+                }
             }
         }
 
