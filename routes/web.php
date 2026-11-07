@@ -582,6 +582,11 @@ Route::get('/secret-deploy-trigger-12345', function () {
         ]);
 
         \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_11_03_100000_add_source_and_processed_at_to_withdrawals_table.php',
+            '--force' => true
+        ]);
+
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
             '--path' => 'database/migrations/2026_11_03_110000_create_digital_product_brands_table.php',
             '--force' => true
         ]);
@@ -640,6 +645,19 @@ Route::get('/secret-deploy-trigger-12345', function () {
             '--path' => 'database/migrations/2026_11_05_130000_add_customer_link_and_phone_source_index.php',
             '--force' => true
         ]);
+
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_11_07_100000_add_source_and_wallet_columns_to_orders_table.php',
+            '--force' => true
+        ]);
+
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_11_07_100100_create_order_events_table.php',
+            '--force' => true
+        ]);
+
+        // Jaring pengaman: jalankan migrate umum agar bila ada migrasi baru lainnya tidak terlewat
+        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
 
         // Jalankan Seeder yang diperlukan
         \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'BusinessCategorySeeder', '--force' => true]);
