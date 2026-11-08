@@ -6,138 +6,82 @@
     {{-- Page Header --}}
     <x-admin.page-header title="Integrasi Digiflazz" subtitle="Pantau saldo deposit akun, status koneksi API Digiflazz, dan kelola konfigurasi transaksi digital." />
 
-    {{-- Sub-navigation Tabs --}}
-    <div class="flex items-center gap-2 border-b border-slate-200 pb-3 mb-6 overflow-x-auto text-xs" style="scrollbar-width: none;">
-        <a href="{{ route('admin.ppob.index') }}" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl font-semibold bg-blue-600 text-white shadow-xs">
-            <i class="fa-solid fa-wallet text-xs"></i>
-            <span>Cek Saldo & Akun</span>
-        </a>
-        <div class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl font-medium text-slate-400 bg-slate-100 cursor-not-allowed opacity-80" title="Fitur dalam pengembangan">
-            <i class="fa-solid fa-tags text-xs"></i>
-            <span>Daftar Harga Produk</span>
-            <span class="text-[9px] px-1.5 py-0.5 rounded bg-slate-200 text-slate-600 font-bold uppercase tracking-wider">Segera</span>
+    {{-- Kartu saldo (mobile-first) --}}
+    <div class="rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white shadow-sm p-4 lg:p-6 mb-4 lg:mb-6">
+        <div class="flex items-start justify-between gap-3">
+            <div class="min-w-0">
+                <p class="text-[11px] lg:text-xs font-medium uppercase tracking-wider text-white/70">Saldo Deposit Digiflazz</p>
+                <p class="mt-1 font-bold leading-tight truncate admin-num">
+                    <span class="text-sm lg:text-xl font-semibold text-white/70 mr-0.5">Rp</span><span class="text-2xl lg:text-4xl" x-text="formatRupiah(balance)">{{ number_format($balance, 0, ',', '.') }}</span>
+                </p>
+            </div>
+            <button type="button" @click="refreshBalance()" :disabled="isLoading" aria-label="Refresh saldo"
+                    class="shrink-0 h-10 lg:h-9 w-10 lg:w-auto lg:px-4 rounded-xl bg-white/15 hover:bg-white/25 flex items-center justify-center gap-2 text-sm font-semibold disabled:opacity-60">
+                <i class="fa-solid fa-arrows-rotate" :class="{ 'fa-spin': isLoading }"></i>
+                <span class="hidden lg:inline" x-text="isLoading ? 'Memeriksa...' : 'Refresh Saldo'">Refresh Saldo</span>
+            </button>
         </div>
-        <div class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl font-medium text-slate-400 bg-slate-100 cursor-not-allowed opacity-80" title="Fitur dalam pengembangan">
-            <i class="fa-solid fa-satellite-dish text-xs"></i>
-            <span>Log Webhook</span>
-            <span class="text-[9px] px-1.5 py-0.5 rounded bg-slate-200 text-slate-600 font-bold uppercase tracking-wider">Segera</span>
+
+        <div class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[11px] text-white/80">
+            <span class="inline-flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full" :class="isConnected ? 'bg-emerald-300' : 'bg-amber-300'"></span>
+                <span x-text="isConnected ? 'Terhubung' : 'Perlu dicek'">{{ $balanceStatus ? 'Terhubung' : 'Perlu dicek' }}</span>
+            </span>
+            <span>Dicek <span class="font-mono" x-text="lastChecked">{{ date('H:i:s') }} WIB</span></span>
+            <span class="px-1.5 py-0.5 rounded-md font-semibold {{ $isProduction ? 'bg-emerald-400/25 text-emerald-100' : 'bg-amber-400/25 text-amber-100' }}">{{ $isProduction ? 'Production' : 'Development' }}</span>
         </div>
+        <p class="hidden lg:block mt-3 text-xs text-white/70">Saldo ini menjadi modal otomatis untuk transaksi pulsa, paket data, token PLN, e-wallet, dan produk digital lainnya.</p>
     </div>
 
-    {{-- Main Hero Saldo Card --}}
-    <x-admin.card class="mb-6 overflow-hidden relative">
-        <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
-            <div class="space-y-3">
-                <div class="flex flex-wrap items-center gap-2.5">
-                    <template x-if="isConnected">
-                        <x-admin.badge color="green">
-                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse mr-1"></span>
-                            Server Digiflazz Terhubung (200 OK)
-                        </x-admin.badge>
-                    </template>
-                    <template x-if="!isConnected">
-                        <x-admin.badge color="yellow">
-                            <span class="w-2 h-2 rounded-full bg-amber-500 mr-1"></span>
-                            Koneksi Terputus / Perlu Cek
-                        </x-admin.badge>
-                    </template>
+    {{-- Akun & koneksi: baris di HP, 3 kolom di desktop --}}
+    <x-admin.card :padding="false" class="mb-4 lg:mb-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 divide-y lg:divide-y-0 lg:divide-x divide-slate-100">
 
-                    <span class="text-xs text-slate-400">
-                        • Diperiksa: <span class="font-mono text-slate-600 font-medium" x-text="lastChecked">{{ date('H:i:s') }} WIB</span>
-                    </span>
+            {{-- Username --}}
+            <div class="p-4 flex items-center gap-3 min-w-0">
+                <span class="w-9 h-9 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 text-sm"><i class="fa-solid fa-user-shield"></i></span>
+                <div class="min-w-0 flex-1">
+                    <p class="text-[11px] font-medium text-slate-500">Username API</p>
+                    <p class="text-sm font-semibold text-slate-900 font-mono truncate">{{ $username ?: '-' }}</p>
                 </div>
+                <i class="fa-solid fa-circle-check text-blue-500 shrink-0" title="Tervalidasi di Digiflazz"></i>
+            </div>
 
-                <div>
-                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 flex items-center gap-1.5">
-                        <i class="fa-solid fa-wallet text-amber-500"></i> Sisa Saldo Deposit Aktif
-                    </p>
-                    <div class="flex items-baseline gap-2">
-                        <span class="text-2xl lg:text-3xl font-bold text-slate-400">Rp</span>
-                        <span class="text-4xl lg:text-5xl font-black text-slate-900 font-mono tracking-tight" x-text="formatRupiah(balance)">
-                            {{ number_format($balance, 0, ',', '.') }}
-                        </span>
+            {{-- Mode + switch --}}
+            <div class="p-4 min-w-0">
+                <div class="flex items-center gap-3">
+                    <span class="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 text-sm {{ $isProduction ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600' }}"><i class="fa-solid {{ $isProduction ? 'fa-circle-play' : 'fa-flask' }}"></i></span>
+                    <div class="min-w-0 flex-1">
+                        <p class="text-[11px] font-medium text-slate-500">Mode</p>
+                        <p class="text-sm font-semibold {{ $isProduction ? 'text-emerald-700' : 'text-amber-700' }}">{{ $isProduction ? 'Production' : 'Development' }}</p>
                     </div>
+                    <form method="POST" action="{{ route('admin.ppob.mode') }}" class="shrink-0">
+                        @csrf
+                        <div class="grid grid-cols-2 rounded-lg bg-slate-100 p-0.5 text-xs font-semibold" role="radiogroup" aria-label="Mode Digiflazz">
+                            @foreach(['development' => ['Dev', 'fa-flask'], 'production' => ['Prod', 'fa-circle-play']] as $value => [$label, $icon])
+                            @php $active = $mode === $value; @endphp
+                            <button type="submit" name="mode" value="{{ $value }}" role="radio" aria-checked="{{ $active ? 'true' : 'false' }}"
+                                    @if($value === 'production') data-confirm-title="Pindah ke Production?" data-confirm="Semua transaksi akan dikirim sungguhan dan memotong saldo Digiflazz." data-confirm-button="Ya, pindah" data-confirm-danger @endif
+                                    @disabled($active || ! $keyReady[$value])
+                                    title="{{ $keyReady[$value] ? ucfirst($value) : 'API key mode ini belum diisi di .env' }}"
+                                    @class(['inline-flex items-center justify-center gap-1 px-2.5 h-8 rounded-md transition-colors',
+                                            'bg-white shadow-xs ' . ($value === 'production' ? 'text-emerald-700' : 'text-amber-700') => $active,
+                                            'text-slate-500 hover:text-slate-800' => ! $active && $keyReady[$value],
+                                            'text-slate-300 cursor-not-allowed' => ! $active && ! $keyReady[$value]])>
+                                <i class="fa-solid {{ $icon }} text-[10px]"></i> {{ $label }}
+                            </button>
+                            @endforeach
+                        </div>
+                    </form>
                 </div>
-
-                <p class="text-xs text-slate-500 flex items-center gap-1.5 max-w-2xl">
-                    <i class="fa-solid fa-circle-info text-blue-500 shrink-0"></i>
-                    Saldo ini digunakan sebagai modal otomatis untuk memproses transaksi pulsa, paket data, token PLN, e-wallet, dan produk digital lainnya.
-                </p>
-            </div>
-
-            {{-- Action Box inside Card --}}
-            <div class="flex flex-col sm:flex-row lg:flex-col gap-2.5 w-full lg:w-auto shrink-0">
-                <x-admin.button type="button" @click="refreshBalance()" ::disabled="isLoading" class="w-full justify-center">
-                    <i class="fa-solid fa-arrows-rotate mr-1.5" :class="{ 'fa-spin': isLoading }"></i>
-                    <span x-text="isLoading ? 'Memeriksa...' : 'Refresh Saldo'"></span>
-                </x-admin.button>
-
-                <div class="text-[11px] text-center text-slate-400 font-mono py-1 px-3 bg-slate-50 border border-slate-200/80 rounded-lg">
-                    Endpoint: <span class="text-slate-700 font-semibold">POST /cek-saldo</span>
-                </div>
-            </div>
-        </div>
-    </x-admin.card>
-
-    {{-- 3 Status Metric Cards --}}
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-
-        {{-- Card 1: Akun Digiflazz --}}
-        <div class="bg-white rounded-xl p-4 border border-slate-200/80 shadow-xs flex items-start gap-3.5">
-            <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center shrink-0 text-sm">
-                <i class="fa-solid fa-user-shield"></i>
-            </div>
-            <div class="min-w-0 flex-1">
-                <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Username API</p>
-                <p class="text-sm font-bold text-slate-900 font-mono mt-0.5 truncate">{{ $username ?: '-' }}</p>
-                <div class="mt-2">
-                    <x-admin.badge color="blue">
-                        <i class="fa-solid fa-circle-check text-[10px]"></i> Tervalidasi di Digiflazz
-                    </x-admin.badge>
-                </div>
-            </div>
-        </div>
-
-        {{-- Card 2: Mode Environment + switch dev/prod --}}
-        <div class="bg-white rounded-xl p-4 border shadow-xs flex items-start gap-3.5 {{ $isProduction ? 'border-emerald-300 ring-1 ring-emerald-200' : 'border-slate-200/80' }}">
-            <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 text-sm border {{ $isProduction ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-amber-50 text-amber-600 border-amber-100' }}">
-                <i class="fa-solid {{ $isProduction ? 'fa-circle-play' : 'fa-flask' }}"></i>
-            </div>
-            <div class="min-w-0 flex-1">
-                <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Mode Environment</p>
-                <p class="text-sm font-bold mt-0.5 {{ $isProduction ? 'text-emerald-700' : 'text-amber-700' }}">{{ $isProduction ? 'Production Live' : 'Development / Sandbox' }}</p>
-
-                <form method="POST" action="{{ route('admin.ppob.mode') }}" class="mt-2"
-                      >
-                    @csrf
-                    <div class="grid grid-cols-2 w-full max-w-[220px] rounded-lg bg-slate-100 p-0.5 text-xs font-semibold" role="radiogroup" aria-label="Mode Digiflazz">
-                        @foreach(['development' => ['Dev', 'fa-flask'], 'production' => ['Prod', 'fa-circle-play']] as $value => [$label, $icon])
-                        @php $active = $mode === $value; @endphp
-                        <button type="submit" name="mode" value="{{ $value }}" role="radio" aria-checked="{{ $active ? 'true' : 'false' }}"
-                                @if($value === 'production') data-confirm-title="Pindah ke Production?" data-confirm="Semua transaksi akan dikirim sungguhan dan memotong saldo Digiflazz." data-confirm-button="Ya, pindah" data-confirm-danger @endif
-                                @disabled($active || ! $keyReady[$value])
-                                title="{{ $keyReady[$value] ? ucfirst($value) : 'API key mode ini belum diisi di .env' }}"
-                                @class(['inline-flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-md transition-colors',
-                                        'bg-white shadow-xs ' . ($value === 'production' ? 'text-emerald-700' : 'text-amber-700') => $active,
-                                        'text-slate-500 hover:text-slate-800' => ! $active && $keyReady[$value],
-                                        'text-slate-300 cursor-not-allowed' => ! $active && ! $keyReady[$value]])>
-                            <i class="fa-solid {{ $icon }} text-[10px]"></i> {{ $label }}
-                        </button>
-                        @endforeach
-                    </div>
-                </form>
-
-                <p class="text-[11px] text-slate-400 mt-2 font-mono truncate">
-                    Key: {{ $apiKey !== '' ? substr($apiKey, 0, 8) . '••••••••' : 'belum diisi' }}
-                </p>
+                <p class="mt-2 text-[11px] text-slate-400 font-mono truncate">Key: {{ $apiKey !== '' ? substr($apiKey, 0, 8) . '••••••••' : 'belum diisi' }}</p>
                 @foreach($keyReady as $m => $ready)
                     @unless($ready)
                     <p class="text-[11px] text-amber-600 mt-1 break-words"><i class="fa-solid fa-triangle-exclamation"></i> Key {{ $m }} belum diisi: <code class="break-all">{{ $m === 'production' ? 'DIGIFLAZZ_PROD_API_KEY' : 'DIGIFLAZZ_DEV_API_KEY' }}</code></p>
                     @endunless
                 @endforeach
-
                 @if($modeLogs->isNotEmpty())
-                <details class="mt-2 text-[11px] text-slate-500">
+                <details class="mt-1.5 text-[11px] text-slate-500">
                     <summary class="cursor-pointer">Riwayat perubahan mode</summary>
                     <ul class="mt-1.5 space-y-1">
                         @foreach($modeLogs as $log)
@@ -147,32 +91,27 @@
                 </details>
                 @endif
             </div>
-        </div>
 
-        {{-- Card 3: Status Webhook --}}
-        <div class="bg-white rounded-xl p-4 border border-slate-200/80 shadow-xs flex items-start gap-3.5">
-            <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 border border-indigo-100 flex items-center justify-center shrink-0 text-sm">
-                <i class="fa-solid fa-satellite-dish"></i>
-            </div>
-            <div class="min-w-0 flex-1">
-                <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Status Webhook</p>
-                <div class="mt-1">
-                    <code class="text-[11px] font-mono font-semibold text-indigo-700 bg-indigo-50 border border-indigo-200/80 px-2 py-0.5 rounded">
-                        /api/digiflazz/webhook
-                    </code>
+            {{-- Webhook --}}
+            <div class="p-4 flex items-center gap-3 min-w-0">
+                <span class="w-9 h-9 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 text-sm"><i class="fa-solid fa-satellite-dish"></i></span>
+                <div class="min-w-0 flex-1">
+                    <p class="text-[11px] font-medium text-slate-500">Webhook</p>
+                    <p class="text-xs font-semibold text-indigo-700 font-mono truncate">/api/digiflazz/webhook</p>
                 </div>
-                <p class="text-[11px] text-slate-400 mt-2">
-                    Secret: <span class="font-mono text-slate-700 font-medium">{{ $webhookSecret ? 'Terpasang (HMAC sha1)' : 'Belum diisi' }}</span>
-                </p>
+                @if($webhookSecret)
+                <x-admin.badge color="green">Secret aktif</x-admin.badge>
+                @else
+                <x-admin.badge color="yellow">Tanpa secret</x-admin.badge>
+                @endif
             </div>
         </div>
-
-    </div>
+    </x-admin.card>
 
     {{-- Deposit saldo Digiflazz via ShopeePay --}}
     @php $ticket = session('deposit_ticket'); @endphp
-    <x-admin.card title="Deposit Saldo via ShopeePay" icon="fa-solid fa-wallet" class="mb-6">
-        <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+    <x-admin.card title="Deposit Saldo via ShopeePay" icon="fa-solid fa-wallet" class="mb-4 lg:mb-6">
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-4 lg:gap-6">
             <form method="POST" action="{{ route('admin.ppob.deposit') }}" class="lg:col-span-2 space-y-3"
                   data-confirm-title="Buat tiket deposit?" data-confirm="Digiflazz akan memberi nominal transfer (dengan kode unik) yang harus dibayar lewat ShopeePay." data-confirm-button="Buat tiket">
                 @csrf
@@ -203,7 +142,7 @@
                 <p class="text-[11px] text-slate-400">Mode aktif: <span class="font-semibold {{ $isProduction ? 'text-emerald-600' : 'text-amber-600' }}">{{ $isProduction ? 'Production' : 'Development' }}</span>. Transfer harus <b>persis</b> sesuai nominal tiket agar saldo masuk otomatis.</p>
             </form>
 
-            <div class="lg:col-span-3 space-y-4">
+            <div class="hidden lg:block lg:col-span-3 space-y-4">
                 <div class="rounded-xl border border-slate-200 bg-slate-50 p-4 text-xs text-slate-600 space-y-1.5">
                     <p class="font-semibold text-slate-800">Cara deposit</p>
                     <p>1. Isi nominal dan nama pemilik akun ShopeePay, lalu klik <b>Buat Tiket Deposit</b>.</p>
@@ -215,7 +154,7 @@
     </x-admin.card>
 
     {{-- Live JSON Response Inspector Card --}}
-    <x-admin.card title="Live JSON Response Inspector" icon="fa-solid fa-code" class="mb-6">
+    <x-admin.card title="Live JSON Response Inspector" icon="fa-solid fa-code" class="hidden lg:block mb-6">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 mb-4 border-b border-slate-100 text-xs">
             <div class="flex items-center gap-2">
                 <span class="text-slate-500">Endpoint:</span>

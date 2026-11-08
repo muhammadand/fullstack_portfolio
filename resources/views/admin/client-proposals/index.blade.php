@@ -94,49 +94,21 @@
     </div>
 
     <!-- Filter & Pencarian Bar -->
-    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm mb-6">
-        <form action="{{ route('admin.client_proposals.index') }}" method="GET" class="flex flex-col md:flex-row items-center gap-3">
-            <!-- Search Input -->
-            <div class="relative flex-1 w-full">
-                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                    <i class="fa-solid fa-magnifying-glass text-sm"></i>
-                </div>
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama brand, nama klien, no. WhatsApp..." class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all">
-            </div>
-
-            <!-- Filter Kategori -->
-            <div class="w-full md:w-56">
-                <select name="category_id" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all">
-                    <option value="">Semua Kategori</option>
-                    @foreach($categories as $category)
-                    <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
-                        {{ $category->name }}
-                    </option>
-                    @endforeach
-                </select>
-            </div>
-
-            <!-- Filter Status Affiliate -->
-            <div class="w-full md:w-56">
-                <select name="owner_status" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all">
-                    <option value="">Semua Status Owner</option>
-                    <option value="claimed" {{ request('owner_status') == 'claimed' ? 'selected' : '' }}>Sudah Dihubungi Affiliate</option>
-                    <option value="unclaimed" {{ request('owner_status') == 'unclaimed' ? 'selected' : '' }}>Belum Dihubungi (Global)</option>
-                </select>
-            </div>
-
-            <!-- Tombol Filter & Reset -->
-            <div class="flex items-center gap-2 w-full md:w-auto">
-                <button type="submit" class="w-full md:w-auto px-5 py-2.5 bg-slate-800 hover:bg-slate-900 text-white text-sm font-medium rounded-lg transition-colors shadow-sm flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-filter"></i> Filter
-                </button>
-                @if(request()->filled('search') || request()->filled('category_id') || request()->filled('owner_status'))
-                <a href="{{ route('admin.client_proposals.index') }}" class="w-full md:w-auto px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-1.5" title="Reset Filter">
-                    <i class="fa-solid fa-rotate-left"></i> Reset
-                </a>
-                @endif
-            </div>
-        </form>
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm mb-5 lg:mb-6">
+        <x-admin.filter-bar :action="route('admin.client_proposals.index')" :value="request('search')" placeholder="Cari brand, nama klien, no. WhatsApp..." :bordered="false"
+            :active="(int) request()->filled('category_id') + (int) request()->filled('owner_status')" :reset="route('admin.client_proposals.index')">
+            <x-admin.select name="category_id" class="lg:w-52">
+                <option value="">Semua Kategori</option>
+                @foreach($categories as $category)
+                <option value="{{ $category->id }}" @selected(request('category_id') == $category->id)>{{ $category->name }}</option>
+                @endforeach
+            </x-admin.select>
+            <x-admin.select name="owner_status" class="lg:w-52">
+                <option value="">Semua Owner</option>
+                <option value="claimed" @selected(request('owner_status') == 'claimed')>Sudah dihubungi</option>
+                <option value="unclaimed" @selected(request('owner_status') == 'unclaimed')>Belum dihubungi</option>
+            </x-admin.select>
+        </x-admin.filter-bar>
     </div>
 
     <!-- Selected Items Banner -->

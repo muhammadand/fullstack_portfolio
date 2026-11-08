@@ -1,93 +1,14 @@
-{{-- ===== STATS CARDS ===== --}}
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 mb-6">
-
-    {{-- Total Views (Combined) --}}
-    <div class="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group">
-        <div class="flex items-center justify-between mb-4">
-            <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background: linear-gradient(135deg, #EFF6FF, #DBEAFE);">
-                <i class="fa-solid fa-eye text-blue-600" style="font-size:13px;"></i>
-            </div>
-            <span class="text-[10px] font-semibold text-emerald-600 bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded-full flex items-center gap-1">
-                <i class="fa-solid fa-arrow-trend-up" style="font-size:8px;"></i> Live
-            </span>
-        </div>
-        <p class="text-2xl font-bold text-slate-900 mb-0.5 tracking-tight">{{ number_format($totalViews) }}</p>
-        <p class="text-xs text-slate-400 font-medium">Total Views Keseluruhan</p>
-        <div class="mt-3 pt-3 border-t border-slate-50 flex items-center justify-between text-[11px] text-slate-400">
-            <span>Blog: <span class="text-slate-600 font-semibold">{{ number_format($totalBlogViews) }}</span></span>
-            <span>Portfolio: <span class="text-slate-600 font-semibold">{{ number_format($totalPortfolioViews) }}</span></span>
-        </div>
-    </div>
-
-    {{-- Blog Views --}}
-    <div class="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
-        <div class="flex items-center justify-between mb-4">
-            <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background: linear-gradient(135deg, #F0FDF4, #DCFCE7);">
-                <i class="fa-solid fa-rss text-emerald-600" style="font-size:13px;"></i>
-            </div>
-            <span class="text-[10px] text-slate-400">Blog Traffic</span>
-        </div>
-        <p class="text-2xl font-bold text-slate-900 mb-0.5 tracking-tight">{{ number_format($totalBlogViews) }}</p>
-        <p class="text-xs text-slate-400 font-medium">Total Blog Views</p>
-        <div class="mt-3 pt-3 border-t border-slate-50">
-            <div class="w-full bg-slate-100 rounded-full h-1.5">
-                @php $blogPct = $totalViews > 0 ? round(($totalBlogViews / $totalViews) * 100) : 0; @endphp
-                <div class="h-1.5 rounded-full bg-emerald-500 transition-all duration-500" style="width: {{ $blogPct }}%"></div>
-            </div>
-            <p class="text-[11px] text-slate-400 mt-1.5">{{ $blogPct }}% dari total views</p>
-        </div>
-    </div>
-
-    {{-- Portfolio Views --}}
-    <div class="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
-        <div class="flex items-center justify-between mb-4">
-            <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background: linear-gradient(135deg, #EEF2FF, #E0E7FF);">
-                <i class="fa-solid fa-chart-line text-indigo-600" style="font-size:13px;"></i>
-            </div>
-            <span class="text-[10px] text-slate-400">Portfolio Traffic</span>
-        </div>
-        <p class="text-2xl font-bold text-slate-900 mb-0.5 tracking-tight">{{ number_format($totalPortfolioViews) }}</p>
-        <p class="text-xs text-slate-400 font-medium">Total Portfolio Views</p>
-        <div class="mt-3 pt-3 border-t border-slate-50">
-            <div class="w-full bg-slate-100 rounded-full h-1.5">
-                @php $portPct = $totalViews > 0 ? round(($totalPortfolioViews / $totalViews) * 100) : 0; @endphp
-                <div class="h-1.5 rounded-full bg-indigo-500 transition-all duration-500" style="width: {{ $portPct }}%"></div>
-            </div>
-            <p class="text-[11px] text-slate-400 mt-1.5">{{ $portPct }}% dari total views</p>
-        </div>
-    </div>
-
-    {{-- Affiliate Traffic --}}
-    <div class="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
-        <div class="flex items-center justify-between mb-4">
-            <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background: linear-gradient(135deg, #FEF2F2, #FEE2E2);">
-                <i class="fa-solid fa-users-viewfinder text-red-600" style="font-size:13px;"></i>
-            </div>
-            <span class="text-[10px] text-slate-400">Partner Traffic</span>
-        </div>
-        <p class="text-2xl font-bold text-slate-900 mb-0.5 tracking-tight">{{ number_format($totalAffiliateClicks ?? 0) }}</p>
-        <p class="text-xs text-slate-400 font-medium">Total Klik Link Affiliate</p>
-        <div class="mt-3 pt-3 border-t border-slate-50 flex items-center justify-between text-[11px] text-slate-400">
-            <a href="{{ route('admin.affiliates.index') }}" class="text-red-500 hover:text-red-600 font-semibold inline-flex items-center gap-1">
-                Kelola Partner <i class="fa-solid fa-arrow-right text-[9px]"></i>
-            </a>
-        </div>
-    </div>
-
-    {{-- Content Count --}}
-    <div class="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
-        <div class="flex items-center justify-between mb-4">
-            <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background: linear-gradient(135deg, #F0F9FF, #E0F2FE);">
-                <i class="fa-solid fa-layer-group text-sky-600" style="font-size:13px;"></i>
-            </div>
-            <span class="text-[10px] text-slate-400">Content</span>
-        </div>
-        <p class="text-2xl font-bold text-slate-900 mb-0.5 tracking-tight">{{ $totalBlogs + $totalPortfolios }}</p>
-        <p class="text-xs text-slate-400 font-medium">Total Konten Aktif</p>
-        <div class="mt-3 pt-3 border-t border-slate-50 flex items-center justify-between text-[11px] text-slate-400">
-            <span class="flex items-center gap-1"><i class="fa-solid fa-pen-nib text-slate-300" style="font-size:9px;"></i> {{ $totalBlogs }} Blogs</span>
-            <span class="flex items-center gap-1"><i class="fa-solid fa-briefcase text-slate-300" style="font-size:9px;"></i> {{ $totalPortfolios }} Projects</span>
-        </div>
-    </div>
-
+{{-- ===== STATS CARDS (mobile-first: 2 kolom di HP, 5 di desktop) ===== --}}
+@php
+    $blogPct = $totalViews > 0 ? round(($totalBlogViews / $totalViews) * 100) : 0;
+    $portPct = $totalViews > 0 ? round(($totalPortfolioViews / $totalViews) * 100) : 0;
+@endphp
+<div class="grid grid-cols-2 lg:grid-cols-5 gap-2.5 lg:gap-4 mb-5 lg:mb-6">
+    <x-admin.stat label="Total Views" :value="$totalViews" icon="fa-solid fa-eye" tone="blue" class="col-span-2 lg:col-span-1">
+        Blog <x-admin.money :value="$totalBlogViews" :rupiah="false" class="font-semibold text-slate-700" /> · Portfolio <x-admin.money :value="$totalPortfolioViews" :rupiah="false" class="font-semibold text-slate-700" />
+    </x-admin.stat>
+    <x-admin.stat label="Blog Views" :value="$totalBlogViews" icon="fa-solid fa-rss" tone="emerald">{{ $blogPct }}% dari total</x-admin.stat>
+    <x-admin.stat label="Portfolio Views" :value="$totalPortfolioViews" icon="fa-solid fa-chart-line" tone="indigo">{{ $portPct }}% dari total</x-admin.stat>
+    <x-admin.stat label="Klik Affiliate" :value="$totalAffiliateClicks ?? 0" icon="fa-solid fa-users-viewfinder" tone="red" :href="route('admin.affiliates.index')">Kelola partner →</x-admin.stat>
+    <x-admin.stat label="Konten Aktif" :value="$totalBlogs + $totalPortfolios" icon="fa-solid fa-layer-group" tone="sky">{{ $totalBlogs }} blog · {{ $totalPortfolios }} project</x-admin.stat>
 </div>

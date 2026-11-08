@@ -7,8 +7,8 @@
 
 <div {{ $attributes->class('bg-white rounded-xl border border-slate-200 shadow-sm') }}>
     @if ($title)
-    <div class="flex items-center justify-between gap-3 px-5 py-4 border-b border-slate-200">
-        <h3 class="text-sm font-semibold text-slate-900 flex items-center gap-2">
+    <div class="flex items-center justify-between gap-3 px-4 lg:px-5 py-3 lg:py-4 border-b border-slate-200">
+        <h3 class="text-sm font-semibold text-slate-900 flex items-center gap-2 min-w-0">
             @if ($icon)<i class="{{ $icon }} text-blue-600"></i>@endif
             {{ $title }}
         </h3>
@@ -18,7 +18,7 @@
     </div>
     @endif
 
-    <div @class(['p-5' => $padding])>
+    <div @class(['p-4 lg:p-5' => $padding, 'min-w-0'])>
         {{ $slot }}
     </div>
 </div>

@@ -4,39 +4,18 @@
 <x-admin.page-header title="Daftar Customer" subtitle="Pelanggan yang mendaftar di top up game maupun yang tercatat dari pesanan travel." />
 
 {{-- Ringkasan per sumber --}}
-<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-    @foreach([
-        ['Total Customer', $stats->total, 'fa-solid fa-user-group', 'bg-slate-100 text-slate-600'],
-        ['Top Up Game', $stats->topup, 'fa-solid fa-gamepad', 'bg-blue-50 text-blue-600'],
-        ['Travel & Shuttle', $stats->travel, 'fa-solid fa-van-shuttle', 'bg-orange-50 text-orange-600'],
-        ['Google Review Card', $stats->google_card, 'fa-solid fa-qrcode', 'bg-emerald-50 text-emerald-600'],
-    ] as [$label, $value, $icon, $iconCls])
-    <x-admin.card>
-        <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl {{ $iconCls }} flex items-center justify-center shrink-0"><i class="{{ $icon }}"></i></div>
-            <div class="min-w-0">
-                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500 truncate">{{ $label }}</p>
-                <p class="mt-0.5 text-xl font-semibold text-slate-900">{{ number_format($value) }}</p>
-            </div>
-        </div>
-    </x-admin.card>
-    @endforeach
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 lg:gap-4 mb-5 lg:mb-6">
+    <x-admin.stat label="Total Customer" :value="$stats->total" icon="fa-solid fa-user-group" tone="slate" />
+    <x-admin.stat label="Top Up Game" :value="$stats->topup" icon="fa-solid fa-gamepad" tone="blue" />
+    <x-admin.stat label="Travel & Shuttle" :value="$stats->travel" icon="fa-solid fa-van-shuttle" tone="amber" />
+    <x-admin.stat label="Google Review Card" :value="$stats->google_card" icon="fa-solid fa-qrcode" tone="emerald" />
 </div>
 
 <x-admin.card :padding="false">
-    <form method="GET" action="{{ route('admin.customers.index') }}" class="flex flex-col sm:flex-row gap-2 p-4 border-b border-slate-200">
-        <div class="relative flex-1 sm:max-w-sm">
-            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-sm text-slate-400"></i>
-            <x-admin.input name="q" :value="$search" placeholder="Cari nama, email, atau no. HP..." class="pl-9" />
-        </div>
-        <x-admin.select name="source" :options="collect(\App\Models\Customer::SOURCE_META)->map(fn ($m) => $m[0])->all()" :selected="$source" placeholder="Semua Sumber" class="sm:w-56" />
-        <div class="flex gap-2">
-            <x-admin.button type="submit" variant="secondary">Cari</x-admin.button>
-            @if($search || $source)
-            <x-admin.button variant="secondary" icon="fa-solid fa-xmark" :href="route('admin.customers.index')">Reset</x-admin.button>
-            @endif
-        </div>
-    </form>
+    <x-admin.filter-bar :action="route('admin.customers.index')" name="q" :value="$search" placeholder="Cari nama, email, atau no. HP..."
+        :active="(int) filled($source)" :reset="route('admin.customers.index')">
+        <x-admin.select name="source" :options="collect(\App\Models\Customer::SOURCE_META)->map(fn ($m) => $m[0])->all()" :selected="$source" placeholder="Semua Sumber" class="col-span-2 lg:w-56" />
+    </x-admin.filter-bar>
 
     {{-- Desktop: tabel --}}
     <div class="hidden md:block overflow-x-auto">

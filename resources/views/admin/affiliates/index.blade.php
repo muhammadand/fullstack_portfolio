@@ -49,65 +49,12 @@
     </x-admin.page-header>
 
     {{-- Dashboard Stats Grid --}}
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        {{-- Total Partners --}}
-        <div class="bg-white rounded-xl p-4 border border-slate-200/80 shadow-xs flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center text-sm shrink-0">
-                    <i class="fa-solid fa-users"></i>
-                </div>
-                <div>
-                    <p class="text-slate-500 text-xs font-medium">Total Partner</p>
-                    <p class="text-lg font-bold text-slate-900 mt-0.5">{{ number_format($totalPartners, 0, ',', '.') }}</p>
-                </div>
-            </div>
-        </div>
-
-        {{-- Total Clicks --}}
-        <div class="bg-white rounded-xl p-4 border border-slate-200/80 shadow-xs flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 border border-purple-100 flex items-center justify-center text-sm shrink-0">
-                    <i class="fa-solid fa-hand-pointer"></i>
-                </div>
-                <div>
-                    <p class="text-slate-500 text-xs font-medium">Total Klik</p>
-                    <p class="text-lg font-bold text-slate-900 mt-0.5">{{ number_format($totalClicks, 0, ',', '.') }}</p>
-                </div>
-            </div>
-        </div>
-
-        {{-- Total Commissions --}}
-        <div class="bg-white rounded-xl p-4 border border-slate-200/80 shadow-xs flex items-center justify-between">
-            <div class="flex items-center gap-3 min-w-0">
-                <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center text-sm shrink-0">
-                    <i class="fa-solid fa-wallet"></i>
-                </div>
-                <div class="min-w-0">
-                    <p class="text-slate-500 text-xs font-medium truncate">Komisi Diberikan</p>
-                    <p class="text-lg font-bold text-emerald-600 mt-0.5 whitespace-nowrap">
-                        <span class="text-xs font-semibold mr-0.5">Rp</span>{{ number_format($totalCommissions, 0, ',', '.') }}
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        {{-- Pending Approval --}}
-        <div class="bg-white rounded-xl p-4 border border-slate-200/80 shadow-xs flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 border border-amber-100 flex items-center justify-center text-sm shrink-0">
-                    <i class="fa-solid fa-user-clock"></i>
-                </div>
-                <div>
-                    <p class="text-slate-500 text-xs font-medium">Perlu Approval</p>
-                    <p class="text-lg font-bold {{ $totalPending > 0 ? 'text-amber-600' : 'text-slate-900' }} mt-0.5">{{ $totalPending }}</p>
-                </div>
-            </div>
-            @if($totalPending > 0)
-            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200 animate-pulse">
-                Baru
-            </span>
-            @endif
-        </div>
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 lg:gap-4 mb-5 lg:mb-6">
+        <x-admin.stat label="Total Partner" :value="$totalPartners" icon="fa-solid fa-users" tone="blue" />
+        <x-admin.stat label="Total Klik" :value="$totalClicks" icon="fa-solid fa-hand-pointer" tone="purple" />
+        <x-admin.stat label="Komisi Diberikan" :value="$totalCommissions" rupiah icon="fa-solid fa-wallet" tone="emerald" />
+        <x-admin.stat label="Perlu Approval" :value="$totalPending" icon="fa-solid fa-user-clock" :tone="$totalPending > 0 ? 'amber' : 'slate'"
+            :href="route('admin.affiliates.index', ['status' => 'pending'])" />
     </div>
 
     {{-- Alerts --}}
@@ -125,26 +72,15 @@
     {{-- Main Table Card --}}
     <x-admin.card :padding="false">
         {{-- Toolbar Filter & Search --}}
-        <form method="GET" class="flex flex-col sm:flex-row gap-2.5 p-4 border-b border-slate-200">
-            <div class="relative flex-1 sm:max-w-sm">
-                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-sm text-slate-400"></i>
-                <x-admin.input name="q" :value="request('q')" placeholder="Cari nama, email, kode partner..." class="pl-9" />
-            </div>
-            <div class="sm:w-44">
-                <x-admin.select name="status">
-                    <option value="">Semua Status</option>
-                    <option value="approved" {{ request('status') === 'approved' ? 'selected' : '' }}>Approved</option>
-                    <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Pending</option>
-                    <option value="rejected" {{ request('status') === 'rejected' ? 'selected' : '' }}>Rejected</option>
-                </x-admin.select>
-            </div>
-            <div class="flex gap-2">
-                <x-admin.button type="submit" variant="secondary">Filter</x-admin.button>
-                @if (request('q') || request('status'))
-                <x-admin.button variant="secondary" icon="fa-solid fa-xmark" :href="route('admin.affiliates.index')">Reset</x-admin.button>
-                @endif
-            </div>
-        </form>
+        <x-admin.filter-bar name="q" :value="request('q')" placeholder="Cari nama, email, kode partner..."
+            :active="(int) filled(request('status'))" :reset="route('admin.affiliates.index')">
+            <x-admin.select name="status" class="col-span-2 lg:w-44">
+                <option value="">Semua Status</option>
+                <option value="approved" @selected(request('status') === 'approved')>Approved</option>
+                <option value="pending" @selected(request('status') === 'pending')>Pending</option>
+                <option value="rejected" @selected(request('status') === 'rejected')>Rejected</option>
+            </x-admin.select>
+        </x-admin.filter-bar>
 
         {{-- Desktop & Tablet Table View --}}
         <div class="hidden md:block overflow-x-auto">

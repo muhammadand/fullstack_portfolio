@@ -55,24 +55,13 @@
         </div>
     </section>
 
-    <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Statistik konten</p>
 </div>
 
-{{-- Page Intro Bar --}}
-<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-    <div>
-        <p class="text-[10px] sm:text-xs text-slate-400 font-medium uppercase tracking-widest mb-0.5">Overview</p>
-        <h2 class="text-slate-800 font-bold text-xl sm:text-lg leading-tight">Dashboard Analytics</h2>
-    </div>
-    <div class="flex items-center gap-2.5 w-full sm:w-auto">
-        <span class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-500">
-            <i class="fa-regular fa-calendar text-slate-400"></i>
-            {{ now()->format('d M Y') }}
-        </span>
-        <a href="{{ route('blogs.index') }}" class="w-full sm:w-auto flex justify-center items-center gap-1.5 px-4 py-2.5 sm:py-1.5 rounded-lg text-sm sm:text-xs font-semibold text-white shadow-sm" style="background: linear-gradient(90deg, #1E3A8A, #2563EB);">
-            <i class="fa-solid fa-plus"></i> New Content
-        </a>
-    </div>
+{{-- Page Intro Bar: desktop saja (di HP sudah ada Beranda ringkas di atas). --}}
+<div class="hidden lg:block">
+<x-admin.page-header title="Dashboard Analytics" subtitle="Ringkasan trafik konten dan partner · {{ now()->translatedFormat('d M Y') }}">
+    <x-admin.button icon="fa-solid fa-plus" :href="route('blogs.index')">New Content</x-admin.button>
+</x-admin.page-header>
 </div>
 
 {{-- Stats Cards --}}

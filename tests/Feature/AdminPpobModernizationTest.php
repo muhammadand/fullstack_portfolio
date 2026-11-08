@@ -46,10 +46,10 @@ class AdminPpobModernizationTest extends TestCase
         $response->assertOk();
         $response->assertSee('Integrasi Digiflazz');
         $response->assertDontSee('PPOB');
-        $response->assertSee('Sisa Saldo Deposit Aktif');
+        $response->assertSee('Saldo Deposit Digiflazz');
         $response->assertSee('Username API');
-        $response->assertSee('Mode Environment');
-        $response->assertSee('Status Webhook');
+        $response->assertSee('Production');
+        $response->assertSee('/api/digiflazz/webhook');
         $response->assertSee('Live JSON Response Inspector');
         $response->assertSee('Deposit Saldo via ShopeePay');
     }

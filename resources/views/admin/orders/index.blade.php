@@ -30,43 +30,22 @@
 </nav>
 
 {{-- Ringkasan (mengikuti tab aktif) --}}
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-    @foreach([
-        ['Total Order', number_format($stats->total), 'fa-solid fa-receipt', 'bg-blue-50 text-blue-600', 'text-slate-900'],
-        ['Belum Bayar', number_format($stats->unpaid), 'fa-solid fa-hourglass-half', 'bg-amber-50 text-amber-600', 'text-amber-600'],
-        ['Perlu Diproses', number_format($stats->processing), 'fa-solid fa-bolt', 'bg-indigo-50 text-indigo-600', 'text-indigo-600'],
-        ['Omzet Lunas', 'Rp ' . number_format($stats->revenue, 0, ',', '.'), 'fa-solid fa-wallet', 'bg-emerald-50 text-emerald-600', 'text-slate-900'],
-    ] as [$label, $value, $icon, $iconCls, $valCls])
-    <x-admin.card>
-        <div class="flex items-center gap-3.5">
-            <div class="w-11 h-11 rounded-xl {{ $iconCls }} flex items-center justify-center text-lg shrink-0"><i class="{{ $icon }}"></i></div>
-            <div class="min-w-0">
-                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">{{ $label }}</p>
-                <p class="mt-0.5 text-xl font-semibold truncate {{ $valCls }}">{{ $value }}</p>
-            </div>
-        </div>
-    </x-admin.card>
-    @endforeach
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 lg:gap-4 mb-5 lg:mb-6">
+    <x-admin.stat label="Total Order" :value="$stats->total" icon="fa-solid fa-receipt" tone="blue" />
+    <x-admin.stat label="Belum Bayar" :value="$stats->unpaid" icon="fa-solid fa-hourglass-half" tone="amber" />
+    <x-admin.stat label="Perlu Diproses" :value="$stats->processing" icon="fa-solid fa-bolt" tone="indigo" />
+    <x-admin.stat label="Omzet Lunas" :value="$stats->revenue" rupiah icon="fa-solid fa-wallet" tone="emerald" />
 </div>
 
 <x-admin.card :padding="false">
     {{-- Toolbar pencarian & filter --}}
-    <form method="GET" action="{{ route('admin.orders.index') }}" class="flex flex-col lg:flex-row gap-2 p-4 border-b border-slate-200">
-        @if($source)<input type="hidden" name="source" value="{{ $source }}">@endif
-        <div class="relative flex-1">
-            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-sm text-slate-400"></i>
-            <x-admin.input name="search" :value="$search" placeholder="Cari no. order, nomor tujuan, email, produk, atau nama..." class="pl-9" />
-        </div>
-        <x-admin.select name="status" :options="collect(\App\Models\Order::STATUS_META)->map(fn ($m) => $m[0])->all()" :selected="$status" placeholder="Semua Status" class="lg:w-44" />
-        <x-admin.select name="payment_status" :options="collect(\App\Models\Order::PAYMENT_META)->map(fn ($m) => $m[0])->all()" :selected="$payment" placeholder="Semua Pembayaran" class="lg:w-48" />
-        <x-admin.input name="date" type="date" :value="$date" class="lg:w-40" />
-        <div class="flex gap-2">
-            <x-admin.button type="submit" variant="secondary">Filter</x-admin.button>
-            @if($filtered)
-            <x-admin.button variant="secondary" icon="fa-solid fa-xmark" :href="route('admin.orders.index', array_filter(['source' => $source]))">Reset</x-admin.button>
-            @endif
-        </div>
-    </form>
+    <x-admin.filter-bar :action="route('admin.orders.index')" :value="$search" placeholder="Cari no. order, nomor tujuan, email, produk, atau nama..."
+        :hidden="['source' => $source]" :active="(int) filled($status) + (int) filled($payment) + (int) filled($date)"
+        :reset="route('admin.orders.index', array_filter(['source' => $source]))">
+        <x-admin.select name="status" :options="collect(\App\Models\Order::STATUS_META)->map(fn ($m) => $m[0])->all()" :selected="$status" placeholder="Semua Status" class="lg:w-40" />
+        <x-admin.select name="payment_status" :options="collect(\App\Models\Order::PAYMENT_META)->map(fn ($m) => $m[0])->all()" :selected="$payment" placeholder="Semua Bayar" class="lg:w-40" />
+        <x-admin.input name="date" type="date" :value="$date" class="col-span-2 lg:w-40" />
+    </x-admin.filter-bar>
 
     {{-- Desktop: tabel --}}
     <div class="hidden md:block overflow-x-auto">

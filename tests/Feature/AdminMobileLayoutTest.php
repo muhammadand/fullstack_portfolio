@@ -69,4 +69,45 @@ class AdminMobileLayoutTest extends TestCase
             $this->assertStringContainsString('class="md:hidden divide-y divide-slate-100"', $html, "$name: harus punya kartu HP");
         }
     }
+
+    public function test_mobile_design_rules_and_compact_numbers_render(): void
+    {
+        $html = $this->actingAs($this->admin())->get(route('admin.affiliates.index'))->assertOk()->getContent();
+
+        // Aturan global HP dimuat di semua halaman admin.
+        $this->assertStringContainsString('@media (max-width: 1023.98px)', $html);
+        // Stat memakai komponen standar: angka besar ringkas di HP, lengkap di desktop.
+        $this->assertStringContainsString('Komisi Diberikan', $html);
+        $this->assertMatchesRegularExpression('/<span class="lg:hidden">Rp [^<]+<\/span><span class="hidden lg:inline">Rp [\d.]+<\/span>|title="Rp [\d.]+">Rp [\d.]+<\/span>/', $html);
+    }
+
+    public function test_stat_component_shows_compact_value_on_mobile_and_full_on_desktop(): void
+    {
+        $html = \Illuminate\Support\Facades\Blade::render('<x-admin.stat label="Omzet" :value="5663000" rupiah />');
+
+        $this->assertStringContainsString('<span class="lg:hidden">Rp 5,66 jt</span>', $html);
+        $this->assertStringContainsString('<span class="hidden lg:inline">Rp 5.663.000</span>', $html);
+        $this->assertStringContainsString('truncate', $html);
+    }
+
+    public function test_filter_bar_is_compact_and_renders_each_filter_once(): void
+    {
+        $admin = $this->admin();
+        $html = $this->actingAs($admin)
+            ->get(route('admin.orders.index', ['source' => 'pulsa', 'search' => 'abc', 'status' => 'processing']))
+            ->assertOk()->getContent();
+
+        $this->assertStringContainsString('admin-filter', $html);
+        $this->assertSame(1, substr_count($html, 'name="status"'), 'filter status harus dirender sekali');
+        $this->assertSame(1, substr_count($html, 'name="payment_status"'));
+        $this->assertStringContainsString('name="search" value="abc"', $html);
+        $this->assertStringContainsString('<input type="hidden" name="source" value="pulsa">', $html); // tab ikut terkirim
+        $this->assertStringContainsString('aria-label="Filter"', $html);                             // tombol panel di HP
+        $this->assertMatchesRegularExpression('/bg-blue-600 text-white text-\[10px\][^>]*>1<\/span>/', $html); // 1 filter aktif
+
+        foreach (['admin.affiliates.index', 'admin.customers.index', 'admin.withdrawals.index', 'admin.review_cards.index',
+                  'admin.travel_bookings.index', 'admin.travel_schedules.index', 'admin.client_proposals.index'] as $name) {
+            $this->actingAs($admin)->get(route($name))->assertOk()->assertSee('admin-filter', false);
+        }
+    }
 }

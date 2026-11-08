@@ -37,6 +37,7 @@
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     @livewireStyles
+    @include('layouts.admin.mobile')
 </head>
 
 <body class="bg-slate-50 font-sans h-screen overflow-hidden">

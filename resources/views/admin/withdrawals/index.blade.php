@@ -98,35 +98,19 @@
     {{-- Main Card --}}
     <x-admin.card :padding="false">
         {{-- Toolbar Filter & Pencarian --}}
-        <form method="GET" action="{{ route('admin.withdrawals.index') }}" class="flex flex-col sm:flex-row gap-2.5 p-4 border-b border-slate-200">
-            <div class="relative flex-1 sm:max-w-sm">
-                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-sm text-slate-400"></i>
-                <x-admin.input name="q" :value="request('q') ?? request('search')" placeholder="Cari nama, email, no rekening..." class="pl-9" />
-            </div>
-
-            <div class="sm:w-44">
-                <x-admin.select name="status">
-                    <option value="">Semua Status</option>
-                    <option value="{{ \App\Models\Withdrawal::STATUS_PENDING }}" {{ request('status') === \App\Models\Withdrawal::STATUS_PENDING ? 'selected' : '' }}>Menunggu Proses</option>
-                    <option value="{{ \App\Models\Withdrawal::STATUS_COMPLETED }}" {{ request('status') === \App\Models\Withdrawal::STATUS_COMPLETED ? 'selected' : '' }}>Selesai</option>
-                </x-admin.select>
-            </div>
-
-            <div class="sm:w-44">
-                <x-admin.select name="source">
-                    <option value="">Semua Sumber</option>
-                    <option value="{{ \App\Models\Withdrawal::SOURCE_COMMISSION }}" {{ request('source') === \App\Models\Withdrawal::SOURCE_COMMISSION ? 'selected' : '' }}>Saldo Komisi</option>
-                    <option value="{{ \App\Models\Withdrawal::SOURCE_WALLET }}" {{ request('source') === \App\Models\Withdrawal::SOURCE_WALLET ? 'selected' : '' }}>Saldo Wallet</option>
-                </x-admin.select>
-            </div>
-
-            <div class="flex gap-2">
-                <x-admin.button type="submit" variant="secondary">Filter</x-admin.button>
-                @if(request('q') || request('search') || request('status') || request('source'))
-                <x-admin.button variant="secondary" icon="fa-solid fa-xmark" :href="route('admin.withdrawals.index')">Reset</x-admin.button>
-                @endif
-            </div>
-        </form>
+        <x-admin.filter-bar :action="route('admin.withdrawals.index')" name="q" :value="request('q') ?? request('search')" placeholder="Cari nama, email, no rekening..."
+            :active="(int) filled(request('status')) + (int) filled(request('source'))" :reset="route('admin.withdrawals.index')">
+            <x-admin.select name="status" class="lg:w-44">
+                <option value="">Semua Status</option>
+                <option value="{{ \App\Models\Withdrawal::STATUS_PENDING }}" @selected(request('status') === \App\Models\Withdrawal::STATUS_PENDING)>Menunggu</option>
+                <option value="{{ \App\Models\Withdrawal::STATUS_COMPLETED }}" @selected(request('status') === \App\Models\Withdrawal::STATUS_COMPLETED)>Selesai</option>
+            </x-admin.select>
+            <x-admin.select name="source" class="lg:w-44">
+                <option value="">Semua Sumber</option>
+                <option value="{{ \App\Models\Withdrawal::SOURCE_COMMISSION }}" @selected(request('source') === \App\Models\Withdrawal::SOURCE_COMMISSION)>Saldo Komisi</option>
+                <option value="{{ \App\Models\Withdrawal::SOURCE_WALLET }}" @selected(request('source') === \App\Models\Withdrawal::SOURCE_WALLET)>Saldo Wallet</option>
+            </x-admin.select>
+        </x-admin.filter-bar>
 
         {{-- Table List (tablet & desktop) --}}
         <div class="hidden md:block overflow-x-auto">

@@ -117,9 +117,8 @@ class PpobAdminController extends Controller
 
         AppSetting::put(DigiflazzService::MODE_SETTING_KEY, $data['mode']);
 
-        $label = $data['mode'] === DigiflazzService::MODE_PRODUCTION ? 'Production (transaksi sungguhan)' : 'Development (testing)';
+        $label = $data['mode'] === DigiflazzService::MODE_PRODUCTION ? 'Production' : 'Development';
 
-        return back()->with('success', "Mode Digiflazz sekarang: {$label}.");
+        return back()->with('success', "Mode: {$label}.");
     }
 }
-

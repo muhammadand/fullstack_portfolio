@@ -21,109 +21,31 @@
     </div>
 
     <!-- Dashboard Stats Grid (Soft & Clean) -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <!-- Total Pesanan -->
-        <div class="bg-white rounded-xl p-4 sm:p-5 shadow-sm border border-slate-200 hover:border-blue-400 transition-all flex items-center justify-between">
-            <div class="flex items-center gap-3.5">
-                <div class="w-11 h-11 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg shrink-0">
-                    <i class="fa-solid fa-ticket"></i>
-                </div>
-                <div>
-                    <p class="text-slate-500 text-xs font-semibold uppercase tracking-wider">Total Pesanan</p>
-                    <p class="text-2xl font-bold text-slate-800 mt-0.5">{{ number_format($stats->total ?? 0) }}</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Sedang Diproses -->
-        <div class="bg-white rounded-xl p-4 sm:p-5 shadow-sm border border-slate-200 hover:border-amber-400 transition-all flex items-center justify-between">
-            <div class="flex items-center gap-3.5">
-                <div class="w-11 h-11 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg shrink-0">
-                    <i class="fa-solid fa-clock-rotate-left"></i>
-                </div>
-                <div>
-                    <p class="text-slate-500 text-xs font-semibold uppercase tracking-wider">Sedang Diproses</p>
-                    <div class="flex items-center gap-2 mt-0.5">
-                        <p class="text-2xl font-bold text-amber-600">{{ number_format($stats->pending ?? 0) }}</p>
-                        @if(($stats->pending ?? 0) > 0)
-                        <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-amber-100 text-amber-800">
-                            Perlu Tindakan
-                        </span>
-                        @endif
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Terkonfirmasi -->
-        <div class="bg-white rounded-xl p-4 sm:p-5 shadow-sm border border-slate-200 hover:border-emerald-400 transition-all flex items-center justify-between">
-            <div class="flex items-center gap-3.5">
-                <div class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg shrink-0">
-                    <i class="fa-solid fa-circle-check"></i>
-                </div>
-                <div>
-                    <p class="text-slate-500 text-xs font-semibold uppercase tracking-wider">Terkonfirmasi</p>
-                    <p class="text-2xl font-bold text-emerald-600 mt-0.5">{{ number_format($stats->confirmed ?? 0) }}</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Omzet Terverifikasi -->
-        <div class="bg-white rounded-xl p-4 sm:p-5 shadow-sm border border-slate-200 hover:border-indigo-400 transition-all flex items-center justify-between">
-            <div class="flex items-center gap-3.5">
-                <div class="w-11 h-11 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-lg shrink-0">
-                    <i class="fa-solid fa-wallet"></i>
-                </div>
-                <div>
-                    <p class="text-slate-500 text-xs font-semibold uppercase tracking-wider">Omzet Lunas</p>
-                    <p class="text-xl font-bold text-slate-800 mt-0.5 font-mono">Rp {{ number_format($stats->total_revenue ?? 0, 0, ',', '.') }}</p>
-                </div>
-            </div>
-        </div>
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 lg:gap-4 mb-5 lg:mb-6">
+        <x-admin.stat label="Total Pesanan" :value="$stats->total ?? 0" icon="fa-solid fa-receipt" tone="blue" />
+        <x-admin.stat label="Sedang Diproses" :value="$stats->pending ?? 0" icon="fa-solid fa-hourglass-half" tone="amber" />
+        <x-admin.stat label="Terkonfirmasi" :value="$stats->confirmed ?? 0" icon="fa-solid fa-circle-check" tone="emerald" />
+        <x-admin.stat label="Omzet Lunas" :value="$stats->total_revenue ?? 0" rupiah icon="fa-solid fa-wallet" tone="indigo" />
     </div>
 
     <!-- Filters & Search Bar -->
-    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 mb-6">
-        <form method="GET" action="{{ route('admin.travel_bookings.index') }}" class="flex flex-col md:flex-row gap-3">
-            <div class="flex-1 relative">
-                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 text-sm">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                </span>
-                <input type="text" name="search" value="{{ $search ?? '' }}" placeholder="Cari Kode Booking, Nama, No. HP, atau Alamat..." class="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all">
-            </div>
-
-            <div class="md:w-44">
-                <select name="status" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white text-slate-700">
-                    <option value="">Semua Status</option>
-                    <option value="pending" {{ ($status ?? '') === 'pending' ? 'selected' : '' }}>Diproses (Pending)</option>
-                    <option value="confirmed" {{ ($status ?? '') === 'confirmed' ? 'selected' : '' }}>Terkonfirmasi</option>
-                    <option value="completed" {{ ($status ?? '') === 'completed' ? 'selected' : '' }}>Selesai</option>
-                    <option value="cancelled" {{ ($status ?? '') === 'cancelled' ? 'selected' : '' }}>Dibatalkan</option>
-                </select>
-            </div>
-
-            <div class="md:w-44">
-                <select name="type" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white text-slate-700">
-                    <option value="">Semua Layanan</option>
-                    <option value="reguler" {{ ($type ?? '') === 'reguler' ? 'selected' : '' }}>Shuttle Reguler</option>
-                    <option value="charter" {{ ($type ?? '') === 'charter' ? 'selected' : '' }}>Sewa Mobil (Charter)</option>
-                </select>
-            </div>
-
-            <div class="md:w-40">
-                <input type="date" name="date" value="{{ $date ?? '' }}" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white text-slate-700">
-            </div>
-
-            <button type="submit" class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-lg text-sm font-medium transition-colors shadow-sm">
-                Filter
-            </button>
-
-            @if($search || $status || $type || $date)
-            <a href="{{ route('admin.travel_bookings.index') }}" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-medium transition-colors text-center">
-                Reset
-            </a>
-            @endif
-        </form>
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 mb-5 lg:mb-6">
+        <x-admin.filter-bar :action="route('admin.travel_bookings.index')" :value="$search ?? ''" placeholder="Cari kode booking, nama, no. HP..." :bordered="false"
+            :active="(int) filled($status ?? null) + (int) filled($type ?? null) + (int) filled($date ?? null)" :reset="route('admin.travel_bookings.index')">
+            <x-admin.select name="status" class="lg:w-44">
+                <option value="">Semua Status</option>
+                <option value="pending" @selected(($status ?? '') === 'pending')>Diproses</option>
+                <option value="confirmed" @selected(($status ?? '') === 'confirmed')>Terkonfirmasi</option>
+                <option value="completed" @selected(($status ?? '') === 'completed')>Selesai</option>
+                <option value="cancelled" @selected(($status ?? '') === 'cancelled')>Dibatalkan</option>
+            </x-admin.select>
+            <x-admin.select name="type" class="lg:w-44">
+                <option value="">Semua Layanan</option>
+                <option value="reguler" @selected(($type ?? '') === 'reguler')>Shuttle Reguler</option>
+                <option value="charter" @selected(($type ?? '') === 'charter')>Charter</option>
+            </x-admin.select>
+            <x-admin.input name="date" type="date" :value="$date ?? ''" class="col-span-2 lg:w-40" />
+        </x-admin.filter-bar>
     </div>
 
     <!-- Table List -->

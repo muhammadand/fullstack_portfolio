@@ -17,56 +17,19 @@
 </div>
 
 {{-- ===== STATS CARDS ===== --}}
-<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-    {{-- Total Pengunjung --}}
-    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
-        <div class="flex items-center justify-between mb-3">
-            <div class="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center">
-                <i class="fa-solid fa-eye text-blue-500 text-sm"></i>
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 lg:gap-4 mb-5 lg:mb-6">
+    <x-admin.stat label="Total Kunjungan" :value="$totalVisits" icon="fa-solid fa-eye" tone="blue" />
+    <x-admin.stat label="IP Unik" :value="$uniqueVisits" icon="fa-solid fa-fingerprint" tone="indigo" />
+    <x-admin.stat label="Kunjungan Hari Ini" :value="$todayVisits" icon="fa-solid fa-calendar-day" tone="emerald" />
+    <div class="block min-w-0 bg-white rounded-xl border border-slate-200 shadow-sm p-3 lg:p-4">
+        <div class="flex items-center gap-2.5 lg:gap-3 min-w-0">
+            <span class="w-8 h-8 lg:w-10 lg:h-10 rounded-lg lg:rounded-xl shrink-0 flex items-center justify-center text-xs lg:text-sm bg-amber-50 text-amber-600"><i class="fa-solid fa-star"></i></span>
+            <div class="min-w-0 flex-1">
+                <p class="text-[11px] lg:text-xs font-medium text-slate-500 truncate">Rating rata-rata</p>
+                <p class="text-lg lg:text-xl font-bold text-slate-900 leading-tight truncate">{{ $avgRating > 0 ? $avgRating : '—' }}</p>
             </div>
-            <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Total</span>
         </div>
-        <p class="text-2xl font-black text-slate-800">{{ number_format($totalVisits) }}</p>
-        <p class="text-xs text-slate-400 mt-0.5">Total Kunjungan</p>
-    </div>
-
-    {{-- Unique Pengunjung --}}
-    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
-        <div class="flex items-center justify-between mb-3">
-            <div class="w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center">
-                <i class="fa-solid fa-users text-emerald-500 text-sm"></i>
-            </div>
-            <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Unik</span>
-        </div>
-        <p class="text-2xl font-black text-slate-800">{{ number_format($uniqueVisits) }}</p>
-        <p class="text-xs text-slate-400 mt-0.5">IP Unik</p>
-    </div>
-
-    {{-- Hari Ini --}}
-    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
-        <div class="flex items-center justify-between mb-3">
-            <div class="w-9 h-9 rounded-xl bg-amber-50 flex items-center justify-center">
-                <i class="fa-solid fa-calendar-day text-amber-500 text-sm"></i>
-            </div>
-            <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Hari Ini</span>
-        </div>
-        <p class="text-2xl font-black text-slate-800">{{ number_format($todayVisits) }}</p>
-        <p class="text-xs text-slate-400 mt-0.5">Kunjungan Hari Ini</p>
-    </div>
-
-    {{-- Reviews --}}
-    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
-        <div class="flex items-center justify-between mb-3">
-            <div class="w-9 h-9 rounded-xl bg-rose-50 flex items-center justify-center">
-                <i class="fa-solid fa-star text-rose-500 text-sm"></i>
-            </div>
-            <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Rating</span>
-        </div>
-        <p class="text-2xl font-black text-slate-800">
-            {{ $avgRating > 0 ? $avgRating : '—' }}
-            <span class="text-sm font-medium text-slate-400">/5</span>
-        </p>
-        <p class="text-xs text-slate-400 mt-0.5">Avg dari {{ number_format($totalReviews) }} ulasan</p>
+        <div class="mt-2 text-[11px] text-slate-500 truncate">dari {{ number_format($totalReviews) }} ulasan</div>
     </div>
 </div>
 

@@ -44,46 +44,11 @@
     </x-admin.page-header>
 
     {{-- 4 Quick Stats Grid --}}
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <div class="bg-white rounded-xl p-4 border border-slate-200/80 shadow-xs flex items-center gap-3.5">
-            <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center shrink-0 text-sm">
-                <i class="fa-solid fa-qrcode"></i>
-            </div>
-            <div>
-                <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Total Kartu</p>
-                <p class="text-lg font-bold text-slate-900 mt-0.5">{{ number_format($stats->total ?? 0, 0, ',', '.') }}</p>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-xl p-4 border border-slate-200/80 shadow-xs flex items-center gap-3.5">
-            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center shrink-0 text-sm">
-                <i class="fa-solid fa-lock"></i>
-            </div>
-            <div>
-                <p class="text-xs font-medium text-emerald-700 uppercase tracking-wider">Terjual</p>
-                <p class="text-lg font-bold text-emerald-600 mt-0.5">{{ number_format($stats->sold ?? 0, 0, ',', '.') }}</p>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-xl p-4 border border-slate-200/80 shadow-xs flex items-center gap-3.5">
-            <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 border border-amber-100 flex items-center justify-center shrink-0 text-sm">
-                <i class="fa-solid fa-box-open"></i>
-            </div>
-            <div>
-                <p class="text-xs font-medium text-amber-700 uppercase tracking-wider">Belum Terjual</p>
-                <p class="text-lg font-bold text-amber-600 mt-0.5">{{ number_format($stats->unsold ?? 0, 0, ',', '.') }}</p>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-xl p-4 border border-slate-200/80 shadow-xs flex items-center gap-3.5">
-            <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 border border-purple-100 flex items-center justify-center shrink-0 text-sm">
-                <i class="fa-solid fa-chart-simple"></i>
-            </div>
-            <div>
-                <p class="text-xs font-medium text-purple-700 uppercase tracking-wider">Total Scan Review</p>
-                <p class="text-lg font-bold text-purple-600 mt-0.5">{{ number_format($stats->total_scans ?? 0, 0, ',', '.') }}</p>
-            </div>
-        </div>
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 lg:gap-4 mb-5 lg:mb-6">
+        <x-admin.stat label="Total Kartu" :value="$stats->total ?? 0" icon="fa-solid fa-qrcode" tone="blue" />
+        <x-admin.stat label="Terjual" :value="$stats->sold ?? 0" icon="fa-solid fa-lock" tone="emerald" />
+        <x-admin.stat label="Belum Terjual" :value="$stats->unsold ?? 0" icon="fa-solid fa-box-open" tone="amber" />
+        <x-admin.stat label="Total Scan" :value="$stats->total_scans ?? 0" icon="fa-solid fa-chart-simple" tone="purple" />
     </div>
 
     {{-- Pesanan QRIS Partner Menunggu Verifikasi --}}
@@ -142,30 +107,17 @@
     {{-- Main Table Card --}}
     <x-admin.card :padding="false">
         {{-- Toolbar Filter & Pencarian --}}
-        <form method="GET" action="{{ route('admin.review_cards.index') }}" class="flex flex-col sm:flex-row gap-2.5 p-4 border-b border-slate-200">
-            <div class="relative flex-1 sm:max-w-sm">
-                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-sm text-slate-400"></i>
-                <x-admin.input name="q" :value="request('q') ?? request('search')" placeholder="Cari serial, nama usaha, atau slug..." class="pl-9" />
-            </div>
-
-            <div class="sm:w-48">
-                <x-admin.select name="status" onchange="this.form.submit()">
-                    <option value="">Semua Status</option>
-                    <option value="sold" {{ request('status') === 'sold' ? 'selected' : '' }}>Terjual</option>
-                    <option value="unsold" {{ request('status') === 'unsold' ? 'selected' : '' }}>Belum Terjual</option>
-                    <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Pending (Gudang)</option>
-                    <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Aktif (Toko)</option>
-                    <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Nonaktif</option>
-                </x-admin.select>
-            </div>
-
-            <div class="flex gap-2">
-                <x-admin.button type="submit" variant="secondary">Filter</x-admin.button>
-                @if(request('q') || request('search') || request('status'))
-                <x-admin.button variant="secondary" icon="fa-solid fa-xmark" :href="route('admin.review_cards.index')">Reset</x-admin.button>
-                @endif
-            </div>
-        </form>
+        <x-admin.filter-bar :action="route('admin.review_cards.index')" name="q" :value="request('q') ?? request('search')" placeholder="Cari serial, nama usaha, atau slug..."
+            :active="(int) filled(request('status'))" :reset="route('admin.review_cards.index')">
+            <x-admin.select name="status" class="col-span-2 lg:w-48">
+                <option value="">Semua Status</option>
+                <option value="sold" @selected(request('status') === 'sold')>Terjual</option>
+                <option value="unsold" @selected(request('status') === 'unsold')>Belum Terjual</option>
+                <option value="pending" @selected(request('status') === 'pending')>Pending (Gudang)</option>
+                <option value="active" @selected(request('status') === 'active')>Aktif (Toko)</option>
+                <option value="inactive" @selected(request('status') === 'inactive')>Nonaktif</option>
+            </x-admin.select>
+        </x-admin.filter-bar>
 
         {{-- Table List --}}
         <div class="hidden md:block overflow-x-auto">

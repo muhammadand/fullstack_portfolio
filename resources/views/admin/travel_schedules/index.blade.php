@@ -21,44 +21,25 @@
     </div>
 
     <!-- Filter Bar -->
-    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 mb-6">
-        <form method="GET" action="{{ route('admin.travel_schedules.index') }}" class="flex flex-col sm:flex-row gap-3">
-            <div class="flex-1">
-                <select name="route_id" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white text-slate-700">
-                    <option value="">Semua Rute Perjalanan</option>
-                    @foreach($routes as $rt)
-                    <option value="{{ $rt->id }}" {{ ($routeId ?? '') == $rt->id ? 'selected' : '' }}>
-                        {{ $rt->origin }} ➔ {{ $rt->destination }}
-                    </option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div class="sm:w-44">
-                <input type="date" name="date" value="{{ $date ?? '' }}" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white text-slate-700">
-            </div>
-
-            <div class="sm:w-44">
-                <select name="status" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white text-slate-700">
-                    <option value="">Semua Status</option>
-                    <option value="confirmed" {{ ($status ?? '') === 'confirmed' ? 'selected' : '' }}>Terkonfirmasi</option>
-                    <option value="waiting_quota" {{ ($status ?? '') === 'waiting_quota' ? 'selected' : '' }}>Menunggu Kuota</option>
-                    <option value="departed" {{ ($status ?? '') === 'departed' ? 'selected' : '' }}>Sudah Berangkat</option>
-                    <option value="completed" {{ ($status ?? '') === 'completed' ? 'selected' : '' }}>Selesai</option>
-                    <option value="cancelled" {{ ($status ?? '') === 'cancelled' ? 'selected' : '' }}>Dibatalkan</option>
-                </select>
-            </div>
-
-            <button type="submit" class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-lg text-sm font-medium transition-colors shadow-sm">
-                Filter
-            </button>
-
-            @if($routeId || $date || $status)
-            <a href="{{ route('admin.travel_schedules.index') }}" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-medium transition-colors text-center">
-                Reset
-            </a>
-            @endif
-        </form>
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 mb-5 lg:mb-6">
+        <x-admin.filter-bar :action="route('admin.travel_schedules.index')" :name="false" :bordered="false"
+            :active="(int) filled($routeId ?? null) + (int) filled($date ?? null) + (int) filled($status ?? null)" :reset="route('admin.travel_schedules.index')">
+            <x-admin.select name="route_id" class="col-span-2 lg:w-64">
+                <option value="">Semua Rute</option>
+                @foreach($routes as $rt)
+                <option value="{{ $rt->id }}" @selected(($routeId ?? '') == $rt->id)>{{ $rt->origin }} ➔ {{ $rt->destination }}</option>
+                @endforeach
+            </x-admin.select>
+            <x-admin.input name="date" type="date" :value="$date ?? ''" class="lg:w-40" />
+            <x-admin.select name="status" class="lg:w-44">
+                <option value="">Semua Status</option>
+                <option value="confirmed" @selected(($status ?? '') === 'confirmed')>Terkonfirmasi</option>
+                <option value="waiting_quota" @selected(($status ?? '') === 'waiting_quota')>Menunggu Kuota</option>
+                <option value="departed" @selected(($status ?? '') === 'departed')>Sudah Berangkat</option>
+                <option value="completed" @selected(($status ?? '') === 'completed')>Selesai</option>
+                <option value="cancelled" @selected(($status ?? '') === 'cancelled')>Dibatalkan</option>
+            </x-admin.select>
+        </x-admin.filter-bar>
     </div>
 
     <!-- Table of Schedules -->
