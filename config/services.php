@@ -58,6 +58,11 @@ return [
         'internal_token' => env('DIGIFLAZZ_INTERNAL_TOKEN', ''),
     ],
 
+    // Push notification ke HP admin (AdminNotifier). Dimatikan saat test (phpunit.xml).
+    'admin_push' => [
+        'enabled' => env('ADMIN_PUSH_ENABLED', true),
+    ],
+
     'scalify_pay' => [
         'base_url' => env('SCALIFY_PAY_URL', 'http://pay.scalifyintellegence.my.id/api/v1'),
         'api_key' => env('SCALIFY_PAY_API_KEY', env('SCALIFY_QRIS_API_KEY', 'pk_live_demo1234_sk_live_demo_store_secret_99887766')),

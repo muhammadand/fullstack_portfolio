@@ -220,6 +220,10 @@ class PaymentWebhookService
         if ($status && in_array($status, self::SUCCESS_STATUSES)) {
             $paid = $deposit->markAsPaid($transactionId, $payload);
             $action = $paid ? 'paid' : 'already_paid';
+            if ($paid) {
+                AdminNotifier::notify('Partner isi saldo', AdminNotifier::rupiah($deposit->amount) . " masuk (#{$deposit->deposit_no}).",
+                    route('admin.affiliates.index'), 'deposit-' . $deposit->id);
+            }
             Log::info("WalletDeposit #{$deposit->deposit_no} paid! Credited Rp {$deposit->amount} to Affiliate #{$deposit->affiliate_id} wallet.");
         } elseif ($status && in_array($status, self::EXPIRED_STATUSES)) {
             $deposit->markAsExpired($payload);
@@ -274,6 +278,8 @@ class PaymentWebhookService
         if ($status && in_array($status, self::SUCCESS_STATUSES)) {
             $createdCard = $cardOrder->markAsPaid($transactionId, $payload);
             $action = 'paid';
+            AdminNotifier::notify('Review Card dibayar', "Order {$orderNumber} lunas, kartu {$createdCard?->serial_number} aktif.",
+                route('admin.review_cards.index'), 'card-' . $orderNumber);
             Log::info("GoogleCardOrder #{$orderNumber} paid! Created & activated ReviewCard: {$createdCard->serial_number}");
         }
 
@@ -318,6 +324,8 @@ class PaymentWebhookService
                 // Email "pembayaran diterima" hanya saat baru lunas (webhook ulang tidak mengirim lagi).
                 if ($action === 'paid') {
                     TopupOrderMailer::send($order, 'paid');
+                    AdminNotifier::notify("{$order->sourceLabel()} dibayar", "{$order->product_name} · " . AdminNotifier::rupiah($order->total_amount),
+                        route('admin.orders.show', $order), 'order-' . $order->id);
                 }
 
                 // Lunas -> kirim ke Digiflazz. Dipanggil juga saat webhook diulang (already_paid) agar
@@ -371,6 +379,8 @@ class PaymentWebhookService
                 'status' => 'confirmed',
             ]);
             $action = 'paid';
+            AdminNotifier::notify('Booking travel dibayar', "Kode {$booking->booking_code} lunas & terkonfirmasi.",
+                route('admin.travel_bookings.index'), 'booking-paid-' . $booking->id);
             Log::info("Booking #{$booking->booking_code} marked as paid & confirmed.");
         }
 

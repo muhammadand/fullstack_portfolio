@@ -47,6 +47,21 @@ $avatar = $user->profile_photo
                 <div class="px-4 py-2 border-b border-slate-50 mb-1 flex justify-between items-center">
                     <p class="text-sm font-semibold text-slate-800">Notifications</p>
                 </div>
+
+                {{-- Push ke HP admin --}}
+                <div x-data="adminPush()" class="mx-3 mb-2 rounded-lg border border-slate-200 bg-slate-50 p-3 text-xs">
+                    <p class="font-semibold text-slate-800 flex items-center gap-1.5"><i class="fa-solid fa-mobile-screen-button text-blue-600"></i> Notifikasi di perangkat ini</p>
+                    <p class="mt-1 text-slate-500" x-show="state === 'on'">Aktif: top up, pesanan, pendaftaran, dan penarikan langsung masuk.</p>
+                    <p class="mt-1 text-slate-500" x-show="state === 'off'">Dapatkan kabar langsung saat ada top up, pesanan, atau pendaftaran baru.</p>
+                    <p class="mt-1 text-amber-700" x-show="state === 'needs-install'">Di iPhone: ketuk Share lalu "Add to Home Screen", buka dari ikon itu, lalu aktifkan di sini.</p>
+                    <p class="mt-1 text-amber-700" x-show="state === 'denied'">Notifikasi diblokir. Izinkan lewat pengaturan situs di browser.</p>
+                    <p class="mt-1 text-slate-500" x-show="state === 'unsupported'">Browser ini tidak mendukung push notification.</p>
+                    <div class="mt-2 flex gap-2">
+                        <button type="button" x-show="state === 'off'" @click="enable()" :disabled="busy" class="px-3 py-1.5 rounded-md bg-blue-600 text-white font-semibold disabled:opacity-50">Aktifkan</button>
+                        <button type="button" x-show="state === 'on'" @click="test()" class="px-3 py-1.5 rounded-md bg-white border border-slate-300 text-slate-700 font-semibold">Kirim tes</button>
+                        <button type="button" x-show="state === 'on'" @click="disable()" :disabled="busy" class="px-3 py-1.5 rounded-md text-red-600 font-semibold disabled:opacity-50">Matikan</button>
+                    </div>
+                </div>
                 <div class="max-h-64 overflow-y-auto">
                     @forelse($user->notifications()->latest()->get() as $notification)
                     <div class="px-4 py-3 border-b border-slate-50 last:border-0 hover:bg-slate-50 transition flex items-start gap-3 {{ $notification->read_at ? 'opacity-70' : 'bg-blue-50/30' }}">

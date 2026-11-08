@@ -136,6 +136,8 @@ class DigiflazzFulfillmentService
         //  - dibayar customer yang login -> saldo akun customer (order tamu tidak di-refund otomatis)
         if ($result === Order::STATUS_FAILED) {
             $reason = 'Digiflazz: ' . ($webhook->message ?: 'Gagal');
+            AdminNotifier::notify('Order gagal di Digiflazz', "{$order->order_no} · {$order->product_name}: " . ($webhook->message ?: 'Gagal'),
+                route('admin.orders.show', $order), 'order-failed-' . $order->id);
             $order->isWalletPayment()
                 ? app(PartnerOrderService::class)->refund($order, $reason, OrderEvent::ACTOR_DIGIFLAZZ)
                 : app(CustomerBalanceService::class)->refundOrder($order, $reason, OrderEvent::ACTOR_DIGIFLAZZ);

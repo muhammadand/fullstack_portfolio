@@ -19,6 +19,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Push notification ke HP admin untuk kejadian penting (lihat app/Support/AdminActivityHooks.php).
+        \App\Support\AdminActivityHooks::register();
     }
 }

@@ -178,6 +178,13 @@ Route::prefix('admin/orders')->name('admin.orders.')->middleware('auth')->group(
 Route::redirect('admin/topup-orders', '/admin/orders?source=topup_game', 301);
 Route::get('admin/topup-orders/{order}', fn (int $order) => redirect()->route('admin.orders.show', $order, 301))->whereNumber('order');
 
+// Push notification ke HP admin
+Route::prefix('admin/push')->name('admin.push.')->middleware(['auth', 'throttle:20,1'])->group(function () {
+    Route::post('/subscribe', [App\Http\Controllers\Admin\AdminPushController::class, 'subscribe'])->name('subscribe');
+    Route::post('/unsubscribe', [App\Http\Controllers\Admin\AdminPushController::class, 'unsubscribe'])->name('unsubscribe');
+    Route::post('/test', [App\Http\Controllers\Admin\AdminPushController::class, 'test'])->name('test');
+});
+
 // Penarikan saldo customer top up (admin proses manual, potongan 2%)
 Route::prefix('admin/customer-withdrawals')->name('admin.customer_withdrawals.')->middleware('auth')->group(function () {
     Route::get('/', [App\Http\Controllers\Admin\CustomerWithdrawalController::class, 'index'])->name('index');

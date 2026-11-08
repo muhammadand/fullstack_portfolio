@@ -6,6 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scalify Admin — Dashboard</title>
     <link rel="icon" type="image/x-icon" href="{{ asset('scalify.png') }}">
+    {{-- PWA admin: di iPhone, push hanya jalan bila panel dipasang ke Home Screen. --}}
+    <link rel="manifest" href="/manifest-admin.json">
+    <meta name="theme-color" content="#0F172A">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Scalify Admin">
+    <link rel="apple-touch-icon" href="/images/icons/icon-192x192.png">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -58,6 +64,7 @@
     </div>
     @livewireScripts
     @include('layouts.admin.toast')
+    @include('layouts.admin.push')
 </body>
 
 </html>
