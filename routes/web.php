@@ -178,6 +178,13 @@ Route::prefix('admin/orders')->name('admin.orders.')->middleware('auth')->group(
 Route::redirect('admin/topup-orders', '/admin/orders?source=topup_game', 301);
 Route::get('admin/topup-orders/{order}', fn (int $order) => redirect()->route('admin.orders.show', $order, 301))->whereNumber('order');
 
+// Penarikan saldo customer top up (admin proses manual, potongan 2%)
+Route::prefix('admin/customer-withdrawals')->name('admin.customer_withdrawals.')->middleware('auth')->group(function () {
+    Route::get('/', [App\Http\Controllers\Admin\CustomerWithdrawalController::class, 'index'])->name('index');
+    Route::post('/{withdrawal}/complete', [App\Http\Controllers\Admin\CustomerWithdrawalController::class, 'complete'])->whereNumber('withdrawal')->name('complete');
+    Route::post('/{withdrawal}/reject', [App\Http\Controllers\Admin\CustomerWithdrawalController::class, 'reject'])->whereNumber('withdrawal')->name('reject');
+});
+
 // Customers (admin): daftar & detail
 Route::prefix('admin/customers')->name('admin.customers.')->middleware('auth')->group(function () {
     Route::get('/', [App\Http\Controllers\Admin\CustomerController::class, 'index'])->name('index');
@@ -669,6 +676,11 @@ Route::get('/secret-deploy-trigger-12345', function () {
 
         \Illuminate\Support\Facades\Artisan::call('migrate', [
             '--path' => 'database/migrations/2026_11_07_140000_create_app_settings_tables.php',
+            '--force' => true
+        ]);
+
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_11_08_100000_create_customer_balance_tables.php',
             '--force' => true
         ]);
 

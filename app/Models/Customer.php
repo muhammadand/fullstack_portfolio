@@ -40,6 +40,7 @@ class Customer extends Authenticatable
     protected $casts = [
         'password' => 'hashed',
         'points'   => 'integer',
+        'balance'  => 'decimal:2',
     ];
 
     /**
@@ -56,6 +57,17 @@ class Customer extends Authenticatable
     public function orders(): HasMany
     {
         return $this->hasMany(Order::class);
+    }
+
+    /** Mutasi saldo (refund & penarikan). */
+    public function balanceMutations(): HasMany
+    {
+        return $this->hasMany(CustomerBalanceMutation::class);
+    }
+
+    public function withdrawals(): HasMany
+    {
+        return $this->hasMany(CustomerWithdrawal::class);
     }
 
     /** Batasi query ke satu sumber customer. */

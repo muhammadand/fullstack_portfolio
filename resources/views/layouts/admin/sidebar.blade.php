@@ -69,6 +69,11 @@ $menus = [
 'route' => 'admin.ppob.index',
 'icon' => 'fa-solid fa-wallet',
 ],
+[
+'label' => 'Penarikan Customer',
+'route' => 'admin.customer_withdrawals.index',
+'icon' => 'fa-solid fa-money-bill-transfer',
+],
 ],
 ],
 [
@@ -214,6 +219,11 @@ $activeRoute = \Illuminate\Support\Facades\Route::currentRouteName();
                             @if($sub['route'] === 'admin.travel_bookings.index' && ($pendingTravelCount = \App\Models\Booking::where('status', 'pending')->count()) > 0)
                             <span class="ml-1.5 inline-flex items-center justify-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 animate-pulse">
                                 {{ $pendingTravelCount }}
+                            </span>
+                            @endif
+                            @if($sub['route'] === 'admin.customer_withdrawals.index' && ($pendingCustomerWd = \App\Models\CustomerWithdrawal::where('status', 'pending')->count()) > 0)
+                            <span class="ml-1.5 inline-flex items-center justify-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 animate-pulse">
+                                {{ $pendingCustomerWd }}
                             </span>
                             @endif
                             @if($sub['route'] === 'admin.orders.index' && ($processingTopupCount = \App\Models\Order::where('status', 'processing')->count()) > 0)

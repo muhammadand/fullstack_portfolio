@@ -131,9 +131,14 @@ class DigiflazzFulfillmentService
             ]);
         }
 
-        // Order dibayar saldo partner yang gagal: kembalikan saldo DULU agar email bisa menyebut refund.
-        if ($result === Order::STATUS_FAILED && $order->isWalletPayment()) {
-            app(PartnerOrderService::class)->refund($order, 'Digiflazz: ' . ($webhook->message ?: 'Gagal'), OrderEvent::ACTOR_DIGIFLAZZ);
+        // Order gagal: kembalikan uang DULU agar email bisa menyebut refund.
+        //  - dibayar saldo partner -> wallet partner
+        //  - dibayar customer yang login -> saldo akun customer (order tamu tidak di-refund otomatis)
+        if ($result === Order::STATUS_FAILED) {
+            $reason = 'Digiflazz: ' . ($webhook->message ?: 'Gagal');
+            $order->isWalletPayment()
+                ? app(PartnerOrderService::class)->refund($order, $reason, OrderEvent::ACTOR_DIGIFLAZZ)
+                : app(CustomerBalanceService::class)->refundOrder($order, $reason, OrderEvent::ACTOR_DIGIFLAZZ);
         }
 
         // Email hasil akhir hanya saat status benar-benar berubah (webhook ulang/terlambat = 'ignored').

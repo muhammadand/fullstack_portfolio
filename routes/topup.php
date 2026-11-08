@@ -47,5 +47,9 @@ Route::middleware('guest:customer')->group(function () {
     Route::post('/daftar', [CustomerAuthController::class, 'register'])->name('customer.register.post')->middleware('throttle:10,1');
 });
 
-Route::get('/akun', [CustomerAuthController::class, 'account'])->name('customer.account')->middleware('auth:customer');
+Route::middleware('auth:customer')->group(function () {
+    Route::get('/akun', [\App\Http\Controllers\CustomerAccountController::class, 'account'])->name('customer.account');
+    Route::get('/akun/tarik', [\App\Http\Controllers\CustomerAccountController::class, 'withdrawForm'])->name('customer.withdraw');
+    Route::post('/akun/tarik', [\App\Http\Controllers\CustomerAccountController::class, 'storeWithdrawal'])->name('customer.withdraw.store')->middleware('throttle:5,1');
+});
 Route::post('/keluar', [CustomerAuthController::class, 'logout'])->name('customer.logout')->middleware('auth:customer');

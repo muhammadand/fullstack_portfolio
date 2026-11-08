@@ -60,16 +60,6 @@ class CustomerAuthController extends Controller
             ->with('success', 'Akun berhasil dibuat. Selamat datang, ' . $customer->name . '!');
     }
 
-    public function account()
-    {
-        $customer = Auth::guard('customer')->user();
-
-        return view('customer.account', [
-            'customer' => $customer,
-            'orders'   => $customer->orders()->latest()->paginate(10),
-        ]);
-    }
-
     public function logout(Request $request): RedirectResponse
     {
         Auth::guard('customer')->logout();

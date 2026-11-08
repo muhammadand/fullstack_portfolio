@@ -47,12 +47,15 @@ class TopupOrderStatusMail extends Mailable
         $label = ($order->source ?? Order::SOURCE_TOPUP_GAME) === Order::SOURCE_TOPUP_GAME ? 'Top Up' : $order->sourceLabel();
         $wallet = $order->isWalletPayment();
         $refund = $order->refunded_at
-            ? ' Saldo sebesar Rp ' . number_format((float) $order->total_amount, 0, ',', '.') . ' sudah dikembalikan ke wallet kamu.'
+            ? ' Dana sebesar Rp ' . number_format((float) $order->total_amount, 0, ',', '.') . ' sudah dikembalikan ke '
+                . ($wallet ? 'wallet kamu.' : 'saldo akun kamu dan bisa ditarik ke e-wallet.')
             : '';
 
-        $cta = $wallet
-            ? ['cta_url' => route('affiliate.ppob.pulsa'), 'cta_label' => 'Beli Lagi']
-            : ['cta_url' => route('topup.index'), 'cta_label' => 'Top Up Lagi'];
+        $cta = match (true) {
+            $wallet             => ['cta_url' => route('affiliate.ppob.pulsa'), 'cta_label' => 'Beli Lagi'],
+            (bool) $order->refunded_at => ['cta_url' => route('customer.account'), 'cta_label' => 'Lihat Saldo'],
+            default             => ['cta_url' => route('topup.index'), 'cta_label' => 'Top Up Lagi'],
+        };
 
         return $cta + [
             'paid' => [
@@ -76,9 +79,10 @@ class TopupOrderStatusMail extends Mailable
             'failed' => [
                 'title'   => "{$label} Gagal Diproses",
                 'badge'   => 'Gagal',
-                'message' => $wallet
-                    ? 'Mohon maaf, pesananmu gagal diproses oleh supplier.' . $refund . ' Silakan coba lagi atau hubungi admin dengan menyertakan nomor order di bawah.'
-                    : 'Mohon maaf, pesananmu gagal diproses oleh sistem. Silakan hubungi admin dengan menyertakan nomor order di bawah agar segera kami bantu.',
+                'message' => match (true) {
+                    $wallet || (bool) $order->refunded_at => 'Mohon maaf, pesananmu gagal diproses oleh supplier.' . $refund . ' Silakan coba lagi atau hubungi admin dengan menyertakan nomor order di bawah.',
+                    default => 'Mohon maaf, pesananmu gagal diproses oleh sistem. Silakan hubungi admin dengan menyertakan nomor order di bawah agar segera kami bantu.',
+                },
                 'icon'    => '&#33;',
                 'color'   => '#DC2626',
                 'soft'    => '#FEF2F2',
