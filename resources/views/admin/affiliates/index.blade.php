@@ -22,7 +22,7 @@
         });
     },
     async sendBroadcast() {
-        if (!(await confirmDialog({ title: 'Kirim notifikasi?', text: "Kirim notifikasi Push ('Semangat Pagi') ke semua Partner sekarang?", confirmText: 'Kirim' }))) return;
+        if (!(await confirmDialog({ title: 'Kirim notifikasi?', text: 'Kirim notifikasi Push (Semangat Pagi) ke semua Partner sekarang?', confirmText: 'Kirim' }))) return;
         fetch('/api/cron/send-daily-push?secret=cuan-tiap-hari')
             .then(res => res.json())
             .then(data => {
