@@ -128,7 +128,7 @@
 
     <!-- Table List -->
     <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-        <div class="overflow-x-auto">
+        <div class="hidden md:block overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="bg-slate-50 border-b border-slate-200">
@@ -296,6 +296,55 @@
                     @endforelse
                 </tbody>
             </table>
+        </div>
+
+        {{-- HP: kartu --}}
+        <div class="md:hidden divide-y divide-slate-100">
+            @forelse($bookings as $b)
+            @php
+                $isCharter = $b->booking_type === 'charter';
+                $sched = $b->schedule;
+                $origin = $sched ? ($sched->route->origin ?? 'Ciamis') : 'Ciamis';
+                $dest = $sched ? ($sched->route->destination ?? 'Bandung') : ($b->destination_note ?? 'Bandung');
+                $depDate = $isCharter
+                    ? ($b->charter_date ? \Carbon\Carbon::parse($b->charter_date)->format('d M Y') : '-')
+                    : ($sched && $sched->departure_date ? \Carbon\Carbon::parse($sched->departure_date)->format('d M Y') : '-');
+                $depTime = $sched ? \Carbon\Carbon::parse($sched->departure_time)->format('H:i') . ' WIB' : '';
+                $phone = preg_replace('/[^0-9]/', '', $b->customer->phone ?? '');
+                $wa = str_starts_with($phone, '0') ? '62' . substr($phone, 1) : $phone;
+                $statusMap = ['pending' => ['Diproses', 'yellow'], 'confirmed' => ['Terkonfirmasi', 'green'], 'completed' => ['Selesai', 'blue'], 'cancelled' => ['Batal', 'red']];
+                [$stLabel, $stColor] = $statusMap[$b->status] ?? [ucfirst((string) $b->status), 'slate'];
+            @endphp
+            <div class="p-4">
+                <div class="flex items-start justify-between gap-3">
+                    <div class="min-w-0">
+                        <p class="font-mono text-xs font-bold text-slate-800">#{{ $b->booking_code }} <span class="font-sans font-medium text-slate-400">· {{ $isCharter ? 'Charter' : 'Shuttle' }}</span></p>
+                        <p class="mt-0.5 font-semibold text-slate-900 truncate">{{ $b->customer->name ?? 'Tamu' }}</p>
+                    </div>
+                    <x-admin.badge :color="$stColor">{{ $stLabel }}</x-admin.badge>
+                </div>
+                <p class="mt-2 text-sm font-medium text-slate-800">{{ $origin }} <i class="fa-solid fa-arrow-right text-[10px] text-slate-400 mx-1"></i> {{ $dest }}</p>
+                <p class="text-xs text-slate-500">{{ $depDate }} {{ $depTime }} · {{ $b->total_passengers ?: 1 }} penumpang</p>
+                <div class="mt-2 flex items-center justify-between text-xs">
+                    <span class="{{ $b->payment_status === 'paid' ? 'text-emerald-600' : 'text-amber-600' }} font-medium">{{ $b->payment_status === 'paid' ? 'Lunas' : ($b->payment_status === 'refunded' ? 'Refund' : 'Belum Bayar') }}</span>
+                    <span class="font-mono font-bold text-slate-900">Rp {{ number_format($b->total_amount ?? 0, 0, ',', '.') }}</span>
+                </div>
+                <div class="mt-3 grid grid-cols-3 gap-2">
+                    @if($b->payment_status !== 'paid' || $b->status === 'pending')
+                    <form action="{{ route('admin.travel_bookings.verify_payment', $b->id) }}" method="POST" data-confirm="Verifikasi pembayaran pesanan #{{ $b->booking_code }}?">
+                        @csrf
+                        <button type="submit" class="w-full py-2 rounded-lg bg-emerald-600 text-white text-xs font-semibold"><i class="fa-solid fa-check mr-1"></i>Lunas</button>
+                    </form>
+                    @endif
+                    @if($wa)
+                    <a href="https://wa.me/{{ $wa }}" target="_blank" class="py-2 rounded-lg border border-emerald-200 text-emerald-700 text-xs font-semibold text-center"><i class="fab fa-whatsapp mr-1"></i>WA</a>
+                    @endif
+                    <button type="button" @click="openEditModal({{ json_encode($b) }})" class="py-2 rounded-lg border border-slate-200 text-slate-700 text-xs font-semibold"><i class="fa-solid fa-pen-to-square mr-1"></i>Detail</button>
+                </div>
+            </div>
+            @empty
+            <div class="px-4 py-10 text-center text-sm text-slate-500">Belum ada data pesanan travel yang sesuai filter.</div>
+            @endforelse
         </div>
 
         @if($bookings->hasPages())

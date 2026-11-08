@@ -12,10 +12,10 @@ $avatar = $user->profile_photo
 : "https://ui-avatars.com/api/?name=" . urlencode($user->name) . "&background=1E3A8A&color=fff&bold=true";
 @endphp
 
-<header class="flex flex-col-reverse lg:flex-row lg:items-center justify-between gap-4 lg:gap-0 mb-6 lg:mb-8">
-    <div class="flex items-center justify-between lg:justify-start w-full lg:w-auto">
-        <div>
-            <h1 class="text-xl lg:text-2xl font-bold text-slate-900 mb-0.5">
+<header class="flex items-center justify-between gap-3 mb-5 lg:mb-8">
+    <div class="flex items-center min-w-0">
+        <div class="min-w-0">
+            <h1 class="text-lg lg:text-2xl font-bold text-slate-900 mb-0.5 truncate">
                 {{ $pageTitle }}
             </h1>
             <p class="hidden sm:block text-slate-400 text-sm">
@@ -23,13 +23,9 @@ $avatar = $user->profile_photo
             </p>
         </div>
 
-        {{-- Mobile Menu Toggle --}}
-        <button @click="sidebarOpen = !sidebarOpen" class="lg:hidden w-10 h-10 flex items-center justify-center bg-white border border-slate-200 rounded-xl text-slate-500 hover:text-blue-600 hover:border-blue-300 transition-colors">
-            <i class="fa-solid fa-bars"></i>
-        </button>
     </div>
 
-    <div class="flex items-center justify-end w-full lg:w-auto gap-3">
+    <div class="flex items-center justify-end shrink-0 gap-2 lg:gap-3">
 
         {{-- Notification --}}
         <div x-data="{ notifOpen: false }" class="relative">
@@ -43,7 +39,7 @@ $avatar = $user->profile_photo
             </button>
 
             {{-- Dropdown Body --}}
-            <div x-show="notifOpen" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="absolute right-0 mt-3 w-80 bg-white rounded-xl shadow-lg border border-slate-100 py-2 z-50" style="display: none;">
+            <div x-show="notifOpen" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="absolute right-0 mt-3 w-[calc(100vw-2rem)] max-w-sm sm:w-80 bg-white rounded-xl shadow-lg border border-slate-100 py-2 z-50" style="display: none;">
                 <div class="px-4 py-2 border-b border-slate-50 mb-1 flex justify-between items-center">
                     <p class="text-sm font-semibold text-slate-800">Notifications</p>
                 </div>
@@ -99,7 +95,7 @@ $avatar = $user->profile_photo
         </div>
 
         {{-- Divider --}}
-        <div class="w-px h-8 bg-slate-200"></div>
+        <div class="hidden lg:block w-px h-8 bg-slate-200"></div>
 
         {{-- User menu --}}
         {{-- User menu (Alpine.js Dropdown) --}}

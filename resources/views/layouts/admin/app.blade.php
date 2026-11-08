@@ -42,16 +42,13 @@
 <body class="bg-slate-50 font-sans h-screen overflow-hidden">
     <div x-data="{ sidebarOpen: false }" class="flex h-screen relative w-full overflow-hidden">
 
-        <!-- Mobile Overlay -->
-        <div x-show="sidebarOpen" x-transition.opacity @click="sidebarOpen = false" class="fixed inset-0 bg-slate-900/60 z-40 lg:hidden backdrop-blur-sm" style="display: none;"></div>
-
-        <!-- Sidebar Container -->
-        <div :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'" class="fixed lg:relative z-50 h-screen transition-transform duration-300 ease-in-out lg:translate-x-0 shadow-2xl lg:shadow-none">
+        <!-- Sidebar: hanya desktop. Di HP navigasi pakai bottom nav + halaman Menu. -->
+        <div class="hidden lg:block relative z-50 h-screen">
             @include('layouts.admin.sidebar')
         </div>
 
         <!-- Main Content -->
-        <main class="flex-1 h-screen overflow-y-auto bg-slate-50 p-4 lg:p-8 min-w-0" style="scrollbar-width: thin; scrollbar-color: #cbd5e1 #f1f5f9;">
+        <main class="flex-1 h-screen overflow-y-auto bg-slate-50 px-4 pt-4 pb-28 lg:p-8 min-w-0" style="scrollbar-width: thin; scrollbar-color: #cbd5e1 #f1f5f9;">
             <!-- Header -->
             @include('layouts.admin.header')
 
@@ -62,6 +59,7 @@
             @yield('head')
         </main>
     </div>
+    @include('layouts.admin.bottom-nav')
     @livewireScripts
     @include('layouts.admin.toast')
     @include('layouts.admin.push')

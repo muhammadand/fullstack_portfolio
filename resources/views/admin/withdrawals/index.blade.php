@@ -128,8 +128,8 @@
             </div>
         </form>
 
-        {{-- Table List --}}
-        <div class="overflow-x-auto">
+        {{-- Table List (tablet & desktop) --}}
+        <div class="hidden md:block overflow-x-auto">
             <table class="min-w-full text-sm">
                 <thead class="bg-slate-50 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">
                     <tr>
@@ -236,6 +236,42 @@
                     @endforelse
                 </tbody>
             </table>
+        </div>
+
+        {{-- HP: kartu --}}
+        <div class="md:hidden divide-y divide-slate-100">
+            @forelse($withdrawals as $w)
+            @php $pending = $w->status === \App\Models\Withdrawal::STATUS_PENDING; @endphp
+            <div class="p-4">
+                <div class="flex items-start justify-between gap-3">
+                    <div class="min-w-0">
+                        <p class="font-semibold text-slate-900 truncate">{{ $w->affiliate->name ?? '-' }}</p>
+                        <p class="text-[11px] text-slate-400">{{ $w->created_at->format('d M Y, H:i') }} · {{ \App\Models\Withdrawal::sourceLabel($w->source) }}</p>
+                    </div>
+                    @if($pending)
+                    <x-admin.badge color="yellow">Menunggu</x-admin.badge>
+                    @else
+                    <x-admin.badge color="green">Selesai</x-admin.badge>
+                    @endif
+                </div>
+                <p class="mt-2 text-xl font-bold text-slate-900">Rp {{ number_format($w->amount, 0, ',', '.') }}</p>
+                <p class="mt-1 text-xs text-slate-600 break-words"><i class="fa-solid fa-building-columns text-slate-400 mr-1"></i>{{ $w->bank_info }}</p>
+                @if($pending && $w->created_at->copy()->addDays(3)->isPast())
+                <p class="mt-1 text-[11px] font-semibold text-rose-600"><i class="fa-solid fa-triangle-exclamation"></i> Lewat batas 3 hari</p>
+                @endif
+                <div class="mt-3">
+                    @if($pending)
+                    <x-admin.button type="button" size="sm" icon="fa-solid fa-upload" class="w-full justify-center" @click="openProof('{{ $w->id }}', '{{ addslashes($w->affiliate->name ?? 'Partner') }}', '{{ number_format($w->amount, 0, ',', '.') }}', '{{ addslashes($w->bank_info) }}', '{{ \App\Models\Withdrawal::sourceLabel($w->source) }}')">Upload Bukti</x-admin.button>
+                    @else
+                    <x-admin.button type="button" variant="secondary" size="sm" icon="fa-solid fa-receipt" class="w-full justify-center" @click="viewProof('{{ asset('storage/' . $w->proof_of_payment) }}', '{{ addslashes($w->affiliate->name ?? 'Partner') }}', '{{ number_format($w->amount, 0, ',', '.') }}')">Lihat Bukti</x-admin.button>
+                    @endif
+                </div>
+            </div>
+            @empty
+            <div class="px-4 py-12 text-center text-sm text-slate-500">
+                {{ request('q') || request('search') || request('status') || request('source') ? 'Tidak ada penarikan yang cocok dengan filter.' : 'Belum ada permintaan penarikan dana.' }}
+            </div>
+            @endforelse
         </div>
 
         {{-- Pagination --}}

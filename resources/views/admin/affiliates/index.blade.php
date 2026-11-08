@@ -147,7 +147,7 @@
         </form>
 
         {{-- Desktop & Tablet Table View --}}
-        <div class="overflow-x-auto">
+        <div class="hidden md:block overflow-x-auto">
             <table class="min-w-full text-sm">
                 <thead class="bg-slate-50 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">
                     <tr>
@@ -252,6 +252,53 @@
                     @endforelse
                 </tbody>
             </table>
+        </div>
+
+        {{-- HP: kartu --}}
+        <div class="md:hidden divide-y divide-slate-100">
+            @forelse($affiliates as $affiliate)
+            <div class="p-4">
+                <div class="flex items-start justify-between gap-3">
+                    <a href="{{ route('admin.affiliates.show', $affiliate->id) }}" class="min-w-0">
+                        <p class="font-semibold text-slate-900 truncate">{{ $affiliate->name }}</p>
+                        <p class="text-xs text-slate-500 truncate">{{ $affiliate->email }}</p>
+                        <p class="mt-1 text-[11px] text-slate-400">Kode <span class="font-mono font-semibold text-blue-700">{{ $affiliate->affiliate_code }}</span> · {{ number_format($affiliate->clicks_count ?? 0, 0, ',', '.') }} klik</p>
+                    </a>
+                    @if($affiliate->status === 'pending')
+                    <x-admin.badge color="yellow">Pending</x-admin.badge>
+                    @elseif($affiliate->status === 'approved')
+                    <x-admin.badge color="green">Approved</x-admin.badge>
+                    @else
+                    <x-admin.badge color="slate">Rejected</x-admin.badge>
+                    @endif
+                </div>
+                <div class="mt-2 flex items-center justify-between text-xs">
+                    <span class="text-slate-500">Saldo komisi</span>
+                    <span class="font-bold text-slate-900">Rp {{ number_format($affiliate->balance, 0, ',', '.') }}</span>
+                </div>
+                <div class="mt-3 grid grid-cols-2 gap-2">
+                    @if($affiliate->status === 'pending')
+                    <form action="{{ route('admin.affiliates.approve', $affiliate->id) }}" method="POST">
+                        @csrf
+                        <x-admin.button type="submit" size="sm" icon="fa-solid fa-check" class="w-full justify-center">Approve</x-admin.button>
+                    </form>
+                    <form action="{{ route('admin.affiliates.reject', $affiliate->id) }}" method="POST" data-confirm="Apakah Anda yakin ingin menolak partner ini?" data-confirm-danger>
+                        @csrf
+                        <x-admin.button type="submit" variant="danger" size="sm" icon="fa-solid fa-xmark" class="w-full justify-center">Reject</x-admin.button>
+                    </form>
+                    @elseif($affiliate->status === 'approved')
+                    <x-admin.button type="button" size="sm" icon="fa-solid fa-plus" class="w-full justify-center" @click="openCommission({{ $affiliate->id }}, '{{ addslashes($affiliate->name) }}')">Komisi</x-admin.button>
+                    <x-admin.button variant="secondary" size="sm" icon="fa-solid fa-eye" class="w-full justify-center" :href="route('admin.affiliates.show', $affiliate->id)">Detail</x-admin.button>
+                    @else
+                    <x-admin.button variant="secondary" size="sm" icon="fa-solid fa-eye" class="col-span-2 w-full justify-center" :href="route('admin.affiliates.show', $affiliate->id)">Detail</x-admin.button>
+                    @endif
+                </div>
+            </div>
+            @empty
+            <div class="px-4 py-12 text-center text-sm text-slate-500">
+                {{ request('q') || request('status') ? 'Tidak ada partner yang cocok dengan filter.' : 'Belum ada partner affiliate terdaftar.' }}
+            </div>
+            @endforelse
         </div>
 
         {{-- Pagination --}}

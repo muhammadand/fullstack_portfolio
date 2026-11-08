@@ -168,7 +168,7 @@
         </form>
 
         {{-- Table List --}}
-        <div class="overflow-x-auto">
+        <div class="hidden md:block overflow-x-auto">
             <table class="min-w-full text-sm">
                 <thead class="bg-slate-50 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">
                     <tr>
@@ -307,6 +307,43 @@
         </div>
 
         {{-- Pagination --}}
+        {{-- HP: kartu --}}
+        <div class="md:hidden divide-y divide-slate-100">
+            @forelse($cards as $card)
+            @php $scanUrl = url('/r/' . $card->slug); @endphp
+            <div class="p-4">
+                <div class="flex items-start justify-between gap-3">
+                    <div class="min-w-0">
+                        <p class="font-mono text-xs font-bold text-slate-900">{{ $card->serial_number }}</p>
+                        <p class="text-[11px] text-slate-400">PIN <span class="font-mono font-semibold text-slate-700">{{ $card->activation_code }}</span> · {{ number_format($card->total_scans) }} scan</p>
+                    </div>
+                    @if($card->is_sold)
+                    <x-admin.badge color="green">Terjual</x-admin.badge>
+                    @elseif($card->status === 'active')
+                    <x-admin.badge color="blue">Aktif</x-admin.badge>
+                    @elseif($card->status === 'pending')
+                    <x-admin.badge color="yellow">Belum Aktif</x-admin.badge>
+                    @else
+                    <x-admin.badge color="slate">Nonaktif</x-admin.badge>
+                    @endif
+                </div>
+                <p class="mt-2 text-sm {{ $card->business_name ? 'font-medium text-slate-900' : 'italic text-slate-400' }} truncate">{{ $card->business_name ?: 'Belum diklaim' }}</p>
+                <button type="button" @click="copyText('{{ $scanUrl }}')" class="mt-1 font-mono text-xs text-blue-700"><i class="fa-regular fa-copy mr-1"></i>/r/{{ $card->slug }}</button>
+                <div class="mt-3 grid {{ $card->is_sold ? 'grid-cols-1' : 'grid-cols-3' }} gap-2">
+                    <x-admin.button variant="secondary" size="sm" icon="fa-solid fa-eye" class="w-full justify-center" :href="route('admin.review_cards.show', $card->id)">Desain</x-admin.button>
+                    @unless($card->is_sold)
+                    <x-admin.button type="button" variant="secondary" size="sm" icon="fa-solid fa-cart-shopping" class="w-full justify-center" @click="openSoldModal('{{ $card->serial_number }}', '{{ addslashes($card->business_name ?? $card->owner_name ?? '') }}', '{{ route('admin.review_cards.mark_sold', $card->id) }}')">Terjual</x-admin.button>
+                    <x-admin.button variant="secondary" size="sm" icon="fa-solid fa-pen" class="w-full justify-center" :href="route('admin.review_cards.edit', $card->id)">Edit</x-admin.button>
+                    @endunless
+                </div>
+            </div>
+            @empty
+            <div class="px-4 py-12 text-center text-sm text-slate-500">
+                {{ request('q') || request('search') || request('status') ? 'Tidak ada kartu yang cocok dengan filter.' : 'Belum ada Review Card yang terdaftar.' }}
+            </div>
+            @endforelse
+        </div>
+
         @if($cards->hasPages())
         <div class="px-4 py-3 border-t border-slate-200">
             {{ $cards->links('pagination::tailwind') }}
