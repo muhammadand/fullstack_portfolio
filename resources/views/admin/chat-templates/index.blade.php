@@ -1,16 +1,10 @@
 @extends('layouts.admin.app')
 
 @section('content')
-<div class="px-4 lg:px-6 py-6 lg:py-8">
-    <div class="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-            <h1 class="text-2xl font-bold text-slate-800">Template Chat WhatsApp</h1>
-            <p class="text-slate-500 text-sm mt-1">Kelola daftar template pesan untuk penawaran klien via WhatsApp.</p>
-        </div>
-        <button type="button" onclick="openTemplateModal()" class="w-full sm:w-auto px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm flex justify-center items-center gap-2">
-            <i class="fa-solid fa-plus"></i> Tambah Template
-        </button>
-    </div>
+<div class="">
+    <x-admin.page-header title="Template Chat WhatsApp" subtitle="Kelola template pesan untuk penawaran klien via WhatsApp.">
+        <x-admin.button icon="fa-solid fa-plus" onclick="openTemplateModal()">Tambah Template</x-admin.button>
+    </x-admin.page-header>
 
     @if($errors->any())
     <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-lg shadow-sm" role="alert">

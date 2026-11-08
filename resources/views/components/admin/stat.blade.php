@@ -1,10 +1,12 @@
 {{--
     Kartu statistik standar (mobile-first, angka tidak pernah keluar kartu).
-    Props: label, value (angka), rupiah (bool), icon (Font Awesome), tone (blue|emerald|amber|red|indigo|sky|purple|slate), href (opsional).
+    Props: label, value (angka), rupiah (bool), icon (Font Awesome), tone (blue|emerald|amber|red|indigo|sky|purple|slate), href (opsional),
+           suffix (satuan kecil setelah angka, mis. "hari"), dense (untuk grid 3 kolom di HP: ikon disembunyikan di HP).
+    Grid standar: 4 stat -> "grid grid-cols-2 lg:grid-cols-4 gap-2.5 lg:gap-4", 3 stat -> "grid grid-cols-3 gap-2 lg:gap-4" + dense.
     Slot opsional = keterangan kecil di bawah angka. Contoh:
       <x-admin.stat label="Omzet" :value="$omzet" rupiah icon="fa-solid fa-wallet" tone="emerald">bulan ini</x-admin.stat>
 --}}
-@props(['label', 'value' => 0, 'rupiah' => false, 'icon' => null, 'tone' => 'blue', 'href' => null])
+@props(['label', 'value' => 0, 'rupiah' => false, 'icon' => null, 'tone' => 'blue', 'href' => null, 'suffix' => null, 'dense' => false])
 @php
     $tones = [
         'blue' => 'bg-blue-50 text-blue-600', 'emerald' => 'bg-emerald-50 text-emerald-600', 'amber' => 'bg-amber-50 text-amber-600',
@@ -13,14 +15,14 @@
     ];
     $tag = $href ? 'a' : 'div';
 @endphp
-<{{ $tag }} @if($href) href="{{ $href }}" @endif {{ $attributes->class('block min-w-0 bg-white rounded-xl border border-slate-200 shadow-sm p-3 lg:p-4' . ($href ? ' hover:border-blue-300 transition-colors' : '')) }}>
+<{{ $tag }} @if($href) href="{{ $href }}" @endif {{ $attributes->class('block min-w-0 bg-white rounded-xl border border-slate-200 shadow-sm ' . ($dense ? 'p-2.5 sm:p-3' : 'p-3') . ' lg:p-4' . ($href ? ' hover:border-blue-300 transition-colors' : '')) }}>
     <div class="flex items-center gap-2.5 lg:gap-3 min-w-0">
         @if($icon)
-        <span class="w-8 h-8 lg:w-10 lg:h-10 rounded-lg lg:rounded-xl shrink-0 flex items-center justify-center text-xs lg:text-sm {{ $tones[$tone] ?? $tones['blue'] }}"><i class="{{ $icon }}"></i></span>
+        <span class="{{ $dense ? 'hidden sm:flex' : 'flex' }} w-8 h-8 lg:w-10 lg:h-10 rounded-lg lg:rounded-xl shrink-0 items-center justify-center text-xs lg:text-sm {{ $tones[$tone] ?? $tones['blue'] }}"><i class="{{ $icon }}"></i></span>
         @endif
         <div class="min-w-0 flex-1">
             <p class="text-[11px] lg:text-xs font-medium text-slate-500 truncate">{{ $label }}</p>
-            <p class="text-lg lg:text-xl font-bold text-slate-900 leading-tight truncate"><x-admin.money :value="$value" :rupiah="$rupiah" /></p>
+            <p class="{{ $dense ? 'text-base' : 'text-lg' }} lg:text-xl font-bold text-slate-900 leading-tight truncate"><x-admin.money :value="$value" :rupiah="$rupiah" />@if($suffix)<span class="ml-1 text-[11px] font-medium text-slate-500">{{ $suffix }}</span>@endif</p>
         </div>
     </div>
     @if($slot->isNotEmpty())

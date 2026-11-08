@@ -1,33 +1,14 @@
 @extends('layouts.admin.app')
 
 @section('content')
-<div class="px-4 lg:px-6 py-6 lg:py-8">
-    <div class="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-            <h1 class="text-2xl font-bold text-slate-800">Data Pelamar</h1>
-            <p class="text-slate-500 text-sm mt-1">Kelola data pelamar (Career Applications).</p>
-        </div>
-        <div class="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
-            <!-- Search Form -->
-            <form action="{{ route('career-applications.index') }}" method="GET" class="relative w-full md:w-64">
-                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                    <i class="fa-solid fa-magnifying-glass text-sm"></i>
-                </div>
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari pelamar..." class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all">
-            </form>
-
-            <a href="{{ route('career-applications.create') }}" class="px-4 py-2.5 bg-blue-900 hover:bg-blue-950 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm flex items-center justify-center gap-2 w-full md:w-auto">
-                <i class="fa-solid fa-plus"></i> Create
-            </a>
-        </div>
+<div class="">
+    <x-admin.page-header title="Data Pelamar" subtitle="Kelola data pelamar (career applications).">
+        <x-admin.button icon="fa-solid fa-plus" :href="route('career-applications.create')">Tambah Pelamar</x-admin.button>
+    </x-admin.page-header>
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm mb-4 lg:mb-6">
+        <x-admin.filter-bar :action="route('career-applications.index')" :value="request('search')" placeholder="Cari pelamar..." :bordered="false" :reset="route('career-applications.index')" />
     </div>
 
-    {{-- ✅ Alert --}}
-    @if (session('success'))
-    <div class="mb-4 p-4 rounded-lg bg-green-100 border border-green-300 text-green-800">
-        {{ session('success') }}
-    </div>
-    @endif
 
     {{-- ✅ Table --}}
     <div class="overflow-x-auto bg-white rounded-lg shadow-sm border border-gray-100">

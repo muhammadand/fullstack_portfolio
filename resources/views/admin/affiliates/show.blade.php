@@ -90,46 +90,11 @@
     </x-admin.card>
 
     {{-- Stats Mini Grid --}}
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <div class="bg-white rounded-xl p-4 border border-slate-200/80 shadow-xs flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 border border-purple-100 flex items-center justify-center text-sm shrink-0">
-                <i class="fa-solid fa-hand-pointer"></i>
-            </div>
-            <div>
-                <p class="text-slate-500 text-xs font-medium">Total Klik</p>
-                <p class="text-lg font-bold text-slate-900 mt-0.5">{{ number_format($affiliate->clicks_count ?? 0, 0, ',', '.') }}</p>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-xl p-4 border border-slate-200/80 shadow-xs flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 border border-amber-100 flex items-center justify-center text-sm shrink-0">
-                <i class="fa-solid fa-star"></i>
-            </div>
-            <div>
-                <p class="text-slate-500 text-xs font-medium">Total Poin</p>
-                <p class="text-lg font-bold text-slate-900 mt-0.5">{{ number_format($affiliate->points ?? 0, 0, ',', '.') }}</p>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-xl p-4 border border-slate-200/80 shadow-xs flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 border border-orange-100 flex items-center justify-center text-sm shrink-0">
-                <i class="fa-solid fa-fire"></i>
-            </div>
-            <div>
-                <p class="text-slate-500 text-xs font-medium">Streak Aktif</p>
-                <p class="text-lg font-bold text-slate-900 mt-0.5">{{ $affiliate->current_streak ?? 0 }} <span class="text-xs font-normal text-slate-500">Hari</span></p>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-xl p-4 border border-slate-200/80 shadow-xs flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 border border-rose-100 flex items-center justify-center text-sm shrink-0">
-                <i class="fa-solid fa-trophy"></i>
-            </div>
-            <div>
-                <p class="text-slate-500 text-xs font-medium">Rekor Streak</p>
-                <p class="text-lg font-bold text-slate-900 mt-0.5">{{ $affiliate->highest_streak ?? 0 }} <span class="text-xs font-normal text-slate-500">Hari</span></p>
-            </div>
-        </div>
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 lg:gap-4 mb-4 lg:mb-6">
+        <x-admin.stat label="Total Klik" :value="$affiliate->clicks_count ?? 0" icon="fa-solid fa-hand-pointer" tone="purple" />
+        <x-admin.stat label="Total Poin" :value="$affiliate->points ?? 0" icon="fa-solid fa-star" tone="amber" />
+        <x-admin.stat label="Streak Aktif" :value="$affiliate->current_streak ?? 0" suffix="hari" icon="fa-solid fa-fire" tone="red" />
+        <x-admin.stat label="Rekor Streak" :value="$affiliate->highest_streak ?? 0" suffix="hari" icon="fa-solid fa-trophy" tone="emerald" />
     </div>
 
     {{-- Lynk.id & Komisi Setting Card --}}

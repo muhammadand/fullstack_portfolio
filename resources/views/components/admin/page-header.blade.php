@@ -4,10 +4,11 @@
 --}}
 @props(['title', 'subtitle' => null, 'back' => null])
 
-<div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4 lg:mb-6">
+{{-- Mobile-first: judul + aksi selalu sebaris; di HP tombol ber-ikon tampil sebagai ikon saja (lihat layouts/admin/mobile). --}}
+<div class="flex items-start justify-between gap-3 mb-4 lg:mb-6">
     <div class="flex items-center gap-3 min-w-0">
         @if ($back)
-        <a href="{{ $back }}" class="w-9 h-9 shrink-0 flex items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 hover:text-blue-600 hover:border-blue-300 transition-colors" title="Kembali">
+        <a href="{{ $back }}" class="w-9 h-9 shrink-0 flex items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 hover:text-blue-600 hover:border-blue-300 transition-colors" title="Kembali" aria-label="Kembali">
             <i class="fa-solid fa-arrow-left text-sm"></i>
         </a>
         @endif
@@ -20,6 +21,6 @@
     </div>
 
     @if ($slot->isNotEmpty())
-    <div class="flex flex-wrap items-center gap-2 [&>*]:flex-1 sm:[&>*]:flex-none">{{ $slot }}</div>
+    <div class="admin-header-actions flex shrink-0 items-center gap-2">{{ $slot }}</div>
     @endif
 </div>

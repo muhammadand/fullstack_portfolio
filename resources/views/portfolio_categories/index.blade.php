@@ -11,18 +11,7 @@
 
 <x-admin.card :padding="false">
     {{-- Toolbar pencarian --}}
-    <form method="GET" class="flex flex-col sm:flex-row gap-2 p-4 border-b border-slate-200">
-        <div class="relative flex-1 sm:max-w-sm">
-            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-sm text-slate-400"></i>
-            <x-admin.input name="q" :value="request('q')" placeholder="Cari nama atau slug..." class="pl-9" />
-        </div>
-        <div class="flex gap-2">
-            <x-admin.button type="submit" variant="secondary">Cari</x-admin.button>
-            @if (request('q'))
-            <x-admin.button variant="secondary" icon="fa-solid fa-xmark" :href="route('portfolio-categories.index')">Reset</x-admin.button>
-            @endif
-        </div>
-    </form>
+    <x-admin.filter-bar name="q" :value="request('q')" placeholder="Cari nama atau slug..." :reset="route('portfolio-categories.index')" />
 
     <div class="overflow-x-auto">
         <table class="min-w-full text-sm">

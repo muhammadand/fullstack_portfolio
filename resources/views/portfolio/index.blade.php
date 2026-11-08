@@ -11,24 +11,11 @@
 
 <x-admin.card :padding="false">
     {{-- Toolbar pencarian & filter --}}
-    <form method="GET" class="flex flex-col sm:flex-row flex-wrap gap-2 p-4 border-b border-slate-200">
-        <div class="relative flex-1 sm:min-w-[240px] sm:max-w-sm">
-            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-sm text-slate-400"></i>
-            <x-admin.input name="q" :value="request('q', request('search'))" placeholder="Cari judul, klien, atau kategori..." class="pl-9" />
-        </div>
-        <div class="w-full sm:w-44">
-            <x-admin.select name="category_id" placeholder="Semua kategori" :options="$categories->pluck('name', 'id')" :selected="request('category_id')" />
-        </div>
-        <div class="w-full sm:w-36">
-            <x-admin.select name="is_active" placeholder="Semua status" :options="['1' => 'Aktif', '0' => 'Nonaktif']" :selected="request('is_active')" />
-        </div>
-        <div class="flex gap-2">
-            <x-admin.button type="submit" variant="secondary">Cari</x-admin.button>
-            @if (request()->hasAny(['q', 'search', 'category_id', 'is_active']))
-            <x-admin.button variant="secondary" icon="fa-solid fa-xmark" :href="route('portfolio.index')">Reset</x-admin.button>
-            @endif
-        </div>
-    </form>
+    <x-admin.filter-bar name="q" :value="request('q', request('search'))" placeholder="Cari judul, klien, atau kategori..."
+        :active="(int) request()->filled('category_id') + (int) request()->filled('is_active')" :reset="route('portfolio.index')">
+        <x-admin.select name="category_id" placeholder="Semua kategori" :options="$categories->pluck('name', 'id')" :selected="request('category_id')" class="lg:w-44" />
+        <x-admin.select name="is_active" placeholder="Semua status" :options="['1' => 'Aktif', '0' => 'Nonaktif']" :selected="request('is_active')" class="lg:w-36" />
+    </x-admin.filter-bar>
 
     <div class="overflow-x-auto">
         <table class="min-w-full text-sm">

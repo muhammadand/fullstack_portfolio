@@ -39,7 +39,7 @@ $avatar = $user->profile_photo
             </button>
 
             {{-- Dropdown Body --}}
-            <div x-show="notifOpen" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="absolute right-0 mt-3 w-[calc(100vw-2rem)] max-w-sm sm:w-80 bg-white rounded-xl shadow-lg border border-slate-100 py-2 z-50" style="display: none;">
+            <div x-show="notifOpen" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="fixed inset-x-3 top-16 lg:absolute lg:inset-x-auto lg:top-auto lg:right-0 lg:mt-3 lg:w-80 max-h-[75vh] overflow-y-auto bg-white rounded-xl shadow-lg border border-slate-100 py-2 z-50" style="display: none;">
                 <div class="px-4 py-2 border-b border-slate-50 mb-1 flex justify-between items-center">
                     <p class="text-sm font-semibold text-slate-800">Notifications</p>
                 </div>
@@ -101,7 +101,7 @@ $avatar = $user->profile_photo
         {{-- User menu (Alpine.js Dropdown) --}}
         <div x-data="{ open: false }" class="relative">
             <div @click="open = !open" @click.away="open = false" class="flex items-center gap-2.5 cursor-pointer group">
-                <img src="{{ $avatar }}" alt="User" class="w-9 h-9 rounded-xl object-cover ring-2 ring-transparent transition-all duration-200 group-hover:ring-blue-200">
+                <img src="{{ $avatar }}" alt="{{ $user->name }}" onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&background=1E3A8A&color=fff&bold=true'" class="w-9 h-9 shrink-0 rounded-xl object-cover bg-slate-200 ring-2 ring-transparent transition-all duration-200 group-hover:ring-blue-200">
                 <div class="hidden md:block">
                     <p class="text-sm font-semibold text-slate-800 leading-tight">{{ $user->name }}</p>
                     <p class="text-xs text-slate-400 leading-tight">{{ $user->email }}</p>
@@ -110,7 +110,7 @@ $avatar = $user->profile_photo
             </div>
 
             {{-- Dropdown Body --}}
-            <div x-show="open" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="absolute right-0 mt-3 w-48 bg-white rounded-xl shadow-lg border border-slate-100 py-2 z-50" style="display: none;">
+            <div x-show="open" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="absolute right-0 mt-3 w-48 max-w-[calc(100vw-1.5rem)] bg-white rounded-xl shadow-lg border border-slate-100 py-2 z-50" style="display: none;">
 
                 <div class="px-4 py-2 border-b border-slate-50 mb-1">
                     <p class="text-xs text-slate-400 font-medium uppercase tracking-wider">Account</p>

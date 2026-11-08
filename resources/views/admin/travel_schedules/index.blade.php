@@ -1,24 +1,11 @@
 @extends('layouts.admin.app')
 
 @section('content')
-<div class="px-4 lg:px-6 py-6 lg:py-8" x-data="travelScheduleManager()">
+<div class="" x-data="travelScheduleManager()">
 
-    <!-- Header -->
-    <div class="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-            <h1 class="text-2xl font-bold text-slate-800 flex items-center gap-3">
-                <img src="{{ asset('images/travel/rivian_logo.jpg') }}" alt="Rivian Travel" class="w-9 h-9 rounded-xl object-cover border border-slate-200 shadow-xs shrink-0">
-                <span>Jadwal & Kuota Keberangkatan</span>
-            </h1>
-            <p class="text-slate-500 text-sm mt-1">Atur jam keberangkatan shuttle Xenia Ciamis - Bandung dan kuota minimal kursi.</p>
-        </div>
-        <div class="flex items-center gap-2.5 w-full md:w-auto">
-            <button type="button" @click="openCreateModal()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm flex items-center justify-center gap-2 w-full sm:w-auto cursor-pointer">
-                <i class="fa-solid fa-plus"></i>
-                <span>Tambah Jadwal Baru</span>
-            </button>
-        </div>
-    </div>
+    <x-admin.page-header title="Jadwal & Kuota Keberangkatan" subtitle="Atur jam keberangkatan shuttle Ciamis - Bandung dan kuota minimal kursi.">
+        <x-admin.button icon="fa-solid fa-plus" @click="openCreateModal()">Tambah Jadwal</x-admin.button>
+    </x-admin.page-header>
 
     <!-- Filter Bar -->
     <div class="bg-white rounded-xl shadow-sm border border-slate-200 mb-5 lg:mb-6">

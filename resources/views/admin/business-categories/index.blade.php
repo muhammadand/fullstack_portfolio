@@ -1,17 +1,10 @@
 @extends('layouts.admin.app')
 
 @section('content')
-<div class="px-4 lg:px-6 py-6 lg:py-8">
-    <div class="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div class="hidden sm:block">
-            <h1 class="text-2xl font-bold text-slate-800">Business Categories</h1>
-            <p class="text-slate-500 text-sm mt-1">Kelola kategori bisnis untuk template halaman dan proposal.</p>
-        </div>
-        <a href="{{ route('admin.business_categories.create') }}" class="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 text-blue-600 hover:text-blue-700 sm:bg-blue-600 sm:hover:bg-blue-700 sm:text-white sm:px-4 sm:py-2.5 sm:rounded-lg sm:shadow-sm transition-colors w-full sm:w-auto mt-2 sm:mt-0">
-            <i class="fa-solid fa-circle-plus text-xl sm:text-sm"></i>
-            <span class="text-[11px] sm:text-sm font-medium">Tambah Kategori</span>
-        </a>
-    </div>
+<div class="">
+    <x-admin.page-header title="Business Categories" subtitle="Kelola kategori bisnis untuk template halaman dan proposal.">
+        <x-admin.button icon="fa-solid fa-plus" :href="route('admin.business_categories.create')">Tambah Kategori</x-admin.button>
+    </x-admin.page-header>
 
     <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
         <div class="overflow-x-auto">

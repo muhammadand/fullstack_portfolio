@@ -1,30 +1,11 @@
 @extends('layouts.admin.app')
 
 @section('content')
-<div class="max-w-6xl mx-auto px-4 py-8">
-    {{-- ✅ Header --}}
-    <div class="flex flex-col sm:flex-row justify-between items-center mb-5 gap-4">
-        <h2 class="text-2xl font-semibold text-slate-800">Daftar Users</h2>
+<div class="max-w-6xl mx-auto">
+    <x-admin.page-header title="Users" subtitle="Kelola akun admin dan editor.">
+        <x-admin.button icon="fa-solid fa-plus" :href="route('users.create')">Tambah User</x-admin.button>
+    </x-admin.page-header>
 
-        <div class="flex flex-col sm:flex-row w-full sm:w-auto gap-2">
-            {{-- ➕ Tambah --}}
-            <a href="{{ route('users.create') }}" class="bg-blue-900 text-white text-center w-full sm:w-auto px-4 py-1.5 rounded-md text-sm font-medium shadow-sm hover:bg-blue-950 transition">
-                Create
-            </a>
-        </div>
-    </div>
-
-    {{-- ✅ Alert --}}
-    @if(session('success'))
-    <div class="mb-4 p-4 rounded-lg bg-green-100 border border-green-300 text-green-800">
-        {{ session('success') }}
-    </div>
-    @endif
-    @if(session('error'))
-    <div class="mb-4 p-4 rounded-lg bg-red-100 border border-red-300 text-red-800">
-        {{ session('error') }}
-    </div>
-    @endif
 
     {{-- ✅ Table --}}
     <div class="overflow-x-auto bg-white rounded-lg shadow-sm border border-gray-100">

@@ -54,8 +54,8 @@ class AdminWithdrawalModernizationTest extends TestCase
         $response = $this->actingAs($this->admin)->get(route('admin.withdrawals.index'));
         $response->assertOk();
         $response->assertSee('Permintaan Penarikan');
-        $response->assertSee('Total Permintaan');
-        $response->assertSee('Menunggu Proses');
+        $response->assertSee('Total');
+        $response->assertSee('Menunggu');
         $response->assertSee('Partner Tarik Dana');
         $response->assertSee('BCA 88990011');
     }

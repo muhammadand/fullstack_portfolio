@@ -8,23 +8,11 @@
 </x-admin.page-header>
 
 {{-- Ringkasan --}}
-<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-    @foreach([
-        ['Poin', number_format($customer->points), 'fa-solid fa-gift', 'bg-amber-50 text-amber-600'],
-        ['Order Top Up', number_format($customer->orders_count), 'fa-solid fa-receipt', 'bg-blue-50 text-blue-600'],
-        ['Total Belanja', 'Rp ' . number_format($customer->total_spent ?? 0, 0, ',', '.'), 'fa-solid fa-wallet', 'bg-emerald-50 text-emerald-600'],
-        ['Pesanan Travel', number_format($customer->bookings_count), 'fa-solid fa-ticket', 'bg-indigo-50 text-indigo-600'],
-    ] as [$label, $value, $icon, $iconCls])
-    <x-admin.card>
-        <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl {{ $iconCls }} flex items-center justify-center shrink-0"><i class="{{ $icon }}"></i></div>
-            <div class="min-w-0">
-                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">{{ $label }}</p>
-                <p class="mt-0.5 text-lg font-semibold text-slate-900 truncate">{{ $value }}</p>
-            </div>
-        </div>
-    </x-admin.card>
-    @endforeach
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 lg:gap-4 mb-4 lg:mb-6">
+    <x-admin.stat label="Poin" :value="$customer->points" icon="fa-solid fa-gift" tone="amber" />
+    <x-admin.stat label="Order Top Up" :value="$customer->orders_count" icon="fa-solid fa-receipt" tone="blue" />
+    <x-admin.stat label="Total Belanja" :value="$customer->total_spent ?? 0" rupiah icon="fa-solid fa-wallet" tone="emerald" />
+    <x-admin.stat label="Pesanan Travel" :value="$customer->bookings_count" icon="fa-solid fa-ticket" tone="indigo" />
 </div>
 
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">

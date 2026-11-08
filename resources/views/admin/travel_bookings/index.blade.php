@@ -1,24 +1,11 @@
 @extends('layouts.admin.app')
 
 @section('content')
-<div class="px-4 lg:px-6 py-6 lg:py-8" x-data="travelBookingManager()">
+<div class="" x-data="travelBookingManager()">
 
-    <!-- Header -->
-    <div class="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-            <h1 class="text-2xl font-bold text-slate-800 flex items-center gap-3">
-                <img src="{{ asset('images/travel/rivian_logo.jpg') }}" alt="Rivian Travel" class="w-9 h-9 rounded-xl object-cover border border-slate-200 shadow-xs shrink-0">
-                <span>Pesanan Travel & Shuttle</span>
-            </h1>
-            <p class="text-slate-500 text-sm mt-1">Kelola tiket shuttle Ciamis - Bandung, sewa mobil (charter), dan status verifikasi pembayaran.</p>
-        </div>
-        <div class="flex items-center gap-2.5 w-full md:w-auto">
-            <a href="{{ route('travell.index') }}" target="_blank" class="px-4 py-2 bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 text-sm font-medium rounded-lg transition-colors shadow-sm flex items-center justify-center gap-2 w-full sm:w-auto">
-                <i class="fa-solid fa-arrow-up-right-from-square text-xs text-blue-600"></i>
-                <span>Buka Web Travel</span>
-            </a>
-        </div>
-    </div>
+    <x-admin.page-header title="Pesanan Travel & Shuttle" subtitle="Tiket shuttle Ciamis - Bandung, sewa mobil (charter), dan verifikasi pembayaran.">
+        <x-admin.button variant="secondary" icon="fa-solid fa-arrow-up-right-from-square" :href="route('travell.index')" target="_blank">Buka Web Travel</x-admin.button>
+    </x-admin.page-header>
 
     <!-- Dashboard Stats Grid (Soft & Clean) -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 lg:gap-4 mb-5 lg:mb-6">

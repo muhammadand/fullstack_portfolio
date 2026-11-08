@@ -30,58 +30,10 @@
     <x-admin.page-header title="Permintaan Penarikan" subtitle="Kelola permintaan penarikan Saldo Komisi & Saldo Wallet dari Affiliate Partner (Target transfer maks. 3x24 jam)." />
 
     {{-- Stats Grid --}}
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-        {{-- Total Requests --}}
-        <div class="bg-white rounded-xl p-4 border border-slate-200/80 shadow-xs flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center text-sm shrink-0">
-                    <i class="fa-solid fa-money-bill-transfer"></i>
-                </div>
-                <div>
-                    <p class="text-slate-500 text-xs font-medium">Total Permintaan</p>
-                    <p class="text-lg font-bold text-slate-900 mt-0.5">{{ number_format($totalCount, 0, ',', '.') }}</p>
-                </div>
-            </div>
-        </div>
-
-        {{-- Pending Requests --}}
-        <div class="bg-white rounded-xl p-4 border border-slate-200/80 shadow-xs flex items-center justify-between">
-            <div class="flex items-center gap-3 min-w-0">
-                <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 border border-amber-100 flex items-center justify-center text-sm shrink-0">
-                    <i class="fa-solid fa-clock"></i>
-                </div>
-                <div class="min-w-0">
-                    <div class="flex items-center gap-2">
-                        <p class="text-slate-500 text-xs font-medium truncate">Menunggu Proses</p>
-                        @if($pendingCount > 0)
-                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200 animate-pulse">
-                            Perlu Transfer
-                        </span>
-                        @endif
-                    </div>
-                    <div class="flex items-baseline gap-2 mt-0.5">
-                        <p class="text-lg font-bold {{ $pendingCount > 0 ? 'text-amber-600' : 'text-slate-900' }}">{{ $pendingCount }}</p>
-                        <span class="text-xs text-slate-400 truncate">Rp {{ number_format($pendingAmount, 0, ',', '.') }}</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {{-- Completed Requests --}}
-        <div class="bg-white rounded-xl p-4 border border-slate-200/80 shadow-xs flex items-center justify-between">
-            <div class="flex items-center gap-3 min-w-0">
-                <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center text-sm shrink-0">
-                    <i class="fa-solid fa-circle-check"></i>
-                </div>
-                <div class="min-w-0">
-                    <p class="text-slate-500 text-xs font-medium truncate">Selesai Ditransfer</p>
-                    <div class="flex items-baseline gap-2 mt-0.5">
-                        <p class="text-lg font-bold text-emerald-600">{{ $completedCount }}</p>
-                        <span class="text-xs text-slate-400 truncate">Rp {{ number_format($completedAmount, 0, ',', '.') }}</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="grid grid-cols-3 gap-2 lg:gap-4 mb-4 lg:mb-6">
+        <x-admin.stat dense label="Total" :value="$totalCount" icon="fa-solid fa-money-bill-transfer" tone="blue" />
+        <x-admin.stat dense label="Menunggu" :value="$pendingCount" icon="fa-solid fa-clock" :tone="$pendingCount > 0 ? 'amber' : 'slate'"><x-admin.money :value="$pendingAmount" /></x-admin.stat>
+        <x-admin.stat dense label="Selesai" :value="$completedCount" icon="fa-solid fa-circle-check" tone="emerald"><x-admin.money :value="$completedAmount" /></x-admin.stat>
     </div>
 
     @if($errors->any())

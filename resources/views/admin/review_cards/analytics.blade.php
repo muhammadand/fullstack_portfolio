@@ -27,54 +27,11 @@
     </x-admin.page-header>
 
     {{-- ===== 1. TOP STATS CARDS ===== --}}
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {{-- Total Pengunjung --}}
-        <x-admin.card>
-            <div class="flex items-center justify-between mb-3">
-                <div class="w-9 h-9 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
-                    <i class="fa-solid fa-eye text-sm"></i>
-                </div>
-                <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Total</span>
-            </div>
-            <p class="text-2xl font-bold text-slate-900">{{ number_format($totalVisits) }}</p>
-            <p class="text-xs text-slate-500 mt-0.5">Total Kunjungan</p>
-        </x-admin.card>
-
-        {{-- Unique Pengunjung --}}
-        <x-admin.card>
-            <div class="flex items-center justify-between mb-3">
-                <div class="w-9 h-9 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
-                    <i class="fa-solid fa-users text-sm"></i>
-                </div>
-                <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Unik</span>
-            </div>
-            <p class="text-2xl font-bold text-slate-900">{{ number_format($uniqueVisits) }}</p>
-            <p class="text-xs text-slate-500 mt-0.5">IP Unik</p>
-        </x-admin.card>
-
-        {{-- Hari Ini --}}
-        <x-admin.card>
-            <div class="flex items-center justify-between mb-3">
-                <div class="w-9 h-9 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
-                    <i class="fa-solid fa-calendar-day text-sm"></i>
-                </div>
-                <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Hari Ini</span>
-            </div>
-            <p class="text-2xl font-bold text-slate-900">{{ number_format($todayVisits) }}</p>
-            <p class="text-xs text-slate-500 mt-0.5">Kunjungan Hari Ini</p>
-        </x-admin.card>
-
-        {{-- Media Sosial & SEO --}}
-        <x-admin.card>
-            <div class="flex items-center justify-between mb-3">
-                <div class="w-9 h-9 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center">
-                    <i class="fa-brands fa-threads text-sm"></i>
-                </div>
-                <span class="text-[10px] font-semibold text-purple-600 uppercase tracking-wider">{{ $socialPct }}% Medsos</span>
-            </div>
-            <p class="text-2xl font-bold text-slate-900">{{ number_format($socialVisits) }}</p>
-            <p class="text-xs text-slate-500 mt-0.5">{{ number_format($seoVisits) }} dari SEO ({{ $seoPct }}%)</p>
-        </x-admin.card>
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 lg:gap-4">
+        <x-admin.stat label="Total Kunjungan" :value="$totalVisits" icon="fa-solid fa-eye" tone="blue" />
+        <x-admin.stat label="IP Unik" :value="$uniqueVisits" icon="fa-solid fa-fingerprint" tone="indigo" />
+        <x-admin.stat label="Hari Ini" :value="$todayVisits" icon="fa-solid fa-calendar-day" tone="emerald" />
+        <x-admin.stat label="Dari Medsos" :value="$socialVisits" icon="fa-solid fa-share-nodes" tone="purple">{{ $socialPct }}% · SEO {{ number_format($seoVisits) }} ({{ $seoPct }}%)</x-admin.stat>
     </div>
 
     {{-- ===== 2. TREN KUNJUNGAN CHART & PERANGKAT ===== --}}

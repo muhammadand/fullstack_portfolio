@@ -18,6 +18,11 @@ $sizes = [
     'sm' => 'min-h-9 lg:min-h-0 px-3 lg:px-2.5 py-1.5 text-xs gap-1.5',
     'md' => 'min-h-10 lg:min-h-0 px-4 py-2 text-sm gap-2',
 ];
+// Label teks dipakai juga sebagai aria-label, karena di header HP tombol ber-ikon tampil sebagai ikon saja.
+$text = trim(strip_tags((string) $slot));
+if ($text !== '' && ! $attributes->has('aria-label')) {
+    $attributes = $attributes->merge(['aria-label' => $text]);
+}
 $classes = 'inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus-visible:ring-2 disabled:opacity-60 disabled:cursor-not-allowed '
     . ($variants[$variant] ?? $variants['primary']) . ' ' . ($sizes[$size] ?? $sizes['md']);
 @endphp
@@ -25,11 +30,11 @@ $classes = 'inline-flex items-center justify-center rounded-lg font-medium trans
 @if ($href)
 <a href="{{ $href }}" {{ $attributes->class($classes) }}>
     @if ($icon)<i class="{{ $icon }}"></i>@endif
-    {{ $slot }}
+    @if ($text !== '')<span class="admin-btn-label">{{ $slot }}</span>@else{{ $slot }}@endif
 </a>
 @else
 <button type="{{ $type }}" {{ $attributes->class($classes) }}>
     @if ($icon)<i class="{{ $icon }}"></i>@endif
-    {{ $slot }}
+    @if ($text !== '')<span class="admin-btn-label">{{ $slot }}</span>@else{{ $slot }}@endif
 </button>
 @endif

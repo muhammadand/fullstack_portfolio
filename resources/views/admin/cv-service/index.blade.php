@@ -3,18 +3,9 @@
 @section('content')
 
 {{-- Page Header --}}
-<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-    <div>
-        <p class="text-[10px] sm:text-xs text-slate-400 font-medium uppercase tracking-widest mb-0.5">Layanan</p>
-        <h2 class="text-slate-800 font-bold text-xl sm:text-2xl leading-tight">CV Service Analytics</h2>
-        <p class="text-slate-500 text-xs mt-0.5">Pengunjung halaman &amp; ulasan pengguna CV Builder</p>
-    </div>
-    <a href="{{ route('layanan.cv') }}" target="_blank"
-        class="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold text-white shadow-sm"
-        style="background: linear-gradient(90deg, #0ea5e9, #2563EB);">
-        <i class="fa-solid fa-arrow-up-right-from-square"></i> Buka Halaman CV
-    </a>
-</div>
+<x-admin.page-header title="CV Service Analytics" subtitle="Pengunjung halaman & ulasan pengguna CV Builder.">
+    <x-admin.button variant="secondary" icon="fa-solid fa-arrow-up-right-from-square" :href="route('layanan.cv')" target="_blank">Buka Halaman CV</x-admin.button>
+</x-admin.page-header>
 
 {{-- ===== STATS CARDS ===== --}}
 <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 lg:gap-4 mb-5 lg:mb-6">

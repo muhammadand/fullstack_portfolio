@@ -110,4 +110,43 @@ class AdminMobileLayoutTest extends TestCase
             $this->actingAs($admin)->get(route($name))->assertOk()->assertSee('admin-filter', false);
         }
     }
+
+    public function test_dense_stat_hides_icon_on_mobile_for_three_column_grids(): void
+    {
+        $html = \Illuminate\Support\Facades\Blade::render('<x-admin.stat dense label="Menunggu" :value="3" suffix="hari" icon="fa-solid fa-clock" />');
+
+        $this->assertStringContainsString('hidden sm:flex', $html);
+        $this->assertStringContainsString('>hari</span>', $html);
+
+        $page = $this->actingAs($this->admin())->get(route('admin.withdrawals.index'))->assertOk()->getContent();
+        $this->assertStringContainsString('grid grid-cols-3 gap-2 lg:gap-4', $page);
+    }
+
+    public function test_every_admin_list_page_uses_standard_header_and_filter_components(): void
+    {
+        $views = collect(\Illuminate\Support\Facades\File::allFiles(resource_path('views')))
+            ->filter(fn ($f) => str_ends_with($f->getFilename(), 'index.blade.php'))
+            ->filter(fn ($f) => str_contains($f->getContents(), "layouts.admin.app"))
+            ->reject(fn ($f) => str_contains($f->getPathname(), 'digital_products')); // header ada di komponen Livewire
+
+        $this->assertNotEmpty($views);
+        foreach ($views as $f) {
+            $html = $f->getContents();
+            $name = str_replace(resource_path('views') . '/', '', $f->getPathname());
+
+            $this->assertStringContainsString('<x-admin.page-header', $html, "$name harus memakai <x-admin.page-header>");
+            $this->assertDoesNotMatchRegularExpression('/<form[^>]*method="GET"/i', $html, "$name: form cari harus memakai <x-admin.filter-bar>");
+        }
+    }
+
+    public function test_header_buttons_become_icons_on_mobile_and_tables_stack(): void
+    {
+        $html = $this->actingAs($this->admin())->get(route('blog-categories.index'))->assertOk()->getContent();
+
+        $this->assertStringContainsString('admin-header-actions', $html);
+        $this->assertStringContainsString('aria-label="Tambah Kategori"', $html);
+        $this->assertStringContainsString('<span class="admin-btn-label">Tambah Kategori</span>', $html);
+        $this->assertStringContainsString('.admin-header-actions :is(a, button):has(> i) .admin-btn-label { display: none; }', $html);
+        $this->assertStringContainsString("table.classList.add('admin-stack')", $html); // tabel jadi kartu di HP
+    }
 }

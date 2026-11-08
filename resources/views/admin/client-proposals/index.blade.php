@@ -1,96 +1,19 @@
 @extends('layouts.admin.app')
 
 @section('content')
-<div x-data="clientProposalManager()" class="px-4 lg:px-6 py-6 lg:py-8">
-    <div class="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-            <h1 class="text-2xl font-bold text-slate-800">Client Proposals</h1>
-            <p class="text-slate-500 text-sm mt-1">Kelola data klien untuk landing page dan proposal penawaran.</p>
-        </div>
-        <div class="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
-            <!-- Tombol Deteksi Duplikat -->
-            <button @click="openDuplicateModal()" type="button" class="px-4 py-2.5 bg-rose-500 hover:bg-rose-600 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm flex items-center justify-center gap-2">
-                <i class="fa-solid fa-broom"></i> Bersihkan Duplikat
-            </button>
-
-            <!-- Tombol Ubah Harga Serentak -->
-            <button @click="openPriceModal()" type="button" class="px-4 py-2.5 bg-amber-500 hover:bg-amber-600 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm flex items-center justify-center gap-2">
-                <i class="fa-solid fa-tags"></i> Ubah Harga Serentak
-            </button>
-
-            <!-- Tombol Tambah Klien Baru -->
-            <a href="{{ route('admin.client_proposals.create') }}" class="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm flex items-center justify-center gap-2">
-                <i class="fa-solid fa-plus"></i> Tambah Klien Baru
-            </a>
-        </div>
-    </div>
+<div x-data="clientProposalManager()" class="">
+    <x-admin.page-header title="Client Proposals" subtitle="Kelola data klien untuk landing page dan proposal penawaran.">
+        <x-admin.button variant="secondary" icon="fa-solid fa-broom" @click="openDuplicateModal()">Bersihkan Duplikat</x-admin.button>
+        <x-admin.button variant="secondary" icon="fa-solid fa-tags" @click="openPriceModal()">Ubah Harga Serentak</x-admin.button>
+        <x-admin.button icon="fa-solid fa-plus" :href="route('admin.client_proposals.create')">Tambah Klien</x-admin.button>
+    </x-admin.page-header>
 
     <!-- Dashboard Stats Grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-        <!-- Total Proposals -->
-        <a href="{{ route('admin.client_proposals.index') }}" class="group bg-white rounded-xl p-5 shadow-sm border {{ !request()->filled('owner_status') ? 'border-blue-300 ring-2 ring-blue-500/20' : 'border-slate-200' }} hover:border-blue-400 hover:shadow transition-all flex items-center justify-between">
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl shrink-0 group-hover:scale-110 transition-transform">
-                    <i class="fa-solid fa-file-invoice"></i>
-                </div>
-                <div>
-                    <p class="text-slate-500 text-xs font-semibold uppercase tracking-wider">Total Data Proposal</p>
-                    <div class="flex items-baseline gap-2 mt-0.5">
-                        <p class="text-2xl font-bold text-slate-800">{{ number_format($totalProposals, 0, ',', '.') }}</p>
-                        <span class="text-xs text-slate-400 font-medium">data</span>
-                    </div>
-                </div>
-            </div>
-            <div class="text-slate-300 group-hover:text-blue-500 transition-colors">
-                <i class="fa-solid fa-arrow-right text-sm"></i>
-            </div>
-        </a>
-
-        <!-- Sudah Dihubungi Affiliate -->
-        <a href="{{ route('admin.client_proposals.index', array_merge(request()->except('page'), ['owner_status' => 'claimed'])) }}" class="group bg-white rounded-xl p-5 shadow-sm border {{ request('owner_status') === 'claimed' ? 'border-emerald-400 ring-2 ring-emerald-500/20 bg-emerald-50/10' : 'border-slate-200' }} hover:border-emerald-400 hover:shadow transition-all flex items-center justify-between">
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl shrink-0 group-hover:scale-110 transition-transform">
-                    <i class="fa-solid fa-user-check"></i>
-                </div>
-                <div>
-                    <p class="text-slate-500 text-xs font-semibold uppercase tracking-wider">Sudah Dihubungi Affiliate</p>
-                    <div class="flex items-baseline gap-2 mt-0.5">
-                        <p class="text-2xl font-bold text-emerald-600">{{ number_format($claimedProposals, 0, ',', '.') }}</p>
-                        @if($totalProposals > 0)
-                        <span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-700">
-                            {{ round(($claimedProposals / $totalProposals) * 100, 1) }}%
-                        </span>
-                        @endif
-                    </div>
-                </div>
-            </div>
-            <div class="text-slate-300 group-hover:text-emerald-500 transition-colors">
-                <i class="fa-solid fa-arrow-right text-sm"></i>
-            </div>
-        </a>
-
-        <!-- Belum Dihubungi (Global) -->
-        <a href="{{ route('admin.client_proposals.index', array_merge(request()->except('page'), ['owner_status' => 'unclaimed'])) }}" class="group bg-white rounded-xl p-5 shadow-sm border {{ request('owner_status') === 'unclaimed' ? 'border-amber-400 ring-2 ring-amber-500/20 bg-amber-50/10' : 'border-slate-200' }} hover:border-amber-400 hover:shadow transition-all flex items-center justify-between">
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl shrink-0 group-hover:scale-110 transition-transform">
-                    <i class="fa-solid fa-globe"></i>
-                </div>
-                <div>
-                    <p class="text-slate-500 text-xs font-semibold uppercase tracking-wider">Belum Dihubungi (Global)</p>
-                    <div class="flex items-baseline gap-2 mt-0.5">
-                        <p class="text-2xl font-bold text-amber-600">{{ number_format($unclaimedProposals, 0, ',', '.') }}</p>
-                        @if($totalProposals > 0)
-                        <span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-700">
-                            {{ round(($unclaimedProposals / $totalProposals) * 100, 1) }}%
-                        </span>
-                        @endif
-                    </div>
-                </div>
-            </div>
-            <div class="text-slate-300 group-hover:text-amber-500 transition-colors">
-                <i class="fa-solid fa-arrow-right text-sm"></i>
-            </div>
-        </a>
+    <div class="grid grid-cols-3 gap-2 lg:gap-4 mb-4 lg:mb-6">
+        @php $pct = fn ($n) => $totalProposals > 0 ? round($n / $totalProposals * 100, 1) . '%' : '0%'; @endphp
+        <x-admin.stat dense label="Total" :value="$totalProposals" icon="fa-solid fa-folder-open" tone="blue" />
+        <x-admin.stat dense label="Dihubungi" :value="$claimedProposals" icon="fa-solid fa-handshake" tone="emerald">{{ $pct($claimedProposals) }}</x-admin.stat>
+        <x-admin.stat dense label="Belum" :value="$unclaimedProposals" icon="fa-solid fa-globe" tone="amber">{{ $pct($unclaimedProposals) }}</x-admin.stat>
     </div>
 
     <!-- Filter & Pencarian Bar -->

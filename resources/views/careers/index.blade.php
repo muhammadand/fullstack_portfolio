@@ -1,24 +1,11 @@
 @extends('layouts.admin.app')
 
 @section('content')
-<div class="max-w-6xl mx-auto px-4 py-8">
-    {{-- ✅ Header --}}
-    <div class="flex flex-col sm:flex-row justify-between items-center mb-5 gap-4">
-        <h2 class="text-2xl font-semibold text-slate-800">Daftar Karir / Lowongan</h2>
+<div class="max-w-6xl mx-auto">
+    <x-admin.page-header title="Karir / Lowongan" subtitle="Kelola lowongan kerja yang tampil di website.">
+        <x-admin.button icon="fa-solid fa-plus" :href="route('careers.create')">Tambah Lowongan</x-admin.button>
+    </x-admin.page-header>
 
-        <div class="flex flex-col sm:flex-row w-full sm:w-auto gap-2">
-            <a href="{{ route('careers.create') }}" class="bg-blue-900 text-white text-center w-full sm:w-auto px-4 py-1.5 rounded-md text-sm font-medium shadow-sm hover:bg-blue-950 transition">
-                Create
-            </a>
-        </div>
-    </div>
-
-    {{-- ✅ Alert --}}
-    @if (session('success'))
-    <div class="mb-4 p-4 rounded-lg bg-green-100 border border-green-300 text-green-800">
-        {{ session('success') }}
-    </div>
-    @endif
 
     {{-- ✅ Table --}}
     <div class="overflow-x-auto bg-white rounded-lg shadow-sm border border-gray-100">
