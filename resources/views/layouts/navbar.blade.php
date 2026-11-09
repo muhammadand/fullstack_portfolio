@@ -390,6 +390,12 @@
 
             <a href="{{ route('index.company.profile') }}" class="mobile-nav-link text-sm text-white/90 font-medium px-3.5 py-2.5 rounded-xl hover:bg-white/5 transition-all">Home</a>
 
+            {{-- Top-Up Game: selalu tampil di menu HP (sama seperti desktop). --}}
+            <a href="{{ route('topup.index') }}" class="mobile-nav-link flex items-center justify-between text-sm font-medium px-3.5 py-2.5 rounded-xl transition-all {{ $isTopupArea ? 'bg-white/5 text-white' : 'text-white/90 hover:bg-white/5' }}" data-mobile-topup>
+                <span class="flex items-center gap-2.5"><i class="fa-solid fa-gamepad text-indigo-400 w-4 text-center"></i> Top-Up Game</span>
+                <span class="px-2 py-0.5 bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 text-[10px] font-bold rounded-full">Instan</span>
+            </a>
+
             @unless($isTopupArea)
             {{-- Mobile Collapsible: Layanan --}}
             <div class="rounded-xl bg-white/[0.02] border border-white/5 p-2">
@@ -446,10 +452,6 @@
             </div>
 
             @endunless
-
-            @if($isTopupArea)
-            <a href="{{ route('topup.index') }}" class="mobile-nav-link text-sm text-white/90 font-medium px-3.5 py-2.5 rounded-xl hover:bg-white/5 transition-all">Top-Up Game</a>
-            @endif
 
             <a href="{{ route('landing.blogs') }}" class="mobile-nav-link text-sm text-white/90 font-medium px-3.5 py-2.5 rounded-xl hover:bg-white/5 transition-all">Blog & Insight</a>
 

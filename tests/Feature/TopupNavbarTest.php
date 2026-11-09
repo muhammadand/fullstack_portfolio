@@ -42,4 +42,13 @@ class TopupNavbarTest extends TestCase
         $this->assertStringContainsString('scalify-native-launcher', $other);
         $this->assertStringNotContainsString('id="topup-page-loader"', $other);
     }
+
+    public function test_mobile_menu_always_has_topup_link(): void
+    {
+        foreach (['index.company.profile', 'landing.blogs', 'topup.index'] as $name) {
+            $html = $this->get(route($name))->assertOk()->getContent();
+            $this->assertSame(1, substr_count($html, 'data-mobile-topup'), "$name: menu HP harus punya satu link Top-Up Game");
+            $this->assertMatchesRegularExpression('/href="' . preg_quote(route('topup.index'), '/') . '"[^>]*data-mobile-topup/', $html);
+        }
+    }
 }
