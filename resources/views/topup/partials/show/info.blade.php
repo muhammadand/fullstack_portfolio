@@ -16,5 +16,19 @@
             </span>
             @endforeach
         </div>
+        @php
+            // Caption bagikan: harga termurah + ajakan. Partner yang login otomatis menyertakan kode referral-nya.
+            $cheapest = collect($products)->where('available', true)->min('price');
+            $partner = auth('affiliate')->user();
+            $shareUrl = route('topup.show', $brand['slug']) . ($partner?->affiliate_code ? '?ref=' . urlencode($partner->affiliate_code) : '');
+            $shareText = "Top up {$gameName} kini lebih mudah di Scalify. "
+                . ($cheapest
+                    ? "Harga mulai Rp " . number_format($cheapest, 0, ',', '.') . " dan diproses otomatis 24 jam setelah pembayaran berhasil."
+                    : "Pesanan diproses otomatis 24 jam setelah pembayaran berhasil.")
+                . "\nCukup masukkan ID akun, pilih nominal, lalu bayar melalui QRIS dari semua e-wallet maupun mobile banking.";
+        @endphp
+        <x-topup.share :url="$shareUrl" :text="$shareText" :title="'Top Up ' . $gameName" class="hidden lg:block" />
     </div>
 </header>
+{{-- HP: tombol bagikan di bawah kartu info (kartu info di HP berbentuk baris kecil). --}}
+<x-topup.share :url="$shareUrl" :text="$shareText" :title="'Top Up ' . $gameName" class="lg:hidden -mt-1 mb-4" />

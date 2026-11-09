@@ -11,7 +11,11 @@
 <meta property="og:site_name" content="Scalify Intelligence" />
 <meta property="og:locale" content="id_ID" />
 <meta property="og:title" content="Top Up {{ $gameName }} Murah, Cepat &amp; Aman" />
-<meta property="og:description" content="Top up {{ $gameName }} otomatis 24 jam. Cukup masukkan ID dan bayar via QRIS." />
+@php $ogCheapest = collect($products)->where('available', true)->min('price'); @endphp
+<meta property="og:description" content="Top up {{ $gameName }}{{ $ogCheapest ? ' mulai Rp ' . number_format($ogCheapest, 0, ',', '.') : '' }}. Otomatis 24 jam, cukup masukkan ID, bayar QRIS." />
+<meta property="og:image:alt" content="Top up {{ $gameName }} di Scalify" />
+<meta name="twitter:title" content="Top Up {{ $gameName }} Murah, Cepat &amp; Aman" />
+<meta name="twitter:description" content="Top up {{ $gameName }}{{ $ogCheapest ? ' mulai Rp ' . number_format($ogCheapest, 0, ',', '.') : '' }}. Otomatis 24 jam, bayar QRIS." />
 <meta property="og:image" content="{{ $brand['image'] ? asset('storage/' . $brand['image']) : asset('og-image.png') }}" />
 <meta name="twitter:card" content="summary_large_image" />
 @endsection
