@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pulsa - Harga Partner</title>
+    <title>{{ $ppob['label'] }} - Harga Partner</title>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -118,7 +118,7 @@
                     <i class="fa-solid fa-arrow-left text-sm"></i>
                 </a>
                 <div>
-                    <h1 class="text-base font-bold text-white leading-tight">Pulsa</h1>
+                    <h1 class="text-base font-bold text-white leading-tight">{{ $ppob['label'] }}</h1>
                     <p class="text-xs text-slate-400">Daftar harga khusus partner</p>
                 </div>
             </div>
@@ -159,14 +159,15 @@
             <div class="px-4">
                 <div class="glass-panel rounded-3xl p-6 text-center">
                     <div class="w-14 h-14 mx-auto rounded-2xl bg-green-500/10 flex items-center justify-center text-green-400 text-2xl mb-3">
-                        <i class="fa-solid fa-mobile-screen-button"></i>
+                        <i class="fa-solid {{ $ppob['icon'] }}"></i>
                     </div>
-                    <h2 class="text-sm font-bold text-white mb-1">Produk pulsa belum tersedia</h2>
+                    <h2 class="text-sm font-bold text-white mb-1">Produk {{ strtolower($ppob['label']) }} belum tersedia</h2>
                     <p class="text-xs text-slate-400 leading-relaxed">Daftar harga sedang disiapkan admin. Coba cek lagi nanti ya.</p>
                 </div>
             </div>
         @else
             <!-- Cek Operator dari Nomor -->
+            @if($ppob['phone'])
             <div class="px-4 mb-4">
                 <label for="phone" class="block text-[11px] font-semibold text-slate-400 mb-1.5 pl-1">Cek operator dari nomor HP</label>
                 <div class="glass-panel rounded-2xl flex items-center gap-3 px-4 py-3 focus-within:border-emerald-500/50 transition-colors">
@@ -184,6 +185,7 @@
                     @endforeach
                 </p>
             </div>
+            @endif
 
             <!-- Pilihan Operator (sticky) -->
             <div class="sticky top-0 z-20 bg-[#0B1120]/90 backdrop-blur-md py-2 mb-3">
@@ -220,8 +222,11 @@
                                 <button type="button" @click="pick(@js(['id' => $product['id'], 'name' => $product['name'], 'price' => $product['price'], 'opName' => $op['name'], 'opSlug' => $op['slug']]))"
                                         :class="selected === {{ $product['id'] }} ? 'is-selected' : ''"
                                         class="glass-panel rounded-2xl p-3 text-left transition-all active:scale-[0.97]" data-product-id="{{ $product['id'] }}">
-                                    <span class="block text-[10px] text-slate-400 font-medium">Pulsa</span>
-                                    <span class="block text-base font-bold text-white leading-tight mb-2 break-words">{{ $product['name'] }}</span>
+                                    <span class="block text-[10px] text-slate-400 font-medium">{{ $ppob['label'] }}</span>
+                                    <span class="block {{ $ppob['type'] === 'paket_data' ? 'text-sm' : 'text-base' }} font-bold text-white leading-tight break-words {{ !empty($product['description']) && $ppob['type'] === 'paket_data' ? 'mb-1' : 'mb-2' }}">{{ $product['name'] }}</span>
+                                    @if($ppob['type'] === 'paket_data' && !empty($product['description']))
+                                    <span class="block text-[10px] text-slate-400 leading-snug mb-2 line-clamp-2">{{ $product['description'] }}</span>
+                                    @endif
                                     <span class="block text-[10px] text-emerald-300/80">Harga Partner</span>
                                     <span class="block text-sm font-bold text-emerald-400">Rp {{ number_format($product['price'], 0, ',', '.') }}</span>
                                     @if($product['profit'] > 0)
@@ -232,7 +237,7 @@
                             @else
                                 <div class="glass-panel rounded-2xl p-3 opacity-50 relative" aria-disabled="true" data-product-id="{{ $product['id'] }}">
                                     <span class="absolute top-2 right-2 text-[9px] font-semibold bg-slate-700 text-slate-200 rounded-full px-1.5 py-0.5">Gangguan</span>
-                                    <span class="block text-[10px] text-slate-400 font-medium">Pulsa</span>
+                                    <span class="block text-[10px] text-slate-400 font-medium">{{ $ppob['label'] }}</span>
                                     <span class="block text-base font-bold text-white leading-tight mb-2 break-words">{{ $product['name'] }}</span>
                                     <span class="block text-[10px] text-slate-400">Sementara tidak tersedia</span>
                                     <span class="block text-sm font-bold text-slate-400">Rp {{ number_format($product['price'], 0, ',', '.') }}</span>
@@ -248,7 +253,7 @@
     <!-- Sheet Konfirmasi Pembayaran (Saldo Wallet) -->
     <div x-show="sheet" x-cloak class="fixed inset-0 z-[70] flex flex-col justify-end" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
         <div class="absolute inset-0 bg-slate-950/70" @click="closeSheet()"></div>
-        <form method="POST" action="{{ route('affiliate.ppob.pulsa.order') }}" @submit="submitting = true"
+        <form method="POST" action="{{ route($ppob['order_route']) }}" @submit="submitting = true"
               class="relative w-full max-w-md mx-auto bg-[#0B1120] border-t border-white/10 rounded-t-3xl p-5 pb-8">
             @csrf
             <input type="hidden" name="product_id" :value="sheet?.id">
@@ -262,17 +267,17 @@
                 </button>
             </div>
 
-            <label for="sheetPhone" class="block text-[11px] font-semibold text-slate-400 mb-1.5 pl-1">Nomor HP tujuan</label>
+            <label for="sheetPhone" class="block text-[11px] font-semibold text-slate-400 mb-1.5 pl-1">{{ $ppob['input_label'] }}</label>
             <div class="glass-panel rounded-2xl flex items-center gap-3 px-4 py-3 mb-1.5 focus-within:border-emerald-500/50">
-                <i class="fa-solid fa-mobile-screen-button text-slate-400"></i>
-                <input id="sheetPhone" name="customer_no" type="tel" inputmode="numeric" autocomplete="tel" required placeholder="08xxxxxxxxxx"
+                <i class="fa-solid {{ $ppob['phone'] ? 'fa-mobile-screen-button' : 'fa-gauge-high' }} text-slate-400"></i>
+                <input id="sheetPhone" name="customer_no" type="tel" inputmode="numeric" autocomplete="{{ $ppob['phone'] ? 'tel' : 'off' }}" required placeholder="{{ $ppob['input_placeholder'] }}"
                        x-model="phone" @input="onPhoneInput()" class="flex-1 min-w-0 bg-transparent text-sm text-white placeholder-slate-500 outline-none">
             </div>
             <p class="text-[11px] pl-1 mb-4 min-h-[1rem]">
             </p>
 
             <div class="glass-panel rounded-2xl p-4 space-y-2.5 text-xs mb-4">
-                <div class="flex justify-between gap-3"><span class="text-slate-400">Produk</span><span class="text-white font-semibold text-right" x-text="sheet ? `Pulsa ${sheet.opName} ${sheet.name}` : ''"></span></div>
+                <div class="flex justify-between gap-3"><span class="text-slate-400">Produk</span><span class="text-white font-semibold text-right" x-text="sheet ? `${@js($ppob['label'])} ${sheet.opName} ${sheet.name}` : ''"></span></div>
                 <div class="flex justify-between gap-3"><span class="text-slate-400">Harga Partner</span><span class="text-emerald-400 font-bold" x-text="sheet ? rupiah(sheet.price) : ''"></span></div>
                 <div class="flex justify-between gap-3 pt-2.5 border-t border-white/5"><span class="text-slate-400">Saldo Wallet</span><span class="text-white" x-text="rupiah(balance)"></span></div>
                 <div class="flex justify-between gap-3"><span class="text-slate-400" x-text="insufficient ? 'Saldo Kurang' : 'Sisa Saldo'"></span><span :class="insufficient ? 'text-red-400' : 'text-white'" class="font-semibold" x-text="sheet ? rupiah(Math.abs(balance - sheet.price)) : ''"></span></div>

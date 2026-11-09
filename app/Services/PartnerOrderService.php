@@ -35,7 +35,7 @@ class PartnerOrderService
     /**
      * @throws PartnerOrderException alasan aman ditampilkan ke partner
      */
-    public function checkout(Affiliate $affiliate, DigitalProduct $product, string $source, string $customerNo, string $idempotencyKey): Order
+    public function checkout(Affiliate $affiliate, DigitalProduct $product, string $source, string $customerNo, string $idempotencyKey, array $accountData = []): Order
     {
         if ($existing = $this->findByIdempotencyKey($affiliate, $idempotencyKey)) {
             return $existing; // double-tap / submit ulang: kembalikan order yang sama
@@ -55,7 +55,7 @@ class PartnerOrderService
         $wallet = $affiliate->getOrCreateWallet();
 
         try {
-            $order = DB::transaction(function () use ($affiliate, $product, $source, $customerNo, $idempotencyKey, $level, $price, $wallet) {
+            $order = DB::transaction(function () use ($affiliate, $product, $source, $customerNo, $idempotencyKey, $accountData, $level, $price, $wallet) {
                 // Kunci baris wallet: cek saldo & status secara konsisten sebelum debit.
                 $locked = Wallet::whereKey($wallet->id)->lockForUpdate()->firstOrFail();
 
@@ -73,6 +73,8 @@ class PartnerOrderService
                     'idempotency_key'    => $idempotencyKey,
                     'digital_product_id' => $product->id,
                     'customer_no'        => $customerNo,
+                    // Top up game: ID akun per field (mis. user_id + zone_id), digabung jadi customer_no untuk Digiflazz.
+                    'account_data'       => $accountData ?: null,
                     'email'              => $affiliate->email ? mb_strtolower(trim($affiliate->email)) : null,
                     'product_name'       => $product->name,
                     'sku_code'           => $product->sku_code,

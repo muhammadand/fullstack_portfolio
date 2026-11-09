@@ -34,7 +34,7 @@
 
         <!-- Header -->
         <div class="flex items-center gap-3 mb-5">
-            <a href="{{ route('affiliate.ppob.pulsa') }}" class="w-10 h-10 rounded-xl glass-panel flex items-center justify-center text-slate-300 hover:text-white transition-colors active:scale-95" title="Kembali">
+            <a href="{{ route($ppob['route']) }}" class="w-10 h-10 rounded-xl glass-panel flex items-center justify-center text-slate-300 hover:text-white transition-colors active:scale-95" title="Kembali">
                 <i class="fa-solid fa-arrow-left text-sm"></i>
             </a>
             <div class="min-w-0">
@@ -48,7 +48,7 @@
             @if($order->status === \App\Models\Order::STATUS_SUCCESS)
                 <div class="w-16 h-16 mx-auto rounded-full bg-emerald-500/15 flex items-center justify-center text-emerald-400 text-3xl mb-3"><i class="fa-solid fa-circle-check"></i></div>
                 <h2 class="text-lg font-bold text-white">{{ $order->sourceLabel() }} Berhasil</h2>
-                <p class="text-xs text-slate-400 mt-1">Pulsa sudah masuk ke nomor tujuan.</p>
+                <p class="text-xs text-slate-400 mt-1">{{ match($ppob['type']) { 'game' => 'Item sudah masuk ke akun game.', 'pln' => 'Token listrik sudah terbit, masukkan ke meteran.', default => $ppob['label'] . ' sudah masuk ke nomor tujuan.' } }}</p>
             @elseif($order->status === \App\Models\Order::STATUS_FAILED)
                 <div class="w-16 h-16 mx-auto rounded-full bg-red-500/15 flex items-center justify-center text-red-400 text-3xl mb-3"><i class="fa-solid fa-circle-xmark"></i></div>
                 <h2 class="text-lg font-bold text-white">{{ $order->sourceLabel() }} Gagal</h2>
@@ -64,13 +64,29 @@
             @endif
         </div>
 
+        @if($ppob['type'] === 'pln' && $order->sn)
+        <!-- Token PLN (SN dari Digiflazz berisi token) -->
+        <div class="glass-panel rounded-2xl p-4 mb-4 text-center">
+            <p class="text-[11px] text-slate-400">Token Listrik</p>
+            <p class="mt-1 text-lg font-bold text-amber-300 font-mono tracking-wider break-all" data-pln-token>{{ $order->sn }}</p>
+            <button type="button" onclick="navigator.clipboard.writeText(this.dataset.token).then(() => this.textContent = 'Tersalin')" data-token="{{ $order->sn }}"
+                    class="mt-2 px-3 py-1.5 rounded-lg bg-amber-500/15 text-amber-200 text-xs font-semibold">Salin Token</button>
+        </div>
+        @endif
+
         <!-- Detail -->
         <div class="glass-panel rounded-2xl p-4 space-y-2.5 text-xs mb-4">
             <div class="flex justify-between gap-3"><span class="text-slate-400">Produk</span><span class="text-white font-semibold text-right">{{ $order->product_name }}</span></div>
-            <div class="flex justify-between gap-3"><span class="text-slate-400">Nomor Tujuan</span><span class="text-white font-mono">{{ $order->customer_no }}</span></div>
+            @if($ppob['type'] === 'game' && $order->account_data)
+                @foreach($order->account_data as $key => $val)
+                <div class="flex justify-between gap-3"><span class="text-slate-400">{{ \Illuminate\Support\Str::headline($key) }}</span><span class="text-white font-mono">{{ $val }}</span></div>
+                @endforeach
+            @else
+            <div class="flex justify-between gap-3"><span class="text-slate-400">{{ $ppob['type'] === 'pln' ? 'Nomor Meter' : 'Nomor Tujuan' }}</span><span class="text-white font-mono">{{ $order->customer_no }}</span></div>
+            @endif
             <div class="flex justify-between gap-3"><span class="text-slate-400">Metode Bayar</span><span class="text-white">Saldo Wallet</span></div>
             <div class="flex justify-between gap-3"><span class="text-slate-400">Waktu</span><span class="text-white">{{ $order->created_at->timezone('Asia/Jakarta')->format('d M Y, H:i') }} WIB</span></div>
-            @if($order->sn)
+            @if($order->sn && $ppob['type'] !== 'pln')
                 <div class="flex justify-between gap-3"><span class="text-slate-400">SN / Ref</span><span class="text-white font-mono break-all text-right">{{ $order->sn }}</span></div>
             @endif
             <div class="flex justify-between gap-3 pt-2.5 border-t border-white/5"><span class="text-slate-300 font-semibold">Total</span><span class="text-emerald-400 font-bold">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</span></div>
@@ -104,7 +120,7 @@
 
         <div class="grid grid-cols-2 gap-3">
             <a href="{{ route('affiliate.dashboard') }}" class="py-3 rounded-2xl glass-panel text-center text-sm font-semibold text-slate-200 active:scale-[0.98]">Beranda</a>
-            <a href="{{ route('affiliate.ppob.pulsa') }}" class="py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 text-center text-sm font-bold text-white active:scale-[0.98]">Beli Lagi</a>
+            <a href="{{ route($ppob['route']) }}" class="py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 text-center text-sm font-bold text-white active:scale-[0.98]">Beli Lagi</a>
         </div>
     </div>
 

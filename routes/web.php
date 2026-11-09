@@ -394,6 +394,13 @@ Route::middleware(['auth:affiliate'])->group(function () {
     // PPOB (harga level partner, belum checkout)
     Route::get('/partner/pulsa', [\App\Http\Controllers\Affiliate\PpobController::class, 'pulsa'])->name('affiliate.ppob.pulsa');
     Route::post('/partner/pulsa/order', [\App\Http\Controllers\Affiliate\PpobController::class, 'orderPulsa'])->middleware('throttle:10,1')->name('affiliate.ppob.pulsa.order');
+    Route::get('/partner/paket-data', [\App\Http\Controllers\Affiliate\PpobController::class, 'paketData'])->name('affiliate.ppob.paket_data');
+    Route::post('/partner/paket-data/order', [\App\Http\Controllers\Affiliate\PpobController::class, 'orderPaketData'])->middleware('throttle:10,1')->name('affiliate.ppob.paket_data.order');
+    Route::get('/partner/token-pln', [\App\Http\Controllers\Affiliate\PpobController::class, 'pln'])->name('affiliate.ppob.pln');
+    Route::post('/partner/token-pln/order', [\App\Http\Controllers\Affiliate\PpobController::class, 'orderPln'])->middleware('throttle:10,1')->name('affiliate.ppob.pln.order');
+    Route::get('/partner/topup-game', [\App\Http\Controllers\Affiliate\PpobController::class, 'games'])->name('affiliate.ppob.games');
+    Route::get('/partner/topup-game/{slug}', [\App\Http\Controllers\Affiliate\PpobController::class, 'game'])->name('affiliate.ppob.game');
+    Route::post('/partner/topup-game/{slug}/order', [\App\Http\Controllers\Affiliate\PpobController::class, 'orderGame'])->middleware('throttle:10,1')->name('affiliate.ppob.game.order');
     Route::get('/partner/ppob/orders/{orderNo}', [\App\Http\Controllers\Affiliate\PpobController::class, 'showOrder'])->name('affiliate.ppob.orders.show');
 
     // Smart Google Review Cards (Partner Reseller Hub)

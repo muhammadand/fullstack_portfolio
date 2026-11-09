@@ -15,7 +15,9 @@
 
 return [
     'categories' => [
-        'pulsa' => 'pulsa',
+        'pulsa'      => 'pulsa',
+        'paket_data' => 'data', // kategori Digiflazz "Data"
+        'pln'        => 'pln',  // token listrik prabayar
     ],
 
     'operators' => [

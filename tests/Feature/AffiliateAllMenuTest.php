@@ -55,9 +55,10 @@ class AffiliateAllMenuTest extends TestCase
             }
         }
 
-        // Paket Data & PLN belum punya halaman: tampil "Segera" dan tidak bisa diklik.
-        $response->assertSee('Segera');
-        $response->assertSee('aria-disabled="true" title="Paket Data segera hadir" data-menu-key="paket_data"', false);
+        // Semua produk digital sudah aktif: Pulsa, Paket Data, Token PLN, Top Up Game.
+        foreach (['affiliate.ppob.pulsa', 'affiliate.ppob.paket_data', 'affiliate.ppob.pln', 'affiliate.ppob.games'] as $name) {
+            $response->assertSee(route($name), false);
+        }
         $response->assertSee(route('affiliate.proposals'), false);
     }
 

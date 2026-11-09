@@ -72,15 +72,16 @@ class AffiliateMenu
             [
                 'key' => 'ppob',
                 'title' => 'Produk Digital',
-                'description' => 'Produk digital, pulsa, paket data & token listrik.',
+                'description' => 'Produk digital, pulsa, paket data, token listrik & top up game.',
                 'icon' => 'fa-solid fa-bolt',
                 'iconColor' => 'text-amber-400',
                 'border' => 'border-amber-500',
                 'items' => [
                     self::item('digital_products', 'Produk', 'Digital', 'fa-solid fa-cubes-stacked', 'text-amber-400', 'group-hover:bg-amber-500/10 group-hover:border-amber-500/30', route: 'affiliate.digital_products.index', badge: '10%', badgeClass: 'bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold shadow-md shadow-amber-500/40'),
                     self::item('pulsa', 'Pulsa', '', 'fa-solid fa-mobile-screen-button', 'text-green-400', 'group-hover:bg-green-500/10 group-hover:border-green-500/30', route: 'affiliate.ppob.pulsa', badge: 'Baru', badgeClass: 'bg-green-500 text-white font-semibold'),
-                    self::item('paket_data', 'Paket', 'Data', 'fa-solid fa-wifi', 'text-violet-400', '', soon: true),
-                    self::item('pln', 'Token', 'PLN', 'fa-solid fa-bolt', 'text-yellow-400', '', soon: true),
+                    self::item('paket_data', 'Paket', 'Data', 'fa-solid fa-wifi', 'text-violet-400', 'group-hover:bg-violet-500/10 group-hover:border-violet-500/30', route: 'affiliate.ppob.paket_data', badge: 'Baru', badgeClass: 'bg-violet-500 text-white font-semibold'),
+                    self::item('pln', 'Token', 'PLN', 'fa-solid fa-bolt', 'text-yellow-400', 'group-hover:bg-yellow-500/10 group-hover:border-yellow-500/30', route: 'affiliate.ppob.pln', badge: 'Baru', badgeClass: 'bg-yellow-500 text-slate-900 font-semibold'),
+                    self::item('topup_game', 'Top Up', 'Game', 'fa-solid fa-gamepad', 'text-indigo-400', 'group-hover:bg-indigo-500/10 group-hover:border-indigo-500/30', route: 'affiliate.ppob.games', badge: 'Baru', badgeClass: 'bg-indigo-500 text-white font-semibold'),
                 ],
             ],
             [

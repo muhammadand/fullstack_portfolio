@@ -42,7 +42,7 @@ class PpobCatalogService
             ->orderBy('display_order')
             ->orderBy('name')
             ->with(['products' => fn ($q) => $q->sellable()
-                ->select(['id', 'digital_product_brand_id', 'name', 'cost_price', 'start_cut_off', 'end_cut_off'])
+                ->select(['id', 'digital_product_brand_id', 'name', 'description', 'cost_price', 'start_cut_off', 'end_cut_off'])
                 ->with('priceOverrides:id,digital_product_id,price_level_id,selling_price')])
             ->get(['id', 'digital_product_category_id', 'name', 'slug', 'image']);
 
@@ -62,6 +62,8 @@ class PpobCatalogService
                     return [
                         'id' => $p->id,
                         'name' => self::shortName($p->name, $brand->name),
+                        // Paket data: deskripsi supplier (kuota, masa aktif) membantu partner memilih.
+                        'description' => $p->description ? trim(strip_tags($p->description)) : null,
                         'price' => $price,
                         'retail_price' => $retailPrice,
                         'profit' => max(0, $retailPrice - $price),
@@ -104,6 +106,56 @@ class PpobCatalogService
                 ->whereHas('category', fn ($c) => $c->where('slug', $slug)->where('is_active', true)))
             ->with(['brand:id,name', 'priceOverrides:id,digital_product_id,price_level_id,selling_price'])
             ->first();
+    }
+
+    /**
+     * Satu game (kategori "games") dengan harga partner + form ID akun (config/topup_games.php).
+     *
+     * @return array{brand: array{name: string, slug: string, image: ?string}, form: array, products: array<int, array>}|null
+     */
+    public static function game(string $slug, Affiliate $affiliate): ?array
+    {
+        $brand = \App\Models\DigitalProductBrand::where('slug', $slug)
+            ->where('is_active', true)
+            ->whereHas('category', fn ($q) => $q->where('slug', TopupCatalogService::CATEGORY_SLUG)->where('is_active', true))
+            ->first(['id', 'name', 'slug', 'image']);
+
+        if (!$brand) {
+            return null;
+        }
+
+        $level = self::levelFor($affiliate);
+        $retail = PriceLevel::retail();
+
+        $products = DigitalProduct::sellable()
+            ->where('digital_product_brand_id', $brand->id)
+            ->with('priceOverrides:id,digital_product_id,price_level_id,selling_price')
+            ->get(['id', 'name', 'cost_price', 'start_cut_off', 'end_cut_off'])
+            ->map(function (DigitalProduct $p) use ($level, $retail) {
+                $price = $level ? $p->priceFor($level) : (float) $p->cost_price;
+                $retailPrice = $retail ? $p->priceFor($retail) : $price;
+
+                return [
+                    'id' => $p->id,
+                    'name' => $p->name,
+                    'price' => $price,
+                    'retail_price' => $retailPrice,
+                    'profit' => max(0, $retailPrice - $price),
+                    'available' => !$p->isInCutOff() && $price > 0,
+                ];
+            })
+            ->sortBy('price')->values()->all();
+
+        if (!$products) {
+            return null;
+        }
+
+        return [
+            'brand' => ['name' => $brand->name, 'slug' => $brand->slug, 'image' => $brand->image],
+            'form' => TopupCatalogService::formFor($brand->name),
+            'products' => $products,
+            'level' => ['name' => $level?->name ?? 'Partner'],
+        ];
     }
 
     /** Level harga partner: milik affiliate, fallback ke level "partner", lalu retail. */

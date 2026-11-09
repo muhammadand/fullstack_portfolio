@@ -52,7 +52,7 @@ class TopupOrderStatusMail extends Mailable
             : '';
 
         $cta = match (true) {
-            $wallet             => ['cta_url' => route('affiliate.ppob.pulsa'), 'cta_label' => 'Beli Lagi'],
+            $wallet             => ['cta_url' => route(\App\Http\Controllers\Affiliate\PpobController::typeForSource($order->source)['route']), 'cta_label' => 'Beli Lagi'],
             (bool) $order->refunded_at => ['cta_url' => route('customer.account'), 'cta_label' => 'Lihat Saldo'],
             default             => ['cta_url' => route('topup.index'), 'cta_label' => 'Top Up Lagi'],
         };
