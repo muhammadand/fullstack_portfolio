@@ -89,6 +89,11 @@ class AdminMenu
 'route' => 'admin.customer_withdrawals.index',
 'icon' => 'fa-solid fa-money-bill-transfer',
 ],
+[
+'label' => 'Payment Gateway',
+'route' => 'admin.payment_gateway.index',
+'icon' => 'fa-solid fa-qrcode',
+],
 ],
 ],
 [

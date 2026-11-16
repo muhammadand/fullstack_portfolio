@@ -178,6 +178,10 @@ Route::prefix('admin/orders')->name('admin.orders.')->middleware('auth')->group(
 Route::redirect('admin/topup-orders', '/admin/orders?source=topup_game', 301);
 Route::get('admin/topup-orders/{order}', fn (int $order) => redirect()->route('admin.orders.show', $order, 301))->whereNumber('order');
 
+// Payment gateway (Scalify Pay): mode sandbox / production
+Route::get('admin/payment-gateway', [App\Http\Controllers\Admin\PaymentGatewayController::class, 'index'])->name('admin.payment_gateway.index')->middleware('auth');
+Route::post('admin/payment-gateway/mode', [App\Http\Controllers\Admin\PaymentGatewayController::class, 'updateMode'])->name('admin.payment_gateway.mode')->middleware(['auth', 'throttle:10,1']);
+
 // Halaman Menu admin (tab "Menu" di bottom nav HP)
 Route::view('admin/menu', 'admin.menu')->name('admin.menu')->middleware('auth');
 

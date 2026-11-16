@@ -7,10 +7,6 @@ use Illuminate\Support\Facades\Log;
 
 class QrisPaymentService
 {
-    /**
-     * Default Fallback API Key provided for Scalify Pay
-     */
-    protected const DEFAULT_API_KEY = 'pk_live_demo1234_sk_live_demo_store_secret_99887766';
     protected const DEFAULT_URL = 'http://pay.scalifyintellegence.my.id/api/v1/qris/dynamic';
 
     /**
@@ -29,11 +25,8 @@ class QrisPaymentService
         string $provider = 'DANA'
     ): array {
         $url = config('services.qris.url', env('SCALIFY_QRIS_URL', self::DEFAULT_URL));
-        $apiKey = config('services.qris.api_key', env('SCALIFY_QRIS_API_KEY', self::DEFAULT_API_KEY));
-
-        if (empty($apiKey)) {
-            $apiKey = self::DEFAULT_API_KEY;
-        }
+        // Key mengikuti mode Scalify Pay (sandbox/production) yang dipilih admin.
+        $apiKey = ScalifyPayService::getApiKey();
 
         $payload = [
             'order_id' => $orderId,

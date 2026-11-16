@@ -252,7 +252,7 @@ class TravellController extends Controller
     protected function requestDynamicQris(Booking $booking, Customer $customer, $totalAmount): array
     {
         $url = config('services.qris.url', env('SCALIFY_QRIS_URL', 'http://pay.scalifyintellegence.my.id/api/v1/qris/dynamic'));
-        $apiKey = config('services.qris.api_key', env('SCALIFY_QRIS_API_KEY', env('QRIS_API_KEY', '')));
+        $apiKey = \App\Services\ScalifyPayService::getApiKey(); // mengikuti mode sandbox/production
         $project = config('services.qris.project', env('SCALIFY_PROJECT', ''));
 
         // Check if API key is populated
@@ -260,7 +260,7 @@ class TravellController extends Controller
             return [
                 'success' => false,
                 'status' => 'pending_config',
-                'message' => 'API Key QRIS belum dikonfigurasi di .env (SCALIFY_QRIS_API_KEY).',
+                'message' => 'API Key Scalify Pay untuk mode aktif belum dikonfigurasi di .env.',
             ];
         }
 

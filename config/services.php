@@ -37,7 +37,7 @@ return [
 
     'qris' => [
         'url' => env('SCALIFY_QRIS_URL', 'http://pay.scalifyintellegence.my.id/api/v1/qris/dynamic'),
-        'api_key' => env('SCALIFY_QRIS_API_KEY', env('QRIS_API_KEY', '')),
+        // API key QRIS mengikuti mode Scalify Pay (lihat ScalifyPayService::getApiKey()).
         'project' => env('SCALIFY_PROJECT', ''),
     ],
 
@@ -63,9 +63,23 @@ return [
         'enabled' => env('ADMIN_PUSH_ENABLED', true),
     ],
 
+    // Scalify Pay (QRIS). Mode sandbox/production dipilih admin (Admin > Payment Gateway).
+    // Key lama (SCALIFY_PAY_API_KEY / SCALIFY_QRIS_API_KEY) tetap jalan: awalan pk_test_ = sandbox, selain itu production.
     'scalify_pay' => [
-        'base_url' => env('SCALIFY_PAY_URL', 'http://pay.scalifyintellegence.my.id/api/v1'),
-        'api_key' => env('SCALIFY_PAY_API_KEY', env('SCALIFY_QRIS_API_KEY', 'pk_live_demo1234_sk_live_demo_store_secret_99887766')),
+        'mode' => env('SCALIFY_PAY_MODE'), // kosong = otomatis
+        'base_urls' => [
+            'production' => env('SCALIFY_PAY_URL') ?: 'http://pay.scalifyintellegence.my.id/api/v1',
+            'sandbox' => env('SCALIFY_PAY_SANDBOX_URL') ?: (env('SCALIFY_PAY_URL') ?: 'http://pay.scalifyintellegence.my.id/api/v1'),
+        ],
+        'api_keys' => (function () {
+            $legacy = (string) (env('SCALIFY_PAY_API_KEY') ?: env('SCALIFY_QRIS_API_KEY') ?: env('QRIS_API_KEY') ?: '');
+            $legacyIsSandbox = str_starts_with($legacy, 'pk_test');
+
+            return [
+                'production' => env('SCALIFY_PAY_PRODUCTION_API_KEY') ?: ($legacy !== '' && !$legacyIsSandbox ? $legacy : ''),
+                'sandbox' => env('SCALIFY_PAY_SANDBOX_API_KEY') ?: ($legacyIsSandbox ? $legacy : ''),
+            ];
+        })(),
     ],
 
 ];

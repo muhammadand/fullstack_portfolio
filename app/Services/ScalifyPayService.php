@@ -7,20 +7,39 @@ use Illuminate\Support\Facades\Log;
 
 class ScalifyPayService
 {
-    /**
-     * Get the base API URL for Scalify Pay.
-     */
-    public static function getBaseUrl(): string
+    public const MODE_SANDBOX = 'sandbox';
+    public const MODE_PRODUCTION = 'production';
+    public const MODE_SETTING_KEY = 'scalify_pay.mode';
+
+    /** Mode aktif: pilihan admin (app_settings) -> SCALIFY_PAY_MODE -> otomatis dari key yang tersedia. */
+    public static function mode(): string
     {
-        return rtrim(config('services.scalify_pay.base_url', env('SCALIFY_PAY_URL', 'http://pay.scalifyintellegence.my.id/api/v1')), '/');
+        $mode = \App\Models\AppSetting::get(self::MODE_SETTING_KEY) ?: config('services.scalify_pay.mode');
+
+        if (!in_array($mode, [self::MODE_SANDBOX, self::MODE_PRODUCTION], true)) {
+            $mode = self::getApiKey(self::MODE_PRODUCTION) === '' && self::getApiKey(self::MODE_SANDBOX) !== ''
+                ? self::MODE_SANDBOX
+                : self::MODE_PRODUCTION;
+        }
+
+        return $mode;
     }
 
-    /**
-     * Get the API Key for Scalify Pay.
-     */
-    public static function getApiKey(): string
+    public static function isProduction(): bool
     {
-        return config('services.scalify_pay.api_key', env('SCALIFY_PAY_API_KEY', env('SCALIFY_QRIS_API_KEY', 'pk_live_4f52fee5_sk_live_d1089cdb71d73414ba048992768a987c')));
+        return self::mode() === self::MODE_PRODUCTION;
+    }
+
+    /** Base URL untuk mode tertentu (default: mode aktif). */
+    public static function getBaseUrl(?string $mode = null): string
+    {
+        return rtrim((string) config('services.scalify_pay.base_urls.' . ($mode ?? self::mode()), ''), '/');
+    }
+
+    /** API key untuk mode tertentu (default: mode aktif). Key hanya dari .env, tidak pernah ditulis di kode. */
+    public static function getApiKey(?string $mode = null): string
+    {
+        return (string) config('services.scalify_pay.api_keys.' . ($mode ?? self::mode()), '');
     }
 
     /**
