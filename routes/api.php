@@ -22,6 +22,11 @@ Route::post('/payments/charge', function (Request $request) {
     return response()->json($result, $status);
 });
 
+// Endpoint API publik: masukkan artikel blog dari luar (AI riset konten). Tanpa kunci, dibatasi 30 request/menit per IP.
+use App\Http\Controllers\Api\BlogApiController;
+
+Route::post('/blogs', [BlogApiController::class, 'store'])->middleware('throttle:30,1')->name('api.blogs.store');
+
 // Endpoint API untuk Bulk Insert Student Leads
 use App\Http\Controllers\Api\StudentLeadApiController;
 

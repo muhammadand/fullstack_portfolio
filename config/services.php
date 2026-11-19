@@ -82,4 +82,9 @@ return [
         })(),
     ],
 
+    // API publik artikel blog (POST /api/blogs): user yang dicatat sebagai penulis. Kosong = user pertama.
+    'blog_api' => [
+        'author_id' => env('BLOG_API_AUTHOR_ID'),
+    ],
+
 ];
