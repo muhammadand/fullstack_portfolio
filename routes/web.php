@@ -21,88 +21,13 @@ use App\Models\Portfolio;
 use App\Models\Career;
 use App\Http\Controllers\CvServiceController;
 
+// Sitemap ditulis ulang otomatis saat blog/portfolio/lowongan berubah (App\Support\SitemapBuilder).
+// Route ini tetap ada untuk menulis ulang secara manual bila perlu; dibatasi agar tidak bisa dibanjiri.
 Route::get('/generate-sitemap', function () {
-    $sitemap = Sitemap::create();
-
-    // 1. Halaman Utama
-    $sitemap->add(Url::create('/')
-        ->setLastModificationDate(now())
-        ->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY)
-        ->setPriority(1.0));
-
-    // 2. Halaman Statis / Publik Utama
-    $sitemap->add(Url::create('/service')
-        ->setLastModificationDate(now())
-        ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
-        ->setPriority(0.8));
-
-    $sitemap->add(Url::create('/about')
-        ->setLastModificationDate(now())
-        ->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY)
-        ->setPriority(0.7));
-
-    $sitemap->add(Url::create('/contact')
-        ->setLastModificationDate(now())
-        ->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY)
-        ->setPriority(0.7));
-
-    $sitemap->add(Url::create('/layanan/scm')
-        ->setLastModificationDate(now())
-        ->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY)
-        ->setPriority(0.8));
-
-    $sitemap->add(Url::create('/layanan/template-cv')
-        ->setLastModificationDate(now())
-        ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
-        ->setPriority(0.9));
-
-    // 3. Halaman Indeks Dinamis
-    $sitemap->add(Url::create('/s/blogs')
-        ->setLastModificationDate(now())
-        ->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY)
-        ->setPriority(0.9));
-
-    $sitemap->add(Url::create('/s/portfolio')
-        ->setLastModificationDate(now())
-        ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
-        ->setPriority(0.9));
-
-    $sitemap->add(Url::create('/s/careers')
-        ->setLastModificationDate(now())
-        ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
-        ->setPriority(0.8));
-
-    // 4. Artikel Blog Dinamis
-    $blogs = Blog::published()->get();
-    foreach ($blogs as $blog) {
-        $sitemap->add(Url::create("/s/blog/{$blog->slug}")
-            ->setLastModificationDate($blog->updated_at ?? now())
-            ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
-            ->setPriority(0.8));
-    }
-
-    // 5. Item Portofolio Dinamis
-    $portfolios = Portfolio::active()->get();
-    foreach ($portfolios as $portfolio) {
-        $sitemap->add(Url::create("/s/portfolio/{$portfolio->slug}")
-            ->setLastModificationDate($portfolio->updated_at ?? now())
-            ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
-            ->setPriority(0.8));
-    }
-
-    // 6. Lowongan Karir Dinamis
-    $careers = Career::where('is_active', 1)->get();
-    foreach ($careers as $career) {
-        $sitemap->add(Url::create("/s/careers/{$career->slug}")
-            ->setLastModificationDate($career->updated_at ?? now())
-            ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
-            ->setPriority(0.7));
-    }
-
-    $sitemap->writeToFile(public_path('sitemap.xml'));
+    \App\Support\SitemapBuilder::write();
 
     return 'Sitemap dinamis berhasil dibuat!';
-});
+})->middleware('throttle:5,1');
 
 
 //administrator
@@ -717,6 +642,10 @@ Route::get('/secret-deploy-trigger-12345', function () {
         \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'ScheduleSeeder', '--force' => true]);
 
         \Illuminate\Support\Facades\Artisan::call('optimize:clear');
+
+        // Segarkan sitemap setiap deploy (file ini dikecualikan dari upload FTP).
+        \App\Support\SitemapBuilder::regenerateQuietly();
+
         return "Deploy commands executed successfully!";
     } catch (\Exception $e) {
         return "Error: " . $e->getMessage();

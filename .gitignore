@@ -21,3 +21,6 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+
+# Ditulis otomatis oleh App\Support\SitemapBuilder (dikecualikan juga dari deploy FTP)
+/public/sitemap.xml

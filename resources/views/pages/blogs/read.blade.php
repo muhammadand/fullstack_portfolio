@@ -33,34 +33,7 @@ $tagsString = is_array($blog->tags) ? implode(', ', $blog->tags) : $blog->tags;
 <meta name="twitter:image" content="{{ $blog->featured_image ? asset('storage/' . $blog->featured_image) : asset('og-image.png') }}" />
 
 {{-- Schema.org JSON-LD (Rahasia Google Rich Results) --}}
-<script type="application/ld+json">
-    {
-        "@@context": "https://schema.org"
-        , "@@type": "BlogPosting"
-        , "mainEntityOfPage": {
-            "@@type": "WebPage"
-            , "@@id": "{{ url()->current() }}"
-        }
-        , "headline": "{{ $blog->meta_title ?? $blog->title }}"
-        , "description": "{{ $blog->meta_description ?? $blog->excerpt ?? Str::limit(strip_tags($blog->content), 150) }}"
-        , "image": "{{ $blog->featured_image ? asset('storage/' . $blog->featured_image) : asset('og-image.png') }}"
-        , "author": {
-            "@@type": "Person"
-            , "name": "{{ $blog->author->name ?? 'Admin Scalify' }}"
-        }
-        , "publisher": {
-            "@@type": "Organization"
-            , "name": "Scalify Intelligence"
-            , "logo": {
-                "@@type": "ImageObject"
-                , "url": "{{ asset('logo.png') }}"
-            }
-        }
-        , "datePublished": "{{ $blog->published_at ? $blog->published_at->toIso8601String() : $blog->created_at->toIso8601String() }}"
-        , "dateModified": "{{ $blog->updated_at->toIso8601String() }}"
-    }
-
-</script>
+<script type="application/ld+json">{!! json_encode($blog->jsonLd(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP) !!}</script>
 @endsection
 
 @push('styles')

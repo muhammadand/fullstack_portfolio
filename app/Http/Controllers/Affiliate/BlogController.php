@@ -82,7 +82,7 @@ class BlogController extends Controller
 
         $blog = new Blog();
         $blog->title = $request->title;
-        $blog->slug = Str::slug($request->title) . '-' . time();
+        $blog->slug = Blog::uniqueSlug($request->title); // URL bersih tanpa angka timestamp
         $blog->content = $request->content;
         $blog->excerpt = Str::limit(strip_tags($request->content), 150);
         $blog->featured_image = $imagePath;

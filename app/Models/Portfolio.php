@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\RegeneratesSitemap;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Validation\Rule;
 
 class Portfolio extends Model
 {
-    use HasFactory;
+    use HasFactory, RegeneratesSitemap;
 
     protected $table = 'portfolios';
 

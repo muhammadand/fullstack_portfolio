@@ -123,7 +123,7 @@ class BlogApiController extends Controller
             'category_id'      => $category->id,
             'author_id'        => $authorId,
             'title'            => $title,
-            'slug'             => $this->uniqueSlug($title),
+            'slug'             => Blog::uniqueSlug($title),
             'excerpt'          => Str::limit(trim($data['excerpt'] ?? '') ?: $plain, 250),
             'content'          => $html,
             'tags'             => $this->tags($data['tags'] ?? null),
@@ -161,20 +161,6 @@ class BlogApiController extends Controller
             // Dua request bersamaan membuat kategori yang sama: pakai yang sudah tersimpan.
             return [BlogCategory::where('slug', $slug)->firstOrFail(), false];
         }
-    }
-
-    private function uniqueSlug(string $title): string
-    {
-        $base = Str::limit(Str::slug($title) ?: 'artikel', 180, '');
-        $slug = $base;
-        $i = 2;
-
-        while (Blog::where('slug', $slug)->exists()) {
-            $slug = "{$base}-{$i}";
-            $i++;
-        }
-
-        return $slug;
     }
 
     /** tags: array ["a","b"] atau string "a, b" -> array unik. */

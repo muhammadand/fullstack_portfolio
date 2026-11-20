@@ -62,7 +62,8 @@ class BlogController extends Controller
             $validated['featured_image'] = $request->file('featured_image')->store('blog_images', 'public');
         }
 
-        $validated['slug'] = Str::slug($validated['title']);
+        // Slug unik: judul sama tidak lagi bikin error karena slug bentrok.
+        $validated['slug'] = Blog::uniqueSlug($validated['title']);
         $validated['published_at'] = $validated['is_published'] ? now() : null;
 
         Blog::create($validated);
@@ -103,7 +104,7 @@ class BlogController extends Controller
             $validated['featured_image'] = null;
         }
 
-        $validated['slug'] = Str::slug($validated['title']);
+        // Slug TIDAK diubah saat edit: URL lama yang sudah diindex Google / dibagikan harus tetap jalan.
         // Pertahankan tanggal terbit asli; hanya diisi saat pertama kali dipublish
         $validated['published_at'] = $validated['is_published'] ? ($blog->published_at ?? now()) : null;
 

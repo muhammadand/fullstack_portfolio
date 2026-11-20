@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\RegeneratesSitemap;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Str;
 
 class Blog extends Model
 {
-    use HasFactory;
+    use HasFactory, RegeneratesSitemap;
 
     protected $table = 'blogs';
     protected $primaryKey = 'id';
@@ -102,7 +103,7 @@ class Blog extends Model
 
         static::creating(function ($blog) {
             if (empty($blog->slug)) {
-                $blog->slug = Str::slug($blog->title);
+                $blog->slug = static::uniqueSlug($blog->title);
             }
         });
 
@@ -153,5 +154,52 @@ class Blog extends Model
         }
 
         return Str::limit(strip_tags($this->content), 150);
+    }
+
+    /**
+     * Slug unik dari judul: "judul", lalu "judul-2", "judul-3", ...
+     * Slug hanya dibuat sekali saat artikel dibuat. Setelah itu tidak diubah lagi walau judul diedit,
+     * karena URL yang sudah diindex Google / dibagikan akan 404 bila slug berganti.
+     */
+    public static function uniqueSlug(string $title, ?int $ignoreId = null): string
+    {
+        $base = Str::limit(Str::slug($title) ?: 'artikel', 180, '');
+        $slug = $base;
+        $i = 2;
+
+        while (static::where('slug', $slug)->when($ignoreId, fn ($q) => $q->whereKeyNot($ignoreId))->exists()) {
+            $slug = "{$base}-{$i}";
+            $i++;
+        }
+
+        return $slug;
+    }
+
+    /** Data terstruktur schema.org BlogPosting untuk rich result Google (dipakai di halaman baca). */
+    public function jsonLd(): array
+    {
+        $url = route('blogs.read', $this->slug);
+        $description = $this->meta_description ?: $this->excerpt;
+
+        return array_filter([
+            '@context'         => 'https://schema.org',
+            '@type'            => 'BlogPosting',
+            'mainEntityOfPage' => ['@type' => 'WebPage', '@id' => $url],
+            'url'              => $url,
+            'headline'         => Str::limit($this->title, 110, ''),
+            'description'      => $description ? Str::limit(trim(strip_tags($description)), 300) : null,
+            'image'            => [$this->featured_image ? asset('storage/' . $this->featured_image) : asset('og-image.png')],
+            'author'           => ['@type' => 'Person', 'name' => $this->author->name ?? 'Scalify Intelligence'],
+            'publisher'        => [
+                '@type' => 'Organization',
+                'name'  => 'Scalify Intelligence',
+                'logo'  => ['@type' => 'ImageObject', 'url' => asset('scalify.png')],
+            ],
+            'articleSection'   => $this->category->name ?? null,
+            'keywords'         => $this->tags ? implode(', ', $this->tags) : null,
+            'wordCount'        => str_word_count(strip_tags((string) $this->content)) ?: null,
+            'datePublished'    => ($this->published_at ?? $this->created_at)?->toIso8601String(),
+            'dateModified'     => ($this->updated_at ?? $this->published_at)?->toIso8601String(),
+        ], fn ($v) => $v !== null);
     }
 }

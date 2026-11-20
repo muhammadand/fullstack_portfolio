@@ -87,4 +87,9 @@ return [
         'author_id' => env('BLOG_API_AUTHOR_ID'),
     ],
 
+    // Lokasi file sitemap.xml (default public/sitemap.xml). Test memakai file sementara.
+    'sitemap' => [
+        'path' => env('SITEMAP_PATH'),
+    ],
+
 ];

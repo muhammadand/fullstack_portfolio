@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\RegeneratesSitemap;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Career extends Model
 {
-    use HasFactory;
+    use HasFactory, RegeneratesSitemap;
 
     // Menentukan nama tabel secara eksplisit
     protected $table = 'careers';
