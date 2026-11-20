@@ -152,4 +152,65 @@ class BlogSeoTest extends TestCase
         $this->assertFileExists(public_path('scalify.png'));
         $this->assertSame('SEO, UMKM', $data['keywords']);
     }
+
+    public function test_every_public_page_outputs_valid_json_ld(): void
+    {
+        $blog = $this->makeBlog(['title' => 'Judul "Kutip" & <Tag> ' . uniqid()]);
+        $paths = ['/', '/layanan/scm', '/layanan/template-cv', '/s/blogs', '/s/portfolio', '/s/careers',
+            '/travell', '/google-review-card', '/top-up-game', route('blogs.read', $blog->slug, false)];
+        if ($portfolio = \App\Models\Portfolio::active()->first()) {
+            $paths[] = "/s/portfolio/{$portfolio->slug}";
+        }
+
+        foreach ($paths as $path) {
+            $html = $this->get($path)->assertOk()->getContent();
+            $this->assertStringNotContainsString('json_encode(', $html, "Kode Blade bocor ke HTML di {$path}");
+
+            preg_match_all('#<script[^>]*application/ld\+json[^>]*>(.*?)</script>#si', $html, $m);
+            foreach ($m[1] as $i => $json) {
+                json_decode($json);
+                $this->assertSame(JSON_ERROR_NONE, json_last_error(), "JSON-LD #{$i} rusak di {$path}: " . json_last_error_msg());
+            }
+        }
+    }
+
+    /**
+     * Formatter editor pernah memecah "{!! ... !!}" jadi "{" + "!!...!!" + "}" sehingga Blade
+     * mencetak kodenya mentah (JSON-LD rusak di Search Console). Test ini menangkapnya lebih awal.
+     */
+    public function test_no_blade_echo_tags_are_split_by_a_formatter(): void
+    {
+        $broken = [];
+        foreach (File::allFiles(resource_path('views')) as $file) {
+            if (!str_ends_with($file->getFilename(), '.blade.php')) {
+                continue;
+            }
+            foreach (file($file->getPathname()) as $n => $line) {
+                if (preg_match('/^\s*!!\s*\S|\S\s*!!\s*$/', $line) && !str_contains($line, '{!!') && !str_contains($line, '!!}')) {
+                    $broken[] = $file->getRelativePathname() . ':' . ($n + 1) . '  ' . trim($line);
+                }
+            }
+        }
+
+        $this->assertSame([], $broken, "Tag Blade terpecah:\n" . implode("\n", $broken));
+    }
+
+    public function test_blog_views_and_daily_views_are_counted_with_upsert(): void
+    {
+        // Satu request per test: callback "afterResponse" menumpuk di instance app yang sama bila
+        // ada beberapa request dalam satu test (di server tiap request = proses baru).
+        $blog = $this->makeBlog();
+        Blog::whereKey($blog->id)->update(['view_count' => 5]);
+        \App\Models\DailyView::create([
+            'viewable_type' => Blog::class, 'viewable_id' => $blog->id,
+            'date' => now()->toDateString(), 'views_count' => 5,
+        ]);
+
+        $this->get(route('blogs.read', $blog->slug))->assertOk();
+
+        $this->assertSame(6, $blog->fresh()->view_count);
+        $daily = \App\Models\DailyView::where('viewable_type', Blog::class)->where('viewable_id', $blog->id)->get();
+        $this->assertCount(1, $daily, 'upsert harus menambah baris yang sama, bukan membuat baris baru');
+        $this->assertSame(6, (int) $daily->first()->views_count);
+    }
 }

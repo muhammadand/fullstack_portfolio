@@ -1,7 +1,5 @@
 <script id="dbSchedulesData" type="application/json">
-    {
-        !!json_encode($dbSchedulesList ? ? []) !!
-    }
+    @json($dbSchedulesList ?? [])
 
 </script>
 

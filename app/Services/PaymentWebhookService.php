@@ -152,7 +152,7 @@ class PaymentWebhookService
      */
     public function verifySignature(?string $orderNumber, ?string $statusCode, $grossAmount, ?string $signatureKey): bool
     {
-        $serverKey = config('services.midtrans.server_key', env('MIDTRANS_SERVER_KEY'));
+        $serverKey = config('services.midtrans.server_key');
 
         // Jika server key atau parameter verifikasi tidak ada, lewati validasi (kompatibel dev/gateway non-midtrans)
         if (empty($serverKey) || empty($signatureKey) || empty($statusCode) || empty($grossAmount)) {

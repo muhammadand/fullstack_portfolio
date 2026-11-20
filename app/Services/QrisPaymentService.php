@@ -24,7 +24,7 @@ class QrisPaymentService
         array $customer = [],
         string $provider = 'DANA'
     ): array {
-        $url = config('services.qris.url', env('SCALIFY_QRIS_URL', self::DEFAULT_URL));
+        $url = config('services.qris.url') ?: self::DEFAULT_URL;
         // Key mengikuti mode Scalify Pay (sandbox/production) yang dipilih admin.
         $apiKey = ScalifyPayService::getApiKey();
 

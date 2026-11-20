@@ -92,4 +92,12 @@ return [
         'path' => env('SITEMAP_PATH'),
     ],
 
+    // Midtrans: server key untuk verifikasi signature webhook (kosong = verifikasi dilewati).
+    'midtrans' => [
+        'server_key' => env('MIDTRANS_SERVER_KEY'),
+    ],
+
+    // Link grup WhatsApp komunitas partner (banner dashboard affiliate).
+    'partner_group_url' => env('SCALIFY_PARTNER_GROUP_URL', 'https://chat.whatsapp.com/H3W4qaoRvBJ0s2jpVi7OB9?s=cl&p=i&mlu=4&ilr=4&iam=2'),
+
 ];

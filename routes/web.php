@@ -643,6 +643,17 @@ Route::get('/secret-deploy-trigger-12345', function () {
 
         \Illuminate\Support\Facades\Artisan::call('optimize:clear');
 
+        // Cache ulang config, route, dan view supaya tiap request tidak membaca ulang semua file dari nol
+        // (lebih cepat untuk pengunjung & Googlebot). Catatan: setelah mengubah .env di server, jalankan
+        // webhook ini lagi agar cache config ikut diperbarui. Gagal cache tidak boleh menggagalkan deploy.
+        foreach (['config:cache', 'route:cache', 'view:cache'] as $cacheCommand) {
+            try {
+                \Illuminate\Support\Facades\Artisan::call($cacheCommand);
+            } catch (\Throwable $cacheError) {
+                \Illuminate\Support\Facades\Log::warning("Deploy: {$cacheCommand} gagal: " . $cacheError->getMessage());
+            }
+        }
+
         // Segarkan sitemap setiap deploy (file ini dikecualikan dari upload FTP).
         \App\Support\SitemapBuilder::regenerateQuietly();
 

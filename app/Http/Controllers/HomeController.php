@@ -90,18 +90,26 @@ class HomeController extends Controller
             ->with(['author', 'category'])
             ->firstOrFail();
 
-        // Tambah view count
-        $blog->increment('view_count');
+        // Hitung view SETELAH halaman terkirim ke browser, supaya pengunjung (dan Googlebot) tidak menunggu
+        // query tulis. Hanya 2 query: update langsung (tanpa event model) + upsert harian.
+        $blogId = $blog->id;
+        dispatch(function () use ($blogId) {
+            Blog::whereKey($blogId)->increment('view_count');
 
-        // Tambah view count harian
-        $dailyView = DailyView::firstOrCreate(
-            [
-                'viewable_type' => Blog::class,
-                'viewable_id' => $blog->id,
-                'date' => now()->toDateString(),
-            ]
-        );
-        $dailyView->increment('views_count');
+            $now = now();
+            DailyView::upsert(
+                [[
+                    'viewable_type' => Blog::class,
+                    'viewable_id'   => $blogId,
+                    'date'          => $now->toDateString(),
+                    'views_count'   => 1,
+                    'created_at'    => $now,
+                    'updated_at'    => $now,
+                ]],
+                ['viewable_type', 'viewable_id', 'date'],
+                ['views_count' => \Illuminate\Support\Facades\DB::raw('views_count + 1'), 'updated_at' => $now]
+            );
+        })->afterResponse();
 
         // Ambil artikel lain untuk rekomendasi
         $related = Blog::published()

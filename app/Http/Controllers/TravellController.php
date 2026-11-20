@@ -251,9 +251,9 @@ class TravellController extends Controller
      */
     protected function requestDynamicQris(Booking $booking, Customer $customer, $totalAmount): array
     {
-        $url = config('services.qris.url', env('SCALIFY_QRIS_URL', 'http://pay.scalifyintellegence.my.id/api/v1/qris/dynamic'));
+        $url = config('services.qris.url');
         $apiKey = \App\Services\ScalifyPayService::getApiKey(); // mengikuti mode sandbox/production
-        $project = config('services.qris.project', env('SCALIFY_PROJECT', ''));
+        $project = config('services.qris.project', '');
 
         // Check if API key is populated
         if (empty($apiKey)) {

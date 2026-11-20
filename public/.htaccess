@@ -32,8 +32,16 @@
 # Browser Caching
 <IfModule mod_expires.c>
     ExpiresActive On
-    ExpiresDefault "access plus 1 year"
-    
+    # Default pendek: hanya aset statis (di bawah) yang boleh disimpan browser lama.
+    ExpiresDefault "access plus 1 hour"
+
+    # Halaman HTML, sitemap, dan JSON TIDAK boleh disimpan lama: artikel baru harus langsung terlihat,
+    # view artikel harus tetap tercatat di server, dan Google harus selalu dapat sitemap terbaru.
+    ExpiresByType text/html "access plus 0 seconds"
+    ExpiresByType application/xml "access plus 0 seconds"
+    ExpiresByType text/xml "access plus 0 seconds"
+    ExpiresByType application/json "access plus 0 seconds"
+
     # Images
     ExpiresByType image/jpeg "access plus 1 year"
     ExpiresByType image/png "access plus 1 year"

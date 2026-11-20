@@ -1,7 +1,7 @@
 @props(['affiliate'])
 
 @php
-$groupUrl = env('SCALIFY_PARTNER_GROUP_URL', 'https://chat.whatsapp.com/H3W4qaoRvBJ0s2jpVi7OB9?s=cl&p=i&mlu=4&ilr=4&iam=2');
+$groupUrl = config('services.partner_group_url');
 @endphp
 
 <!-- Sleek Compact VIP Community Bar (Mobile Friendly) -->

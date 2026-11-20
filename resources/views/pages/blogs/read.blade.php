@@ -33,7 +33,7 @@ $tagsString = is_array($blog->tags) ? implode(', ', $blog->tags) : $blog->tags;
 <meta name="twitter:image" content="{{ $blog->featured_image ? asset('storage/' . $blog->featured_image) : asset('og-image.png') }}" />
 
 {{-- Schema.org JSON-LD (Rahasia Google Rich Results) --}}
-<script type="application/ld+json">{!! json_encode($blog->jsonLd(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP) !!}</script>
+<script type="application/ld+json">@json($blog->jsonLd())</script>
 @endsection
 
 @push('styles')
