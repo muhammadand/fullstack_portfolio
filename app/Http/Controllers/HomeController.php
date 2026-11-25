@@ -77,7 +77,10 @@ class HomeController extends Controller
             ->orderBy('display_order')
             ->get();
 
-        return view('pages.blogs.index', compact('blogs', 'popular', 'categories', 'search', 'categorySlug'));
+        // Topik populer (tag dengan >= 2 artikel): tautan internal ke halaman tag, bagus untuk SEO & navigasi.
+        $popularTags = \App\Support\BlogTags::popular(12);
+
+        return view('pages.blogs.index', compact('blogs', 'popular', 'categories', 'search', 'categorySlug', 'popularTags'));
     }
 
 
@@ -111,15 +114,117 @@ class HomeController extends Controller
             );
         })->afterResponse();
 
-        // Ambil artikel lain untuk rekomendasi
-        $related = Blog::published()
-            ->where('category_id', $blog->category_id)
-            ->where('id', '!=', $blog->id)
-            ->latest('published_at')
-            ->take(3)
-            ->get();
+        $related = $this->relatedBlogs($blog);
 
         return view('pages.blogs.read', compact('blog', 'related'));
+    }
+
+    /**
+     * Halaman topik/tag: /s/blogs/tag/{tag}. Semua artikel dengan tag yang sama + meta SEO sendiri.
+     * Slug tidak baku (huruf besar, spasi, "#") diarahkan 301 ke slug baku agar tidak ada URL ganda.
+     */
+    public function blogTag(Request $request, string $tag)
+    {
+        $slug = \App\Support\BlogTags::slug(urldecode($tag));
+        $info = $slug !== '' ? \App\Support\BlogTags::find($slug) : null;
+        abort_if($info === null, 404);
+
+        if ($tag !== $info['slug']) {
+            return redirect()->route('blogs.tag', array_filter(['tag' => $info['slug'], 'page' => $request->query('page')]), 301);
+        }
+
+        $blogs = Blog::published()
+            ->whereIn('id', $info['blog_ids'])
+            ->with('category')
+            ->latest('published_at')
+            ->paginate(9)
+            ->withQueryString();
+
+        abort_if($blogs->isEmpty() && $blogs->currentPage() > 1, 404);
+
+        $name = $info['name'];
+        $pageSuffix = $blogs->currentPage() > 1 ? " — Halaman {$blogs->currentPage()}" : '';
+        $canonical = $blogs->currentPage() > 1 ? $blogs->url($blogs->currentPage()) : route('blogs.tag', $info['slug']);
+        $latestTitles = $blogs->getCollection()->take(3)->pluck('title')->implode('; ');
+
+        $seo = [
+            'title'       => "#{$name}: {$info['count']} Artikel & Panduan tentang {$name}{$pageSuffix}",
+            'description' => \Illuminate\Support\Str::limit("Kumpulan {$info['count']} artikel tentang {$name} dari Scalify Intelligence. Terbaru: {$latestTitles}", 158),
+            'canonical'   => $canonical,
+            'robots'      => \App\Support\BlogTags::isIndexable($info) ? 'index, follow, max-image-preview:large' : 'noindex, follow',
+        ];
+
+        $schema = [
+            '@context' => 'https://schema.org',
+            '@graph'   => [
+                [
+                    '@type'       => 'CollectionPage',
+                    'name'        => $seo['title'],
+                    'url'         => $canonical,
+                    'description' => $seo['description'],
+                    'about'       => ['@type' => 'Thing', 'name' => $name],
+                    'isPartOf'    => ['@type' => 'Blog', 'name' => 'Blog Scalify Intelligence', 'url' => route('landing.blogs')],
+                    'mainEntity'  => [
+                        '@type'           => 'ItemList',
+                        'numberOfItems'   => $info['count'],
+                        'itemListElement' => $blogs->getCollection()->values()->map(fn ($b, $i) => [
+                            '@type'    => 'ListItem',
+                            'position' => ($blogs->firstItem() ?? 1) + $i,
+                            'url'      => route('blogs.read', $b->slug),
+                            'name'     => $b->title,
+                        ])->all(),
+                    ],
+                ],
+                [
+                    '@type'           => 'BreadcrumbList',
+                    'itemListElement' => [
+                        ['@type' => 'ListItem', 'position' => 1, 'name' => 'Beranda', 'item' => url('/')],
+                        ['@type' => 'ListItem', 'position' => 2, 'name' => 'Blog', 'item' => route('landing.blogs')],
+                        ['@type' => 'ListItem', 'position' => 3, 'name' => "#{$name}", 'item' => route('blogs.tag', $info['slug'])],
+                    ],
+                ],
+            ],
+        ];
+
+        return view('pages.blogs.tag', [
+            'tag'         => $info,
+            'blogs'       => $blogs,
+            'seo'         => $seo,
+            'schema'      => $schema,
+            'relatedTags' => \App\Support\BlogTags::relatedTo($info['slug'], 10),
+        ]);
+    }
+
+    /** Artikel terkait: utamakan yang berbagi tag terbanyak, lalu isi dari kategori yang sama. */
+    private function relatedBlogs(Blog $blog, int $limit = 3)
+    {
+        $scores = [];
+        foreach ($blog->tag_list as $name) {
+            foreach (\App\Support\BlogTags::find(\App\Support\BlogTags::slug($name))['blog_ids'] ?? [] as $id) {
+                if ($id !== $blog->id) {
+                    $scores[$id] = ($scores[$id] ?? 0) + 1;
+                }
+            }
+        }
+        arsort($scores);
+
+        $byTag = $scores
+            ? Blog::published()->whereIn('id', array_slice(array_keys($scores), 0, $limit))->get()
+                ->sortByDesc(fn ($b) => [$scores[$b->id], $b->published_at?->timestamp])->values()
+            : collect();
+
+        if ($byTag->count() < $limit) {
+            $byTag = $byTag->concat(
+                Blog::published()
+                    ->where('category_id', $blog->category_id)
+                    ->whereNotIn('id', $byTag->pluck('id')->push($blog->id))
+                    ->latest('published_at')
+                    ->take($limit - $byTag->count())
+                    ->get()
+            );
+        }
+
+        return $byTag;
     }
 
     public function portfolio(Request $request)

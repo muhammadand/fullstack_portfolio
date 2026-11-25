@@ -164,18 +164,10 @@ class BlogApiController extends Controller
     }
 
     /** tags: array ["a","b"] atau string "a, b" -> array unik. */
+    /** tags: array ["a","b"] atau string "a, b" -> array unik (lihat BlogTags::normalize), maks 15. */
     private function tags(mixed $tags): array
     {
-        $list = is_array($tags) ? $tags : explode(',', (string) $tags);
-
-        return collect($list)
-            ->filter(fn ($t) => is_scalar($t))
-            ->map(fn ($t) => Str::limit(trim((string) $t), 50, ''))
-            ->filter()
-            ->unique(fn ($t) => mb_strtolower($t))
-            ->take(15)
-            ->values()
-            ->all();
+        return array_slice(\App\Support\BlogTags::normalize($tags), 0, 15);
     }
 
     private function authorId(): ?int

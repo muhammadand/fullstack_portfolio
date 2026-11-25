@@ -70,6 +70,16 @@ class SitemapBuilder
                 $sitemap->add($url);
             });
 
+        // Halaman topik/tag yang cukup isinya (>= BlogTags::MIN_INDEXABLE artikel).
+        // flush dulu: sitemap ditulis di event "created", sebelum cache tag dibuang di event "saved".
+        BlogTags::flush();
+        BlogTags::index()->filter(fn ($tag) => BlogTags::isIndexable($tag))->each(fn ($tag) => $sitemap->add(
+            Url::create(self::url('/s/blogs/tag/' . $tag['slug']))
+                ->setLastModificationDate(\Illuminate\Support\Carbon::parse($tag['updated_at'] ?? now()))
+                ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
+                ->setPriority(0.6)
+        ));
+
         Portfolio::active()->get(['slug', 'updated_at'])->each(fn ($p) => $sitemap->add(
             Url::create(self::url("/s/portfolio/{$p->slug}"))
                 ->setLastModificationDate($p->updated_at ?? now())

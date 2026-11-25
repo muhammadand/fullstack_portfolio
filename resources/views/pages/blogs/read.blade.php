@@ -5,11 +5,8 @@
 <meta name="title" content="{{ $blog->meta_title ?? $blog->title }}" />
 <meta name="description" content="{{ $blog->meta_description ?? $blog->excerpt ?? Str::limit(strip_tags($blog->content), 150) }}" />
 
-@if($blog->tags)
-@php
-$tagsString = is_array($blog->tags) ? implode(', ', $blog->tags) : $blog->tags;
-@endphp
-<meta name="keywords" content="{{ $tagsString }}, automasi bisnis, kecerdasan buatan" />
+@if ($blog->tag_list)
+<meta name="keywords" content="{{ implode(', ', $blog->tag_list) }}" />
 @endif
 
 <meta name="author" content="{{ $blog->author->name ?? 'Scalify Intelligence' }}" />
@@ -528,32 +525,19 @@ $tagsString = is_array($blog->tags) ? implode(', ', $blog->tags) : $blog->tags;
 
                         </style>
 
-                        <!-- Tags -->
-                        @if ($blog->tags)
+                        <!-- Tags: link ke halaman topik (/s/blogs/tag/...) -->
+                        @if ($blog->tag_list)
                         <div class="mt-12 pt-8 border-t border-white/10">
-                            <div class="flex flex-wrap gap-2">
-                                @php
-                                $tags = [];
-                                if (is_array($blog->tags)) {
-                                foreach ($blog->tags as $item) {
-                                if (strpos($item, ',') !== false) {
-                                $tags = array_merge($tags, explode(',', $item));
-                                } else {
-                                $tags[] = $item;
-                                }
-                                }
-                                } else {
-                                $tags = explode(',', $blog->tags);
-                                }
-                                $tags = array_filter(array_map('trim', $tags), fn($t) => $t !== '');
-                                @endphp
-
-                                @foreach ($tags as $tag)
-                                <span class="px-4 py-1.5 bg-white/5 border border-white/10 text-white/70 rounded-full text-sm font-medium hover:bg-brand-accent hover:text-white transition-colors cursor-pointer">
-                                    #{{ $tag }}
-                                </span>
+                            <p class="text-[11px] font-bold text-white/40 uppercase tracking-widest mb-3">Topik artikel ini</p>
+                            <ul class="flex flex-wrap gap-2">
+                                @foreach ($blog->tag_list as $tag)
+                                <li>
+                                    <a href="{{ \App\Support\BlogTags::url($tag) }}" rel="tag" class="inline-block px-4 py-1.5 bg-white/5 border border-white/10 text-white/70 rounded-full text-sm font-medium hover:bg-brand-accent hover:text-white hover:border-transparent transition-colors" title="Lihat semua artikel tentang {{ $tag }}">
+                                        #{{ $tag }}
+                                    </a>
+                                </li>
                                 @endforeach
-                            </div>
+                            </ul>
                         </div>
                         @endif
 

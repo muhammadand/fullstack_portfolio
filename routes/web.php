@@ -204,6 +204,7 @@ Route::redirect('landing/careers/{slug}', '/s/careers/{slug}', 301);
 
 //blogs user
 Route::get('s/blogs', [HomeController::class, 'blogs'])->name('landing.blogs');
+Route::get('s/blogs/tag/{tag}', [HomeController::class, 'blogTag'])->name('blogs.tag');
 Route::get('s/blog/{slug}', [HomeController::class, 'readBlog'])->name('blogs.read');
 //portfolio users
 Route::get('s/portfolio', [HomeController::class, 'portfolio'])->name('landing.portfolio');
@@ -394,244 +395,11 @@ require __DIR__ . '/travell.php';
 // Endpoint rahasia untuk trigger deploy (migrasi & cache) dari GitHub Actions (Tanpa SSH)
 Route::get('/secret-deploy-trigger-12345', function () {
     try {
-        // Jalankan migrasi spesifik secara berurutan
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_09_05_051625_add_lynk_id_link_to_affiliates_table.php',
-            '--force' => true
-        ]);
-
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_09_05_052128_create_digital_products_table.php',
-            '--force' => true
-        ]);
-
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_09_05_062934_adjust_commission_rate_to_affiliates_and_digital_products.php',
-            '--force' => true
-        ]);
-
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_09_06_142047_add_package_pricing_to_client_proposals_table.php',
-            '--force' => true
-        ]);
-
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_09_07_091321_drop_project_price_and_domain_price_from_client_proposals_table.php',
-            '--force' => true
-        ]);
-
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_09_21_114354_create_cv_reviews_table.php',
-            '--force' => true
-        ]);
-
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_09_21_144539_create_cv_page_visits_table.php',
-            '--force' => true
-        ]);
-
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_10_18_062915_create_customers_table.php',
-            '--force' => true
-        ]);
-
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_10_18_063206_create_routes_table.php',
-            '--force' => true
-        ]);
-
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_10_18_063431_create_schedules_table.php',
-            '--force' => true
-        ]);
-
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_10_18_070736_create_bookings_table.php',
-            '--force' => true
-        ]);
-
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_10_18_070737_create_booking_details_table.php',
-            '--force' => true
-        ]);
-
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_10_19_111500_create_review_cards_table.php',
-            '--force' => true
-        ]);
-
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_10_19_133000_add_affiliate_id_to_review_cards_table.php',
-            '--force' => true
-        ]);
-
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_10_21_060813_add_points_to_customers_table.php',
-            '--force' => true
-        ]);
-
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_10_22_022524_create_lead_offerings_table.php',
-            '--force' => true
-        ]);
-
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_10_22_022636_add_product_type_to_chat_templates_table.php',
-            '--force' => true
-        ]);
-
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_10_23_143647_add_is_sold_to_review_cards_table.php',
-            '--force' => true
-        ]);
-
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_10_24_170000_add_referral_system_to_affiliates_table.php',
-            '--force' => true
-        ]);
-
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_10_26_133318_create_google_card_visits_table.php',
-            '--force' => true
-        ]);
-
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_10_28_134800_update_total_amount_in_bookings_and_booking_details_table.php',
-            '--force' => true
-        ]);
-
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_10_29_083526_create_payment_callbacks_table.php',
-            '--force' => true
-        ]);
-
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_11_01_111500_create_google_card_orders_table.php',
-            '--force' => true
-        ]);
-
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_11_01_114500_add_review_card_id_to_google_card_orders_table.php',
-            '--force' => true
-        ]);
-
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_11_02_143000_create_digiflazz_webhooks_table.php',
-            '--force' => true
-        ]);
-
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_11_02_144200_add_fields_to_digiflazz_webhooks_table.php',
-            '--force' => true
-        ]);
-
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_11_02_221000_create_wallets_table.php',
-            '--force' => true
-        ]);
-
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_11_02_221100_create_wallet_deposits_table.php',
-            '--force' => true
-        ]);
-
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_11_02_221200_create_wallet_mutations_table.php',
-            '--force' => true
-        ]);
-
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_11_03_100000_add_source_and_processed_at_to_withdrawals_table.php',
-            '--force' => true
-        ]);
-
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_11_03_110000_create_digital_product_brands_table.php',
-            '--force' => true
-        ]);
-
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_11_03_110100_create_price_levels_table.php',
-            '--force' => true
-        ]);
-
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_11_03_110200_add_supplier_columns_to_digital_products_table.php',
-            '--force' => true
-        ]);
-
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_11_03_110300_create_digital_product_prices_table.php',
-            '--force' => true
-        ]);
-
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_11_03_110400_create_digital_product_categories_table.php',
-            '--force' => true
-        ]);
-
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_11_03_120000_add_image_to_digital_product_brands_table.php',
-            '--force' => true
-        ]);
-
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_11_04_110000_add_email_and_password_to_customers_table.php',
-            '--force' => true
-        ]);
-
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_11_04_110100_create_orders_table.php',
-            '--force' => true
-        ]);
-
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_11_05_090000_add_email_to_orders_table.php',
-            '--force' => true
-        ]);
-
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_11_05_100000_add_qris_columns_to_orders_table.php',
-            '--force' => true
-        ]);
-
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_11_05_120000_add_source_to_customers_table.php',
-            '--force' => true
-        ]);
-
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_11_05_130000_add_customer_link_and_phone_source_index.php',
-            '--force' => true
-        ]);
-
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_11_07_100000_add_source_and_wallet_columns_to_orders_table.php',
-            '--force' => true
-        ]);
-
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_11_07_100100_create_order_events_table.php',
-            '--force' => true
-        ]);
-
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_11_07_132000_add_affiliate_id_to_orders_table.php',
-            '--force' => true
-        ]);
-
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_11_07_140000_create_app_settings_tables.php',
-            '--force' => true
-        ]);
-
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--path' => 'database/migrations/2026_11_08_100000_create_customer_balance_tables.php',
-            '--force' => true
-        ]);
-
-        // Jaring pengaman: jalankan migrate umum agar bila ada migrasi baru lainnya tidak terlewat
+        // Jalankan SEMUA migrasi yang belum pernah dijalankan di server, urut sesuai tanggal di nama file.
+        // Migrasi baru tidak perlu didaftarkan di sini: cukup buat file di database/migrations lalu deploy.
+        // Laravel mencatat yang sudah jalan di tabel `migrations`, jadi tidak ada yang dobel/terlewat.
         \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        $migrateOutput = trim(\Illuminate\Support\Facades\Artisan::output());
 
         // Jalankan Seeder yang diperlukan
         \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'BusinessCategorySeeder', '--force' => true]);
@@ -657,7 +425,8 @@ Route::get('/secret-deploy-trigger-12345', function () {
         // Segarkan sitemap setiap deploy (file ini dikecualikan dari upload FTP).
         \App\Support\SitemapBuilder::regenerateQuietly();
 
-        return "Deploy commands executed successfully!";
+        return response("Deploy commands executed successfully!\n\n[migrate]\n" . ($migrateOutput ?: 'Nothing to migrate.'), 200)
+            ->header('Content-Type', 'text/plain');
     } catch (\Exception $e) {
         return "Error: " . $e->getMessage();
     }

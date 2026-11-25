@@ -101,6 +101,10 @@ class Blog extends Model
     {
         parent::boot();
 
+        // Indeks halaman tag (/s/blogs/tag/...) dihitung ulang saat artikel berubah.
+        static::saved(fn () => \App\Support\BlogTags::flush());
+        static::deleted(fn () => \App\Support\BlogTags::flush());
+
         static::creating(function ($blog) {
             if (empty($blog->slug)) {
                 $blog->slug = static::uniqueSlug($blog->title);
@@ -156,6 +160,12 @@ class Blog extends Model
         return Str::limit(strip_tags($this->content), 150);
     }
 
+    /** Daftar tag yang sudah dirapikan (tanpa '#', tanpa duplikat), untuk tampilan & SEO. */
+    public function getTagListAttribute(): array
+    {
+        return \App\Support\BlogTags::normalize($this->tags);
+    }
+
     /**
      * Slug unik dari judul: "judul", lalu "judul-2", "judul-3", ...
      * Slug hanya dibuat sekali saat artikel dibuat. Setelah itu tidak diubah lagi walau judul diedit,
@@ -196,7 +206,7 @@ class Blog extends Model
                 'logo'  => ['@type' => 'ImageObject', 'url' => asset('scalify.png')],
             ],
             'articleSection'   => $this->category->name ?? null,
-            'keywords'         => $this->tags ? implode(', ', $this->tags) : null,
+            'keywords'         => $this->tag_list ? implode(', ', $this->tag_list) : null,
             'wordCount'        => str_word_count(strip_tags((string) $this->content)) ?: null,
             'datePublished'    => ($this->published_at ?? $this->created_at)?->toIso8601String(),
             'dateModified'     => ($this->updated_at ?? $this->published_at)?->toIso8601String(),

@@ -147,13 +147,7 @@ class BlogController extends Controller
         ]);
 
         // Input tags berupa satu teks "a, b, c" -> pecah jadi array
-        $validated['tags'] = collect($validated['tags'] ?? [])
-            ->flatMap(fn ($tag) => explode(',', (string) $tag))
-            ->map(fn ($tag) => trim($tag))
-            ->filter()
-            ->unique()
-            ->values()
-            ->all();
+        $validated['tags'] = \App\Support\BlogTags::normalize($validated['tags'] ?? []);
 
         // Kolom excerpt NOT NULL: isi otomatis dari konten jika dikosongkan
         if (blank($validated['excerpt'] ?? null)) {
