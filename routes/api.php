@@ -94,3 +94,11 @@ Route::get('/cron/send-daily-push', function (Request $request) {
         'message' => "Notifikasi berhasil dikirim ke {$count} affiliate" . ($failed > 0 ? " ({$failed} gagal)" : "") . "!"
     ]);
 });
+
+// API khusus Scalify Office: jual Google Review Card otomatis lewat WhatsApp (Bearer SCALIFY_OFFICE_TOKEN)
+use App\Http\Controllers\Api\ScalifyOfficeReviewCardController;
+Route::prefix('scalify-office')->middleware('throttle:60,1')->group(function () {
+    Route::post('/review-card-orders', [ScalifyOfficeReviewCardController::class, 'store']);
+    Route::post('/review-card-orders/{orderId}/confirm', [ScalifyOfficeReviewCardController::class, 'confirm']);
+    Route::get('/review-card-orders/{orderId}', [ScalifyOfficeReviewCardController::class, 'show']);
+});

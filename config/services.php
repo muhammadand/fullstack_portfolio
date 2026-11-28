@@ -35,6 +35,11 @@ return [
         ],
     ],
 
+    // Scalify Office (mesin prospek WA) → API jual Google Review Card. Kosong / < 32 karakter = API mati.
+    'scalify_office' => [
+        'token' => env('SCALIFY_OFFICE_TOKEN'),
+    ],
+
     'qris' => [
         'url' => env('SCALIFY_QRIS_URL', 'http://pay.scalifyintellegence.my.id/api/v1/qris/dynamic'),
         // API key QRIS mengikuti mode Scalify Pay (lihat ScalifyPayService::getApiKey()).
