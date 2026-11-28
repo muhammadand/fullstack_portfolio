@@ -22,7 +22,8 @@ class QrisPaymentService
         string $orderId,
         $amount,
         array $customer = [],
-        string $provider = 'DANA'
+        string $provider = 'DANA',
+        ?bool $useUniqueCode = null
     ): array {
         $url = config('services.qris.url') ?: self::DEFAULT_URL;
         // Key mengikuti mode Scalify Pay (sandbox/production) yang dipilih admin.
@@ -32,6 +33,8 @@ class QrisPaymentService
             'order_id' => $orderId,
             'amount' => (int) round($amount),
             'provider' => $provider,
+            // null = ikut default gateway (pakai kode unik 3 digit); false = nominal pas (mis. dikonfirmasi manual oleh owner)
+            'use_unique_code' => $useUniqueCode,
             'customer' => [
                 'name' => $customer['name'] ?? null,
                 'email' => $customer['email'] ?? null,

@@ -70,7 +70,8 @@ class ScalifyOfficeReviewCardController extends Controller
                 'payment_status' => GoogleCardOrder::STATUS_PENDING,
             ]);
 
-            $qris = QrisPaymentService::createDynamicQris($orderId, self::PRICE, ['name' => $name, 'phone' => $v['phone']]);
+            // Nominal pas (tanpa kode unik): pembayaran dikonfirmasi manual oleh owner lewat WhatsApp
+            $qris = QrisPaymentService::createDynamicQris($orderId, self::PRICE, ['name' => $name, 'phone' => $v['phone']], 'DANA', false);
             if (empty($qris['success'])) {
                 $order->update(['payment_status' => GoogleCardOrder::STATUS_FAILED, 'raw_response' => $qris]);
 
